@@ -74,7 +74,8 @@
 							<outputDirectory>${project.build.directory}/classes/resources/</outputDirectory>
 							<resources>
 								<resource>
-									<directory>../frontend/src/main/web/dist/frontendApp/</directory>
+									<!--suppress UnresolvedMavenProperty -->
+									<directory>${project.parent.basedir}/frontend/src/main/web/dist/frontendApp/</directory>
 								</resource>
 							</resources>
 						</configuration>
