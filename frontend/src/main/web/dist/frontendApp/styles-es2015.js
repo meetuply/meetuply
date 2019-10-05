@@ -338,7 +338,7 @@ if (content.locals) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/sannguyen/Desktop/meetuply/frontend/src/main/web/src/styles.less */"./src/styles.less");
+module.exports = __webpack_require__(/*! /Users/sannguyen/Developer/Netcracker/meetuply/frontend/src/main/web/src/styles.less */"./src/styles.less");
 
 
 /***/ })

@@ -353,7 +353,7 @@
   /***/
   function _(module, exports, __webpack_require__) {
     module.exports = __webpack_require__(
-    /*! /Users/sannguyen/Desktop/meetuply/frontend/src/main/web/src/styles.less */
+    /*! /Users/sannguyen/Developer/Netcracker/meetuply/frontend/src/main/web/src/styles.less */
     "./src/styles.less");
     /***/
   }
