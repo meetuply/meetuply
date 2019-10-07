@@ -44,7 +44,6 @@ public class BlogPostController {
 
     @RequestMapping("/")
     public String viewHome(Model model) {
-
         return "welcomePage";
     }
 
