@@ -28,8 +28,8 @@ public class BlogPostDAO {
         BlogPost b = new BlogPost(2L, "HKGjdhfsbd", "Hfbjdkndsfjkdbdghjkslfdbgfsnjf", LocalDateTime.now(), new User(2L, "jerry", "Jerry", "Jerry", //
                 true, "jerry@waltdisney.com", "US"));
 
-        BLOG_POST_MAP.put(a.getBlogpostId(), a);
-        BLOG_POST_MAP.put(b.getBlogpostId(), b);
+        BLOG_POST_MAP.put(a.getBlogPostId(), a);
+        BLOG_POST_MAP.put(b.getBlogPostId(), b);
     }
 
     public Long getMaxBlogPostId() {
@@ -45,7 +45,7 @@ public class BlogPostDAO {
     public BlogPost findBlogPostByTitle(String title) {
         Collection<BlogPost> bp = BLOG_POST_MAP.values();
         for (BlogPost b : bp) {
-            if (b.getTitle().equals(title)) {
+            if (b.getBlogPostTitle().equals(title)) {
                 return b;
             }
         }
@@ -71,12 +71,14 @@ public class BlogPostDAO {
     }
 
     public BlogPost createBlogPost(BlogPostForm form) {
-        Long blogpostId = this.getMaxBlogPostId() + 1;
+        Long blogPostId = this.getMaxBlogPostId() + 1;
 
-        BlogPost bp = new BlogPost(blogpostId, form.getTitle(), //
-                form.getContent(), form.getTime(), form.getAuthor());
+        BlogPost bp = new BlogPost(blogPostId, form.getBlogPostTitle(), //
+                form.getBlogPostContent(), LocalDateTime.now(),
+                new User(1L, "Placeholder", "For", "Current User", //
+                        true, "placeholder@user.com", "Ukraine"));
 
-        BLOG_POST_MAP.put(blogpostId, bp);
+        BLOG_POST_MAP.put(blogPostId, bp);
         return bp;
     }
 

@@ -25,8 +25,8 @@ public class BlogPostValidator implements Validator {
         BlogPostForm blogPostForm = (BlogPostForm) target;
 
         // Check the fields of AppUserForm.
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "NotEmpty.blogPostForm.title");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "content", "NotEmpty.blogPostForm.content");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "blogPostTitle", "NotEmpty.blogPostForm.blogPostTitle");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "blogPostContent", "NotEmpty.blogPostForm.blogPostContent");
     }
 
 }
