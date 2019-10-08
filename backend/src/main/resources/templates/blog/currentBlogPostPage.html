@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:utext="${title}"></title>
+</head>
+
+<style>
+    table th, table td {
+        padding: 5px;
+    }
+    .message {
+        color: blue;
+    }
+</style>
+
+<body>
+
+<!-- Include _menu.html -->
+<div xmlns:th="http://www.thymeleaf.org"
+     style="border: 1px solid #ccc;padding:5px;margin-bottom:20px;">
+
+    <!-- Include _menu.html -->
+    <th:block th:include="/_menu"></th:block>
+
+
+</div>
+
+<h2>Blog Post</h2>
+
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Content</th>
+        <th>Time</th>
+        <th>Author</th>
+    </tr>
+    <tr th:each ="blogPost : ${blogPosts}">
+        <td><a th:href="@{/members}" th:utext="${blogPost.blogPostTitle}">...</a></td>
+        <td th:utext="${blogPost.blogPostContent}">...</td>
+        <td th:utext="${blogPost.time}">...</td>
+        <td th:utext="${blogPost.author.getFirstName()}">...</td>
+        <td th:utext="${blogPost.author.getLastName()}">...</td>
+        <td th:utext="${blogPost.author.getEmail()}">...</td>
+    </tr>
+</table>
+
+<form th:action="@{/logout}" method="POST">
+    <input type="submit" value="Log Out"/>
+</form>
+
+</body>
+</html>

@@ -49,7 +49,7 @@ public class AppUserDAO {
         return max;
     }
  
-    public AppUser findAppUserByEmail(String email) {
+    public static AppUser findAppUserByEmail(String email) {
         Collection<AppUser> appUsers = USERS_MAP.values();
         for (AppUser u : appUsers) {
             if (u.getEmail().equals(email)) {

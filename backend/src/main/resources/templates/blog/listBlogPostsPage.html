@@ -28,7 +28,7 @@
         <th>Author</th>
     </tr>
     <tr th:each ="blogPost : ${blogPosts}">
-        <td th:utext="${blogPost.blogPostTitle}">...</td>
+        <td><a th:href="@{/members}" th:utext="${blogPost.blogPostTitle}">...</a></td>
         <td th:utext="${blogPost.blogPostContent}">...</td>
         <td th:utext="${blogPost.time}">...</td>
         <td th:utext="${blogPost.author.getFirstName()}">...</td>

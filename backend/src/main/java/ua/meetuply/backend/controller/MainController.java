@@ -1,5 +1,6 @@
 package ua.meetuply.backend.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ua.meetuply.backend.dao.AppUserDAO;
@@ -59,9 +57,7 @@ public class MainController {
  
    @RequestMapping("/members")
    public String viewMembers(Model model) {
- 
       List<AppUser> list = appUserDAO.getAppUsers();
- 
       model.addAttribute("members", list);
  
       return "registration/membersPage";
@@ -83,9 +79,7 @@ public class MainController {
    public String viewRegister(Model model) {
  
       AppUserForm form = new AppUserForm();
- 
       model.addAttribute("appUserForm", form);
- 
       return "registration/registerPage";
    }
  
@@ -113,7 +107,6 @@ public class MainController {
       }
  
       redirectAttributes.addFlashAttribute("flashUser", newUser);
-       
       return "redirect:/registerSuccessful";
    }
 
@@ -129,19 +122,14 @@ public class MainController {
    public String viewBlogPosts(Model model) {
 
       List<BlogPost> list = blogPostDAO.getBlogPosts();
-
       model.addAttribute("blogPosts", list);
-
       return "blog/listBlogPostsPage";
    }
 
    @RequestMapping(value = "/newBlogPost", method = RequestMethod.GET)
    public String viewNewBlogPost(Model model) {
-
       BlogPostForm form = new BlogPostForm();
-
       model.addAttribute("blogPostForm", form);
-
       return "blog/newBlogPostPage";
    }
 
@@ -168,6 +156,12 @@ public class MainController {
 
       return "redirect:/blogPosts";
    }
+
+//   @RequestMapping(value = "/email", method = RequestMethod.GET)
+//   @ResponseBody
+//   public String currentUserName(Principal principal) {
+//      return principal.getName();
+//   }
  
 }
 

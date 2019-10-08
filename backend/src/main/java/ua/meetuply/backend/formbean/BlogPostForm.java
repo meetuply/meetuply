@@ -18,6 +18,7 @@ public class BlogPostForm {
     public BlogPostForm(Long blogPostId, String blogPostTitle, String blogPostContent, LocalDateTime time, AppUser author) {
         super();
         this.blogPostId = blogPostId;
+        this.blogPostTitle=blogPostTitle;
         this.time = time;
         this.blogPostContent = blogPostContent;
         this.time = time;

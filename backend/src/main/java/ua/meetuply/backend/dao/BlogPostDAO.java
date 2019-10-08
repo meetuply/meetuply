@@ -1,9 +1,13 @@
 package ua.meetuply.backend.dao;
 
+import java.security.Principal;
 import java.util.*;
 import java.time.LocalDateTime;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
+import ua.meetuply.backend.controller.MainController;
 import ua.meetuply.backend.formbean.BlogPostForm;
 import ua.meetuply.backend.model.BlogPost;
 import ua.meetuply.backend.model.AppUser;
@@ -67,9 +71,17 @@ public class BlogPostDAO {
     public BlogPost createBlogPost(BlogPostForm form) {
         Long blogPostId = this.getMaxBlogPostId() + 1;
 
+        String email="";
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            email = ((UserDetails)principal).getUsername();
+        } else {
+            email = principal.toString();
+        }
+
         BlogPost bp = new BlogPost(blogPostId, form.getBlogPostTitle(), //
-                form.getBlogPostContent(), LocalDateTime.now(),
-                AppUserDAO.getAppUsers().get(0));
+                form.getBlogPostContent(), LocalDateTime.now(), AppUserDAO.findAppUserByEmail(email));
 
         BLOG_POST_MAP.put(blogPostId, bp);
         return bp;
