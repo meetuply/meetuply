@@ -59,7 +59,7 @@ public class AppUserDAO {
         return null;
     }
  
-    public List<AppUser> getAppUsers() {
+    public static List<AppUser> getAppUsers() {
         List<AppUser> list = new ArrayList<>();
  
         list.addAll(USERS_MAP.values());

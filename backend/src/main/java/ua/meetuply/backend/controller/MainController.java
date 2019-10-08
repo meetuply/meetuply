@@ -15,10 +15,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ua.meetuply.backend.dao.AppUserDAO;
+import ua.meetuply.backend.dao.BlogPostDAO;
 import ua.meetuply.backend.formbean.AppUserForm;
+import ua.meetuply.backend.formbean.BlogPostForm;
 import ua.meetuply.backend.model.AppUser;
+import ua.meetuply.backend.model.BlogPost;
 import ua.meetuply.backend.validator.AppUserValidator;
- 
+import ua.meetuply.backend.validator.BlogPostValidator;
+
 @Controller
 public class MainController {
  
@@ -40,6 +44,10 @@ public class MainController {
  
       if (target.getClass() == AppUserForm.class) {
          dataBinder.setValidator(appUserValidator);
+      }
+
+      if (target.getClass() == BlogPostForm.class) {
+         dataBinder.setValidator(blogPostValidator);
       }
    }
  
@@ -107,6 +115,59 @@ public class MainController {
       redirectAttributes.addFlashAttribute("flashUser", newUser);
        
       return "redirect:/registerSuccessful";
+   }
+
+   //Blog section
+
+   @Autowired
+   private BlogPostDAO blogPostDAO;
+
+   @Autowired
+   private BlogPostValidator blogPostValidator;
+
+   @RequestMapping("/blogPosts")
+   public String viewBlogPosts(Model model) {
+
+      List<BlogPost> list = blogPostDAO.getBlogPosts();
+
+      model.addAttribute("blogPosts", list);
+
+      return "listBlogPostsPage";
+   }
+
+   @RequestMapping(value = "/newPost", method = RequestMethod.GET)
+   public String viewNewBlogPost(Model model) {
+
+      BlogPostForm form = new BlogPostForm();
+
+      model.addAttribute("blogPostForm", form);
+
+      return "newBlogPostPage";
+   }
+
+   @RequestMapping(value = "/newPost", method = RequestMethod.POST)
+   public String saveNewBlogPost(Model model, //
+                                 @ModelAttribute("blogPostForm") @Validated BlogPostForm blogPostForm, //
+                                 BindingResult result, //
+                                 final RedirectAttributes redirectAttributes) {
+
+      // Validate result
+      if (result.hasErrors()) {
+         return "newBlogPostPage";
+      }
+      BlogPost bp= null;
+      try {
+         bp = blogPostDAO.createBlogPost(blogPostForm);
+      }
+      // Other error!!
+      catch (Exception e) {
+         model.addAttribute("errorMessage", "Error: " + e.getMessage());
+         return "newBlogPostPage";
+      }
+
+      redirectAttributes.addFlashAttribute("flashBlogPost", bp);
+
+      return "redirect:/listBlogPosts";
    }
  
 }
