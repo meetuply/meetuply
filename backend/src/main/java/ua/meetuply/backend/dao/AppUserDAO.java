@@ -29,10 +29,10 @@ public class AppUserDAO {
     private static void initDATA() {
         String encrytedPassword = "";
  
-        AppUser tom = new AppUser(1L, "tom@waltdisney.com", "Tom", "Tom", Role.USER,
+        AppUser tom = new AppUser(1L, "tom@waltdisney.com", "Tom", "HdjsKGh", Role.USER,
                 false, encrytedPassword);
  
-        AppUser jerry = new AppUser(2L, "jerry@waltdisney.com", "Jerry", "Jerry", Role.SPEAKER,
+        AppUser jerry = new AppUser(2L, "jerry@waltdisney.com", "Jerry", "JHKGSFDherry", Role.SPEAKER,
                 false, encrytedPassword);
  
         USERS_MAP.put(tom.getUserId(), tom);

@@ -28,10 +28,12 @@
         <th>Author</th>
     </tr>
     <tr th:each ="blogPost : ${blogPosts}">
-        <td th:utext="${blogPost.title}">...</td>
-        <td th:utext="${blogPost.content}">...</td>
+        <td th:utext="${blogPost.blogPostTitle}">...</td>
+        <td th:utext="${blogPost.blogPostContent}">...</td>
         <td th:utext="${blogPost.time}">...</td>
-        <td th:utext="${blogPost.author}">...</td>
+        <td th:utext="${blogPost.author.getFirstName()}">...</td>
+        <td th:utext="${blogPost.author.getLastName()}">...</td>
+        <td th:utext="${blogPost.author.getEmail()}">...</td>
     </tr>
 </table>
 

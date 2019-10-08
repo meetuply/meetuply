@@ -135,7 +135,7 @@ public class MainController {
       return "listBlogPostsPage";
    }
 
-   @RequestMapping(value = "/newPost", method = RequestMethod.GET)
+   @RequestMapping(value = "/newBlogPost", method = RequestMethod.GET)
    public String viewNewBlogPost(Model model) {
 
       BlogPostForm form = new BlogPostForm();
@@ -145,7 +145,7 @@ public class MainController {
       return "newBlogPostPage";
    }
 
-   @RequestMapping(value = "/newPost", method = RequestMethod.POST)
+   @RequestMapping(value = "/newBlogPost", method = RequestMethod.POST)
    public String saveNewBlogPost(Model model, //
                                  @ModelAttribute("blogPostForm") @Validated BlogPostForm blogPostForm, //
                                  BindingResult result, //
@@ -159,7 +159,6 @@ public class MainController {
       try {
          bp = blogPostDAO.createBlogPost(blogPostForm);
       }
-      // Other error!!
       catch (Exception e) {
          model.addAttribute("errorMessage", "Error: " + e.getMessage());
          return "newBlogPostPage";
@@ -167,7 +166,7 @@ public class MainController {
 
       redirectAttributes.addFlashAttribute("flashBlogPost", bp);
 
-      return "redirect:/listBlogPosts";
+      return "redirect:/blogPosts";
    }
  
 }
