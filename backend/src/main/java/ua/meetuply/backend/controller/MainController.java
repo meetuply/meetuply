@@ -64,18 +64,18 @@ public class MainController {
  
       model.addAttribute("members", list);
  
-      return "membersPage";
+      return "registration/membersPage";
    }
  
    @RequestMapping("/registerSuccessful")
    public String viewRegisterSuccessful(Model model) {
  
-      return "registerSuccessfulPage";
+      return "registration/registerSuccessfulPage";
    }
   
    @RequestMapping("/login")
    public String viewLogin(Model model) {
-	   return "loginPage";
+	   return "registration/loginPage";
    }  
  
    // Show Register page.
@@ -86,7 +86,7 @@ public class MainController {
  
       model.addAttribute("appUserForm", form);
  
-      return "registerPage";
+      return "registration/registerPage";
    }
  
    // This method is called to save the registration information.
@@ -100,7 +100,7 @@ public class MainController {
  
       // Validate result
       if (result.hasErrors()) {
-         return "registerPage";
+         return "registration/registerPage";
       }
       AppUser newUser= null;
       try {
@@ -109,7 +109,7 @@ public class MainController {
       // Other error!!
       catch (Exception e) {
          model.addAttribute("errorMessage", "Error: " + e.getMessage());
-         return "registerPage";
+         return "registration/registerPage";
       }
  
       redirectAttributes.addFlashAttribute("flashUser", newUser);
@@ -132,7 +132,7 @@ public class MainController {
 
       model.addAttribute("blogPosts", list);
 
-      return "listBlogPostsPage";
+      return "blog/listBlogPostsPage";
    }
 
    @RequestMapping(value = "/newBlogPost", method = RequestMethod.GET)
@@ -142,7 +142,7 @@ public class MainController {
 
       model.addAttribute("blogPostForm", form);
 
-      return "newBlogPostPage";
+      return "blog/newBlogPostPage";
    }
 
    @RequestMapping(value = "/newBlogPost", method = RequestMethod.POST)
@@ -153,7 +153,7 @@ public class MainController {
 
       // Validate result
       if (result.hasErrors()) {
-         return "newBlogPostPage";
+         return "blog/newBlogPostPage";
       }
       BlogPost bp= null;
       try {
@@ -161,7 +161,7 @@ public class MainController {
       }
       catch (Exception e) {
          model.addAttribute("errorMessage", "Error: " + e.getMessage());
-         return "newBlogPostPage";
+         return "blog/newBlogPostPage";
       }
 
       redirectAttributes.addFlashAttribute("flashBlogPost", bp);
