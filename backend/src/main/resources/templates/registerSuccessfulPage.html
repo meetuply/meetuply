@@ -1,7 +1,10 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
    <head>
-      <title th:utext="${title}"></title>
+      <title>Successfully registered</title>
+      <style>
+        span {color: blue;}
+      </style>
    </head>
     
    <body>
@@ -23,7 +26,12 @@
  
 	</div>
        
-      <h2>Home Page!</h2>
+      <h2>You have successfully registered!</h2>
        
+      <div th:if="${flashUser != null}">
+         <ul>
+            <li>Email: <span th:utext="${flashUser.email}">..</span></li>
+         </ul>
+      </div>
    </body>
 </html>
