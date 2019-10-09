@@ -19,7 +19,6 @@ public class BlogPostForm {
         super();
         this.blogPostId = blogPostId;
         this.blogPostTitle=blogPostTitle;
-        this.time = time;
         this.blogPostContent = blogPostContent;
         this.time = time;
         this.author = author;
@@ -59,7 +58,7 @@ public class BlogPostForm {
         return author;
     }
 
-    public void setTime(AppUser author) {
+    public void setAuthor(AppUser author) {
         this.author = author;
     }
 }

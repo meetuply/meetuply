@@ -31,9 +31,9 @@
         <td><a th:href="@{/members}" th:utext="${blogPost.blogPostTitle}">...</a></td>
         <td th:utext="${blogPost.blogPostContent}">...</td>
         <td th:utext="${blogPost.time}">...</td>
-        <td th:utext="${blogPost.author.getFirstName()}">...</td>
-        <td th:utext="${blogPost.author.getLastName()}">...</td>
-        <td th:utext="${blogPost.author.getEmail()}">...</td>
+        <td th:utext="${blogPost.authorId.getFirstName()}">...</td>
+        <td th:utext="${blogPost.authorId.getLastName()}">...</td>
+        <td th:utext="${blogPost.authorId.getEmail()}">...</td>
     </tr>
 </table>
 

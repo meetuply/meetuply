@@ -6,18 +6,17 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.meetuply.backend.dao.AppUserDAO;
+import ua.meetuply.backend.dao.BlogCommentDAO;
 import ua.meetuply.backend.dao.BlogPostDAO;
 import ua.meetuply.backend.formbean.AppUserForm;
 import ua.meetuply.backend.formbean.BlogPostForm;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.BlogPost;
 import ua.meetuply.backend.validator.AppUserValidator;
+import ua.meetuply.backend.validator.BlogCommentValidator;
 import ua.meetuply.backend.validator.BlogPostValidator;
 
 import java.util.List;
@@ -163,6 +162,30 @@ public class MainController {
 //   public String currentUserName(Principal principal) {
 //      return principal.getName();
 //   }
+
+
+   //Blog comment section
+
+   @Autowired
+   private BlogCommentDAO blogCommentDAO;
+
+   @Autowired
+   private BlogCommentValidator blogCommentValidator;
+
+//   @RequestMapping(value = "/postComment", method = RequestMethod.GET)
+//   public String viewCurrentBlogPost(@PathVariable("postid") long postid, Model model) {
+//
+//
+//      List<BlogPost> list = blogPostDAO.getBlogPosts();
+//      model.addAttribute("blogPosts", list);
+//      return "blog/listBlogPostsPage";
+//
+//      BlogPostForm form = new BlogPostForm();
+//      model.addAttribute("blogPostForm", form);
+//      return "blog/newBlogPostPage";
+//   }
+
+
  
 }
 

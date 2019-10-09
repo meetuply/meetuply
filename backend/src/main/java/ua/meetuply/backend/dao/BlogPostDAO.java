@@ -29,25 +29,29 @@ public class BlogPostDAO {
         return max;
     }
 
-    public BlogPost findBlogPostByTitle(String title) {
+    public List<BlogPost> findBlogPostsByTitle(String title) {
         Collection<BlogPost> bp = BLOG_POST_MAP.values();
+        List<BlogPost> res = new ArrayList<>();
+
         for (BlogPost b : bp) {
             if (b.getBlogPostTitle().equals(title)) {
-                return b;
+                res.add(b);
             }
         }
-        return null;
+        return res;
     }
 
-    //TODO: implement methods for searching users by name + surname (User)
-    public BlogPost findBlogPostsByAuthor(AppUser author) {
+    //TODO: implement methods for searching users by name + surname
+    public List<BlogPost> findBlogPostsByAuthor(AppUser author) {
         Collection<BlogPost> bp = BLOG_POST_MAP.values();
+        List<BlogPost> res = new ArrayList<>();
+
         for (BlogPost b : bp) {
-            if (b.getAuthor().equals(author)) {
-                return b;
+            if (b.getAuthor().getUserId()==author.getUserId()) {
+                res.add(b);
             }
         }
-        return null;
+        return res;
     }
 
     public List<BlogPost> getBlogPosts() {

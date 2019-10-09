@@ -8,6 +8,7 @@ public class BlogPost {
     private String blogPostTitle;
     private String blogPostContent;
     private LocalDateTime time;
+
     private AppUser author;
 
     public BlogPost() {
@@ -18,7 +19,6 @@ public class BlogPost {
         super();
         this.blogPostId = blogPostId;
         this.blogPostTitle=blogPostTitle;
-        this.time = time;
         this.blogPostContent = blogPostContent;
         this.time = time;
         this.author = author;
@@ -60,7 +60,7 @@ public class BlogPost {
         return author;
     }
 
-    public void setTime(AppUser author) {
+    public void setAuthor(AppUser author) {
         this.author = author;
     }
 
