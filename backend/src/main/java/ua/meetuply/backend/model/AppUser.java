@@ -1,13 +1,5 @@
 package ua.meetuply.backend.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import ua.meetuply.backend.dao.RoleDAO;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class AppUser {
     private Integer userId;
     private String email;
@@ -16,8 +8,6 @@ public class AppUser {
     private Role role;
     private boolean deactivated;
     private String encrytedPassword;
-
-    public static final UserMapper userMapper = new UserMapper();
 
     public AppUser() { }
  
@@ -89,19 +79,3 @@ public class AppUser {
         this.encrytedPassword = encrytedPassword;
     }
 }
-
-class UserMapper implements RowMapper<AppUser> {
-    @Override
-    public AppUser mapRow(ResultSet resultSet, int i) throws SQLException {
-        return new AppUser(
-                    resultSet.getInt("uid"),
-                    resultSet.getString("email"),
-                    resultSet.getString("firstname"),
-                    resultSet.getString("surname"),
-                    RoleDAO.instance.getRoleById(resultSet.getInt("role_id")),
-                    resultSet.getBoolean("is_deactivated"),
-                    resultSet.getString("password")
-                );
-    }
-}
-

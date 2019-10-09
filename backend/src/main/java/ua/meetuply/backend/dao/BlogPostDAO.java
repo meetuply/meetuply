@@ -1,22 +1,23 @@
 package ua.meetuply.backend.dao;
 
-import java.security.Principal;
-import java.util.*;
-import java.time.LocalDateTime;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
-import ua.meetuply.backend.controller.MainController;
 import ua.meetuply.backend.formbean.BlogPostForm;
-import ua.meetuply.backend.model.BlogPost;
 import ua.meetuply.backend.model.AppUser;
+import ua.meetuply.backend.model.BlogPost;
+
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Repository
 public class BlogPostDAO {
 
     private static final Map<Long, BlogPost> BLOG_POST_MAP = new HashMap<>();
 
+    @Autowired
+    AppUserDAO appUserDAO;
 
     public Long getMaxBlogPostId() {
         long max = 0;
@@ -69,7 +70,7 @@ public class BlogPostDAO {
         }
 
         BlogPost bp = new BlogPost(blogPostId, form.getBlogPostTitle(), //
-                form.getBlogPostContent(), LocalDateTime.now(), AppUserDAO.instance.findAppUserByEmail(email));
+                form.getBlogPostContent(), LocalDateTime.now(), appUserDAO.findAppUserByEmail(email));
 
         BLOG_POST_MAP.put(blogPostId, bp);
         return bp;
