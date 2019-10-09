@@ -5,7 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
- 
+
+import org.springframework.jdbc.core.JdbcTemplate;
 import ua.meetuply.backend.formbean.AppUserForm;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Role;
@@ -15,67 +16,45 @@ import org.springframework.stereotype.Repository;
  
 @Repository
 public class AppUserDAO {
- 
+
+    @Autowired
+    public JdbcTemplate jdbcTemplate;
+
     // Config in WebSecurityConfig
     @Autowired
     private PasswordEncoder passwordEncoder;
- 
-    private static final Map<Long, AppUser> USERS_MAP = new HashMap<>();
- 
-    static {
-        initDATA();
+
+    public final static AppUserDAO instance = new AppUserDAO();
+
+    public AppUser findAppUserByEmail(String email) {
+        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE email = ?", new Object[] { email }, AppUser.userMapper);
+        return users.size() == 0 ? null : users.get(0);
     }
- 
-    private static void initDATA() {
-        String encrytedPassword = "";
- 
-        AppUser tom = new AppUser(1L, "tom@waltdisney.com", "Tom", "HdjsKGh", Role.USER,
-                false, encrytedPassword);
- 
-        AppUser jerry = new AppUser(2L, "jerry@waltdisney.com", "Jerry", "JHKGSFDherry", Role.SPEAKER,
-                false, encrytedPassword);
- 
-        USERS_MAP.put(tom.getUserId(), tom);
-        USERS_MAP.put(jerry.getUserId(), jerry);
+
+    public List<AppUser> getAppUsers() {
+        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user", AppUser.userMapper);
+        return users;
     }
- 
-    public Long getMaxUserId() {
-        long max = 0;
-        for (Long id : USERS_MAP.keySet()) {
-            if (id > max) {
-                max = id;
-            }
-        }
-        return max;
-    }
- 
-    public static AppUser findAppUserByEmail(String email) {
-        Collection<AppUser> appUsers = USERS_MAP.values();
-        for (AppUser u : appUsers) {
-            if (u.getEmail().equals(email)) {
-                return u;
-            }
-        }
-        return null;
-    }
- 
-    public static List<AppUser> getAppUsers() {
-        List<AppUser> list = new ArrayList<>();
- 
-        list.addAll(USERS_MAP.values());
-        return list;
-    }
- 
-    public AppUser createAppUser(AppUserForm form) {
-        Long userId = this.getMaxUserId() + 1;
+
+    public AppUser createAppUser(AppUserForm form) {;
         String encrytedPassword = this.passwordEncoder.encode(form.getPassword());
  
-        AppUser user = new AppUser(userId, form.getEmail(),
-                form.getFirstName(), form.getLastName(), form.getRole(), false,
+        AppUser user = new AppUser(null, form.getEmail(),
+                form.getFirstName(), form.getLastName(), RoleDAO.instance.getRoleByName("user"), false,
                 encrytedPassword);
- 
-        USERS_MAP.put(userId, user);
+
+        addAppUserDB(user);
         return user;
+    }
+
+
+    public void addAppUserDB(AppUser user) {
+        jdbcTemplate.update(
+                // TODO role_id
+                "INSERT INTO `heroku_eac346ff75652cf`.`user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                user.getEmail(), user.getEncrytedPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId()
+        );
     }
  
 }

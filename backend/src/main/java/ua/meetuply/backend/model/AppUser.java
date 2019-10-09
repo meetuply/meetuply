@@ -1,22 +1,28 @@
 package ua.meetuply.backend.model;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import ua.meetuply.backend.dao.RoleDAO;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class AppUser {
-    
-	 
-    private Long userId;
+    private Integer userId;
     private String email;
     private String firstName;
     private String lastName;
-    private String role;
+    private Role role;
     private boolean deactivated;
     private String encrytedPassword;
+
+    public static final UserMapper userMapper = new UserMapper();
+
+    public AppUser() { }
  
-    public AppUser() {
- 
-    }
- 
-    public AppUser(Long userId, String email, String firstName, String lastName,
-            String role, boolean deactivated, String encrytedPassword) {
+    public AppUser(Integer userId, String email, String firstName, String lastName,
+            Role role, boolean deactivated, String encrytedPassword) {
         super();
         this.userId = userId;
         this.email = email;
@@ -27,11 +33,11 @@ public class AppUser {
         this.encrytedPassword = encrytedPassword;
     }
  
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
  
-    public void setUserId(Long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
     
@@ -59,11 +65,11 @@ public class AppUser {
         this.lastName = lastName;
     }
     
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
  
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
  
@@ -82,6 +88,20 @@ public class AppUser {
     public void setEncrytedPassword(String encrytedPassword) {
         this.encrytedPassword = encrytedPassword;
     }
- 
+}
+
+class UserMapper implements RowMapper<AppUser> {
+    @Override
+    public AppUser mapRow(ResultSet resultSet, int i) throws SQLException {
+        return new AppUser(
+                    resultSet.getInt("uid"),
+                    resultSet.getString("email"),
+                    resultSet.getString("firstname"),
+                    resultSet.getString("surname"),
+                    RoleDAO.instance.getRoleById(resultSet.getInt("role_id")),
+                    resultSet.getBoolean("is_deactivated"),
+                    resultSet.getString("password")
+                );
+    }
 }
 

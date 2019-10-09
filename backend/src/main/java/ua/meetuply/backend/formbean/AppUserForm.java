@@ -6,7 +6,6 @@ public class AppUserForm {
     private String email;
     private String firstName;
     private String lastName;
-    private String role;
     private boolean deactivated;
     private String password;
     private String confirmPassword;
@@ -16,13 +15,12 @@ public class AppUserForm {
     }
  
     public AppUserForm(Long userId, String email,
-            String firstName, String lastName, String role, boolean deactivated,
+            String firstName, String lastName, boolean deactivated,
             String password, String confirmPassword) {
         this.userId = userId;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.role = role;
         this.deactivated = deactivated;
         this.email = email;
         this.password = password;
@@ -59,14 +57,6 @@ public class AppUserForm {
  
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-    
-    public String getRole() {
-        return role;
-    }
- 
-    public void setRole(String role) {
-        this.role = role;
     }
  
     public boolean isDeactivated() {

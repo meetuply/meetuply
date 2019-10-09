@@ -17,18 +17,6 @@ public class BlogPostDAO {
 
     private static final Map<Long, BlogPost> BLOG_POST_MAP = new HashMap<>();
 
-    static {
-        initDATA();
-    }
-
-    private static void initDATA() {
-        BlogPost a = new BlogPost(1L, "This is a new post", "Lorem ipsum", LocalDateTime.now(), AppUserDAO.getAppUsers().get(0));
-
-        BlogPost b = new BlogPost(2L, "HKGjdhfsbd", "Hfbjdkndsfjkdbdghjkslfdbgfsnjf", LocalDateTime.now(), AppUserDAO.getAppUsers().get(0));
-
-        BLOG_POST_MAP.put(a.getBlogPostId(), a);
-        BLOG_POST_MAP.put(b.getBlogPostId(), b);
-    }
 
     public Long getMaxBlogPostId() {
         long max = 0;
@@ -81,7 +69,7 @@ public class BlogPostDAO {
         }
 
         BlogPost bp = new BlogPost(blogPostId, form.getBlogPostTitle(), //
-                form.getBlogPostContent(), LocalDateTime.now(), AppUserDAO.findAppUserByEmail(email));
+                form.getBlogPostContent(), LocalDateTime.now(), AppUserDAO.instance.findAppUserByEmail(email));
 
         BLOG_POST_MAP.put(blogPostId, bp);
         return bp;
