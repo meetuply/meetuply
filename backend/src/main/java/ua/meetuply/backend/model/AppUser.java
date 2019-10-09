@@ -1,22 +1,18 @@
 package ua.meetuply.backend.model;
 
 public class AppUser {
-    
-	 
-    private Long userId;
+    private Integer userId;
     private String email;
     private String firstName;
     private String lastName;
-    private String role;
+    private Role role;
     private boolean deactivated;
     private String encrytedPassword;
+
+    public AppUser() { }
  
-    public AppUser() {
- 
-    }
- 
-    public AppUser(Long userId, String email, String firstName, String lastName,
-            String role, boolean deactivated, String encrytedPassword) {
+    public AppUser(Integer userId, String email, String firstName, String lastName,
+            Role role, boolean deactivated, String encrytedPassword) {
         super();
         this.userId = userId;
         this.email = email;
@@ -27,11 +23,11 @@ public class AppUser {
         this.encrytedPassword = encrytedPassword;
     }
  
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
  
-    public void setUserId(Long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
     
@@ -59,11 +55,11 @@ public class AppUser {
         this.lastName = lastName;
     }
     
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
  
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
  
@@ -82,6 +78,4 @@ public class AppUser {
     public void setEncrytedPassword(String encrytedPassword) {
         this.encrytedPassword = encrytedPassword;
     }
- 
 }
-

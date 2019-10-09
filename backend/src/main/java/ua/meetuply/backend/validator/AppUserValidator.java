@@ -35,7 +35,6 @@ public class AppUserValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "NotEmpty.appUserForm.lastName");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty.appUserForm.password");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "confirmPassword", "NotEmpty.appUserForm.confirmPassword");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "role", "NotEmpty.appUserForm.role");
         
         if (!this.emailValidator.isValid(appUserForm.getEmail())) {
             // Invalid email.

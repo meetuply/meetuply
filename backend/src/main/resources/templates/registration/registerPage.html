@@ -70,19 +70,7 @@
                   <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">..</span>
                </td>
             </tr>
-            <tr>
-               <td>Role</td>
-               <td>
-                  <select th:field="*{role}">
-                     <option value=""> -- </option>
-                     <option value="User">User</option>
-                     <option value="Speaker">Speaker</option>
-                  </select>
-               </td>
-               <td>
-                  <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}">..</span>
-               </td>
-            </tr>
+
             <tr>
                <td>&nbsp;</td>
                <td>
