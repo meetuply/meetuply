@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import ua.meetuply.backend.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -28,18 +29,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
  
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        http
-        .authorizeRequests()
-            .antMatchers("/", "/register", "welcomePage", "/registerSuccessful").permitAll()
-            .anyRequest().authenticated()
-            .and()
-        .formLogin()
-            .loginPage("/login")
-            .permitAll()
-            .and()
-        .logout()
-            .permitAll();
+//
+//        http
+//        .authorizeRequests()
+//            .antMatchers("/", "/register", "welcomePage", "/registerSuccessful").permitAll()
+//            .anyRequest().authenticated()
+//            .and()
+//        .formLogin()
+//            .loginPage("/login")
+//            .permitAll()
+//            .and()
+//        .logout()
+//            .permitAll();
 
 //        http.httpBasic()
 //                .and()
@@ -68,7 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
     
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {
