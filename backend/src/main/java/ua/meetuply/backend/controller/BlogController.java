@@ -5,13 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.meetuply.backend.dao.BlogCommentDAO;
 import ua.meetuply.backend.dao.BlogPostDAO;
+import ua.meetuply.backend.formbean.AppUserForm;
 import ua.meetuply.backend.formbean.BlogCommentForm;
 import ua.meetuply.backend.formbean.BlogPostForm;
 import ua.meetuply.backend.model.BlogComment;
@@ -30,6 +29,21 @@ public class BlogController {
 
     @Autowired
     private BlogPostValidator blogPostValidator;
+
+    // Set a form validator
+    @InitBinder
+    protected void initBinder(WebDataBinder dataBinder) {
+        // Form target
+        Object target = dataBinder.getTarget();
+        if (target == null) {
+            return;
+        }
+        System.out.println("Target=" + target);
+
+        if (target.getClass() == BlogPostForm.class) {
+            dataBinder.setValidator(blogPostValidator);
+        }
+    }
 
     @RequestMapping("/blogPosts")
     public String viewBlogPosts(Model model) {
