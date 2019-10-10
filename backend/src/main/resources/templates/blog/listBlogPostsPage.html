@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:utext="${title}"></title>
+</head>
+
+<style>
+    table th, table td {
+        padding: 5px;
+    }
+    .message {
+        color: blue;
+    }
+</style>
+
+<body>
+
+<!-- Include _menu.html -->
+<th:block th:include="/_menu"></th:block>
+
+<h2>Blog Posts</h2>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Content</th>
+        <th>Time</th>
+        <th>Author</th>
+    </tr>
+    <tr th:each ="blogPost : ${blogPosts}">
+        <td th:utext="${blogPost.blogPostId}">...</td>
+        <td><a th:href="@{/blogPosts/${blogPost.blogPostId}}" th:utext="${blogPost.blogPostTitle}">...</a></td>
+        <td th:utext="${blogPost.blogPostContent}">...</td>
+        <td th:utext="${blogPost.time}">...</td>
+        <td th:utext="${blogPost.author.getFirstName()}">...</td>
+        <td th:utext="${blogPost.author.getLastName()}">...</td>
+        <td th:utext="${blogPost.author.getEmail()}">...</td>
+    </tr>
+</table>
+
+</body>
+</html>
