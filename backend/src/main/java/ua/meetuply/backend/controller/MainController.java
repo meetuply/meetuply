@@ -12,8 +12,10 @@ import ua.meetuply.backend.dao.AppUserDAO;
 import ua.meetuply.backend.dao.BlogCommentDAO;
 import ua.meetuply.backend.dao.BlogPostDAO;
 import ua.meetuply.backend.formbean.AppUserForm;
+import ua.meetuply.backend.formbean.BlogCommentForm;
 import ua.meetuply.backend.formbean.BlogPostForm;
 import ua.meetuply.backend.model.AppUser;
+import ua.meetuply.backend.model.BlogComment;
 import ua.meetuply.backend.model.BlogPost;
 import ua.meetuply.backend.validator.AppUserValidator;
 import ua.meetuply.backend.validator.BlogCommentValidator;
@@ -172,18 +174,18 @@ public class MainController {
    @Autowired
    private BlogCommentValidator blogCommentValidator;
 
-//   @RequestMapping(value = "/postComment", method = RequestMethod.GET)
-//   public String viewCurrentBlogPost(@PathVariable("postid") long postid, Model model) {
-//
-//
-//      List<BlogPost> list = blogPostDAO.getBlogPosts();
-//      model.addAttribute("blogPosts", list);
-//      return "blog/listBlogPostsPage";
-//
-//      BlogPostForm form = new BlogPostForm();
-//      model.addAttribute("blogPostForm", form);
-//      return "blog/newBlogPostPage";
-//   }
+   @RequestMapping(value = "/postComment/{postid}", method = RequestMethod.GET)
+   public String viewCurrentBlogPost(@PathVariable("postid") long postid, Model model) {
+      BlogPost post = blogPostDAO.getBlogPostById(postid);
+      model.addAttribute("blogPost", post);
+
+      List<BlogComment> list = blogCommentDAO.findBlogCommentsByPost(post);
+      model.addAttribute("blogComments", list);
+
+      BlogCommentForm form = new BlogCommentForm();
+      model.addAttribute("blogCommentForm", form);
+      return "blog/currentBlogPostPage";
+   }
 
 
  

@@ -54,6 +54,16 @@ public class BlogPostDAO {
         return res;
     }
 
+    public BlogPost getBlogPostById(Long id) {
+        Collection<BlogPost> bp = BLOG_POST_MAP.values();
+        for (BlogPost b : bp) {
+            if (b.getBlogPostId()==id) {
+                return b;
+            }
+        }
+        return null;
+    }
+
     public List<BlogPost> getBlogPosts() {
         List<BlogPost> list = new ArrayList<>();
 
