@@ -1,0 +1,46 @@
+.left_menu_item {
+  text-transform: uppercase;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding-left: 1%;
+  align-items: center;
+  color: black;
+  font-weight: 800;
+  border-left: 3px solid white;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+
+}
+
+.left_menu_item.selected {
+  border-left: 3px solid #2a8bf2;
+  color: #2a8bf2;
+
+}
+
+.left_menu_item.selected:hover {
+  border-left: 3px solid #2a8bf2;
+}
+
+.left_menu_item:hover {
+  background-color: rgb(208, 212, 221);
+  border-left: 3px solid rgb(208, 212, 221);
+}
+
+.left_menu_item * {
+  margin: 5px;
+}
+
+.left_menu_item #icon {
+  width: 24px;
+  height: 24px;
+  background-image: url(/assets/icons/apps.png);
+}
+
+/*
+if less than 900 then vertical
+*/

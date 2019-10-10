@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:utext="${title}"></title>
+</head>
+
+<style>
+    table th, table td {
+        padding: 5px;
+    }
+    .message {
+        color: blue;
+    }
+</style>
+
+<body>
+
+<div xmlns:th="http://www.thymeleaf.org"
+     style="border: 1px solid #ccc;padding:5px;margin-bottom:20px;">
+
+    <!-- Include _menu.html -->
+    <th:block th:include="/_menu"></th:block>
+
+
+</div>
+
+<h2>Blog Post</h2>
+
+<div th:utext="${blogPost.blogPostTitle}">...</div>
+<div th:utext="${blogPost.blogPostContent}">...</div>
+<div th:utext="${blogPost.time}">...</div>
+<div th:utext="${blogPost.author.getFirstName()}">...
+
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Content</th>
+        <th>Time</th>
+        <th>Author</th>
+    </tr>
+    <tr th:each ="blogComment : ${blogComments}">
+        <td th:utext="${blogComment.blogCommentContent}">...</td>
+        <td th:utext="${blogComment.time}">...</td>
+        <td th:utext="${blogComment.author.getFirstName()}">...</td>
+        <td th:utext="${blogComment.author.getLastName()}">...</td>
+        <td th:utext="${blogComment.author.getEmail()}">...</td>
+    </tr>
+</table>
+
+
+<form th:action="@{/postComment}" th:object="${blogCommentForm}" method="POST">
+    <table>
+        <tr>
+            <td>Content</td>
+            <td><input type="text" th:field="*{blogCommentContent}" /> </td>
+            <td>
+                <span th:if="${#fields.hasErrors('blogCommentContent')}" th:errors="*{blogCommentContent}">..</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <input type="submit" value="Post comment" />
+                <a th:href="@{/}">Cancel</a>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>

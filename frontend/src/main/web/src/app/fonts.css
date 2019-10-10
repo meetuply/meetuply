@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "FiraSans";
+  src: local("FiraSans"),
+    url(/assets/fonts/AvenirNextLTPro-Regular.ttf) format("truetype");
+}
+
+* {
+  font-family: FiraSans;
+}

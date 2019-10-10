@@ -1,0 +1,36 @@
+<div class='item'>
+	<div class='main'>
+		<div class='profile'>
+			<div class='avatar'>
+				<img src="assets/img/download.png">
+				<span>{{this.rate + "/5" }}</span>
+			</div>
+			<div class='info'>
+				<div class='name'>
+					{{this.name + " " + this.surname}}
+				</div>
+				<div class='location'>
+					<div class='icon'></div>
+					<div>{{this.location}}</div>
+				</div>
+			</div>
+		</div>
+		<div class='description'>
+			{{this.description}}
+		</div>
+	</div>
+	<div class='additional'>
+		<div class='languages'>
+			<div class='icon'>
+			</div>
+			<div>
+				<div *ngFor="let language of this.languages">{{language}}</div>
+			</div>
+		</div>
+		<div class='awards'>
+			<div class='icon'></div>
+			<div> {{this.awards}}</div>
+		</div>
+		<app-button [text]="followText()" href='ll' type='2' fontSize='20'></app-button>
+	</div>
+</div>

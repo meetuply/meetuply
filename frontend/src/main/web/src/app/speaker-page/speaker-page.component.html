@@ -1,0 +1,89 @@
+<app-left-menu></app-left-menu>
+<div class='content'>
+
+
+	<div class='main'>
+		<div class='profile'>
+
+			<div class='avatar'>
+				<img src="assets/img/download.png">
+				<span>{{this.rate + "/5" }}</span>
+			</div>
+
+			<div class='other'>
+				<div class='info'>
+					<div class='name'>
+						{{this.name + " " + this.surname}}
+					</div>
+					<div class='location'>
+						<div class='icon'></div>
+						<div>{{this.location}}</div>
+					</div>
+
+				</div>
+				<div class='additional'>
+					<app-button text='Follow' type='1' href='ok' fontSize='20'></app-button>
+					<app-button text='Message speaker' type='1' href='ok' fontSize='20'></app-button>
+				</div>
+				<div class='additional_info'>
+					<span>345 followers</span>
+				</div>
+
+			</div>
+
+
+		</div>
+
+		<div class='about'>
+			About me
+		</div>
+		<div class='description'>
+			{{this.description}}
+		</div>
+
+
+		<div class='about'>
+			History
+		</div>
+		<div class='histories'>
+
+			<div *ngFor="let history of this.histories;let i = index">
+				<div *ngIf="i < 4" class='history'>
+					<span class='title'>{{history.title}}</span>
+					<span class='contents'>{{history.contents}}</span>
+				</div>
+			</div>
+
+
+
+		</div>
+
+		<div class='about'>
+			Feedbacks
+		</div>
+		<div class='feedbacks'>
+
+			<div *ngFor="let feedback of this.feedbacks;let i = index">
+				<div *ngIf="i < 4" class='feedback'>
+
+					<div class='author'>
+						<img src="assets/img/download.png">
+						<span>{{feedback.name + " " + feedback.surname}}</span>
+
+					</div>
+
+					<span class='contents'>{{feedback.contents}}</span>
+
+					<div class='rating'>
+						<app-rating size='20' rating='{{feedback.rating}}'></app-rating>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class='extra'>
+
+	</div>
+</div>
