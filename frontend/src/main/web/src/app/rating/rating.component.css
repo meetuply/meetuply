@@ -1,0 +1,9 @@
+.rating {
+  display: inline;
+}
+
+.star {
+  display: inline-block;
+  background-size: cover;
+  background-image: url(/assets/icons/star_filled.png);
+}

@@ -1,0 +1,17 @@
+<div id='left_menu'>
+	<div id='avatar'>
+
+		<img src="assets/img/download.png">
+		<span>Pavlo Petrenko</span>
+
+	</div>
+	<div id='menu'>
+
+		<app-left-menu-item *ngFor="let item of this.menu_items" sel="{{selectedItem}}" icon="{{item.icon}}"
+			text="{{item.text}}" (clck)="childClicked($event)"></app-left-menu-item>
+	</div>
+	<div id='bottom_menu'>
+		<app-left-menu-item *ngFor="let item of this.bottom_menu_items" sel="{{false}}" icon="{{item.icon}}"
+			text="{{item.text}}" (clck)="childClicked($event)"></app-left-menu-item>
+	</div>
+</div>
