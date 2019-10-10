@@ -1,2 +1,1 @@
-web: java -Dserver.port=$PORT $JAVA_OPTS -jar backend/target/backend-0.0.1-SNAPSHOT.war
-
+web: mvn clean install & cd backend & mvn spring-boot:run
