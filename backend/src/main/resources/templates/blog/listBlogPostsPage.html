@@ -22,13 +22,15 @@
 
 <table border="1">
     <tr>
+        <th>ID</th>
         <th>Title</th>
         <th>Content</th>
         <th>Time</th>
         <th>Author</th>
     </tr>
     <tr th:each ="blogPost : ${blogPosts}">
-        <td><a th:href="@{/members}" th:utext="${blogPost.blogPostTitle}">...</a></td>
+        <td th:utext="${blogPost.blogPostId}">...</td>
+        <td><a th:href="@{/blogPosts/${blogPost.blogPostId}}" th:utext="${blogPost.blogPostTitle}">...</a></td>
         <td th:utext="${blogPost.blogPostContent}">...</td>
         <td th:utext="${blogPost.time}">...</td>
         <td th:utext="${blogPost.author.getFirstName()}">...</td>

@@ -99,7 +99,7 @@ public class BlogController {
     @Autowired
     private BlogCommentValidator blogCommentValidator;
 
-    @RequestMapping(value = "/postComment/{postid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/blogPosts/{postid}", method = RequestMethod.GET)
     public String viewCurrentBlogPost(@PathVariable("postid") long postid, Model model) {
         BlogPost post = blogPostDAO.getBlogPostById(postid);
         model.addAttribute("blogPost", post);
