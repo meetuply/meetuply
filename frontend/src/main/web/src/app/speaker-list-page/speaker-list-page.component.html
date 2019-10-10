@@ -1,0 +1,36 @@
+<app-left-menu></app-left-menu>
+<div class='content'>
+	<p class='title'>Speakers</p>
+
+	<div class='search_div'>
+		<div class='search_icon'></div>
+		<input type="text" name="search" placeholder="search" />
+	</div>
+
+	<div class="main">
+
+		<div class='left_column'>
+
+
+			<div *ngFor="let speaker_item of this.speaker_list;let i = index">
+
+				<app-speaker-list-item *ngIf="isOdd(i)" name="{{speaker_item.name}}" surname="{{speaker_item.surname}}"
+					description="{{speaker_item.description}}" [languages]="speaker_item.languages"
+					awards="{{speaker_item.awards}}" following="{{speaker_item.following}}" rate="{{speaker_item.rate}}"
+					location="{{speaker_item.location}}">
+				</app-speaker-list-item>
+			</div>
+		</div>
+		<div class='right_column'>
+			<div *ngFor="let speaker_item of this.speaker_list;let i = index">
+				<app-speaker-list-item *ngIf="!isOdd(i)" name="{{speaker_item.name}}" surname="{{speaker_item.surname}}"
+					description="{{speaker_item.description}}" [languages]="speaker_item.languages"
+					awards="{{speaker_item.awards}}" following="{{speaker_item.following}}" rate="{{speaker_item.rate}}"
+					location="{{speaker_item.location}}">
+				</app-speaker-list-item>
+			</div>
+		</div>
+	</div>
+
+
+</div>
