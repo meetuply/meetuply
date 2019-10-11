@@ -20,7 +20,8 @@ import ua.meetuply.backend.validator.BlogPostValidator;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/blog")
 public class BlogController {
     //Blog section
 
