@@ -18,7 +18,7 @@ export class RatingComponent implements OnInit {
 
   num(): Array<number> {
     let v = new Array();
-    for (let i = 0; i < this.rating; i++) {
+    for (let i = 0; i < Math.floor(this.rating); i++) {
       v.push(i);
     }
     return v;

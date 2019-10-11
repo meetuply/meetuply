@@ -17,7 +17,7 @@ export class SpeakerListItemComponent implements OnInit {
   @Input() awards: number;
   @Input() languages: Array<string>;
   @Input() description: string;
-
+  @Input() id: number;
 
   followText(): string {
 
@@ -32,7 +32,7 @@ export class SpeakerListItemComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    
+
   }
 
 }

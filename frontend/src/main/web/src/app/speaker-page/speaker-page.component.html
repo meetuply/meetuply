@@ -3,11 +3,14 @@
 
 
 	<div class='main'>
+    <div class='back' (click)="goBack()">
+
+  </div>
 		<div class='profile'>
 
 			<div class='avatar'>
 				<img src="assets/img/download.png">
-				<span>{{this.rate + "/5" }}</span>
+        <app-rating size='24' rating="{{this.rate}}"></app-rating>
 			</div>
 
 			<div class='other'>

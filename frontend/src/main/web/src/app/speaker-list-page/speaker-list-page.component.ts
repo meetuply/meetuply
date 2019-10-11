@@ -4,7 +4,7 @@ import { Speaker_list_item } from '../speaker_list_item';
 @Component({
   selector: 'app-speaker-list-page',
   templateUrl: './speaker-list-page.component.html',
-  styleUrls: ['./speaker-list-page.component.css']
+  styleUrls: ['./speaker-list-page.component.css', '../fonts.css']
 })
 export class SpeakerListPageComponent implements OnInit {
 

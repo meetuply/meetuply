@@ -1,5 +1,5 @@
-import { Component, OnInit, Output } from '@angular/core';
-import { Menu_item } from '../menu_item';
+import {Component, OnInit, Output} from '@angular/core';
+import {Menu_item} from '../menu_item';
 
 
 @Component({
@@ -15,15 +15,18 @@ export class LeftMenuComponent implements OnInit {
   @Output() selectedItem = "meetups";
 
   menu_items: Menu_item[] = [
-    { icon: "apps", text: 'meetups' },
-    { icon: "bell", text: 'other' },
-    { icon: "apps", text: 'meetups2' },
-    { icon: "bell", text: 'other2' }
+    {icon: "apps", text: 'dashboard'},
+    {icon: "globe", text: 'meetups'},
+    {icon: "user", text: 'speakers'},
+    {icon: "comment", text: 'chat'},
+    {icon: "calendar", text: 'blog'},
+    {icon: "bell", text: 'notifications'}
   ];
 
+
   bottom_menu_items: Menu_item[] = [
-    { icon: "apps", text: 'meetups' },
-    { icon: "bell", text: 'other' }
+    { icon: "apps", text: 'settings' },
+    { icon: "bell", text: 'log out' }
   ];
 
   constructor() {

@@ -3,7 +3,7 @@
 		<div class='profile'>
 			<div class='avatar'>
 				<img src="assets/img/download.png">
-				<span>{{this.rate + "/5" }}</span>
+        <app-rating size='16' rating="{{this.rate}}"></app-rating>
 			</div>
 			<div class='info'>
 				<div class='name'>
@@ -31,6 +31,6 @@
 			<div class='icon'></div>
 			<div> {{this.awards}}</div>
 		</div>
-		<app-button [text]="followText()" href='ll' type='2' fontSize='20'></app-button>
+    <app-button [text]="followText()" href="{{'speakers/' + this.id}}" type='2' fontSize='20'></app-button>
 	</div>
 </div>
