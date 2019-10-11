@@ -4,32 +4,28 @@ import java.time.LocalDateTime;
 
 public class BlogComment {
 
-    private Long blogCommentId;
+    private Integer blogCommentId;
     private String blogCommentContent;
     private LocalDateTime time;
-
     private BlogPost post;
-
     private AppUser author;
 
     public BlogComment() {
-
     }
 
-    public BlogComment(Long blogCommentId, String blogCommentContent, LocalDateTime time, BlogPost post, AppUser author) {
+    public BlogComment(String blogCommentContent, LocalDateTime time, BlogPost post, AppUser author) {
         super();
-        this.blogCommentId = blogCommentId;
         this.blogCommentContent=blogCommentContent;
         this.time = time;
         this.post=post;
         this.author = author;
     }
 
-    public Long getBlogCommentId() {
+    public Integer getBlogCommentId() {
         return blogCommentId;
     }
 
-    public void setBlogCommentId(Long blogCommentId) {
+    public void setBlogCommentId(Integer blogCommentId) {
         this.blogCommentId = blogCommentId;
     }
 
@@ -57,7 +53,7 @@ public class BlogComment {
         return author;
     }
 
-    public void setAuthorId(AppUser author) {
+    public void setAuthor(AppUser author) {
         this.author = author;
     }
 

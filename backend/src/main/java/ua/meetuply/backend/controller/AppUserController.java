@@ -8,19 +8,18 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ua.meetuply.backend.dao.AppUserDAO;
 import ua.meetuply.backend.formbean.AppUserForm;
 import ua.meetuply.backend.model.AppUser;
+import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.validator.AppUserValidator;
 
-import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("api/user")
 public class AppUserController {
 
     @Autowired
-    private AppUserDAO appUserDAO;
+    private AppUserService appUserService;
 
     @Autowired
     private AppUserValidator appUserValidator;
@@ -28,13 +27,11 @@ public class AppUserController {
     // Set a form validator
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder) {
-        // Form target
         Object target = dataBinder.getTarget();
         if (target == null) {
             return;
         }
         System.out.println("Target=" + target);
-
         if (target.getClass() == AppUserForm.class) {
             dataBinder.setValidator(appUserValidator);
         }
@@ -42,15 +39,12 @@ public class AppUserController {
 
     @RequestMapping("/members")
     public String viewMembers(Model model) {
-        List<AppUser> list = appUserDAO.getAppUsers();
-        model.addAttribute("members", list);
-
+        model.addAttribute("members", appUserService.getAppUsers());
         return "registration/membersPage";
     }
 
     @RequestMapping("/registerSuccessful")
     public String viewRegisterSuccessful(Model model) {
-
         return "registration/registerSuccessfulPage";
     }
 
@@ -62,7 +56,6 @@ public class AppUserController {
     // Show Register page.
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String viewRegister(Model model) {
-
         AppUserForm form = new AppUserForm();
         model.addAttribute("appUserForm", form);
         return "registration/registerPage";
@@ -76,23 +69,18 @@ public class AppUserController {
                                @ModelAttribute("appUserForm") @Validated AppUserForm appUserForm,
                                BindingResult result,
                                final RedirectAttributes redirectAttributes) {
-
-        // Validate result
         if (result.hasErrors()) {
             return "registration/registerPage";
         }
         AppUser newUser= null;
         try {
-            newUser = appUserDAO.createAppUser(appUserForm);
+            appUserService.createAppUser(appUserForm);
         }
-        // Other error!!
         catch (Exception e) {
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
             return "registration/registerPage";
         }
-
         redirectAttributes.addFlashAttribute("flashUser", newUser);
         return "redirect:/registerSuccessful";
     }
-
 }

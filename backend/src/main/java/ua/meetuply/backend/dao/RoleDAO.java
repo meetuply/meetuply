@@ -11,27 +11,46 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-public class RoleDAO implements RowMapper<Role> {
+public class RoleDAO implements IDAO<Role>, RowMapper<Role> {
 
     @Autowired
     public JdbcTemplate jdbcTemplate;
 
-    public Role getRoleById(Integer id) {
-        List<Role> role = jdbcTemplate.query("SELECT * FROM role WHERE uid = ?", new Object[] { id }, this);
-        return role.size() == 0 ? null : role.get(0);
-    }
-
     public Role getRoleByName(String name) {
-        System.out.println(jdbcTemplate == null? "NULL":"NO");
         List<Role> role = jdbcTemplate.query("SELECT * FROM role WHERE name = ?", new Object[] { name }, this);
         return role.size() == 0 ? null : role.get(0);
     }
 
     @Override
-    public Role mapRow(ResultSet resultSet, int i) throws SQLException {
+    public Role get(Integer id) {
+        List<Role> role = jdbcTemplate.query("SELECT * FROM role WHERE uid = ?", new Object[] { id }, this);
+        return role.size() == 0 ? null : role.get(0);
+    }
+
+    @Override
+    public List<Role> getAll() {
+        return null;
+    }
+
+    @Override
+    public void save(Role role) {
+
+    }
+
+    @Override
+    public void update(Role role) {
+
+    }
+
+    @Override
+    public void delete(Integer id) {
+
+    }
+
+    public Role mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return new Role(
-                resultSet.getString("name"),
-                resultSet.getInt("uid")
+                resultSet.getInt("uid"),
+                resultSet.getString("name")
         );
     }
 }

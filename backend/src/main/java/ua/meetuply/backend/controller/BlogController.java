@@ -8,30 +8,30 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ua.meetuply.backend.dao.BlogCommentDAO;
-import ua.meetuply.backend.dao.BlogPostDAO;
-import ua.meetuply.backend.formbean.AppUserForm;
 import ua.meetuply.backend.formbean.BlogCommentForm;
 import ua.meetuply.backend.formbean.BlogPostForm;
 import ua.meetuply.backend.model.BlogComment;
 import ua.meetuply.backend.model.BlogPost;
+import ua.meetuply.backend.service.BlogCommentService;
+import ua.meetuply.backend.service.BlogPostService;
 import ua.meetuply.backend.validator.BlogCommentValidator;
 import ua.meetuply.backend.validator.BlogPostValidator;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/blog")
+@RequestMapping("api")
+@Controller
 public class BlogController {
-    //Blog section
-
-    @Autowired
-    private BlogPostDAO blogPostDAO;
 
     @Autowired
     private BlogPostValidator blogPostValidator;
 
-    // Set a form validator
+    @Autowired
+    BlogPostService blogPostService;
+
+    @Autowired
+    BlogCommentService blogCommentService;
+
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder) {
         // Form target
@@ -49,7 +49,7 @@ public class BlogController {
     @RequestMapping("/blogPosts")
     public String viewBlogPosts(Model model) {
 
-        List<BlogPost> list = blogPostDAO.getBlogPosts();
+        List<BlogPost> list = blogPostService.getBlogPosts();
         model.addAttribute("blogPosts", list);
         return "blog/listBlogPostsPage";
     }
@@ -73,7 +73,7 @@ public class BlogController {
         }
         BlogPost bp= null;
         try {
-            bp = blogPostDAO.createBlogPost(blogPostForm);
+            bp = blogPostService.createBlogPost(blogPostForm);
         }
         catch (Exception e) {
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
@@ -94,22 +94,45 @@ public class BlogController {
 
     //Blog comment section
 
-    @Autowired
-    private BlogCommentDAO blogCommentDAO;
 
     @Autowired
     private BlogCommentValidator blogCommentValidator;
 
     @RequestMapping(value = "/blogPosts/{postid}", method = RequestMethod.GET)
-    public String viewCurrentBlogPost(@PathVariable("postid") long postid, Model model) {
-        BlogPost post = blogPostDAO.getBlogPostById(postid);
+    public String viewCurrentBlogPost(@PathVariable("postid") int postid, Model model) {
+        BlogPost post = blogPostService.getBlogPostById(postid);
         model.addAttribute("blogPost", post);
 
-        List<BlogComment> list = blogCommentDAO.findBlogCommentsByPost(post);
+        List<BlogComment> list = blogCommentService.getBlogCommentsByPostId(postid);
         model.addAttribute("blogComments", list);
 
         BlogCommentForm form = new BlogCommentForm();
         model.addAttribute("blogCommentForm", form);
         return "blog/currentBlogPostPage";
+    }
+
+    @RequestMapping(value = "/postComment/{postid}", method = RequestMethod.POST)
+    public String saveNewBlogComment(@PathVariable("postid") long postid,
+                                     Model model, //
+                                     @ModelAttribute("blogCommentForm") @Validated BlogCommentForm blogCommentForm, //
+                                     BindingResult result, //
+                                     final RedirectAttributes redirectAttributes) {
+
+        // Validate result
+        if (result.hasErrors()) {
+            return "blogPosts/{postid}";
+        }
+        BlogComment bc= null;
+        try {
+            bc = blogCommentService.createBlogComment(blogCommentForm);
+        }
+        catch (Exception e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            return "blogPosts";
+        }
+
+        redirectAttributes.addFlashAttribute("flashBlogComment", bc);
+
+        return "redirect:/blogPosts/{postid}";
     }
 }

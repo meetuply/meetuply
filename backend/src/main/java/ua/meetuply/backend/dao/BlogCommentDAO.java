@@ -1,85 +1,75 @@
 package ua.meetuply.backend.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ua.meetuply.backend.formbean.BlogCommentForm;
-import ua.meetuply.backend.formbean.BlogPostForm;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.BlogComment;
 import ua.meetuply.backend.model.BlogPost;
+import ua.meetuply.backend.service.BlogPostService;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Repository
-public class BlogCommentDAO {
-
-    private static final Map<Long, BlogComment> BLOG_COMMENT_MAP = new HashMap<>();
+public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment> {
 
     @Autowired
-    AppUserDAO appUserDAO;
+    private JdbcTemplate jdbcTemplate;
 
-    public Long getMaxBlogCommentId() {
-        long max = 0;
-        for (Long id : BLOG_COMMENT_MAP.keySet()) {
-            if (id > max) {
-                max = id;
-            }
-        }
-        return max;
+    @Autowired
+    BlogPostService blogPostService;
+
+    @Override
+    public BlogComment get(Integer id) {
+        List<BlogComment> blogComments = jdbcTemplate.query("SELECT * FROM comment WHERE uid = ?", new Object[] { id }, this);
+        return blogComments.size() == 0 ? null : blogComments.get(0);
     }
 
-    public List<BlogComment> findBlogCommentsByAuthor(AppUser author) {
-        Collection<BlogComment> bp = BLOG_COMMENT_MAP.values();
-        List<BlogComment> res = new ArrayList<>();
-
-        for (BlogComment b : bp) {
-            if (b.getAuthor().getUserId()==author.getUserId()) {
-                res.add(b);
-            }
-        }
-        return res;
+    @Override
+    public List<BlogComment> getAll() {
+        List<BlogComment> blogComments = jdbcTemplate.query("SELECT * FROM comment", this);
+        return blogComments;
     }
 
-    public List<BlogComment> findBlogCommentsByPost(BlogPost post) {
-        Collection<BlogComment> bp = BLOG_COMMENT_MAP.values();
-        List<BlogComment> res = new ArrayList<>();
-
-        for (BlogComment b : bp) {
-            if (b.getPost().equals(post)) {
-                res.add(b);
-            }
-        }
-        return res;
+    @Override
+    public void save(BlogComment blogComment) {
+        jdbcTemplate.update(
+                "INSERT INTO `post` (`date_time`, `content`, `post_id`, `author`) " +
+                        "VALUES (?, ?, ?, ?)",
+                blogComment.getTime(), blogComment.getBlogCommentContent(), blogComment.getPost().getBlogPostId(), blogComment.getAuthor().getUserId());
     }
 
-    public List<BlogComment> getBlogComments() {
-        List<BlogComment> list = new ArrayList<>();
+    @Override
+    public void update(BlogComment blogComment) {
 
-        list.addAll(BLOG_COMMENT_MAP.values());
-        return list;
     }
 
-    public BlogComment createBlogComment(BlogCommentForm form) {
-        Long blogCommentId = this.getMaxBlogCommentId() + 1;
+    @Override
+    public void delete(Integer id) {
 
-        String email="";
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            email = ((UserDetails)principal).getUsername();
-        } else {
-            email = principal.toString();
-        }
-
-        BlogComment bp = new BlogComment(blogCommentId, form.getBlogCommentContent(), //
-                LocalDateTime.now(), form.getPost(), appUserDAO.findAppUserByEmail(email));
-
-        BLOG_COMMENT_MAP.put(blogCommentId, bp);
-        return bp;
     }
 
+    public List<BlogComment> getCommentsByPostId(Integer id) {
+        List<BlogComment> blogComments = jdbcTemplate.query("SELECT * FROM comment WHERE post_id = ?", new Object[] { id }, this);
+        return blogComments;
+    }
+
+    @Override
+    public BlogComment mapRow(ResultSet resultSet, int i) throws SQLException {
+        BlogComment blogComment = new BlogComment();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        blogComment.setBlogCommentId(resultSet.getInt("uid"));
+        blogComment.setBlogCommentContent(resultSet.getString("content"));
+        blogComment.setTime(resultSet.getTimestamp("date_time").toLocalDateTime());
+        blogComment.setPost(blogPostService.getBlogPostById(resultSet.getInt("post_id")));
+        blogComment.setAuthor(null); //must be fixed according to new system
+//                appUserDAO.findAppUserById(resultSet.getInt("author"))
+        return blogComment;
+    }
 }
-
