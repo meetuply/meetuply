@@ -181,3 +181,4 @@ testem.log
 .DS_Store
 Thumbs.db
 /node/
+/backend/src/main/resources/static/

@@ -16,7 +16,7 @@ import ua.meetuply.backend.validator.AppUserValidator;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("api/user")
 public class AppUserController {
 
     @Autowired
