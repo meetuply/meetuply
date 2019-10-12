@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.BlogPostDAO;
 import ua.meetuply.backend.model.BlogPost;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -17,6 +18,8 @@ public class BlogPostService {
     AppUserService appUserService;
 
     public void createBlogPost(BlogPost blogPost) {
+        blogPost.setTime(LocalDateTime.now());
+        blogPost.setAuthor(appUserService.getUser(appUserService.getCurrentUserID()));
         blogPostDAO.save(blogPost);
     }
 

@@ -21,7 +21,7 @@ public class BlogController {
     @Autowired
     BlogPostService blogPostService;
 
-    @GetMapping("/all")
+    @GetMapping("/posts")
     public @ResponseBody Iterable<BlogPost> getAllBlogPosts() {
         return blogPostService.getBlogPosts();
     }
@@ -71,9 +71,10 @@ public class BlogController {
         return blogCommentService.getBlogCommentById(blogCommentId);
     }
 
-    @PostMapping("/comments/create")
-    public ResponseEntity<BlogComment> createNewBlogComment(@Valid @RequestBody BlogComment blogComment){
-        blogCommentService.createBlogComment(blogComment);
+    @PostMapping("/{post-id}/comments/create")
+    public ResponseEntity<BlogComment> createNewBlogComment(@PathVariable("post-id") Integer blogPostId,
+                                                            @Valid @RequestBody BlogComment blogComment){
+        blogCommentService.createBlogComment(blogComment, blogPostId);
         return ResponseEntity.ok().build();
     }
 
