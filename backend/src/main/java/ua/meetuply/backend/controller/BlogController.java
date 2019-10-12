@@ -2,125 +2,99 @@ package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ua.meetuply.backend.formbean.BlogCommentForm;
-import ua.meetuply.backend.formbean.BlogPostForm;
 import ua.meetuply.backend.model.BlogComment;
 import ua.meetuply.backend.model.BlogPost;
-import ua.meetuply.backend.model.Topic;
 import ua.meetuply.backend.service.BlogCommentService;
 import ua.meetuply.backend.service.BlogPostService;
-import ua.meetuply.backend.validator.BlogCommentValidator;
-import ua.meetuply.backend.validator.BlogPostValidator;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RequestMapping("api/blog")
 @Transactional
 @RestController
 public class BlogController {
 
+    //region Posts
+
     @Autowired
     BlogPostService blogPostService;
 
+    @GetMapping("/all")
+    public @ResponseBody Iterable<BlogPost> getAllBlogPosts() {
+        return blogPostService.getBlogPosts();
+    }
+
+    @GetMapping("/{post-id}")
+    public BlogPost getBlogPost(@PathVariable("post-id") Integer blogPostId) {
+        return blogPostService.getBlogPostById(blogPostId);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<BlogPost> createNewBlogPost(@Valid @RequestBody BlogPost blogPost){
+        blogPostService.createBlogPost(blogPost);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{post-id}")
+    public ResponseEntity<BlogPost> updateBlogPost(@PathVariable("post-id") Integer blogPostId,
+                                                   @RequestBody BlogPost blogPost) {
+        if (blogPostService.getBlogPostById(blogPostId) == null) {
+            ResponseEntity.badRequest().build();
+        }
+        blogPostService.updateBlogPost(blogPost);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{post-id}")
+    public ResponseEntity<BlogPost> deleteBlogPost(@PathVariable("post-id") Integer blogPostId){
+        if (blogPostService.getBlogPostById(blogPostId) == null) {
+            ResponseEntity.badRequest().build();
+        }
+        blogPostService.deleteBlogPost(blogPostId);
+        return ResponseEntity.ok().build();
+    }
+    //endregion
+
+    //region Comments
     @Autowired
     BlogCommentService blogCommentService;
 
-    @RequestMapping("/blogPosts")
-    public String viewBlogPosts(Model model) {
-
-        List<BlogPost> list = blogPostService.getBlogPosts();
-        model.addAttribute("blogPosts", list);
-        return "blog/listBlogPostsPage";
+    @GetMapping("/{post-id}/comments")
+    public @ResponseBody Iterable<BlogComment> getBlogPostComments(@PathVariable("post-id") Integer blogPostId) {
+        return blogCommentService.getBlogCommentsByPostId(blogPostId);
     }
 
-    @RequestMapping(value = "/newBlogPost", method = RequestMethod.GET)
-    public String viewNewBlogPost(Model model) {
-        BlogPostForm form = new BlogPostForm();
-        model.addAttribute("blogPostForm", form);
-        return "blog/newBlogPostPage";
+    @GetMapping("/comments/{comment-id}")
+    public BlogComment getBlogComment(@PathVariable("comment-id") Integer blogCommentId) {
+        return blogCommentService.getBlogCommentById(blogCommentId);
     }
 
-    @RequestMapping(value = "/newBlogPost", method = RequestMethod.POST)
-    public String saveNewBlogPost(Model model, //
-                                  @ModelAttribute("blogPostForm") @Validated BlogPostForm blogPostForm, //
-                                  BindingResult result, //
-                                  final RedirectAttributes redirectAttributes) {
-
-        // Validate result
-        if (result.hasErrors()) {
-            return "blog/newBlogPostPage";
-        }
-        BlogPost bp= null;
-        try {
-            bp = blogPostService.createBlogPost(blogPostForm);
-        }
-        catch (Exception e) {
-            model.addAttribute("errorMessage", "Error: " + e.getMessage());
-            return "blog/newBlogPostPage";
-        }
-
-        redirectAttributes.addFlashAttribute("flashBlogPost", bp);
-
-        return "redirect:/blogPosts";
+    @PostMapping("/comments/create")
+    public ResponseEntity<BlogComment> createNewBlogComment(@Valid @RequestBody BlogComment blogComment){
+        blogCommentService.createBlogComment(blogComment);
+        return ResponseEntity.ok().build();
     }
 
-//   @RequestMapping(value = "/email", method = RequestMethod.GET)
-//   @ResponseBody
-//   public String currentUserName(Principal principal) {
-//      return principal.getName();
-//   }
-
-
-    //Blog comment section
-
-
-    @Autowired
-    private BlogCommentValidator blogCommentValidator;
-
-    @RequestMapping(value = "/blogPosts/{postid}", method = RequestMethod.GET)
-    public String viewCurrentBlogPost(@PathVariable("postid") int postid, Model model) {
-        BlogPost post = blogPostService.getBlogPostById(postid);
-        model.addAttribute("blogPost", post);
-
-        List<BlogComment> list = blogCommentService.getBlogCommentsByPostId(postid);
-        model.addAttribute("blogComments", list);
-
-        BlogCommentForm form = new BlogCommentForm();
-        model.addAttribute("blogCommentForm", form);
-        return "blog/currentBlogPostPage";
+    @PutMapping("/comments/{comment-id}")
+    public ResponseEntity<BlogComment> updateBlogComment(@PathVariable("comment-id") Integer blogCommentId,
+                                                      @RequestBody BlogComment blogComment) {
+        if (blogCommentService.getBlogCommentById(blogCommentId) == null) {
+            ResponseEntity.badRequest().build();
+        }
+        blogCommentService.updateBlogComment(blogComment);
+        return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "/postComment/{postid}", method = RequestMethod.POST)
-    public String saveNewBlogComment(@PathVariable("postid") long postid,
-                                     Model model, //
-                                     @ModelAttribute("blogCommentForm") @Validated BlogCommentForm blogCommentForm, //
-                                     BindingResult result, //
-                                     final RedirectAttributes redirectAttributes) {
-
-        // Validate result
-        if (result.hasErrors()) {
-            return "blogPosts/{postid}";
+    @DeleteMapping("/comments/{comment-id}")
+    public ResponseEntity<BlogComment> deleteBlogComment(@PathVariable("comment-id") Integer blogCommentId){
+        if (blogCommentService.getBlogCommentById(blogCommentId) == null) {
+            ResponseEntity.badRequest().build();
         }
-        BlogComment bc= null;
-        try {
-            bc = blogCommentService.createBlogComment(blogCommentForm);
-        }
-        catch (Exception e) {
-            model.addAttribute("errorMessage", "Error: " + e.getMessage());
-            return "blogPosts";
-        }
-
-        redirectAttributes.addFlashAttribute("flashBlogComment", bc);
-
-        return "redirect:/blogPosts/{postid}";
+        blogCommentService.deleteBlogComment(blogCommentId);
+        return ResponseEntity.ok().build();
     }
+
+    //endregion
 }
