@@ -23,7 +23,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
 
     @Override
     public BlogPost get(Integer id) {
-        List<BlogPost> blogPosts = jdbcTemplate.query("SELECT * FROM post WHERE uid = ?", new Object[] { id }, this);
+        List<BlogPost> blogPosts = jdbcTemplate.query("SELECT * FROM post WHERE uid = ?", new Object[]{id}, this);
         return blogPosts.size() == 0 ? null : blogPosts.get(0);
     }
 
@@ -38,17 +38,20 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
         jdbcTemplate.update(
                 "INSERT INTO `post` (`title`, `date_time`, `content`, `author_id`) " +
                         "VALUES (?, ?, ?, ?)",
-                blogPost.getBlogPostTitle(), blogPost.getTime(), blogPost.getBlogPostContent(), blogPost.getAuthor().getUserId());
+                blogPost.getBlogPostTitle(),
+                blogPost.getTime(),
+                blogPost.getBlogPostContent(),
+                blogPost.getAuthor().getUserId());
     }
 
     @Override
     public void update(BlogPost blogPost) {
-
+        jdbcTemplate.update("UPDATE post SET content = ? AND title = ? WHERE uid = ?", blogPost.getBlogPostContent(), blogPost.getBlogPostTitle(), blogPost.getBlogPostId());
     }
 
     @Override
     public void delete(Integer id) {
-
+        jdbcTemplate.update("DELETE FROM post WHERE uid = ?", id);
     }
 
     @Override

@@ -1,11 +1,8 @@
 package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.BlogCommentDAO;
-import ua.meetuply.backend.formbean.BlogCommentForm;
 import ua.meetuply.backend.model.BlogComment;
 
 import java.util.ArrayList;
@@ -17,21 +14,16 @@ public class BlogCommentService {
     @Autowired
     BlogCommentDAO blogCommentDAO;
 
-    public BlogComment createBlogComment(BlogCommentForm form) {
-        String email="";
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            email = ((UserDetails)principal).getUsername();
-        } else {
-            email = principal.toString();
-        }
-        //todo: get user id and find user using service
-
-        BlogComment blogComment = new BlogComment(form.getBlogCommentContent(),
-                form.getTime(), null, null); //need to implement author and post
+    public void createBlogComment(BlogComment blogComment) {
         blogCommentDAO.save(blogComment);
-        return blogComment;
+    }
+
+    public void updateBlogComment(BlogComment blogComment){
+        blogCommentDAO.update(blogComment);
+    }
+
+    public void deleteBlogComment(Integer id){
+        blogCommentDAO.delete(id);
     }
 
     public List<BlogComment> getBlogComments() {
