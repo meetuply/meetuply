@@ -8,6 +8,7 @@ import ua.meetuply.backend.formbean.BlogCommentForm;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.BlogComment;
 import ua.meetuply.backend.model.BlogPost;
+import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.BlogPostService;
 
 import java.sql.ResultSet;
@@ -24,6 +25,9 @@ public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment>
 
     @Autowired
     BlogPostService blogPostService;
+
+    @Autowired
+    AppUserService appUserService;
 
     @Override
     public BlogComment get(Integer id) {
@@ -55,11 +59,6 @@ public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment>
 
     }
 
-    public List<BlogComment> getCommentsByPostId(Integer id) {
-        List<BlogComment> blogComments = jdbcTemplate.query("SELECT * FROM comment WHERE post_id = ?", new Object[] { id }, this);
-        return blogComments;
-    }
-
     @Override
     public BlogComment mapRow(ResultSet resultSet, int i) throws SQLException {
         BlogComment blogComment = new BlogComment();
@@ -68,8 +67,7 @@ public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment>
         blogComment.setBlogCommentContent(resultSet.getString("content"));
         blogComment.setTime(resultSet.getTimestamp("date_time").toLocalDateTime());
         blogComment.setPost(blogPostService.getBlogPostById(resultSet.getInt("post_id")));
-        blogComment.setAuthor(null); //must be fixed according to new system
-//                appUserDAO.findAppUserById(resultSet.getInt("author"))
+        blogComment.setAuthor(appUserService.getUser(resultSet.getInt("author")));
         return blogComment;
     }
 }

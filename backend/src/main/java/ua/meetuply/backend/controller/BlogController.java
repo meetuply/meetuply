@@ -1,7 +1,9 @@
 package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -12,39 +14,25 @@ import ua.meetuply.backend.formbean.BlogCommentForm;
 import ua.meetuply.backend.formbean.BlogPostForm;
 import ua.meetuply.backend.model.BlogComment;
 import ua.meetuply.backend.model.BlogPost;
+import ua.meetuply.backend.model.Topic;
 import ua.meetuply.backend.service.BlogCommentService;
 import ua.meetuply.backend.service.BlogPostService;
 import ua.meetuply.backend.validator.BlogCommentValidator;
 import ua.meetuply.backend.validator.BlogPostValidator;
 
+import javax.validation.Valid;
 import java.util.List;
 
-@RequestMapping("api")
-@Controller
+@RequestMapping("api/blog")
+@Transactional
+@RestController
 public class BlogController {
-
-    @Autowired
-    private BlogPostValidator blogPostValidator;
 
     @Autowired
     BlogPostService blogPostService;
 
     @Autowired
     BlogCommentService blogCommentService;
-
-    @InitBinder
-    protected void initBinder(WebDataBinder dataBinder) {
-        // Form target
-        Object target = dataBinder.getTarget();
-        if (target == null) {
-            return;
-        }
-        System.out.println("Target=" + target);
-
-        if (target.getClass() == BlogPostForm.class) {
-            dataBinder.setValidator(blogPostValidator);
-        }
-    }
 
     @RequestMapping("/blogPosts")
     public String viewBlogPosts(Model model) {

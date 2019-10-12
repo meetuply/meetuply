@@ -2,8 +2,6 @@ package ua.meetuply.backend.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +11,6 @@ import ua.meetuply.backend.formbean.MeetupForm;
 import ua.meetuply.backend.model.Meetup;
 import ua.meetuply.backend.service.MeetupService;
 
-import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,6 +53,6 @@ public class MeetupController {
 
     @GetMapping("/all")
     public String showAllMeetups() {
-        return meetupService.showAllMeetups().stream().map(Objects::toString).collect(Collectors.joining("\n "));
+        return meetupService.getAllMeetups().stream().map(Objects::toString).collect(Collectors.joining("\n "));
     }
 }

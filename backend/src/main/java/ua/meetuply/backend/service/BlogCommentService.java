@@ -8,6 +8,7 @@ import ua.meetuply.backend.dao.BlogCommentDAO;
 import ua.meetuply.backend.formbean.BlogCommentForm;
 import ua.meetuply.backend.model.BlogComment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -38,7 +39,13 @@ public class BlogCommentService {
     }
 
     public List<BlogComment> getBlogCommentsByPostId(Integer id) {
-        return blogCommentDAO.getCommentsByPostId(id);
+        List<BlogComment> blogComments = new ArrayList<>();
+        for (BlogComment bc : blogCommentDAO.getAll()){
+            if (bc.getPost().getBlogPostId()==id)
+                blogComments.add(bc);
+        }
+
+        return blogComments;
     }
 
     public BlogComment getBlogCommentById(Integer id) {return blogCommentDAO.get(id);}

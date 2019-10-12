@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ua.meetuply.backend.model.BlogPost;
+import ua.meetuply.backend.service.AppUserService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +17,9 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private AppUserService appUserService;
 
     @Override
     public BlogPost get(Integer id) {
@@ -55,8 +59,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
         blogPost.setBlogPostTitle(resultSet.getString("title"));
         blogPost.setBlogPostContent(resultSet.getString("content"));
         blogPost.setTime(resultSet.getTimestamp("date_time").toLocalDateTime());
-        blogPost.setAuthor(null); //must be fixed according to new system
-//                appUserDAO.findAppUserById(resultSet.getInt("author_id"))
+        blogPost.setAuthor(appUserService.getUser(resultSet.getInt("author_id")));
         return blogPost;
     }
 }

@@ -2,6 +2,8 @@ package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.AppUserDAO;
@@ -19,10 +21,10 @@ public class AppUserService {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    RoleDAO roleDao;
+    RoleDAO roleDAO;
 
     @Autowired
-    AppUserDAO appUserDao;
+    AppUserDAO appUserDAO;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -35,24 +37,40 @@ public class AppUserService {
                     form.getFirstName(), form.getLastName(), form.getRole(),
                     false,
                     encrytedPassword);
-            appUserDao.save(appUser);
+            appUserDAO.save(appUser);
             return appUser;
         } else {
-            Role userRole = roleDao.getRoleByName("user");
+            Role userRole = roleDAO.getRoleByName("user");
             AppUser appUser = new AppUser(null, form.getEmail(),
                     form.getFirstName(), form.getLastName(), userRole,
                     false,
                     encrytedPassword);
-            appUserDao.save(appUser);
+            appUserDAO.save(appUser);
             return appUser;
         }
     }
 
     public List<AppUser> getAppUsers() {
-        return appUserDao.getAppUsers();
+        return appUserDAO.getAppUsers();
     }
 
     public Integer getUserIdByEmail(String email){
-        return appUserDao.getUserIdByEmail(email);
+        return appUserDAO.getUserIdByEmail(email);
+    }
+
+    public AppUser getUser(Integer id){
+        return appUserDAO.get(id);
+    }
+
+    public int getCurrentUserID() {
+        String email = "";
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            email = ((UserDetails) principal).getUsername();
+        } else {
+            email = principal.toString();
+        }
+        int userId = appUserDAO.getUserIdByEmail(email);
+        return userId;
     }
 }
