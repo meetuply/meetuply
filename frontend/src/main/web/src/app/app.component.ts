@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
-import {AppService} from "./app.service";
 
 
 @Component({
@@ -12,13 +11,7 @@ import {AppService} from "./app.service";
 export class AppComponent {
   title = 'meetuply';
 
-  constructor(private app: AppService, private http: HttpClient, private router: Router) {
-    this.app.authenticate(undefined, undefined);
+  constructor( private http: HttpClient, private router: Router) {
   }
 
-  logout() {
-    this.http.post('logout', {}).subscribe();
-  }
-
-  authenticated() { return this.app.authenticated; }
 }

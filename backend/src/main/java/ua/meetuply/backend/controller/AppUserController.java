@@ -13,8 +13,10 @@ import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.validator.AppUserValidator;
 
+import java.security.Principal;
 
-@Controller
+
+@RestController
 @RequestMapping("api/user")
 public class AppUserController {
 
@@ -35,6 +37,11 @@ public class AppUserController {
         if (target.getClass() == AppUserForm.class) {
             dataBinder.setValidator(appUserValidator);
         }
+    }
+
+    @RequestMapping("/")
+    public Principal user(Principal user) {
+        return user;
     }
 
     @RequestMapping("/members")

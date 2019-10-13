@@ -12,6 +12,7 @@ export class LeftMenuItemComponent implements OnInit {
   @Input() icon: string;
   @Input() sel: string;
   @Output() clck = new EventEmitter<string>();
+  @Output() action: EventEmitter<any> = new EventEmitter();
 
   bg: string;
 
@@ -21,6 +22,7 @@ export class LeftMenuItemComponent implements OnInit {
   }
 
   onClick() {
+    if (this.action) this.action.emit(null);
 
     this.clck.emit(
       this.text
