@@ -34,20 +34,26 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
     //todo change userId to function
     @Override
     public void save(Meetup meetup) {
-        jdbcTemplate.update("INSERT INTO meetup (`place`, `title`, `registered_attendees`, `min_attendees`, `max_attendees`," +
-                        "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", meetup.getMeetupPlace(),
-                meetup.getMeetupTitle(), 0, meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
-                meetup.getMeetupStartDateTime(), meetup.getMeetupFinishDateTime(), 1, 2);
+        jdbcTemplate.update("INSERT INTO meetup (`uid`,`place`, `title`, `registered_attendees`, `min_attendees`, `max_attendees`," +
+                        "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", null,
+                meetup.getMeetupPlace(),
+                meetup.getMeetupTitle(), meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
+                meetup.getMeetupStartDateTime(), meetup.getMeetupFinishDateTime(), meetup.getStateId(), meetup.getSpeakerId());
     }
 
     @Override
     public void update(Meetup meetup) {
-
+        jdbcTemplate.update("UPDATE meetup SET place = ?, " +
+                "title = ?, registered_attendees = ?, min_attendees = ?," +
+                "max_attendees = ?, start_date_time = ?, finish_date_time = ?," +
+                "state_id = ?, speaker_id = ? WHERE uid = ?", meetup.getMeetupPlace(), meetup.getMeetupTitle(),
+                meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
+                meetup.getMeetupStartDateTime(), meetup.getMeetupFinishDateTime(), meetup.getStateId(), meetup.getSpeakerId());
     }
 
     @Override
     public void delete(Integer id) {
-
+        jdbcTemplate.update("DELETE FROM meetup WHERE uid = ?", id);
     }
 
     public Meetup mapRow(ResultSet rs, int rowNum) throws SQLException {
