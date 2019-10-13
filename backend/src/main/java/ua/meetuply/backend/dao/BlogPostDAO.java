@@ -46,7 +46,8 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
 
     @Override
     public void update(BlogPost blogPost) {
-        jdbcTemplate.update("UPDATE post SET content = ? AND title = ? WHERE uid = ?", blogPost.getBlogPostContent(), blogPost.getBlogPostTitle(), blogPost.getBlogPostId());
+        jdbcTemplate.update("UPDATE post SET content = ? AND title = ? WHERE uid = ?",
+                blogPost.getBlogPostContent(), blogPost.getBlogPostTitle(), blogPost.getBlogPostId());
     }
 
     @Override
