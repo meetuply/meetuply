@@ -55,7 +55,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
                 // TODO role_id
                 "INSERT INTO `user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                user.getEmail(), user.getEncrytedPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId()
+                user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId()
         );
     }
 

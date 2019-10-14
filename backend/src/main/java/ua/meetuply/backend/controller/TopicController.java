@@ -9,7 +9,7 @@ import ua.meetuply.backend.service.TopicService;
 
 import javax.validation.Valid;
 
-@RequestMapping("api/topic")
+@RequestMapping("api/topics")
 @Transactional
 @RestController
 public class TopicController {
@@ -17,7 +17,7 @@ public class TopicController {
 	@Autowired
 	private TopicService topicService;
 	
-	@GetMapping("/all")
+	@GetMapping()
     public @ResponseBody Iterable<Topic> getAllTopics() {
         return topicService.getAll();
     }

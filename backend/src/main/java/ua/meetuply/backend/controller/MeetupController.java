@@ -2,27 +2,25 @@ package ua.meetuply.backend.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ua.meetuply.backend.formbean.MeetupForm;
 import ua.meetuply.backend.model.Meetup;
+import ua.meetuply.backend.model.Topic;
 import ua.meetuply.backend.service.MeetupService;
 
-import java.security.Principal;
-import java.util.*;
-import java.util.stream.Collectors;
+import javax.validation.Valid;
 
-@RequestMapping("api/meetup")
+@RequestMapping("api/meetups")
 @RestController
 public class MeetupController {
 
     @Autowired
     MeetupService meetupService;
+
+    @GetMapping()
+    public @ResponseBody Iterable<Meetup> getAllMeetups(){
+            return meetupService.getAllMeetups();
+    }
 
     @GetMapping("/create")
     public String showForm() {
@@ -30,32 +28,31 @@ public class MeetupController {
     }
 
     @PostMapping("/create")
-    public String saveMeetup(Model model,
-                             @ModelAttribute("meetupForm") @Validated MeetupForm meetupForm,
-                             BindingResult result,
-                             final RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            result.getAllErrors().stream().map(Object::toString).forEach(r -> System.out.println(r + "\n"));
-            return "result has errors";
-        }
-        try {
-            meetupService.createMeetup(meetupForm);
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error: " + e.getMessage());
-            e.printStackTrace();
-            return "Exception again";
-        }
-        return "creation successfull";
+    public ResponseEntity<Meetup> createMeetup(@Valid @RequestBody Meetup meetup){
+        meetupService.createMeetup(meetup);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{meetupId}")
-    public String showOne(@PathVariable("meetupId") Integer meetupId) {
-        Meetup meetup = meetupService.getMeetupById(meetupId);
-        return meetup.toString();
+    public Meetup showOne(@PathVariable("meetupId") Integer meetupId) {
+        return meetupService.getMeetupById(meetupId);
     }
 
-    @GetMapping("/all")
-    public String showAllMeetups() {
-        return meetupService.showAllMeetups().stream().map(Objects::toString).collect(Collectors.joining("\n "));
+    @PutMapping("/{meetupId}")
+    public ResponseEntity<Topic> updateTopic(@PathVariable("topicId") Integer meetupId, @RequestBody Meetup meetup) {
+        if (meetupService.getMeetupById(meetupId) == null) {
+            ResponseEntity.badRequest().build();
+        }
+        meetupService.updateMeetup(meetup);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{meetupId}")
+    public ResponseEntity<Topic> deleteTopic(@PathVariable("meetupId") Integer meetupId){
+        if (meetupService.getMeetupById(meetupId) == null) {
+            ResponseEntity.badRequest().build();
+        }
+        meetupService.deleteMeetup(meetupId);
+        return ResponseEntity.ok().build();
     }
 }

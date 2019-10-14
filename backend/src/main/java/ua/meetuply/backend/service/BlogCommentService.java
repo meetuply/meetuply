@@ -1,13 +1,13 @@
 package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.BlogCommentDAO;
-import ua.meetuply.backend.formbean.BlogCommentForm;
+import ua.meetuply.backend.dao.BlogPostDAO;
 import ua.meetuply.backend.model.BlogComment;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -16,21 +16,25 @@ public class BlogCommentService {
     @Autowired
     BlogCommentDAO blogCommentDAO;
 
-    public BlogComment createBlogComment(BlogCommentForm form) {
-        String email="";
+    @Autowired
+    BlogPostDAO blogPostDAO;
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            email = ((UserDetails)principal).getUsername();
-        } else {
-            email = principal.toString();
-        }
-        //todo: get user id and find user using service
+    @Autowired
+    AppUserService appUserService;
 
-        BlogComment blogComment = new BlogComment(form.getBlogCommentContent(),
-                form.getTime(), null, null); //need to implement author and post
+    public void createBlogComment(BlogComment blogComment, Integer blogPostId) {
+        blogComment.setTime(LocalDateTime.now());
+        blogComment.setAuthor(appUserService.getUser(appUserService.getCurrentUserID()));
+        blogComment.setPost(blogPostDAO.get(blogPostId));
         blogCommentDAO.save(blogComment);
-        return blogComment;
+    }
+
+    public void updateBlogComment(BlogComment blogComment){
+        blogCommentDAO.update(blogComment);
+    }
+
+    public void deleteBlogComment(Integer id){
+        blogCommentDAO.delete(id);
     }
 
     public List<BlogComment> getBlogComments() {
@@ -38,7 +42,13 @@ public class BlogCommentService {
     }
 
     public List<BlogComment> getBlogCommentsByPostId(Integer id) {
-        return blogCommentDAO.getCommentsByPostId(id);
+        List<BlogComment> blogComments = new ArrayList<>();
+        for (BlogComment bc : blogCommentDAO.getAll()){
+            if (bc.getPost().getBlogPostId()==id)
+                blogComments.add(bc);
+        }
+
+        return blogComments;
     }
 
     public BlogComment getBlogCommentById(Integer id) {return blogCommentDAO.get(id);}
