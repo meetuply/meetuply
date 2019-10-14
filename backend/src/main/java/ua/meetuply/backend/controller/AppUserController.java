@@ -14,7 +14,7 @@ import ua.meetuply.backend.validator.AppUserValidator;
 
 import javax.validation.Valid;
 import javax.annotation.Resource;
-
+import java.security.Principal;
 
 
 @RestController
