@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {AuthenticationService} from "../_services";
 import {first} from "rxjs/operators";
 
@@ -12,11 +12,19 @@ export class LoginComponent {
 
   loading = false;
   error = '';
+  returnUrl: string;
 
   credentials = {username: '', password: ''};
 
   constructor( private router: Router,
+               private route: ActivatedRoute,
                private authenticationService: AuthenticationService) {
+  }
+
+  ngOnInit() {
+    // get return url from route parameters or default to '/'
+
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
   }
 
   login() {
@@ -24,7 +32,7 @@ export class LoginComponent {
       .pipe(first())
       .subscribe(
         data => {
-          this.router.navigate(["/speakers"]);
+          this.router.navigate([this.returnUrl ? this.returnUrl : "/speakers"]);
         },
         error => {
           this.error = error;

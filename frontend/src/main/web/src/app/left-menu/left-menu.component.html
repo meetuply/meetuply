@@ -7,11 +7,12 @@
 	</div>
 	<div id='menu'>
 
-		<app-left-menu-item *ngFor="let item of this.menu_items" sel="{{selectedItem}}" icon="{{item.icon}}"
-			text="{{item.text}}" (clck)="childClicked($event)" (action)="item.action()"></app-left-menu-item>
+		<app-left-menu-item *ngFor="let item of this.menu_items" sel="{{selectedItem}}" [item]="item"
+                        (clck)="childClicked($event)"></app-left-menu-item>
 	</div>
 	<div id='bottom_menu'>
-		<app-left-menu-item *ngFor="let item of this.bottom_menu_items" sel="{{false}}" icon="{{item.icon}}"
-			text="{{item.text}}" (clck)="childClicked($event)" (action)="item.action()"></app-left-menu-item>
+		<app-left-menu-item *ngFor="let item of this.bottom_menu_items" sel="{{false}}" [item]="item"
+                        (clck)="childClicked($event)"></app-left-menu-item>
+    <app-logout-menu-item sel="{{false}}" (clck)="childClicked($event)"></app-logout-menu-item>
 	</div>
 </div>

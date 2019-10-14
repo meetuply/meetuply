@@ -15,7 +15,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from "@angular/forms";
 import { RatingComponent } from "./rating/rating.component";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {BasicAuthInterceptor, ErrorInterceptor} from "./_helpers";
+import {BasicAuthInterceptor, ErrorInterceptor, XhrInterceptor} from "./_helpers";
+import { LogoutMenuItemComponent } from './left-menu-item/logout-menu-item/logout-menu-item.component';
+
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import {BasicAuthInterceptor, ErrorInterceptor} from "./_helpers";
     SpeakerListPageComponent,
     SpeakerListItemComponent,
     RatingComponent,
+    LogoutMenuItemComponent,
 
   ],
   imports: [
@@ -40,7 +43,8 @@ import {BasicAuthInterceptor, ErrorInterceptor} from "./_helpers";
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }],
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
