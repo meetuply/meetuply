@@ -12,21 +12,12 @@ import { SpeakerPageComponent } from './speaker-page/speaker-page.component';
 import { SpeakerListPageComponent } from './speaker-list-page/speaker-list-page.component';
 import { SpeakerListItemComponent } from './speaker-list-item/speaker-list-item.component';
 import { AppRoutingModule } from './app-routing.module';
-import {FormsModule} from "@angular/forms";
-import {RatingComponent} from "./rating/rating.component";
-import {AppService} from "./app.service";
-import {HTTP_INTERCEPTORS, HttpClientModule, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
+import { FormsModule } from "@angular/forms";
+import { RatingComponent } from "./rating/rating.component";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {BasicAuthInterceptor, ErrorInterceptor, XhrInterceptor} from "./_helpers";
+import { LogoutMenuItemComponent } from './left-menu-item/logout-menu-item/logout-menu-item.component';
 
-@Injectable()
-export class XhrInterceptor implements HttpInterceptor {
-
-  intercept(req: HttpRequest<any>, next: HttpHandler) {
-    const xhr = req.clone({
-      headers: req.headers.set('X-Requested-With', 'XMLHttpRequest')
-    });
-    return next.handle(xhr);
-  }
-}
 
 @NgModule({
   declarations: [
@@ -41,6 +32,7 @@ export class XhrInterceptor implements HttpInterceptor {
     SpeakerListPageComponent,
     SpeakerListItemComponent,
     RatingComponent,
+    LogoutMenuItemComponent,
 
   ],
   imports: [
@@ -49,7 +41,10 @@ export class XhrInterceptor implements HttpInterceptor {
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [AppService, { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

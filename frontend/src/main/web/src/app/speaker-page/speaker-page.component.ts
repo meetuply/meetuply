@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { History } from '../history'
 import { Feedback } from "../feedback"
 import { Location } from '@angular/common';
+import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-speaker-page',
@@ -64,7 +66,8 @@ export class SpeakerPageComponent implements OnInit {
     this._location.back();
   }
 
-  constructor(private _location: Location) { }
+  constructor(private _location: Location, private router: Router) {
+  }
 
   ngOnInit() {
   }

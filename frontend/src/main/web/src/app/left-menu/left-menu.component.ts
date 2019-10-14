@@ -1,5 +1,8 @@
 import {Component, OnInit, Output} from '@angular/core';
 import {Menu_item} from '../menu_item';
+import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
+import {AuthenticationService} from "../_services";
 
 
 @Component({
@@ -15,23 +18,21 @@ export class LeftMenuComponent implements OnInit {
   @Output() selectedItem = "meetups";
 
   menu_items: Menu_item[] = [
-    {icon: "apps", text: 'dashboard'},
-    {icon: "globe", text: 'meetups'},
-    {icon: "user", text: 'speakers'},
-    {icon: "comment", text: 'chat'},
-    {icon: "calendar", text: 'blog'},
-    {icon: "bell", text: 'notifications'}
+    {icon: "apps.png", text: 'dashboard', action: null},
+    {icon: "globe.png", text: 'meetups', action: null},
+    {icon: "user.png", text: 'speakers', action: null},
+    {icon: "comment.png", text: 'chat', action: null},
+    {icon: "calendar.png", text: 'blog', action: null},
+    {icon: "bell.png", text: 'notifications', action: null}
   ];
 
 
   bottom_menu_items: Menu_item[] = [
-    { icon: "apps", text: 'settings' },
-    { icon: "bell", text: 'log out' }
+    { icon: "settings.svg", text: 'settings', action: null },
+    // { icon: "bell", text: 'log out', action: null}
   ];
 
-  constructor() {
-
-  }
+  constructor(private http: HttpClient, private router: Router, private authenticationService: AuthenticationService) {}
 
   childClicked($event) {
     this.selectedItem = $event;
@@ -40,4 +41,7 @@ export class LeftMenuComponent implements OnInit {
   ngOnInit() {
   }
 
+  logot() {
+    this.authenticationService.logout();
+  }
 }
