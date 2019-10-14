@@ -17,6 +17,7 @@ import { RatingComponent } from "./rating/rating.component";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {BasicAuthInterceptor, ErrorInterceptor, XhrInterceptor} from "./_helpers";
 import { LogoutMenuItemComponent } from './left-menu-item/logout-menu-item/logout-menu-item.component';
+import {MustMatchDirective} from "./_helpers/validator/must-match.directive";
 
 
 @NgModule({
@@ -33,7 +34,7 @@ import { LogoutMenuItemComponent } from './left-menu-item/logout-menu-item/logou
     SpeakerListItemComponent,
     RatingComponent,
     LogoutMenuItemComponent,
-
+    MustMatchDirective,
   ],
   imports: [
     BrowserModule,

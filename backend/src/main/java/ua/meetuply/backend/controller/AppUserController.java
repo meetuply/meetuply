@@ -75,7 +75,7 @@ public class AppUserController {
     @PostMapping("/register")
     public ResponseEntity<AppUser> registerUser(@Valid @RequestBody AppUser appUser) {
         appUserService.createAppUser(appUser);
-        emailService.sendEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
+//        emailService.sendEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
         return ResponseEntity.ok().build();
     }
 }
