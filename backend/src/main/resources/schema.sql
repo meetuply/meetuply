@@ -87,9 +87,9 @@ CREATE TABLE `user`
     `password`               varchar(72)      NOT NULL,
     `firstname`              varchar(100)     NOT NULL,
     `surname`                varchar(100)     NOT NULL,
-    `registration_confirmed` tinyint(1)          NOT NULL,
-    `is_deactivated`         tinyint(1)          NOT NULL,
-    `allow_notifications`    tinyint(1)          NOT NULL,
+    `registration_confirmed` tinyint(1)       NOT NULL,
+    `is_deactivated`         tinyint(1)       NOT NULL,
+    `allow_notifications`    tinyint(1)       NOT NULL,
     `role_id`                integer unsigned NOT NULL,
 
     PRIMARY KEY (`uid`),
@@ -299,7 +299,7 @@ CREATE TABLE `notification`
 (
     `uid`         integer          NOT NULL AUTO_INCREMENT,
     `date_time`   datetime         NOT NULL,
-    `is_read`     tinyint(1)          NOT NULL,
+    `is_read`     tinyint(1)       NOT NULL,
     `receiver_id` integer unsigned NOT NULL,
     `template_id` integer          NOT NULL,
 
@@ -423,6 +423,20 @@ CREATE TABLE `filter_topic`
         ON DELETE CASCADE
         ON UPDATE CASCADE,
     FOREIGN KEY (`topic_id`) REFERENCES `topic` (`uid`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- ************************************** `confirmation_token`
+CREATE TABLE `confirmation_token`
+(
+    `uid`         integer unsigned NOT NULL AUTO_INCREMENT,
+    `token`       varchar(255)     NULL,
+    `create_date` DATETIME         NULL,
+    `user_id`     integer unsigned NOT NULL,
+
+    PRIMARY KEY (`uid`),
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`uid`)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );

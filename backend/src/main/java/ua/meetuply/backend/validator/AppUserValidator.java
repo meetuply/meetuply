@@ -30,7 +30,6 @@ public class AppUserValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "NotEmpty.appUser.firstName");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "NotEmpty.appUser.lastName");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty.appUser.password");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "confirmedPassword", "NotEmpty.appUser.confirmedPassword");
 
         if (!this.emailValidator.isValid(appUser.getEmail())) {
             errors.rejectValue("email", "Pattern.appUser.email");
@@ -42,9 +41,7 @@ public class AppUserValidator implements Validator {
         }
 
         if (!errors.hasErrors()) {
-            if (!appUser.getConfirmedPassword().equals(appUser.getPassword())) {
-                errors.rejectValue("confirmedPassword", "Match.appUser.confirmedPassword");
-            }
+
         }
     }
 }

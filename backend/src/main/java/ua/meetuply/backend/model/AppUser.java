@@ -11,12 +11,13 @@ public class AppUser {
     private Role role;
     private boolean deactivated;
     private String password;
-    private String confirmedPassword;
+    private boolean registration_confirmed;
+    private boolean allow_notifications;
 
     public AppUser() {
     }
 
-    public AppUser(Integer userId, String email, String firstName, String lastName, Role role, boolean deactivated, String password) {
+    public AppUser(Integer userId, String email, String firstName, String lastName, Role role, boolean deactivated, boolean registration_confirmed, boolean allow_notifications, String password) {
         this.userId = userId;
         this.email = email;
         this.firstName = firstName;
@@ -24,18 +25,8 @@ public class AppUser {
         this.role = role;
         this.deactivated = deactivated;
         this.password = password;
-    }
-
-    public AppUser(Integer userId, String email, String firstName, String lastName,
-                   Role role, boolean deactivated, String password, String confirmedPassword) {
-        this.userId = userId;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.role = role;
-        this.deactivated = deactivated;
-        this.password = password;
-        this.confirmedPassword = confirmedPassword;
+        this.registration_confirmed = registration_confirmed;
+        this.allow_notifications = allow_notifications;
     }
 
     public Integer getUserId() {
@@ -94,12 +85,20 @@ public class AppUser {
         this.password = password;
     }
 
-    public String getConfirmedPassword() {
-        return confirmedPassword;
+    public boolean isRegistration_confirmed() {
+        return registration_confirmed;
     }
 
-    public void setConfirmedPassword(String confirmedPassword) {
-        this.confirmedPassword = confirmedPassword;
+    public void setRegistration_confirmed(boolean registration_confirmed) {
+        this.registration_confirmed = registration_confirmed;
+    }
+
+    public boolean isAllow_notifications() {
+        return allow_notifications;
+    }
+
+    public void setAllow_notifications(boolean allow_notifications) {
+        this.allow_notifications = allow_notifications;
     }
 
     @Override

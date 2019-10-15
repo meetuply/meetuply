@@ -27,7 +27,9 @@ public class AppUserService {
     public void createAppUser(AppUser appUser) {
         String encrytedPassword = this.passwordEncoder.encode(appUser.getPassword());
         appUser.setPassword(encrytedPassword);
-        appUser.setConfirmedPassword("");
+        appUser.setDeactivated(false);
+        appUser.setAllow_notifications(true);
+        appUser.setRegistration_confirmed(false);
         Role role = appUser.getRole();
         if (role == null) {
             Role userRole = roleDAO.getRoleByName("user");
@@ -58,5 +60,14 @@ public class AppUserService {
         }
         int userId = appUserDAO.getUserIdByEmail(email);
         return userId;
+    }
+
+    public AppUser getUserByEmail(String email){
+        return appUserDAO.getUserByEmail(email);
+    }
+
+    public void activateUser(AppUser user) {
+        user.setRegistration_confirmed(true);
+        appUserDAO.update(user);
     }
 }
