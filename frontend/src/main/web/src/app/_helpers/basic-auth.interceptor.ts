@@ -17,6 +17,7 @@ export class BasicAuthInterceptor implements HttpInterceptor {
                     Authorization: `Basic ${authData}`
                 }
             });
+
         }
 
         return next.handle(request);

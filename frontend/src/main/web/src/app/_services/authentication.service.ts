@@ -37,6 +37,9 @@ export class AuthenticationService {
         // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
+        localStorage.removeItem('authData');
+        this.authDataSubject.next(authData);
+
         return user;
       }));
   }

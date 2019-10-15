@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import ua.meetuply.backend.model.ConfirmationToken;
+import ua.meetuply.backend.service.ConfirmationService;
 import ua.meetuply.backend.service.EmailService;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.service.AppUserService;
@@ -26,6 +28,9 @@ public class AppUserController {
 
     @Autowired
     private AppUserService appUserService;
+
+    @Autowired
+    private ConfirmationService confirmationService;
 
     @Autowired
     private AppUserValidator appUserValidator;
@@ -74,7 +79,26 @@ public class AppUserController {
 
     @PostMapping("/register")
     public ResponseEntity<AppUser> registerUser(@Valid @RequestBody AppUser appUser) {
+
+
         appUserService.createAppUser(appUser);
+        ConfirmationToken ct = confirmationService.generateToken(appUserService.getUserByEmail(appUser.getEmail()));
+
+        //TODO confirmation email
+//        emailService.sendEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/confirm")
+    public ResponseEntity<AppUser> confirmUser(@RequestParam("token") String confirmationToken) {
+
+        if (confirmationService.confirmUser(confirmationToken)) {
+            // TODO welcome email
+        } else {
+            //TODO "The link is invalid or broken!"
+        }
+
+
 //        emailService.sendEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
         return ResponseEntity.ok().build();
     }
