@@ -2,7 +2,6 @@ package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,7 @@ import java.security.Principal;
 @RequestMapping("api/user")
 public class AppUserController {
 
-    private static final String GREETING_TEMPLATE_NAME = "templates/email-template.ftl";
+    private static final String GREETING_TEMPLATE_NAME = "email-template.ftl";
     private static final String GREETING_SUBJECT = "Greeting";
 
     @Autowired
@@ -85,7 +84,7 @@ public class AppUserController {
         ConfirmationToken ct = confirmationService.generateToken(appUserService.getUserByEmail(appUser.getEmail()));
 
         //TODO confirmation email
-//        emailService.sendEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
+        emailService.sendEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
         return ResponseEntity.ok().build();
     }
 
@@ -97,7 +96,6 @@ public class AppUserController {
         } else {
             //TODO "The link is invalid or broken!"
         }
-
 
 //        emailService.sendEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
         return ResponseEntity.ok().build();

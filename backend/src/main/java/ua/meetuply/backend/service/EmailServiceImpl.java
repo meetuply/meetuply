@@ -8,6 +8,8 @@ import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import ua.meetuply.backend.model.Mail;
@@ -22,6 +24,7 @@ import java.util.Map;
 
 
 @Service
+@EnableAsync
 public class EmailServiceImpl implements EmailService {
 
     private static final String UTF_8 = "UTF-8";
@@ -36,6 +39,7 @@ public class EmailServiceImpl implements EmailService {
     private Configuration getFreeMarkerConfiguration;
 
     @Override
+    @Async
     public void sendEmail(String receiver, String templateName, String subject) {
         Mail mail = prepareMail(receiver, subject);
 
