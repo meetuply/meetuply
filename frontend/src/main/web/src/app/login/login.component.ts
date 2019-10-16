@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {AppService} from "../app.service";
-import {HttpClient} from "@angular/common/http";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {AuthenticationService} from "../_services";
+import {first} from "rxjs/operators";
 
 @Component({
   selector: 'app-login',
@@ -10,16 +10,33 @@ import {Router} from "@angular/router";
 })
 export class LoginComponent {
 
+  loading = false;
+  error = '';
+  returnUrl: string;
+
   credentials = {username: '', password: ''};
 
-  constructor(private app: AppService, private http: HttpClient, private router: Router) {
+  constructor( private router: Router,
+               private route: ActivatedRoute,
+               private authenticationService: AuthenticationService) {
+  }
+
+  ngOnInit() {
+    // get return url from route parameters or default to '/'
+
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
   }
 
   login() {
-    // this.app.authenticate(this.credentials, () => {
-    //   this.router.navigateByUrl('/');
-    // });
-    this.router.navigateByUrl('/speaker');
-    return false;
+    this.authenticationService.login(this.credentials.username, this.credentials.password)
+      .pipe(first())
+      .subscribe(
+        data => {
+          this.router.navigate([this.returnUrl ? this.returnUrl : "/speakers"]);
+        },
+        error => {
+          this.error = error;
+          this.loading = false;
+        });
   }
 }

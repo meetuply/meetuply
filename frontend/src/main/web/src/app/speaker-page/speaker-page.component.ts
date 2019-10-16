@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { History } from '../history'
 import { Feedback } from "../feedback"
+import { Location } from '@angular/common';
+import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-speaker-page',
   templateUrl: './speaker-page.component.html',
-  styleUrls: ['./speaker-page.component.css']
+  styleUrls: ['./speaker-page.component.css', '../fonts.css']
 })
 export class SpeakerPageComponent implements OnInit {
 
@@ -59,7 +62,12 @@ export class SpeakerPageComponent implements OnInit {
 
   description = "Aenean rhoncus semper faucibus. Mauris tincidunt lobortis nulla, a blandit nulla laoreet vitae. Maecenas eget orci laoreet, suscipit elit ut, aliquam turpis. Aenean ornare varius augue nec scelerisque. Phasellus turpis leo, venenatis sit amet imperdiet sit amet, aliquam sit amet est. Ut finibus elit a libero semper, ac faucibus lectus luctus. Cras vestibulum nulla quis arcu faucibus, sed molestie ex iaculis. Phasellus facilisis ipsum magna, quis pellentesque erat auctor sit amet. Aenean blandit magna quis est elementum elementum. Aenean tincidunt justo eu erat maximus aliquet. Etiam laoreet velit nec turpis vulputate elementum. Nunc convallis, tortor quis ultricies fringilla, magna tellus fringilla enim, ut gravida justo purus et lacus."
 
-  constructor() { }
+  goBack() {
+    this._location.back();
+  }
+
+  constructor(private _location: Location, private router: Router) {
+  }
 
   ngOnInit() {
   }

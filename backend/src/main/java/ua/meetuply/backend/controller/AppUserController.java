@@ -1,58 +1,68 @@
 package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ua.meetuply.backend.dao.AppUserDAO;
-import ua.meetuply.backend.formbean.AppUserForm;
+import org.springframework.web.bind.annotation.*;
+import ua.meetuply.backend.model.ConfirmationToken;
+import ua.meetuply.backend.service.ConfirmationService;
+import ua.meetuply.backend.service.EmailService;
 import ua.meetuply.backend.model.AppUser;
+import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.validator.AppUserValidator;
 
-import java.util.List;
 
-@Controller
+import javax.validation.Valid;
+import javax.annotation.Resource;
+import java.security.Principal;
+
+
+@RestController
+@RequestMapping("api/user")
 public class AppUserController {
 
+    private static final String GREETING_TEMPLATE_NAME = "email-template.ftl";
+    private static final String GREETING_SUBJECT = "Greeting";
+
     @Autowired
-    private AppUserDAO appUserDAO;
+    private AppUserService appUserService;
+
+    @Autowired
+    private ConfirmationService confirmationService;
 
     @Autowired
     private AppUserValidator appUserValidator;
 
-    // Set a form validator
+    @Resource(name = "emailServiceImpl")
+    private EmailService emailService;
+
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder) {
-        // Form target
         Object target = dataBinder.getTarget();
         if (target == null) {
             return;
         }
         System.out.println("Target=" + target);
-
-        if (target.getClass() == AppUserForm.class) {
+        if (target.getClass() == AppUser.class) {
             dataBinder.setValidator(appUserValidator);
         }
     }
 
-    @RequestMapping("/members")
-    public String viewMembers(Model model) {
-        List<AppUser> list = appUserDAO.getAppUsers();
-        model.addAttribute("members", list);
-
-        return "registration/membersPage";
+    @RequestMapping("/")
+    public Principal user(Principal user) {
+        return user;
     }
+
+    @RequestMapping("/members")
+    @GetMapping()
+    public @ResponseBody Iterable<AppUser> getAllMeetups(){
+        return appUserService.getAppUsers();
+    }
+
 
     @RequestMapping("/registerSuccessful")
     public String viewRegisterSuccessful(Model model) {
-
         return "registration/registerSuccessfulPage";
     }
 
@@ -61,40 +71,33 @@ public class AppUserController {
         return "registration/loginPage";
     }
 
-    // Show Register page.
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String viewRegister(Model model) {
-
-        AppUserForm form = new AppUserForm();
-        model.addAttribute("appUserForm", form);
+    @GetMapping("/register")
+    public String viewRegister() {
         return "registration/registerPage";
     }
 
-    // This method is called to save the registration information.
-    // @Validated: To ensure that this Form
-    // has been Validated before this method is invoked.
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String saveRegister(Model model,
-                               @ModelAttribute("appUserForm") @Validated AppUserForm appUserForm,
-                               BindingResult result,
-                               final RedirectAttributes redirectAttributes) {
+    @PostMapping("/register")
+    public ResponseEntity<AppUser> registerUser(@Valid @RequestBody AppUser appUser) {
 
-        // Validate result
-        if (result.hasErrors()) {
-            return "registration/registerPage";
-        }
-        AppUser newUser= null;
-        try {
-            newUser = appUserDAO.createAppUser(appUserForm);
-        }
-        // Other error!!
-        catch (Exception e) {
-            model.addAttribute("errorMessage", "Error: " + e.getMessage());
-            return "registration/registerPage";
-        }
 
-        redirectAttributes.addFlashAttribute("flashUser", newUser);
-        return "redirect:/registerSuccessful";
+        appUserService.createAppUser(appUser);
+        ConfirmationToken ct = confirmationService.generateToken(appUserService.getUserByEmail(appUser.getEmail()));
+
+        //TODO confirmation email
+        emailService.sendEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
+        return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/confirm")
+    public ResponseEntity<AppUser> confirmUser(@RequestParam("token") String confirmationToken) {
+
+        if (confirmationService.confirmUser(confirmationToken)) {
+            // TODO welcome email
+        } else {
+            //TODO "The link is invalid or broken!"
+        }
+
+//        emailService.sendEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
+        return ResponseEntity.ok().build();
+    }
 }

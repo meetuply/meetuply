@@ -11,7 +11,6 @@ export class ButtonComponent implements OnInit {
   @Input() fontSize = 20;
   @Input() href: string;
   @Input() type = 1;
-  @Input() onClickp: any;
   constructor() { }
 
   ngOnInit() {

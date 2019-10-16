@@ -4,31 +4,29 @@ import java.time.LocalDateTime;
 
 public class BlogPost {
 
-    private Long blogPostId;
+    private Integer blogPostId;
     private String blogPostTitle;
     private String blogPostContent;
     private LocalDateTime time;
-
     private AppUser author;
 
     public BlogPost() {
 
     }
 
-    public BlogPost(Long blogPostId, String blogPostTitle, String blogPostContent, LocalDateTime time, AppUser author) {
+    public BlogPost(String blogPostTitle, String blogPostContent, LocalDateTime time, AppUser author) {
         super();
-        this.blogPostId = blogPostId;
         this.blogPostTitle=blogPostTitle;
         this.blogPostContent = blogPostContent;
         this.time = time;
         this.author = author;
     }
 
-    public Long getBlogPostId() {
+    public Integer getBlogPostId() {
         return blogPostId;
     }
 
-    public void setBlogPostId(Long blogPostId) {
+    public void setBlogPostId(Integer blogPostId) {
         this.blogPostId = blogPostId;
     }
 
@@ -63,5 +61,4 @@ public class BlogPost {
     public void setAuthor(AppUser author) {
         this.author = author;
     }
-
 }

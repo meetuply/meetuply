@@ -181,3 +181,12 @@ testem.log
 .DS_Store
 Thumbs.db
 /node/
+/backend/src/main/resources/static/
+frontend/.DS_Store
+frontend/.DS_Store
+frontend/src/.DS_Store
+frontend/src/main/.DS_Store
+frontend/.DS_Store
+frontend/.DS_Store
+frontend/.DS_Store
+frontend/src/.DS_Store

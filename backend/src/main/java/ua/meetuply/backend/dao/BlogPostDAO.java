@@ -1,94 +1,68 @@
 package ua.meetuply.backend.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import ua.meetuply.backend.formbean.BlogPostForm;
-import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.BlogPost;
+import ua.meetuply.backend.service.AppUserService;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Repository
-public class BlogPostDAO {
-
-    private static final Map<Long, BlogPost> BLOG_POST_MAP = new HashMap<>();
+public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
 
     @Autowired
-    AppUserDAO appUserDAO;
+    private JdbcTemplate jdbcTemplate;
 
-    public Long getMaxBlogPostId() {
-        long max = 0;
-        for (Long id : BLOG_POST_MAP.keySet()) {
-            if (id > max) {
-                max = id;
-            }
-        }
-        return max;
+    @Autowired
+    private AppUserService appUserService;
+
+    @Override
+    public BlogPost get(Integer id) {
+        List<BlogPost> blogPosts = jdbcTemplate.query("SELECT * FROM post WHERE uid = ?", new Object[]{id}, this);
+        return blogPosts.size() == 0 ? null : blogPosts.get(0);
     }
 
-    public List<BlogPost> findBlogPostsByTitle(String title) {
-        Collection<BlogPost> bp = BLOG_POST_MAP.values();
-        List<BlogPost> res = new ArrayList<>();
-
-        for (BlogPost b : bp) {
-            if (b.getBlogPostTitle().equals(title)) {
-                res.add(b);
-            }
-        }
-        return res;
+    @Override
+    public List<BlogPost> getAll() {
+        List<BlogPost> blogPosts = jdbcTemplate.query("SELECT * FROM post", this);
+        return blogPosts;
     }
 
-    //TODO: implement methods for searching users by name + surname
-    public List<BlogPost> findBlogPostsByAuthor(AppUser author) {
-        Collection<BlogPost> bp = BLOG_POST_MAP.values();
-        List<BlogPost> res = new ArrayList<>();
-
-        for (BlogPost b : bp) {
-            if (b.getAuthor().getUserId()==author.getUserId()) {
-                res.add(b);
-            }
-        }
-        return res;
+    @Override
+    public void save(BlogPost blogPost) {
+        jdbcTemplate.update(
+                "INSERT INTO `post` (`title`, `date_time`, `content`, `author_id`) " +
+                        "VALUES (?, ?, ?, ?)",
+                blogPost.getBlogPostTitle(),
+                blogPost.getTime(),
+                blogPost.getBlogPostContent(),
+                blogPost.getAuthor().getUserId());
     }
 
-    public BlogPost getBlogPostById(Long id) {
-        Collection<BlogPost> bp = BLOG_POST_MAP.values();
-        for (BlogPost b : bp) {
-            if (b.getBlogPostId()==id) {
-                return b;
-            }
-        }
-        return null;
+    @Override
+    public void update(BlogPost blogPost) {
+        jdbcTemplate.update("UPDATE post SET content = ? AND title = ? WHERE uid = ?", blogPost.getBlogPostContent(), blogPost.getBlogPostTitle(), blogPost.getBlogPostId());
     }
 
-    public List<BlogPost> getBlogPosts() {
-        List<BlogPost> list = new ArrayList<>();
-
-        list.addAll(BLOG_POST_MAP.values());
-        return list;
+    @Override
+    public void delete(Integer id) {
+        jdbcTemplate.update("DELETE FROM post WHERE uid = ?", id);
     }
 
-    public BlogPost createBlogPost(BlogPostForm form) {
-        Long blogPostId = this.getMaxBlogPostId() + 1;
-
-        String email="";
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            email = ((UserDetails)principal).getUsername();
-        } else {
-            email = principal.toString();
-        }
-
-        BlogPost bp = new BlogPost(blogPostId, form.getBlogPostTitle(), //
-                form.getBlogPostContent(), LocalDateTime.now(), appUserDAO.findAppUserByEmail(email));
-
-        BLOG_POST_MAP.put(blogPostId, bp);
-        return bp;
+    @Override
+    public BlogPost mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        BlogPost blogPost = new BlogPost();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        blogPost.setBlogPostId(resultSet.getInt("uid"));
+        blogPost.setBlogPostTitle(resultSet.getString("title"));
+        blogPost.setBlogPostContent(resultSet.getString("content"));
+        blogPost.setTime(resultSet.getTimestamp("date_time").toLocalDateTime());
+        blogPost.setAuthor(appUserService.getUser(resultSet.getInt("author_id")));
+        return blogPost;
     }
-
 }
-

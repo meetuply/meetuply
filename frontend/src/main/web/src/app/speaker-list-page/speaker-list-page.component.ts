@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Speaker_list_item } from '../speaker_list_item';
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-speaker-list-page',
   templateUrl: './speaker-list-page.component.html',
-  styleUrls: ['./speaker-list-page.component.css']
+  styleUrls: ['./speaker-list-page.component.css', '../fonts.css']
 })
 export class SpeakerListPageComponent implements OnInit {
 
@@ -32,9 +33,10 @@ export class SpeakerListPageComponent implements OnInit {
     return num % 2 == 0;
   }
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
+    this.http.get<any>(`/api/user/`).subscribe(next => console.log());
   }
 
 }
