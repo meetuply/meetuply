@@ -32,14 +32,13 @@ export class AuthenticationService {
     localStorage.setItem('authData', authData);
     this.authDataSubject.next(authData);
 
-    return this.http.get<any>(`/api/user/`)
+    return this.http.get<any>(`${environment.apiUrl}/api/user/`)
       .pipe(map(user => {
         // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
         localStorage.removeItem('authData');
         this.authDataSubject.next(authData);
-
         return user;
       }));
   }
@@ -50,5 +49,6 @@ export class AuthenticationService {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('authData');
     this.currentUserSubject.next(null);
+    this.authDataSubject.next(null);
   }
 }

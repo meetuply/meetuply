@@ -236,6 +236,7 @@ CREATE TABLE `meetup`
     `max_attendees`        integer           NOT NULL,
     `state_id`             smallint unsigned NOT NULL,
     `speaker_id`           integer unsigned  NOT NULL,
+    `description`          varchar(500)      NOT NULL,
 
     PRIMARY KEY (`uid`),
     FOREIGN KEY (`state_id`) REFERENCES `state` (`uid`)

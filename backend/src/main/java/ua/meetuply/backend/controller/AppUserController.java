@@ -1,8 +1,10 @@
 package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.ConfirmationToken;
@@ -78,8 +80,6 @@ public class AppUserController {
 
     @PostMapping("/register")
     public ResponseEntity<AppUser> registerUser(@Valid @RequestBody AppUser appUser) {
-
-
         appUserService.createAppUser(appUser);
         ConfirmationToken ct = confirmationService.generateToken(appUserService.getUserByEmail(appUser.getEmail()));
 
