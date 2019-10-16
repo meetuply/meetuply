@@ -18,6 +18,12 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {BasicAuthInterceptor, ErrorInterceptor, XhrInterceptor} from "./_helpers";
 import { LogoutMenuItemComponent } from './left-menu-item/logout-menu-item/logout-menu-item.component';
 import {MustMatchDirective} from "./_helpers/validator/must-match.directive";
+import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
+import { AtendeeComponent } from './atendee/atendee.component';
+import { MeetupFilterComponent } from './meetup-filter/meetup-filter.component';
+import { MeetupListItemComponent } from './meetup-list-item/meetup-list-item.component';
+import { MeetupsListPageComponent } from './meetups-list-page/meetups-list-page.component';
+import { MeetupPageComponent } from './meetup-page/meetup-page.component';
 
 
 @NgModule({
@@ -35,6 +41,12 @@ import {MustMatchDirective} from "./_helpers/validator/must-match.directive";
     RatingComponent,
     LogoutMenuItemComponent,
     MustMatchDirective,
+    ToggleButtonComponent,
+    AtendeeComponent,
+    MeetupFilterComponent,
+    MeetupListItemComponent,
+    MeetupsListPageComponent,
+    MeetupPageComponent,
   ],
   imports: [
     BrowserModule,
