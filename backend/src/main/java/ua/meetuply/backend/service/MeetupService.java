@@ -1,6 +1,7 @@
 package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.MeetupDAO;
 import ua.meetuply.backend.model.Meetup;
@@ -13,7 +14,7 @@ public class MeetupService {
     @Autowired
     MeetupDAO meetupDao;
 
-    @Autowired
+    @Autowired @Lazy
     AppUserService appUserService;
 
     //todo add state logic
