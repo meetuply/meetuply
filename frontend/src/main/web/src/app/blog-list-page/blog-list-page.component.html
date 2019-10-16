@@ -1,0 +1,23 @@
+<app-left-menu></app-left-menu>
+<div class='content'>
+  <p class='title'>Blog</p>
+
+  <div class='search_div'>
+    <div class='search_icon'></div>
+    <input type="text" name="search" placeholder="search" />
+  </div>
+
+  <div class="main">
+    <div class='posts_column'>
+      <div *ngFor="let post_item of this.posts_list;let i = index">
+
+        <app-blog-list-item name="{{post_item.name}}" surname="{{post_item.surname}}"
+                               post_title="{{post_item.post_title}}"
+                               post_content="{{post_item.post_content}}" id='2'>
+        </app-blog-list-item>
+      </div>
+    </div>
+  </div>
+
+
+</div>
