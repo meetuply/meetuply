@@ -1,13 +1,22 @@
 <div class='dialog'>
-	<p class='title'>Sign in</p>
+  <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
+    <p class='title'>Sign in</p>
+    <p *ngIf="error" class='error'>{{error}}</p>
 
+    <input type="text" name="email" placeholder="email" [(ngModel)]="credentials.username" #email="ngModel" [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required email />
+    <div *ngIf="f.submitted && email.invalid" class="invalid-feedback">
+      <div *ngIf="email.errors.required">Email is required</div>
+      <div *ngIf="email.errors.email">Email must be a valid email address</div>
+    </div>
 
-		<input type="text" name="email" placeholder="email" [(ngModel)]="credentials.username" />
-		<input type="password" name="password" placeholder="password" [(ngModel)]="credentials.password" />
+    <input type="password" name="password" placeholder="password" [(ngModel)]="credentials.password"  #password="ngModel" [ngClass]="{ 'is-invalid': f.submitted && password.invalid }" required minlength="6"/>
+    <div *ngIf="f.submitted && password.invalid" class="invalid-feedback">
+      <div *ngIf="password.errors.required">Password is required</div>
+      <div *ngIf="password.errors.minlength">Password must be at least 6 characters</div>
+    </div>
 
-
-
-	<a class='link'>Forgot password?</a>
-	<a class='link' routerLink='/registration'>Don't have an account? Click here</a>
-	<a class="button btn1" (click)="login()">Enter</a>
+    <a class='link'>Forgot password?</a>
+    <a class='link' routerLink='/registration'>Don't have an account? Click here</a>
+    <button class="button btn1">Enter</button>
+  </form>
 </div>

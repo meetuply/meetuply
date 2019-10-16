@@ -26,17 +26,17 @@ public class AppUserValidator implements Validator {
     public void validate(Object target, Errors errors) {
         AppUser appUser = (AppUser) target;
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty.appUser.email");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "NotEmpty.appUser.firstName");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "NotEmpty.appUser.lastName");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty.appUser.password");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty.appUser.email", "Email is required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "NotEmpty.appUser.firstName", "Name is required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "NotEmpty.appUser.lastName", "Surname is required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty.appUser.password", "Password is required");
 
         if (!this.emailValidator.isValid(appUser.getEmail())) {
-            errors.rejectValue("email", "Pattern.appUser.email");
+            errors.rejectValue("email", "Pattern.appUser.email", "Not valid email");
         } else if (appUser.getUserId() == null) {
             AppUser dbUser = appUserDAO.findAppUserByEmail(appUser.getEmail());
             if (dbUser != null) {
-                errors.rejectValue("email", "Duplicate.appUser.email");
+                errors.rejectValue("email", "Duplicate.appUser.email", "User with such email is already registered");
             }
         }
 
