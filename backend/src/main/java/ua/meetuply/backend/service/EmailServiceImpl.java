@@ -33,6 +33,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.mail.username}")
     private String sender;
+
     @Resource
     private JavaMailSender javaMailSender;
     @Resource
