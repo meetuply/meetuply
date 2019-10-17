@@ -1,6 +1,6 @@
 # Meetuply
 
-##Requirements
+## Requirements
 1. JRE11
 
 ## Backend
@@ -12,4 +12,4 @@
 
 ## Frontend
 0. Run a backend.
-1. Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+1. Run `ng serve` in folder `/frontend/src/main/web` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
