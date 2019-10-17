@@ -11,7 +11,7 @@ import { LeftMenuItemComponent } from './left-menu-item/left-menu-item.component
 import { SpeakerPageComponent } from './speaker-page/speaker-page.component';
 import { SpeakerListPageComponent } from './speaker-list-page/speaker-list-page.component';
 import { SpeakerListItemComponent } from './speaker-list-item/speaker-list-item.component';
-//import { BlogPageComponent } from './blog-page/blog-page.component';
+import { BlogPageComponent } from './blog-page/blog-page.component';
 import { BlogListPageComponent } from './blog-list-page/blog-list-page.component';
 import { BlogListItemComponent } from './blog-list-item/blog-list-item.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -40,6 +40,7 @@ import {MustMatchDirective} from "./_helpers/validator/must-match.directive";
     MustMatchDirective,
     BlogListPageComponent,
     BlogListItemComponent,
+    BlogPageComponent
   ],
   imports: [
     BrowserModule,

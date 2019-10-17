@@ -1,0 +1,92 @@
+.content {
+  margin-left: 17%;
+  margin-right: 17%;
+  display: flex;
+  flex-direction: row;
+  padding: 25px;
+}
+
+.author {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 15px;
+}
+
+.avatar img {
+  max-width: 150px;
+  max-width: 150px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 15px;
+}
+
+.avatar span {
+  font-weight: bold;
+  margin: 5px;
+}
+
+.other {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.info * {
+  margin: 3px;
+}
+
+.info .name {
+  margin-left: 7px;
+}
+
+.main {
+  width: 65%;
+  padding: 10px;
+}
+
+.extra {
+  width: 35%;
+}
+
+.main .description {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.about {
+  margin: 20px;
+  margin-left: 0px;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.histories {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+
+.back {
+  width: 24px;
+  height: 24px;
+  background-size: cover;
+  background-image: url(/assets/icons/arrow-left.png);
+  cursor: pointer;
+}

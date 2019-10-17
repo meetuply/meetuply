@@ -28,7 +28,7 @@ export class BlogListPageComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    //this.http.get<any>(`/api/user/`).subscribe(next => console.log());
+    this.http.get<any>(`/api/blog/posts/`).subscribe(next => console.log());
   }
 
 }

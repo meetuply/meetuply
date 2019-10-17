@@ -7,6 +7,7 @@ import {SpeakerPageComponent} from "./speaker-page/speaker-page.component";
 import {SpeakerListPageComponent} from "./speaker-list-page/speaker-list-page.component";
 import {AuthGuard} from "./_helpers";
 import {BlogListPageComponent} from "./blog-list-page/blog-list-page.component";
+import {BlogPageComponent} from "./blog-page/blog-page.component";
 
 
 const routes: Routes = [
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'speaker', component: SpeakerPageComponent, canActivate: [AuthGuard]},
   { path: 'speakers', component: SpeakerListPageComponent, canActivate: [AuthGuard]},
   { path: 'blog', component: BlogListPageComponent, canActivate: [AuthGuard]},
+  { path: 'blogposttest', component: BlogPageComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

@@ -56,14 +56,6 @@
   width: 95%;
 }
 
-.left_column {
-  margin-right: 5px;
-}
-
-.right_column {
-  margin-left: 5px;
-}
-
 .post_item {
   box-shadow: 10px 6px 25px rgba(112, 124, 151, 0.1),
   4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);

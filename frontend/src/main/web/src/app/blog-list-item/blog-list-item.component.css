@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: row;
 
-  max-width: 600px;
+  max-width: 800px;
   max-height: 200px;
   box-shadow: 10px 6px 25px rgba(112, 124, 151, 0.1),
     4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);
