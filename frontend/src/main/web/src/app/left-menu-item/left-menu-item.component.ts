@@ -22,7 +22,8 @@ export class LeftMenuItemComponent implements OnInit {
     this.clck.emit(
       this.item.text
     )
-    this.router.navigate([this.item.redirectTo]);
+    if (this.item.redirectTo)
+      this.router.navigate([this.item.redirectTo]);
   }
 
   setClasses() {
