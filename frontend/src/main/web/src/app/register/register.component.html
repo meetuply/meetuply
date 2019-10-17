@@ -36,7 +36,8 @@
 
     <button class="button btn1">Enter</button>
   </form>
-  <form>
-    <p *ngIf="registered">Thank you! Please, confirm you email address.</p>
+  <form *ngIf="registered">
+    <p>Thank you! Please, confirm you email address.</p>
+    <a class='link' routerLink='/'>Back to home</a>
   </form>
 </div>
