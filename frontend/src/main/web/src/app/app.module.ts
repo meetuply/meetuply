@@ -50,6 +50,9 @@ import { MeetupPageComponent } from './meetup-page/meetup-page.component';
     MeetupListItemComponent,
     MeetupsListPageComponent,
     MeetupPageComponent,
+    BlogPageComponent,
+    BlogListItemComponent,
+    BlogListPageComponent
   ],
   imports: [
     BrowserModule,

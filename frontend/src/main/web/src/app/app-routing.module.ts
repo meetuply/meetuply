@@ -8,6 +8,8 @@ import { SpeakerListPageComponent } from "./speaker-list-page/speaker-list-page.
 import { MeetupsListPageComponent } from "./meetups-list-page/meetups-list-page.component";
 import { MeetupPageComponent } from "./meetup-page/meetup-page.component";
 import { AuthGuard } from "./_helpers";
+import {BlogListPageComponent} from "./blog-list-page/blog-list-page.component";
+import {BlogPageComponent} from "./blog-page/blog-page.component";
 
 
 const routes: Routes = [
@@ -18,6 +20,8 @@ const routes: Routes = [
   { path: 'speakers', component: SpeakerListPageComponent, canActivate: [AuthGuard] },
   { path: 'meetup', component: MeetupPageComponent, canActivate: [AuthGuard] },
   { path: 'meetups', component: MeetupsListPageComponent, canActivate: [AuthGuard] },
+  { path: 'blog', component: BlogListPageComponent, canActivate: [AuthGuard] },
+  { path: 'post', component: BlogPageComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
