@@ -46,7 +46,10 @@ public class EmailServiceImpl implements EmailService {
     public void sendGreetingEmail(AppUser receiver, String templateName, String subject) {
         Mail mail = prepareMail(receiver.getEmail(), subject);
 
-        String loginUrl = "http://" + InetAddress.getLoopbackAddress().getHostName() + "/#/login";
+        String hostName = System.getenv("HOST_NAME");
+        if (hostName == null) hostName = "localhost:4200";
+
+        String loginUrl = "http://" + hostName + "/#/login";
         Map<String, Object> model = new HashMap<>();
         model.put("login_url", loginUrl);
         model.put("name", receiver.getFullName());
