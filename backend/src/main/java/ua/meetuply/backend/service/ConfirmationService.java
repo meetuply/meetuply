@@ -1,10 +1,13 @@
 package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.ConfirmationTokenDAO;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.ConfirmationToken;
+
+import java.net.InetAddress;
 
 @Component
 public class ConfirmationService {
@@ -21,13 +24,18 @@ public class ConfirmationService {
         return ct;
     }
 
-    public boolean confirmUser(String token) {
+    public AppUser confirmUser(String token) {
         ConfirmationToken ct = confirmationTokenDAO.getByToken(token);
         if (ct != null) {
             appUserService.activateUser(ct.getUser());
             confirmationTokenDAO.delete(ct.getTokenid());
-            return true;
+            return ct.getUser();
         }
-        return false;
+        return null;
+    }
+
+    public String getConfirmLink(ConfirmationToken ct) {
+        String hostName = InetAddress.getLoopbackAddress().getHostName();
+        return "http://" + hostName + "/#/confirm?token=" + ct.getConfirmationToken();
     }
 }

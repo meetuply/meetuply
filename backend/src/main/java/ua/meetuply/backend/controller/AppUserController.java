@@ -89,23 +89,20 @@ public class AppUserController {
         appUserService.createAppUser(appUser);
         ConfirmationToken ct = confirmationService.generateToken(appUserService.getUserByEmail(appUser.getEmail()));
 
-        //TODO confirmation email
-//        emailService.sendGreetingEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
-        emailService.sendVerificationEmail(appUser.getEmail(), VERIFICATION_TEMPLATE_NAME, "Verify your account",
-                "http://" + InetAddress.getLoopbackAddress().getHostName() + "/confirm?token=" + ct.getConfirmationToken());
+        emailService.sendVerificationEmail(appUser, VERIFICATION_TEMPLATE_NAME, "Verify your account",
+                confirmationService.getConfirmLink(ct));
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/confirm")
     public ResponseEntity<AppUser> confirmUser(@RequestParam("token") String confirmationToken) {
 
-        if (confirmationService.confirmUser(confirmationToken)) {
-            // TODO welcome email
+        AppUser user = confirmationService.confirmUser(confirmationToken);
+        if (user != null) {
+            emailService.sendGreetingEmail(user, GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
         } else {
-            //TODO "The link is invalid or broken!"
+            return ResponseEntity.badRequest().build();
         }
-
-//        emailService.sendGreetingEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
         return ResponseEntity.ok().build();
     }
 }

@@ -5,7 +5,7 @@
     <title>Verify your email</title>
 </head>
 <body>
-<p>Hi there,<br/>
+<p>Hi ${name},<br/>
 
 Thanks for using MEETUPLY! Please confirm your email address by clicking on the link below.<br/>
 
