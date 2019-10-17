@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Mail;
 import freemarker.template.Configuration;
 
@@ -19,6 +20,7 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,8 +43,14 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendEmail(String receiver, String templateName, String subject) {
-        Mail mail = prepareMail(receiver, subject);
+    public void sendGreetingEmail(AppUser receiver, String templateName, String subject) {
+        Mail mail = prepareMail(receiver.getEmail(), subject);
+
+        String loginUrl = "http://" + InetAddress.getLoopbackAddress().getHostName() + "/#/login";
+        Map<String, Object> model = new HashMap<>();
+        model.put("login_url", loginUrl);
+        model.put("name", receiver.getFullName());
+        mail.setModel(model);
 
         MimeMessagePreparator messagePreparator = mimeMessage -> prepareMimeMessage(templateName, mail, mimeMessage);
 
@@ -51,6 +59,26 @@ public class EmailServiceImpl implements EmailService {
         } catch (MailException e) {
             throw new MailSendException(e.getMessage());
         }
+    }
+
+    @Override
+    public void sendVerificationEmail(AppUser receiver, String templateName, String subject, String verificationCode) {
+        Mail verificationMail = new Mail();
+        verificationMail.setMailFrom(sender);
+        verificationMail.setMailTo(receiver.getEmail());
+        verificationMail.setMailSubject(subject);
+        Map<String, Object> model = new HashMap<>();
+        model.put("VERIFICATION_URL", verificationCode);
+        model.put("name", receiver.getFirstName());
+        verificationMail.setModel(model);
+        MimeMessagePreparator messagePreparator = mimeMessage -> prepareMimeMessage(templateName, verificationMail, mimeMessage);
+
+        try {
+            javaMailSender.send(messagePreparator);
+        } catch (MailException e) {
+            throw new MailSendException(e.getMessage());
+        }
+
     }
 
     private void prepareMimeMessage(String templateName, Mail mail, MimeMessage mimeMessage)
@@ -73,10 +101,6 @@ public class EmailServiceImpl implements EmailService {
         mail.setMailFrom(sender);
         mail.setMailTo(email);
         mail.setMailSubject(subject);
-
-        Map<String, Object> mailModel = new HashMap<>();
-        mailModel.put(NAME, mail.getMailTo());
-        mail.setModel(mailModel);
         return mail;
     }
 

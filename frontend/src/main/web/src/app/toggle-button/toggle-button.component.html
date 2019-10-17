@@ -1,0 +1,6 @@
+<div [ngClass]='getClass()' (click)="toggle()">
+	<div *ngIf="icon" [ngStyle]="bg()" class='icon' ></div>
+	<div>
+		{{this.text}}
+	</div>
+</div>

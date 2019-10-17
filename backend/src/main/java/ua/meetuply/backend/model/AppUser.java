@@ -101,6 +101,9 @@ public class AppUser {
         this.allow_notifications = allow_notifications;
     }
 
+    public String getFullName() {
+        return getFirstName() + " " + getLastName();
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

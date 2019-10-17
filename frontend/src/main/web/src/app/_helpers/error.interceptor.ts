@@ -11,13 +11,22 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
+
             if (err.status === 401) {
                 // auto logout if 401 response returned from api
-                this.authenticationService.logout();
-                location.reload(true);
+
+                if (this.authenticationService.currentAuthDataValue == null) {
+                  this.authenticationService.logout();
+                  location.reload(true);
+                } else {
+                  this.authenticationService.logout();
+                  return throwError("Invalid email or password");
+                }
             }
 
-            const error = err.error.message || err.statusText;
+            console.log(err);
+            const error = (err.error.error != null && err.error.errors[0].defaultMessage)
+                          || err.error.message || err.statusText;
             return throwError(error);
         }))
     }

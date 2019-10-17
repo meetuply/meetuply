@@ -1,6 +1,5 @@
 
-
-.dialog {
+.dialog form{
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -16,17 +15,17 @@
   margin-top: 200px;
 }
 
-.dialog * {
+.dialog form input, .dialog form button, .dialog form a {
   margin: 7px 10px;
 }
 
-.dialog .title {
+.dialog form .title {
   font-size: 45px;
   margin: 20px;
   color: #707c97;
 }
 
-.dialog input {
+.dialog form input {
   text-align: center;
   font-size: 15px;
   border: 2px solid #c4c4c4;
@@ -36,16 +35,16 @@
   padding: 15px;
 }
 
-.dialog input::placeholder {
+.dialog form input::placeholder {
   color: #c7c7c7;
 }
 
-.dialog .link {
+.dialog form .link {
   font-size: 12px;
   color: #2a8bf2;
 }
 
-.dialog .checkbox_row * {
+.dialog form .checkbox_row * {
   display: inline;
   color: #707c97;
 }
@@ -79,4 +78,10 @@
   background: linear-gradient(96.1deg, #868ea2 0%, #707c97 100%);
   box-shadow: 10px 6px 25px rgba(112, 124, 151, 0.1),
     4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);
+}
+
+.invalid-feedback, .error {
+  color: #ff3366;
+  font-size: 12px;
+  margin: 0;
 }

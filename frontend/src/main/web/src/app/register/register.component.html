@@ -2,6 +2,7 @@
   <form name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" [mustMatch]="['password', 'confirmPassword']" novalidate
         *ngIf="!registered">
     <p class='title'>Sign up</p>
+    <p *ngIf="error" class='error'>{{error}}</p>
 
     <input class="form-control" type="text" name="firstName" placeholder="name" [(ngModel)]="user.firstName" #firstName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && firstName.invalid }" required/>
     <div *ngIf="f.submitted && firstName.invalid" class="invalid-feedback">
@@ -35,7 +36,14 @@
 
     <button class="button btn1">Enter</button>
   </form>
-  <form>
-    <p *ngIf="registered">Thank you! Please, confirm you email address.</p>
+  <form *ngIf="registered">
+    <p>Thank you! Please, confirm you email address.</p>
+    <a class='link' routerLink='/'>Back to home</a>
   </form>
+</div>
+
+<div *ngIf="loading">
+  <div style="position:fixed; left: 0; right: 0; margin:0 auto;">
+    <mat-spinner style="margin:0 auto;" diameter=50 color="accent"></mat-spinner>
+  </div>
 </div>
