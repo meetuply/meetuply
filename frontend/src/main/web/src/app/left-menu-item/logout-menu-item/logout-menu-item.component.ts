@@ -17,8 +17,7 @@ export class LogoutMenuItemComponent extends LeftMenuItemComponent {
 
   onClick() {
     super.onClick();
-    this.authService.logout();
-    this.router.navigate(['/login']);
+    this.authService.logout().subscribe(data => this.router.navigate(['/login']));
   }
 
 }

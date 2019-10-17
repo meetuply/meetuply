@@ -81,7 +81,7 @@ public class AppUserController {
 
     @GetMapping("/address")
     public String adress() {
-        return InetAddress.getLoopbackAddress().getHostName();
+        return System.getenv("HOST_NAME");
     }
 
     @PostMapping("/register")
