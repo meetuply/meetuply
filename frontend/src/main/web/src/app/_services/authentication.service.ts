@@ -43,12 +43,13 @@ export class AuthenticationService {
       }));
   }
 
-  logout() {
+  logout() : Observable<{}> {
     console.log("logout");
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
     localStorage.removeItem('authData');
     this.currentUserSubject.next(null);
     this.authDataSubject.next(null);
+    return this.http.get(`${environment.apiUrl}/logout`);
   }
 }
