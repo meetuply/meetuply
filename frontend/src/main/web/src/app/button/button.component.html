@@ -1,5 +1,5 @@
-<div [className]="getClass()" [style.font-size.px]="fontSize">
-	<a [href]="href">
-		{{this.text}}
-	</a>
+<div [className]="getClass()" [routerLink]="href ? href : null" [style.font-size.px]="fontSize">
+  <a>
+    {{this.text}}
+  </a>
 </div>

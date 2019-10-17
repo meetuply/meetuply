@@ -62,6 +62,10 @@ public class AppUserController {
         return appUserService.getAppUsers();
     }
 
+    @GetMapping("/{id}")
+    public AppUser get(@PathVariable("id") Integer userId) {
+        return appUserService.getUser(userId);
+    }
 
     @RequestMapping("/registerSuccessful")
     public String viewRegisterSuccessful(Model model) {

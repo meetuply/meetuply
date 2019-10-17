@@ -14,10 +14,14 @@ const routes: Routes = [
   { path: '', component: LandingPageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegisterComponent },
-  { path: 'speaker', component: SpeakerPageComponent, canActivate: [AuthGuard] },
-  { path: 'speakers', component: SpeakerListPageComponent, canActivate: [AuthGuard] },
-  { path: 'meetup', component: MeetupPageComponent, canActivate: [AuthGuard] },
-  { path: 'meetups', component: MeetupsListPageComponent, canActivate: [AuthGuard] },
+  // { path: 'speaker', component: SpeakerPageComponent, canActivate: [AuthGuard] },
+  { path: 'speaker', component: SpeakerPageComponent },
+  { path: 'speakers', component: SpeakerListPageComponent },
+  { path: 'meetup/:id', component: MeetupPageComponent },
+  { path: 'meetups', component: MeetupsListPageComponent}
+    // children: [
+    //   { path: ':id', component: MeetupPageComponent }
+    // ]},
 ];
 
 @NgModule({

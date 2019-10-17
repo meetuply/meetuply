@@ -15,6 +15,10 @@ export class UserService {
     return this.http.post(`${environment.apiUrl}/api/user/register`, user);
   }
 
+  get(id:number) : Observable<User> {
+    return this.http.get<User>(`${environment.apiUrl}/api/user/${id}`);
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.

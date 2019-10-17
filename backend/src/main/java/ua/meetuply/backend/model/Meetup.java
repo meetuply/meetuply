@@ -8,6 +8,7 @@ public class Meetup {
     private Integer meetupId;
     private String meetupPlace;
     private String meetupTitle;
+    private String meetupDescription;
     private int meetupRegisteredAttendees;
     private int meetupMinAttendees;
     private int meetupMaxAttendees;
@@ -18,12 +19,14 @@ public class Meetup {
 
     public Meetup(){}
 
-    public Meetup(Integer meetupId, String meetupPlace, String meetupTitle, int meetupRegisteredAttendees,
+    public Meetup(Integer meetupId, String meetupPlace, String meetupTitle,
+                  int meetupRegisteredAttendees,
                   int meetupMinAttendees, int meetupMaxAttendees, LocalDateTime meetupStartDateTime,
                   LocalDateTime meetupFinishDateTime, Integer stateId, Integer speakerId) {
         this.meetupId = meetupId;
         this.meetupPlace = meetupPlace;
         this.meetupTitle = meetupTitle;
+//        this.meetupDescription = meetupDescription;
         this.meetupRegisteredAttendees = meetupRegisteredAttendees;
         this.meetupMinAttendees = meetupMinAttendees;
         this.meetupMaxAttendees = meetupMaxAttendees;
@@ -111,6 +114,14 @@ public class Meetup {
 
     public void setSpeakerId(Integer speakerId) {
         this.speakerId = speakerId;
+    }
+
+    public String getMeetupDescription() {
+        return meetupDescription;
+    }
+
+    public void setMeetupDescription(String meetupDescription) {
+        this.meetupDescription = meetupDescription;
     }
 
     @Override

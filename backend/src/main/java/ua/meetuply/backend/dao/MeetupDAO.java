@@ -34,19 +34,20 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
     //todo change userId to function
     @Override
     public void save(Meetup meetup) {
-        jdbcTemplate.update("INSERT INTO meetup (`uid`,`place`, `title`, `registered_attendees`, `min_attendees`, `max_attendees`," +
-                        "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", null,
-                meetup.getMeetupPlace(),
-                meetup.getMeetupTitle(), meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
+        jdbcTemplate.update("INSERT INTO meetup (`uid`,`place`, `title`, `description`,``registered_attendees`, `min_attendees`, `max_attendees`," +
+                        "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", null,
+                meetup.getMeetupPlace(),meetup.getMeetupTitle(), meetup.getMeetupDescription(),
+                meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
                 meetup.getMeetupStartDateTime(), meetup.getMeetupFinishDateTime(), meetup.getStateId(), meetup.getSpeakerId());
     }
 
     @Override
     public void update(Meetup meetup) {
         jdbcTemplate.update("UPDATE meetup SET place = ?, " +
-                "title = ?, registered_attendees = ?, min_attendees = ?," +
+                "title = ?, description = ? ,registered_attendees = ?, min_attendees = ?," +
                 "max_attendees = ?, start_date_time = ?, finish_date_time = ?," +
                 "state_id = ?, speaker_id = ? WHERE uid = ?", meetup.getMeetupPlace(), meetup.getMeetupTitle(),
+                meetup.getMeetupDescription(),
                 meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
                 meetup.getMeetupStartDateTime(), meetup.getMeetupFinishDateTime(), meetup.getStateId(), meetup.getSpeakerId());
     }
@@ -62,6 +63,7 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
         meetup.setMeetupId(rs.getInt("uid"));
         meetup.setMeetupPlace(rs.getString("place"));
         meetup.setMeetupTitle(rs.getString("title"));
+        meetup.setMeetupDescription(rs.getString("description"));
         meetup.setMeetupRegisteredAttendees(rs.getInt("registered_attendees"));
         meetup.setMeetupMinAttendees(rs.getInt("min_attendees"));
         meetup.setMeetupMaxAttendees(rs.getInt("max_attendees"));
