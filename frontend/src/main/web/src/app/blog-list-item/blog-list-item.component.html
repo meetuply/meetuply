@@ -1,23 +1,25 @@
 <div class='item'>
-	<div class='author'>
-		<div class='profile'>
-			<div class='avatar'>
-				<img src="assets/img/download.png">
-			</div>
-			<div class='info'>
-				<div class='name'>
-					{{this.name + " " + this.surname}}
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class='post'>
-    <div class='post_title'>
-      {{this.post_title}}
+  <div class = 'main'>
+    <div class='author'>
+        <div class='avatar'>
+          <img src="assets/img/download.png">
+        </div>
+        <div class='info'>
+          <div class='name'>
+            {{this.name + " " + this.surname}}
+          </div>
+        </div>
     </div>
-    <div class='post_content'>
-      {{this.post_content}}
+
+    <div class='post'>
+      <div class='title'>
+        {{this.post_title}}
+      </div>
+      <div class='content'>
+        {{this.post_content}}
+      </div>
     </div>
-    <app-button [text]="'>'" fontSize='50' href="{{'posts/' + this.id}}" type='2'></app-button>
-	</div>
+
+    <app-button class="post_button" [text]="'>'" fontSize='50' href="{{'posts/' + this.id}}" type='1'></app-button>
+  </div>
 </div>
