@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {Menu_item} from "../menu_item";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-left-menu-item',
@@ -15,14 +16,13 @@ export class LeftMenuItemComponent implements OnInit {
 
   bg: string;
 
-  constructor() {}
+  constructor(public router: Router) {}
 
   onClick() {
-    if (this.item.action) this.item.action();
-
     this.clck.emit(
       this.item.text
     )
+    this.router.navigate([this.item.redirectTo]);
   }
 
   setClasses() {

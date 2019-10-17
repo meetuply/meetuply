@@ -2,6 +2,7 @@ package ua.meetuply.backend.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.Meetup;
@@ -14,7 +15,7 @@ import javax.validation.Valid;
 @RestController
 public class MeetupController {
 
-    @Autowired
+    @Autowired @Lazy
     MeetupService meetupService;
 
     @GetMapping()

@@ -3,6 +3,7 @@ package ua.meetuply.backend.service;
 import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,7 +15,7 @@ import ua.meetuply.backend.model.AppUser;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService{
 
-    @Autowired
+    @Autowired @Lazy
     private AppUserDAO appUserDAO;
 
     @Override

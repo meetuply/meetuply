@@ -80,7 +80,8 @@
   4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);
 }
 
-.invalid-feedback {
+.invalid-feedback, .error {
   color: #ff3366;
   font-size: 12px;
+  margin: 0;
 }

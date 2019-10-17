@@ -8,6 +8,8 @@ import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import ua.meetuply.backend.model.Mail;
@@ -22,6 +24,7 @@ import java.util.Map;
 
 
 @Service
+@EnableAsync
 public class EmailServiceImpl implements EmailService {
 
     private static final String UTF_8 = "UTF-8";
@@ -30,13 +33,15 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.mail.username}")
     private String sender;
+
     @Resource
     private JavaMailSender javaMailSender;
     @Resource
     private Configuration getFreeMarkerConfiguration;
 
     @Override
-    public void sendEmail(String receiver, String templateName, String subject) {
+    @Async
+    public void sendGreetingEmail(String receiver, String templateName, String subject) {
         Mail mail = prepareMail(receiver, subject);
 
         MimeMessagePreparator messagePreparator = mimeMessage -> prepareMimeMessage(templateName, mail, mimeMessage);
@@ -46,6 +51,25 @@ public class EmailServiceImpl implements EmailService {
         } catch (MailException e) {
             throw new MailSendException(e.getMessage());
         }
+    }
+
+    @Override
+    public void sendVerificationEmail(String receiver, String templateName, String subject, String verificationCode) {
+        Mail verificationMail = new Mail();
+        verificationMail.setMailFrom(sender);
+        verificationMail.setMailTo(receiver);
+        verificationMail.setMailSubject(subject);
+        Map<String, Object> model = new HashMap<>();
+        model.put("VERIFICATION_URL", verificationCode);
+        verificationMail.setModel(model);
+        MimeMessagePreparator messagePreparator = mimeMessage -> prepareMimeMessage(templateName, verificationMail, mimeMessage);
+
+        try {
+            javaMailSender.send(messagePreparator);
+        } catch (MailException e) {
+            throw new MailSendException(e.getMessage());
+        }
+
     }
 
     private void prepareMimeMessage(String templateName, Mail mail, MimeMessage mimeMessage)

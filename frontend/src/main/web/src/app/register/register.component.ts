@@ -12,6 +12,7 @@ export class RegisterComponent implements OnInit {
 
   user: User = new User();
   registered = false;
+  error = null;
 
   constructor(
     private userService: UserService,
@@ -23,14 +24,12 @@ export class RegisterComponent implements OnInit {
 
   register() {
     this.userService.register(this.user).subscribe(
-      error => {
-          if (error) {
-            console.log(error);
-          } else {
+      data => {
+          if (data == null) {
             this.registered = true;
             //this.router.navigate(["/speakers"]);
           }
-      });
+      }, error => this.error = error);
   }
 
 }
