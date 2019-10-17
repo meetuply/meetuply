@@ -21,4 +21,12 @@ export class BlogListItemComponent implements OnInit {
 
   }
 
+  shorten(text: string):string{
+    var n=300;
+    if (text.length>n){
+      text=text.substr(0,n)+"...";
+    }
+    return text;
+  }
+
 }

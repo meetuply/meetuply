@@ -12,14 +12,16 @@
     </div>
 
     <div class='post'>
-      <div class='title'>
+      <div class='post-title'>
         {{this.post_title}}
       </div>
-      <div class='content'>
-        {{this.post_content}}
+      <div class='post-content'>
+        <p>
+        {{shorten(this.post_content)}}
+        </p>
       </div>
     </div>
 
-    <app-button class="post_button" [text]="'>'" fontSize='50' href="{{'posts/' + this.id}}" type='1'></app-button>
+    <app-button class="post-button" [text]="'>'" fontSize='50' href="{{'posts/' + this.id}}" type='1'></app-button>
   </div>
 </div>

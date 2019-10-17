@@ -50,17 +50,17 @@
   margin: 10px 10px 10px 20px;
 }
 
-.post .title{
+.post-title{
   margin: 5px 0px;
   font-weight: bold;
   font-size: 16px;
 }
 
-.post .content{
+.post-content{
   font-size: 14px;
 }
 
-.post_button{
+.post-button{
   min-height: 100%;
   position: relative;
   height: 100%;
@@ -70,7 +70,7 @@
   padding: 0px;
 }
 
-.post_button div.button.btn1{
+.post-button div.button.btn1{
   min-height: 100%;
   position: relative;
   height: 100%;

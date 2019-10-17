@@ -5,26 +5,26 @@
     <div class='back' (click)="goBack()">
 
   </div>
-    <div class = 'post_title'>
+    <div class = 'post-title'>
       {{this.post_title}}
     </div>
 
 
-		<div class='author'>
-			<div class='avatar'>
-				<img src="assets/img/download.png">
-			</div>
+		<div class='author-container'>
+      <div class="author">
+        <div class='avatar'>
+          <img src="assets/img/download.png">
+        </div>
 
-			<div class='other'>
-				<div class='info'>
-					<div class='name'>
-						{{this.name + " " + this.surname}}
-					</div>
-				</div>
-			</div>
+        <div class='info'>
+          <div class='name'>
+            {{this.name + " " + this.surname}}
+          </div>
+        </div>
+      </div>
 		</div>
 
-		<div class='post_content'>
+		<div class='post-content'>
 			{{this.post_content}}
 		</div>
 
