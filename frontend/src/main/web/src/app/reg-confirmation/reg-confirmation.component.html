@@ -1,0 +1,15 @@
+<div class='dialog' *ngIf="!loading">
+  <form *ngIf="sucsessful">
+    <p clall="title">Successful!</p>
+    <a class='link' routerLink='/login'>Sign In</a>
+  </form>
+  <form *ngIf="!sucsessful">
+    <p clall="title">Something went wrong!</p>
+    <a class='link' routerLink='/'>Back to home</a>
+  </form>
+</div>
+<div *ngIf="loading">
+  <div style="position:fixed; left: 0; right: 0; margin:0 auto;">
+    <mat-spinner style="margin:0 auto;" diameter=50 color="accent"></mat-spinner>
+  </div>
+</div>

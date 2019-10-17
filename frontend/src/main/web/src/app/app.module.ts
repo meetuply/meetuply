@@ -24,7 +24,9 @@ import { MeetupFilterComponent } from './meetup-filter/meetup-filter.component';
 import { MeetupListItemComponent } from './meetup-list-item/meetup-list-item.component';
 import { MeetupsListPageComponent } from './meetups-list-page/meetups-list-page.component';
 import { MeetupPageComponent } from './meetup-page/meetup-page.component';
-
+import { RegConfirmationComponent } from './reg-confirmation/reg-confirmation.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -47,12 +49,15 @@ import { MeetupPageComponent } from './meetup-page/meetup-page.component';
     MeetupListItemComponent,
     MeetupsListPageComponent,
     MeetupPageComponent,
+    RegConfirmationComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

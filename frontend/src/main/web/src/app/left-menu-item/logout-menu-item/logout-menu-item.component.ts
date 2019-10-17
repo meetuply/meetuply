@@ -10,15 +10,14 @@ import {Router} from "@angular/router";
 })
 export class LogoutMenuItemComponent extends LeftMenuItemComponent {
 
-  constructor(private authService: AuthenticationService, private router: Router) {
-    super();
-    this.item = { icon: "turn-off.svg", text: 'log out', action: null};
+  constructor(private authService: AuthenticationService, public router: Router) {
+    super(router);
+    this.item = { icon: "turn-off.svg", text: 'log out', redirectTo: null};
   }
 
   onClick() {
     super.onClick();
-    this.authService.logout();
-    this.router.navigate(['/login']);
+    this.authService.logout().subscribe(data => this.router.navigate(['/login']));
   }
 
 }

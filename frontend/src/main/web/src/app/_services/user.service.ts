@@ -15,6 +15,7 @@ export class UserService {
     return this.http.post(`${environment.apiUrl}/api/user/register`, user);
   }
 
+
   get(id:number) : Observable<User> {
     return this.http.get<User>(`${environment.apiUrl}/api/user/${id}`);
   }
@@ -34,4 +35,9 @@ export class UserService {
     return throwError(
       'Something bad happened; please try again later.');
   };
+
+  activate(token: string) : Observable<{}> {
+    return this.http.get(`${environment.apiUrl}/api/user/confirm?token=` + token);
+  }
+
 }
