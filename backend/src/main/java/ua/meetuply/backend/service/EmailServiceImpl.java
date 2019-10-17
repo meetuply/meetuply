@@ -41,7 +41,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendEmail(String receiver, String templateName, String subject) {
+    public void sendGreetingEmail(String receiver, String templateName, String subject) {
         Mail mail = prepareMail(receiver, subject);
 
         MimeMessagePreparator messagePreparator = mimeMessage -> prepareMimeMessage(templateName, mail, mimeMessage);
@@ -51,6 +51,25 @@ public class EmailServiceImpl implements EmailService {
         } catch (MailException e) {
             throw new MailSendException(e.getMessage());
         }
+    }
+
+    @Override
+    public void sendVerificationEmail(String receiver, String templateName, String subject, String verificationCode) {
+        Mail verificationMail = new Mail();
+        verificationMail.setMailFrom(sender);
+        verificationMail.setMailTo(receiver);
+        verificationMail.setMailSubject(subject);
+        Map<String, Object> model = new HashMap<>();
+        model.put("VERIFICATION_URL", verificationCode);
+        verificationMail.setModel(model);
+        MimeMessagePreparator messagePreparator = mimeMessage -> prepareMimeMessage(templateName, verificationMail, mimeMessage);
+
+        try {
+            javaMailSender.send(messagePreparator);
+        } catch (MailException e) {
+            throw new MailSendException(e.getMessage());
+        }
+
     }
 
     private void prepareMimeMessage(String templateName, Mail mail, MimeMessage mimeMessage)

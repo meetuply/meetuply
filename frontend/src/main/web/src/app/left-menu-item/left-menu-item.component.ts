@@ -16,7 +16,7 @@ export class LeftMenuItemComponent implements OnInit {
 
   bg: string;
 
-  constructor(private router: Router) {}
+  constructor(public router: Router) {}
 
   onClick() {
     this.clck.emit(
