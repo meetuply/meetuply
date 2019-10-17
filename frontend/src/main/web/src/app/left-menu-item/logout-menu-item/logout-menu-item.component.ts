@@ -12,7 +12,7 @@ export class LogoutMenuItemComponent extends LeftMenuItemComponent {
 
   constructor(private authService: AuthenticationService, private router: Router) {
     super();
-    this.item = { icon: "turn-off.svg", text: 'log out', action: null};
+    this.item = { icon: "turn-off.svg", text: 'log out', redirectTo: null};
   }
 
   onClick() {

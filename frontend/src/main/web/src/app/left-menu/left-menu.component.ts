@@ -18,18 +18,17 @@ export class LeftMenuComponent implements OnInit {
   @Output() selectedItem = "meetups";
 
   menu_items: Menu_item[] = [
-    {icon: "apps.png", text: 'dashboard', action: null},
-    {icon: "globe.png", text: 'meetups', action: null},
-    {icon: "user.png", text: 'speakers', action: null},
-    {icon: "comment.png", text: 'chat', action: null},
-    {icon: "calendar.png", text: 'blog', action: null},
-    {icon: "bell.png", text: 'notifications', action: null}
+    {icon: "apps.png", text: 'dashboard', redirectTo: "dashboard"},
+    {icon: "globe.png", text: 'meetups', redirectTo: "meetups"},
+    {icon: "user.png", text: 'speakers', redirectTo: "speakers"},
+    {icon: "comment.png", text: 'chat', redirectTo: "chat"},
+    {icon: "calendar.png", text: 'blog', redirectTo: "blog"},
+    {icon: "bell.png", text: 'notifications', redirectTo: "notifications"}
   ];
 
 
   bottom_menu_items: Menu_item[] = [
-    { icon: "settings.svg", text: 'settings', action: null },
-    // { icon: "bell", text: 'log out', action: null}
+    { icon: "settings.svg", text: 'settings', redirectTo: null }
   ];
 
   constructor(private http: HttpClient, private router: Router, private authenticationService: AuthenticationService) {}
