@@ -24,6 +24,7 @@ import { MeetupFilterComponent } from './meetup-filter/meetup-filter.component';
 import { MeetupListItemComponent } from './meetup-list-item/meetup-list-item.component';
 import { MeetupsListPageComponent } from './meetups-list-page/meetups-list-page.component';
 import { MeetupPageComponent } from './meetup-page/meetup-page.component';
+import { CreateMeetupPageComponent } from './create-meetup-page/create-meetup-page.component';
 
 
 @NgModule({
@@ -47,6 +48,7 @@ import { MeetupPageComponent } from './meetup-page/meetup-page.component';
     MeetupListItemComponent,
     MeetupsListPageComponent,
     MeetupPageComponent,
+    CreateMeetupPageComponent,
   ],
   imports: [
     BrowserModule,

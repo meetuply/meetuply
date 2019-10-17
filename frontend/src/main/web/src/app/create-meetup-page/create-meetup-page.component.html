@@ -1,0 +1,69 @@
+<app-left-menu></app-left-menu>
+<div class='content'>
+
+	<div class='back' (click)="goBack()">
+
+	</div>
+
+	<div class='main'>
+
+		<div class='title'>
+			Create meetup
+		</div>
+
+		<form class="form">
+			<div class='form_line'><span>Title:</span><input type="text" name="title" placeholder="title" required />
+			</div>
+			<div class='form_line'><span>Location:</span><input type="text" name="location" placeholder="location"
+					required /></div>
+			<div class='form_line'><span>Date:</span><input type="date" name="date" placeholder="date" required /></div>
+			<div class='form_line'><span>Time:</span><input type="time" name="time" placeholder="time" required /></div>
+
+			<div class='form_line'><span>Maximum members:</span><input type="number" name="maxMembers" value="20"
+					step="1" min="1" required /></div>
+
+			<!--
+			<div class='form_line'><span>Language:</span><select name="language">
+					<option *ngFor="let language of this.topics" value="{{language | lowercase}}">
+						{{language}}
+					</option>
+				</select></div>
+			-->
+
+			<div class='form_line'>
+				<span>Topics:</span>
+				<div class='topics_list'>
+					<app-toggle-button *ngFor="let topic of this.topics" id='{{topic.id}}' text='{{topic.name}}'
+						(toggled)="topicToggled($event)"></app-toggle-button>
+				</div>
+			</div>
+			
+			<!--
+			<div class='form_line'><span>Topics:</span><select name="topics">
+					<option value="volvo">Volvo</option>
+					<option value="saab">Saab</option>
+					<option value="fiat">Fiat</option>
+					<option value="audi">Audi</option>
+				</select></div>
+			-->
+
+			<div class='form_line'>
+				<span>Description:</span>
+				<textarea placeholder="Description" cols="30" rows="8"></textarea>
+			</div>
+
+
+			<div class='extra'>
+				<app-button text='Create meetup' fontSize='24' type='1'></app-button>
+			</div>
+		</form>
+
+
+
+
+
+	</div>
+
+
+
+</div>

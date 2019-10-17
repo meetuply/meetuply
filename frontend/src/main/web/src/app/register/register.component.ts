@@ -22,6 +22,8 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
+
+
     this.userService.register(this.user).subscribe(
       error => {
           if (error) {
