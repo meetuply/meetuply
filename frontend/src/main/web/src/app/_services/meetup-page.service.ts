@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
 // import { config } from '../../default.config';
 import {Meetup} from "../_models/meetup";
 import {environment} from "../../environments/environment";
@@ -10,9 +9,6 @@ import {User} from "../_models";
 
 @Injectable({ providedIn: 'root' })
 export class MeetupPageService {
-  // private getUrl    = '/meetups/:id';
-  // private updateUrl = config.api_path + '/meetups/update/';
-  // private deleteUrl = config.api_path + '/meetups/delete/';
 
   constructor(private http: HttpClient, private userService: UserService) {
   }

@@ -22,8 +22,7 @@ export class MeetupListItemComponent implements OnInit {
 
 
 
-  constructor() {
-  }
+  constructor() { }
 
   ngOnInit() {
     

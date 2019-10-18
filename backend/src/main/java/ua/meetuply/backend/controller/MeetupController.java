@@ -16,7 +16,7 @@ import javax.validation.Valid;
 public class MeetupController {
 
     @Autowired @Lazy
-    MeetupService meetupService;
+    private MeetupService meetupService;
 
     @GetMapping()
     public @ResponseBody Iterable<Meetup> getAllMeetups(){
@@ -40,9 +40,9 @@ public class MeetupController {
     }
 
     @PutMapping("/{meetupId}")
-    public ResponseEntity<Topic> updateTopic(@PathVariable("topicId") Integer meetupId, @RequestBody Meetup meetup) {
+    public ResponseEntity<Meetup> updateMeetup(@PathVariable("meetupId") Integer meetupId, @RequestBody Meetup meetup) {
         if (meetupService.getMeetupById(meetupId) == null) {
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build();
         }
         meetupService.updateMeetup(meetup);
         return ResponseEntity.ok().build();

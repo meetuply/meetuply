@@ -35,20 +35,20 @@ export class MeetupPageComponent implements OnInit {
   atendees: Atendee[] = [
     {
       name: "john",
-      surname: "dee",
+      surname: "doe2",
       rating: 4
     },
     {
-      name: "johwefn",
-      surname: "dee",
+      name: "Kate",
+      surname: "Tonyik",
       rating: 5
     },
     {
-      name: "joker",
-      surname: "lol",
+      name: "Jocker",
+      surname: "Jocker",
       rating: 1
     }
-  ];
+  ]
 
   constructor(
     private meetupPageService: MeetupPageService,
@@ -98,5 +98,7 @@ export class MeetupPageComponent implements OnInit {
   }
 
   goBack() {
+
   }
+
 }
