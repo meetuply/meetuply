@@ -1,11 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Atendee } from '../_models/atendee'
-import { Meetup } from "../_models/meetup";
-import {AuthenticationService} from "../_services";
-import {ActivatedRoute, ParamMap, Router} from "@angular/router";
+import {Component, OnInit} from '@angular/core';
+import {Atendee} from '../_models/atendee'
+import {Meetup} from "../_models/meetup";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MeetupPageService} from "../_services/meetup-page.service";
-import {tap} from "rxjs/operators";
-import {Observable} from "rxjs";
+import {User} from "../_models";
 
 @Component({
   selector: 'app-meetup-page',
@@ -14,41 +12,18 @@ import {Observable} from "rxjs";
 })
 export class MeetupPageComponent implements OnInit {
 
+  //todo ratind
+  meetup: Meetup = new Meetup();
   loading = false;
   private sub: any;
   id: number;
-  speakerId: number;
-  // meetup: Meetup = new Meetup();
-  //TODO: retrieve from backend using specific meetup id or other
-  title: string;
-  location: string;
-  description: string;
+  author: string;
   date: string;
   time: string;
-  maxMembers: number;
-  members: number;
-  author: string;
-  // rate = 4;
+  rate = 4;
   joined = true;
   error = null;
-
-  atendees: Atendee[] = [
-    {
-      name: "john",
-      surname: "doe2",
-      rating: 4
-    },
-    {
-      name: "Kate",
-      surname: "Tonyik",
-      rating: 5
-    },
-    {
-      name: "Jocker",
-      surname: "Jocker",
-      rating: 1
-    }
-  ]
+  atendees: User[];
 
   constructor(
     private meetupPageService: MeetupPageService,
@@ -59,26 +34,38 @@ export class MeetupPageComponent implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
     this.loadMeetup(this.id);
+
   }
 
   loadMeetup(id:number) {
     this.loading = true;
-    this.meetupPageService.get(id).subscribe(
+    this.sub = this.meetupPageService.get(id).subscribe(
       data => {
-        this.title = data['meetupTitle'];
-        this.description = data['meetupDescription'];
-        this.date = data['meetupStartDateTime'].substring(0, 10);
-        this.time = data['meetupStartDateTime'].substring(11, 16);
-        this.location = data['meetupPlace'];
-        this.maxMembers = data['meetupMaxAttendees'];
-        this.members = data['meetupRegisteredAttendees'];
-        this.speakerId = data['speakerId'];
+        this.loading = false;
+        this.meetup = data;
+        this.date = data.meetupStartDateTime.substring(0, 10);
+        this.time = data.meetupStartDateTime.substring(11, 16);
         this.getMeetupSpeakerName();
-      }, error => this.error = error);
+        this.getAttendees();},
+      error => {
+        // this.alertService.error(error);
+        this.loading = false;
+      }
+    );
+  }
+
+  getAttendees(){
+    this.loading = true;
+    this.meetupPageService.getAttendees(this.id).subscribe(
+      data => {
+        this.loading = false;
+        this.atendees = data;
+      }
+    )
   }
 
   getMeetupSpeakerName(){
-    this.meetupPageService.getSpeaker(this.speakerId).subscribe(
+    this.meetupPageService.getSpeaker(this.meetup.speakerId).subscribe(
       data => {
         this.author = data['firstName'] +" "+ data['lastName'];
       }
@@ -86,19 +73,17 @@ export class MeetupPageComponent implements OnInit {
   }
 
   joinType() {
-    return (this.joined == true ? '2' : (this.maxMembers == this.members ? "3" : "1"));
+    return (this.joined == true ? '2' : (this.meetup.meetupMaxAttendees == this.meetup.meetupRegisteredAttendees ? "3" : "1"));
   }
 
   joinText() {
-    return (this.joined == true ? 'Leave' : (this.maxMembers == this.members ? "Full" : "Join"));
+    return (this.joined == true ? 'Leave' : (this.meetup.meetupMinAttendees == this.meetup.meetupRegisteredAttendees ? "Full" : "Join"));
   }
 
   ngOnDestroy(){
-    this.sub.unsubscribe();
+    if (this.sub) this.sub.unsubscribe;
   }
 
   goBack() {
-
   }
-
 }
