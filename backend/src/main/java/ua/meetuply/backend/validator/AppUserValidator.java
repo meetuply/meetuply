@@ -34,7 +34,7 @@ public class AppUserValidator implements Validator {
         if (appUser.getEmail().length() > 200) errors.rejectValue("email", "Length.appUser.email", "Email address is too long");
         if (appUser.getFirstName().length() > 100) errors.rejectValue("name", "Length.appUser.email", "Email address is too long");
         if (appUser.getLastName().length() > 100) errors.rejectValue("surname", "Length.appUser.email", "Email address is too long");
-        if (appUser.getPassword().length() < 73) errors.rejectValue("password", "Length.appUser.password", "Password is too long");
+        if (appUser.getPassword().length() > 73) errors.rejectValue("password", "Length.appUser.password", "Password is too long");
 
         if (!this.emailValidator.isValid(appUser.getEmail())) {
             errors.rejectValue("email", "Pattern.appUser.email", "Not valid email");
