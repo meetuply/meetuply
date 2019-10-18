@@ -31,10 +31,9 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
         return meetupList;
     }
 
-    //todo change userId to function
     @Override
     public void save(Meetup meetup) {
-        jdbcTemplate.update("INSERT INTO meetup (`uid`,`place`, `title`, `description`,``registered_attendees`, `min_attendees`, `max_attendees`," +
+        jdbcTemplate.update("INSERT INTO meetup (`uid`,`place`, `title`, `description`,`registered_attendees`, `min_attendees`, `max_attendees`," +
                         "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", null,
                 meetup.getMeetupPlace(),meetup.getMeetupTitle(), meetup.getMeetupDescription(),
                 meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
@@ -56,6 +55,7 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
     public void delete(Integer id) {
         jdbcTemplate.update("DELETE FROM meetup WHERE uid = ?", id);
     }
+
 
     public Meetup mapRow(ResultSet rs, int rowNum) throws SQLException {
         Meetup meetup = new Meetup();

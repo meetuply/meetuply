@@ -1,13 +1,13 @@
 export class Meetup{
-  uid: number;
-  place: string;
-  title: string;
-  description: string;
-  registeredAttendees: number;
-  minAttendees: number;
-  maxAttendees: number;
-  startDateTime: string;
-  finishDateTime: string;
-  statusId: number;
+  meetupId: number;
+  meetupPlace: string;
+  meetupTitle: string;
+  meetupDescription: string;
+  meetupRegisteredAttendees: number;
+  meetupMinAttendees: number;
+  meetupMaxAttendees: number;
+  meetupStartDateTime: string;
+  meetupFinishDateTime: string;
+  stateId: number;
   speakerId: number;
 }

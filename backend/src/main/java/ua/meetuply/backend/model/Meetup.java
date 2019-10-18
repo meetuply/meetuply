@@ -1,6 +1,8 @@
 package ua.meetuply.backend.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Meetup {
@@ -26,7 +28,7 @@ public class Meetup {
         this.meetupId = meetupId;
         this.meetupPlace = meetupPlace;
         this.meetupTitle = meetupTitle;
-//        this.meetupDescription = meetupDescription;
+        this.meetupDescription = meetupDescription;
         this.meetupRegisteredAttendees = meetupRegisteredAttendees;
         this.meetupMinAttendees = meetupMinAttendees;
         this.meetupMaxAttendees = meetupMaxAttendees;
