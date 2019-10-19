@@ -49,6 +49,7 @@ public class MeetupController {
         if (meetupService.getMeetupById(meetupId) == null) {
             return ResponseEntity.badRequest().build();
         }
+        meetup.setMeetupId(meetupId);
         meetupService.updateMeetup(meetup);
         return ResponseEntity.ok().build();
     }
