@@ -9,7 +9,7 @@
   <div class='main'>
 
     <div class='info'>
-      <div class='title'>{{this.title}}</div>
+      <div class='title'>{{this.meetup.meetupTitle}}</div>
       <div class='detail'>
         <img src="assets/img/download.png"/>
         <div>by {{this.author}}</div>
@@ -21,7 +21,7 @@
       About
     </div>
     <div class='description'>
-      {{this.description}}
+      {{this.meetup.meetupDescription}}
     </div>
 
     <div class='about'>
@@ -29,12 +29,9 @@
     </div>
 
     <div class='atendees'>
-
-
-      <app-atendee *ngFor="let atendee of this.atendees" [name]='atendee.name' [surname]=atendee.surname
-                   [rating]='atendee.rating'></app-atendee>
+      <app-atendee *ngFor="let atendee of atendees" [name]='atendee.firstName' [surname]=atendee.lastName></app-atendee>
+      <!--[rating]=4-->
     </div>
-
   </div>
 
   <div class='additional'>
@@ -49,12 +46,11 @@
     </div>
     <div class='location'>
       <div class='icon'></div>
-      <div>{{this.location}}</div>
+      <div class='text'>{{this.meetup.meetupPlace}}</div>
     </div>
-
     <div class='members'>
       <div class='icon'></div>
-      <div>{{this.members}}/{{this.maxMembers}}</div>
+      <div>{{this.meetup.meetupRegisteredAttendees}}/{{this.meetup.meetupMaxAttendees}}</div>
     </div>
   </div>
 </div>

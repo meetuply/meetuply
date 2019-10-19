@@ -20,12 +20,16 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     @Autowired
     public JdbcTemplate jdbcTemplate;
 
-    // Config in WebSecurityConfig
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     RoleDAO roleDAO;
+
+    public List<AppUser> getMeetupAttendees(Integer id){
+        List<AppUser> attendeesList = jdbcTemplate.query("select * from user where uid in (select user_id from meetup_attendees where meetup_id = ?)", new Object[]{id}, this);
+        return attendeesList;
+    }
 
     public AppUser findAppUserByEmail(String email) {
         List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE email = ?", new Object[] { email }, this);

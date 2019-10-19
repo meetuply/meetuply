@@ -38,6 +38,7 @@ public class TopicController {
     	if (topicService.get(topicId) == null) {
             ResponseEntity.badRequest().build();
         }
+    	topic.setTopicId(topicId);
         topicService.update(topic);
     	return ResponseEntity.ok().build();
     }
