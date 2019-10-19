@@ -73,4 +73,14 @@ public class AppUserService {
         user.setRegistration_confirmed(true);
         appUserDAO.update(user);
     }
+
+    public void deactivateUser(AppUser user) {
+        user.setDeactivated(true);
+        appUserDAO.update(user);
+    }
+
+    public void activateDeactivatedUser(AppUser user) {
+        user.setDeactivated(false);
+        appUserDAO.update(user);
+    }
 }
