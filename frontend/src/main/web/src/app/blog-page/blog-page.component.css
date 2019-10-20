@@ -7,9 +7,9 @@
   padding: 25px;
 }
 
-.post-title{
+.post-title *{
   font-weight: bold;
-  font-size: 24px;
+  font-size: 28px;
   margin-bottom: 10px;
 }
 
@@ -61,4 +61,17 @@
   background-size: cover;
   background-image: url(/assets/icons/arrow-left.png);
   cursor: pointer;
+}
+
+.comments-header{
+  text-align: left;
+  flex-direction: row;
+  display: flex;
+  vertical-align: baseline;
+}
+
+.view-all-link{
+  text-decoration: none;
+  font-style: italic;
+
 }

@@ -31,6 +31,11 @@ public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment>
         return blogComments.size() == 0 ? null : blogComments.get(0);
     }
 
+    public List<BlogComment> getByPostId(Integer id) {
+        List<BlogComment> blogComments = jdbcTemplate.query("SELECT * FROM comment WHERE post_id = ?", new Object[] { id }, this);
+        return blogComments;
+    }
+
     @Override
     public List<BlogComment> getAll() {
         List<BlogComment> blogComments = jdbcTemplate.query("SELECT * FROM comment", this);

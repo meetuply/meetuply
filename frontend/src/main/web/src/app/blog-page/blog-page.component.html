@@ -6,7 +6,7 @@
 
   </div>
     <div class = 'post-title'>
-      {{this.post_title}}
+      <h1>{{this.post_title}}</h1>
     </div>
 
 
@@ -29,7 +29,29 @@
 		</div>
 
     <div class="comments">
+      <div class="comments-header">
+        <h2>Comments</h2>
+        <a class="view-all-link" href="">view all</a>
+      </div>
 
+      <div class="comments-container">
+
+      </div>
+
+      <div class="new-comment-container">
+        <div class="new-comment">
+          <div class="author">
+            <div class='avatar'>
+              <img src="assets/img/download.png">
+            </div>
+          </div>
+
+          <form class="comment-text">
+            <textarea placeholder="You can leave your comment here"></textarea>
+            <app-button [text]="'>'" fontSize='50' href="" type='4'></app-button>
+          </form>
+        </div>
+      </div>
     </div>
 
 	</div>

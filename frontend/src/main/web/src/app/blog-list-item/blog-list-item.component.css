@@ -1,5 +1,6 @@
 .item {
   margin-top: 20px;
+  padding: 20px 10px 20px 20px;
 
   display: flex;
 
@@ -9,8 +10,6 @@
 }
 
 .item .main {
-  margin: 20px 10px 20px 20px;
-
   display: flex;
   flex-direction: row;
 }
@@ -58,26 +57,5 @@
 
 .post-content{
   font-size: 14px;
-}
-
-.post-button{
-  min-height: 100%;
-  position: relative;
-  height: 100%;
-  width: auto;
-  margin-left: 0px;
-  margin-right: 0px;
-  padding: 0px;
-}
-
-.post-button div.button.btn1{
-  min-height: 100%;
-  position: relative;
-  height: 100%;
-  display: inline-block;
-}
-
-.post_button div.button.btn1 a {
-  font-stretch: ultra-condensed;
-  font-size: 5px;
+  text-overflow: fade;
 }
