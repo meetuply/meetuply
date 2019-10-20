@@ -41,7 +41,7 @@ public class BlogController {
     public ResponseEntity<BlogPost> updateBlogPost(@PathVariable("post-id") Integer blogPostId,
                                                    @RequestBody BlogPost blogPost) {
         if (blogPostService.getBlogPostById(blogPostId) == null) {
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build();
         }
         blogPostService.updateBlogPost(blogPost);
         return ResponseEntity.ok().build();
@@ -50,7 +50,7 @@ public class BlogController {
     @DeleteMapping("/{post-id}")
     public ResponseEntity<BlogPost> deleteBlogPost(@PathVariable("post-id") Integer blogPostId){
         if (blogPostService.getBlogPostById(blogPostId) == null) {
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build();
         }
         blogPostService.deleteBlogPost(blogPostId);
         return ResponseEntity.ok().build();
@@ -82,7 +82,7 @@ public class BlogController {
     public ResponseEntity<BlogComment> updateBlogComment(@PathVariable("comment-id") Integer blogCommentId,
                                                       @RequestBody BlogComment blogComment) {
         if (blogCommentService.getBlogCommentById(blogCommentId) == null) {
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build();
         }
         blogCommentService.updateBlogComment(blogComment);
         return ResponseEntity.ok().build();
