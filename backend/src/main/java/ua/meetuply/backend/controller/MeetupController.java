@@ -4,9 +4,13 @@ package ua.meetuply.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Meetup;
 import ua.meetuply.backend.model.Topic;
+import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.MeetupService;
 
 import javax.validation.Valid;
@@ -17,6 +21,9 @@ public class MeetupController {
 
     @Autowired @Lazy
     MeetupService meetupService;
+
+    @Autowired
+    AppUserService appUserService;
 
     @GetMapping()
     public @ResponseBody Iterable<Meetup> getAllMeetups(){
@@ -54,6 +61,13 @@ public class MeetupController {
             ResponseEntity.badRequest().build();
         }
         meetupService.deleteMeetup(meetupId);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PutMapping("/join/{meetupID}")
+    public ResponseEntity join(@PathVariable("meetupID") Integer meetupID){
+        meetupService.join(meetupID);
         return ResponseEntity.ok().build();
     }
 }

@@ -63,6 +63,17 @@ public class AppUserService {
         return userId;
     }
 
+    public AppUser getCurrentUser() {
+        String email = "";
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            email = ((UserDetails) principal).getUsername();
+        } else {
+            email = principal.toString();
+        }
+        return appUserDAO.getUserByEmail(email);
+    }
+
     public AppUser getUserByEmail(String email){
         return appUserDAO.getUserByEmail(email);
     }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.MeetupDAO;
+import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Meetup;
 
 import java.util.List;
@@ -38,5 +39,11 @@ public class MeetupService {
 
     public void deleteMeetup(Integer id){
         meetupDao.delete(id);
+    }
+
+    public void join(Integer meetupID) {
+        AppUser user = appUserService.getCurrentUser();
+        Meetup meetup = getMeetupById(meetupID);
+        meetupDao.join(meetup, user);
     }
 }

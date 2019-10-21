@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Meetup;
 
 import java.sql.ResultSet;
@@ -34,7 +37,7 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
     //todo change userId to function
     @Override
     public void save(Meetup meetup) {
-        jdbcTemplate.update("INSERT INTO meetup (`uid`,`place`, `title`, `description`,``registered_attendees`, `min_attendees`, `max_attendees`," +
+        jdbcTemplate.update("INSERT INTO meetup (`uid`,`place`, `title`, `description`,`registered_attendees`, `min_attendees`, `max_attendees`," +
                         "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", null,
                 meetup.getMeetupPlace(),meetup.getMeetupTitle(), meetup.getMeetupDescription(),
                 meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
@@ -42,6 +45,7 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void update(Meetup meetup) {
         jdbcTemplate.update("UPDATE meetup SET place = ?, " +
                 "title = ?, description = ? ,registered_attendees = ?, min_attendees = ?," +
@@ -72,5 +76,12 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
         meetup.setStateId(rs.getInt("state_id"));
         meetup.setSpeakerId(rs.getInt("speaker_id"));
         return meetup;
+    }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public void join(Meetup meetup, AppUser user) {
+        jdbcTemplate.update("INSERT INTO `meetup_attendees` (`meetup_id`, `user_id`) VALUES (?, ?)",
+                meetup.getMeetupId(), user.getUserId());
+        System.out.println("join");
     }
 }
