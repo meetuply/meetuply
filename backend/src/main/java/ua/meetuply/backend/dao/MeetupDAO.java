@@ -1,6 +1,7 @@
 package ua.meetuply.backend.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -79,9 +80,9 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void join(Meetup meetup, AppUser user) {
+    public void join(Integer meetupID, Integer userID) {
         jdbcTemplate.update("INSERT INTO `meetup_attendees` (`meetup_id`, `user_id`) VALUES (?, ?)",
-                meetup.getMeetupId(), user.getUserId());
-        System.out.println("join");
+                meetupID, userID);
+
     }
 }
