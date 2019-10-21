@@ -43,6 +43,8 @@ public class AppUserService {
         return appUserDAO.getAppUsers();
     }
 
+    public List<AppUser> getMeetupAttendees(Integer meetupId) {return appUserDAO.getMeetupAttendees(meetupId);}
+
     public Integer getUserIdByEmail(String email){
         return appUserDAO.getUserIdByEmail(email);
     }
@@ -80,6 +82,16 @@ public class AppUserService {
 
     public void activateUser(AppUser user) {
         user.setRegistration_confirmed(true);
+        appUserDAO.update(user);
+    }
+
+    public void deactivateUser(AppUser user) {
+        user.setDeactivated(true);
+        appUserDAO.update(user);
+    }
+
+    public void activateDeactivatedUser(AppUser user) {
+        user.setDeactivated(false);
         appUserDAO.update(user);
     }
 }

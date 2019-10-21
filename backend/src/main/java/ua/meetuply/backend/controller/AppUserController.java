@@ -109,4 +109,18 @@ public class AppUserController {
         }
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/deactivate/{id}")
+    public ResponseEntity<AppUser> deactivateUser(@PathVariable("id") Integer userId) {
+        AppUser user = appUserService.getUser(userId);
+        appUserService.deactivateUser(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/activate/{id}")
+    public ResponseEntity<AppUser> activateUser(@PathVariable("id") Integer userId) {
+        AppUser user = appUserService.getUser(userId);
+        appUserService.activateDeactivatedUser(user);
+        return ResponseEntity.ok().build();
+    }
 }
