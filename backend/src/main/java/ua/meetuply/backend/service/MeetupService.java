@@ -3,7 +3,10 @@ package ua.meetuply.backend.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import ua.meetuply.backend.controller.exception.MeetupNotFoundException;
+import ua.meetuply.backend.controller.exception.UserNotFoundException;
 import ua.meetuply.backend.dao.MeetupDAO;
+import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Meetup;
 
 import java.util.List;
@@ -38,5 +41,12 @@ public class MeetupService {
 
     public void deleteMeetup(Integer id){
         meetupDao.delete(id);
+    }
+
+    public void join(Integer meetupID) throws Exception {
+        AppUser user = appUserService.getCurrentUser();
+        if (user == null) throw UserNotFoundException.createWith("current");
+        if (meetupDao.get(meetupID) == null) throw MeetupNotFoundException.createWith(meetupID);
+        meetupDao.join(meetupID, user.getUserId());
     }
 }
