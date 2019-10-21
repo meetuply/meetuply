@@ -10,27 +10,48 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import ua.meetuply.backend.model.Ban;
+import ua.meetuply.backend.service.AppUserService;
+import ua.meetuply.backend.service.BanReasonService;
 
 @Repository
-public abstract class BanDAO implements IDAO<Ban>, RowMapper<Ban> {
+public class BanDAO implements RowMapper<Ban> {
 	
 	@Autowired
     private JdbcTemplate jdbcTemplate;
 	
 	@Autowired
-    AppUserDAO appUserDAO;
+    AppUserService appUserService;
 	
 	@Autowired
-    BanReasonDAO banReasonDAO;
+    BanReasonService banReasonService;
 	
 	public Ban get(Integer reason_id, Integer by_user_id, Integer reported_user_id) {
         List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban WHERE reason_id = ? AND by_user_id = ? AND reported_user_id = ?", new Object[] { reason_id, by_user_id, reported_user_id }, this);
         return bans.size() == 0 ? null : bans.get(0);
     }
+
+    public List<Ban> getByReason(Integer reason_id) {
+        List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban WHERE reason_id = ?", new Object[] { reason_id }, this);
+        return bans;
+    }
+
+    public List<Ban> getByAuthor(Integer by_user_id) {
+        List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban WHERE by_user_id = ?", new Object[] { by_user_id }, this);
+        return bans;
+    }
+
+    public List<Ban> getByReported(Integer reported_user_id) {
+        List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban WHERE reported_user_id = ?", new Object[] { reported_user_id }, this);
+        return bans;
+    }
+
+    public List<Ban> getAll() {
+        List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban", this);
+        return bans;
+    }
 	
-	@Override
-    public void save(Ban ban) {
-        jdbcTemplate.update("INSERT INTO `ban` (`reason_id`, 'by_user_id', 'report_user_id', 'description', 'data_time') " + "VALUES (?, ?, ?, ?, ?)",
+	public void save(Ban ban) {
+        jdbcTemplate.update("INSERT INTO `ban` (`reason_id`, `by_user_id`, `reported_user_id`, `description`, `date_time`) " + "VALUES (?, ?, ?, ?, ?)",
                 ban.getBanReason().getBanReasonId(),
                 ban.getAuthor().getUserId(),
                 ban.getReported().getUserId(),
@@ -38,7 +59,6 @@ public abstract class BanDAO implements IDAO<Ban>, RowMapper<Ban> {
                 ban.getTime());
     }
 
-    @Override
     public void update(Ban ban) {
         jdbcTemplate.update("UPDATE ban SET description = ?"
         		+ " WHERE reason_id = ? AND by_user_id = ? AND reported_user_id = ?",
@@ -52,11 +72,11 @@ public abstract class BanDAO implements IDAO<Ban>, RowMapper<Ban> {
     @Override
     public Ban mapRow(ResultSet resultSet, int i) throws SQLException {
         return new Ban(
-        		banReasonDAO.get(resultSet.getInt("reason_id")),
-        		appUserDAO.get(resultSet.getInt("by_user_id")),
-        		appUserDAO.get(resultSet.getInt("reported_user_id")),
+        		banReasonService.get(resultSet.getInt("reason_id")),
+        		appUserService.getUser(resultSet.getInt("by_user_id")),
+        		appUserService.getUser(resultSet.getInt("reported_user_id")),
                 resultSet.getString("description"),
-                resultSet.getTimestamp("date_time")
+                resultSet.getTimestamp("date_time").toLocalDateTime()
         );
     }
 

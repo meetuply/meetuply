@@ -47,6 +47,7 @@ public class BanReasonController {
     	if (banReasonService.get(banReasonId) == null) {
             ResponseEntity.badRequest().build();
         }
+		banReason.setBanReasonId(banReasonId);
     	banReasonService.update(banReason);
     	return ResponseEntity.ok().build();
     }
