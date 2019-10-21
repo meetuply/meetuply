@@ -1,17 +1,9 @@
 package ua.meetuply.backend.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import ua.meetuply.backend.controller.exception.MeetupNotFoundException;
-import ua.meetuply.backend.controller.exception.UserNotFoundException;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Meetup;
 import ua.meetuply.backend.model.Topic;
@@ -29,9 +21,6 @@ public class MeetupController {
 
     @Autowired
     private AppUserService appUserService;
-
-    @Autowired
-    AppUserService appUserService;
 
     @GetMapping()
     public @ResponseBody Iterable<Meetup> getAllMeetups(){
