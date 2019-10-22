@@ -56,6 +56,10 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
         return users.size() == 0 ? null : users.get(0);
     }
 
+    public List<Integer> getUserSubscribers(Integer id) {
+        return jdbcTemplate.queryForList("SELECT follower_id FROM followers WHERE followed_user_id = ?", new Object[]{id}, Integer.class);
+    }
+
     @Override
     public List<AppUser> getAll() {
         return null;
@@ -65,9 +69,9 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     public void save(AppUser user) {
         jdbcTemplate.update(
                 // TODO role_id
-                "INSERT INTO `user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId()
+                "INSERT INTO `user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`, `description`, `location`) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId(), user.getDescription(), user.getLocation()
         );
     }
 
@@ -81,11 +85,13 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
                         "registration_confirmed = ?, " +
                         "is_deactivated = ?, " +
                         "allow_notifications = ?, " +
-                        "role_id = ? WHERE uid = ?",
+                        "role_id = ?, " +
+                        "description = ?, " +
+                        "location = ? WHERE uid = ?",
                 appUser.getEmail(), appUser.getPassword(), appUser.getFirstName(),
                 appUser.getLastName(), appUser.isRegistration_confirmed(),
                 appUser.isDeactivated(), appUser.isAllow_notifications(), appUser.getRole().getRoleId(),
-                appUser.getUserId());
+                appUser.getUserId(),appUser.getDescription(),appUser.getLocation());
     }
 
     @Override
@@ -103,7 +109,9 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
                 resultSet.getBoolean("is_deactivated"),
                 resultSet.getBoolean("registration_confirmed"),
                 resultSet.getBoolean("allow_notifications"),
-                resultSet.getString("password")
+                resultSet.getString("password"),
+                resultSet.getString("description"),
+                resultSet.getString("location")
         );
         return appUser;
     }

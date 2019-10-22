@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { History } from '../history'
 import { Feedback } from "../feedback"
 import { Location } from '@angular/common';
-import {HttpClient} from "@angular/common/http";
-import {Router} from "@angular/router";
+import { HttpClient } from "@angular/common/http";
+import { ActivatedRoute, Router } from "@angular/router";
+
+import { User } from '../_models'
+import { UserService } from '../_services/user.service'
 
 @Component({
   selector: 'app-speaker-page',
@@ -13,12 +16,10 @@ import {Router} from "@angular/router";
 export class SpeakerPageComponent implements OnInit {
 
 
-  name = "John"
-  surname = "Dee"
+  id: number;
+  user: User;
+  followers: number;
 
-  location = "Barcelona, Spain"
-
-  rate = 4.5;
 
   histories: History[] = [
     {
@@ -66,10 +67,25 @@ export class SpeakerPageComponent implements OnInit {
     this._location.back();
   }
 
-  constructor(private _location: Location, private router: Router) {
+  constructor(private _location: Location, private router: Router, private userService: UserService, private route: ActivatedRoute) {
+  }
+
+  loadUser(id: number) {
+    this.userService.get(id).subscribe(user => 
+      this.user = user
+    );
+  }
+
+  loadFollowers(id:number) {
+    this.userService.getUserFollowers(id).subscribe(res => 
+      this.followers = res.length
+    );
   }
 
   ngOnInit() {
+    this.id = this.route.snapshot.params['id'];
+    this.loadUser(this.id);
+    this.loadFollowers(this.id);
   }
 
 }

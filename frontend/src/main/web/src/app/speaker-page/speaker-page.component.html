@@ -1,7 +1,7 @@
 <app-left-menu></app-left-menu>
 <div class='content'>
 
-
+	
 	<div class='main'>
     <div class='back' (click)="goBack()">
 
@@ -16,11 +16,11 @@
 			<div class='other'>
 				<div class='info'>
 					<div class='name'>
-						{{this.name + " " + this.surname}}
+						{{this.user.firstName + " " + this.user.lastName}}
 					</div>
 					<div class='location'>
 						<div class='icon'></div>
-						<div>{{this.location}}</div>
+						<div>{{this.user.location}}</div>
 					</div>
 
 				</div>
@@ -29,7 +29,7 @@
 					<app-button text='Message speaker' type='1' href='ok' fontSize='20'></app-button>
 				</div>
 				<div class='additional_info'>
-					<span>345 followers</span>
+					<span>{{this.followers}} followers</span>
 				</div>
 
 			</div>
@@ -41,7 +41,7 @@
 			About me
 		</div>
 		<div class='description'>
-			{{this.description}}
+			{{this.user.description}}
 		</div>
 
 

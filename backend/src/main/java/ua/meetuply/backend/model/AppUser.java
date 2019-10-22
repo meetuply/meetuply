@@ -13,11 +13,13 @@ public class AppUser {
     private String password;
     private boolean registration_confirmed;
     private boolean allow_notifications;
+    private String description;
+    private String location;
 
     public AppUser() {
     }
 
-    public AppUser(Integer userId, String email, String firstName, String lastName, Role role, boolean deactivated, boolean registration_confirmed, boolean allow_notifications, String password) {
+    public AppUser(Integer userId, String email, String firstName, String lastName, Role role, boolean deactivated, boolean registration_confirmed, boolean allow_notifications, String password, String description,String location) {
         this.userId = userId;
         this.email = email;
         this.firstName = firstName;
@@ -27,6 +29,8 @@ public class AppUser {
         this.password = password;
         this.registration_confirmed = registration_confirmed;
         this.allow_notifications = allow_notifications;
+        this.description = description;
+        this.location = location;
     }
 
     public Integer getUserId() {
@@ -104,6 +108,23 @@ public class AppUser {
     public String getFullName() {
         return getFirstName() + " " + getLastName();
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -49,6 +49,10 @@ public class AppUserService {
         return appUserDAO.getUserIdByEmail(email);
     }
 
+    public List<Integer> getUserSubscribers(Integer id) {
+        return appUserDAO.getUserSubscribers(id);
+    }
+
     public AppUser getUser(Integer id){
         return appUserDAO.get(id);
     }

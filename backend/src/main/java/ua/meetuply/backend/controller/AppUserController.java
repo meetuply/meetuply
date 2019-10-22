@@ -7,10 +7,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.ConfirmationToken;
+import ua.meetuply.backend.model.Language;
 import ua.meetuply.backend.service.ConfirmationService;
 import ua.meetuply.backend.service.EmailService;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.service.AppUserService;
+import ua.meetuply.backend.service.LanguageService;
 import ua.meetuply.backend.validator.AppUserValidator;
 
 
@@ -30,6 +32,9 @@ public class AppUserController {
 
     @Autowired
     private AppUserService appUserService;
+
+    @Autowired
+    private LanguageService languageService;
 
     @Autowired
     private ConfirmationService confirmationService;
@@ -59,13 +64,24 @@ public class AppUserController {
 
     @RequestMapping("/members")
     @GetMapping()
-    public @ResponseBody Iterable<AppUser> getAllMeetups(){
+    public @ResponseBody
+    Iterable<AppUser> getAllMeetups() {
         return appUserService.getAppUsers();
     }
 
     @GetMapping("/{id}")
     public AppUser get(@PathVariable("id") Integer userId) {
         return appUserService.getUser(userId);
+    }
+
+    @GetMapping("/{id}/languages")
+    public Iterable<Language> getLanguages(@PathVariable("id") Integer userId) {
+        return languageService.getUserLanguages(userId);
+    }
+
+    @GetMapping("/{id}/subscribers")
+    public Iterable<Integer> getSubscribers(@PathVariable("id") Integer userId) {
+        return appUserService.getUserSubscribers(userId);
     }
 
     @RequestMapping("/registerSuccessful")
@@ -77,6 +93,8 @@ public class AppUserController {
     public String viewLogin(Model model) {
         return "registration/loginPage";
     }
+
+
 
     @GetMapping("/register")
     public String viewRegister() {

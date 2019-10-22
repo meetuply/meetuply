@@ -1,8 +1,10 @@
 ﻿export class User {
-    uid: number;
+    userId: number;
     email: string;
     firstName: string;
+    location: string;
     lastName: string;
     password: string;
     confirmedPassword: string;
+    description: string;
 }
