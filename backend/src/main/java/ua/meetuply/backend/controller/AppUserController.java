@@ -5,17 +5,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.ConfirmationToken;
+import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.ConfirmationService;
 import ua.meetuply.backend.service.EmailService;
-import ua.meetuply.backend.model.AppUser;
-import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.validator.AppUserValidator;
 
-
-import javax.validation.Valid;
 import javax.annotation.Resource;
-import java.security.Principal;
+import javax.validation.Valid;
 
 
 @RestController

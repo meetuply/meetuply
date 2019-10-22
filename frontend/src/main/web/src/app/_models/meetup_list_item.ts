@@ -5,6 +5,7 @@ import {UserService} from "../_services";
 export class Meetup_list_item {
   meetup: Meetup;
 	author: string;
+	authorPhoto: string;
 	joined: boolean;
 	rate: number;
 	get date() {return this.meetup.meetupStartDateTime}
@@ -22,6 +23,7 @@ export class Meetup_list_item {
 	  this.rate = 4;
 	  this.userService.get(meetup.speakerId).subscribe(
 	    user => {
+	      this.authorPhoto = user['photo'];
 	      this.author = user['firstName'] + " " + user['lastName'];
       }
     )

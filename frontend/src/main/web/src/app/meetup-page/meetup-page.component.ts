@@ -19,6 +19,7 @@ export class MeetupPageComponent implements OnInit {
   private sub: Subscription;
   id: number;
   author: string;
+  authorPhoto: string;
   rate = 4;
   joined = true;
   error = null;
@@ -44,7 +45,7 @@ export class MeetupPageComponent implements OnInit {
         this.meetup = data;
         this.loading = false;
         this.meetup = data;
-        this.getAuthorName(data['speakerId']);
+        this.getAuthorInfo(data['speakerId']);
         this.getAttendees();
       },
       error => {
@@ -64,12 +65,13 @@ export class MeetupPageComponent implements OnInit {
     )
   }
 
-  getAuthorName(id: number){
+  getAuthorInfo(id: number){
     this.loading = true;
     this.meetupService.getSpeaker(this.meetup.speakerId).subscribe(
       data => {
         this.loading = false;
-        this.author = data['firstName']+" " + data['lastName']},
+        this.author = data['firstName']+" " + data['lastName'];
+        this.authorPhoto = data['photo']},
       error1 => {
         this.loading = false;
       }

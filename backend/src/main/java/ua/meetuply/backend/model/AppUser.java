@@ -11,13 +11,16 @@ public class AppUser {
     private Role role;
     private boolean deactivated;
     private String password;
+    private String photo;
     private boolean registration_confirmed;
     private boolean allow_notifications;
 
     public AppUser() {
     }
 
-    public AppUser(Integer userId, String email, String firstName, String lastName, Role role, boolean deactivated, boolean registration_confirmed, boolean allow_notifications, String password) {
+    public AppUser(Integer userId, String email, String firstName, String lastName, Role role,
+                   boolean deactivated, boolean registration_confirmed, boolean allow_notifications,
+                   String password, String photo) {
         this.userId = userId;
         this.email = email;
         this.firstName = firstName;
@@ -27,6 +30,7 @@ public class AppUser {
         this.password = password;
         this.registration_confirmed = registration_confirmed;
         this.allow_notifications = allow_notifications;
+        this.photo = photo;
     }
 
     public Integer getUserId() {
@@ -104,6 +108,15 @@ public class AppUser {
     public String getFullName() {
         return getFirstName() + " " + getLastName();
     }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

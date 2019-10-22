@@ -65,9 +65,9 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     public void save(AppUser user) {
         jdbcTemplate.update(
                 // TODO role_id
-                "INSERT INTO `user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId()
+                "INSERT INTO `user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`, `photo`) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId(), user.getPhoto()
         );
     }
 
@@ -81,11 +81,12 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
                         "registration_confirmed = ?, " +
                         "is_deactivated = ?, " +
                         "allow_notifications = ?, " +
-                        "role_id = ? WHERE uid = ?",
+                        "role_id = ?, " +
+                        "photo = ? WHERE uid = ?",
                 appUser.getEmail(), appUser.getPassword(), appUser.getFirstName(),
                 appUser.getLastName(), appUser.isRegistration_confirmed(),
                 appUser.isDeactivated(), appUser.isAllow_notifications(), appUser.getRole().getRoleId(),
-                appUser.getUserId());
+                appUser.getPhoto(), appUser.getUserId());
     }
 
     @Override
@@ -103,7 +104,8 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
                 resultSet.getBoolean("is_deactivated"),
                 resultSet.getBoolean("registration_confirmed"),
                 resultSet.getBoolean("allow_notifications"),
-                resultSet.getString("password")
+                resultSet.getString("password"),
+                resultSet.getString("photo")
         );
         return appUser;
     }
