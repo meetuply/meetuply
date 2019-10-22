@@ -19,7 +19,7 @@
 		<div class='left_column'>
 			<div *ngFor="let meetup_item of this.meetupsList;let i = index">
 				<app-meetup-list-item *ngIf="isOdd(i)" [joined]='meetup_item.joined' author='{{meetup_item.author}}'
-					time='{{meetup_item.time}}' rate='{{meetup_item.rate}}' description='{{meetup_item.description}}'
+					rate='{{meetup_item.rate}}' description='{{meetup_item.description}}'
 					title='{{meetup_item.title}}' place='{{meetup_item.place}}'
 					maxAttendees='{{meetup_item.maxAttendees}}' registeredAttendees='{{meetup_item.registeredAttendees}}'
                               id='{{meetup_item.id}}'
@@ -29,7 +29,7 @@
 		<div class='right_column'>
       <div *ngFor="let meetup_item of this.meetupsList;let i = index">
 				<app-meetup-list-item *ngIf="!isOdd(i)" [joined]='meetup_item.joined' author='{{meetup_item.author}}'
-					time='{{meetup_item.time}}' rate='{{meetup_item.rate}}' description='{{meetup_item.description}}'
+					 rate='{{meetup_item.rate}}' description='{{meetup_item.description}}'
 					title='{{meetup_item.title}}' place='{{meetup_item.place}}'
 					maxAttendees='{{meetup_item.maxAttendees}}' registeredAttendees='{{meetup_item.registeredAttendees}}'
           id='{{meetup_item.id}}' date='{{meetup_item.date}}' ></app-meetup-list-item>

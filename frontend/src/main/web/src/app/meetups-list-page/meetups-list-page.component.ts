@@ -65,10 +65,6 @@ export class MeetupsListPageComponent implements OnInit {
           this.newChunk = data.map(item => {
               return new Meetup_list_item(
                 item,
-                item.meetupStartDateTime.substring(0, 10),
-                item.meetupStartDateTime.substring(11, 16),
-                true,
-                3,
                 this.userService
               )
             }

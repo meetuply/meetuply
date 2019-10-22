@@ -19,8 +19,6 @@ export class MeetupPageComponent implements OnInit {
   private sub: Subscription;
   id: number;
   author: string;
-  date: string;
-  time: string;
   rate = 4;
   joined = true;
   error = null;
@@ -43,8 +41,6 @@ export class MeetupPageComponent implements OnInit {
       data => {
         this.loading = false;
         this.meetup = data;
-        this.date = data.meetupStartDateTime.substring(0, 10);
-        this.time = data.meetupStartDateTime.substring(11, 16);
         this.getAuthorName(data['speakerId']);
         this.getAttendees();
       },

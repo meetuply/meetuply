@@ -11,8 +11,7 @@ import {UserService} from "../_services";
 
 export class MeetupListItemComponent implements OnInit {
   @Input() meetup: Meetup;
-  @Input() time: string;
-  @Input() date: string;
+  @Input() date: Date;
   @Input() rate: number;
   @Input() author: string;
   @Input() joined: boolean;
