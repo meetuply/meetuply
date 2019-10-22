@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {MeetupService} from "../_services/meetup.service";
+import {Meetup} from "../_models/meetup";
 
 @Component({
   selector: 'app-meetup-list-item',
@@ -7,6 +9,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class MeetupListItemComponent implements OnInit {
 
+  @Input() meetup: Meetup;
   @Input() title: string;
   @Input() author: string;
   @Input() location: string;
@@ -20,12 +23,13 @@ export class MeetupListItemComponent implements OnInit {
   @Input() joined: boolean;
   @Input() id: number;
 
+  error;
 
 
-  constructor() { }
+  constructor(private meetupService: MeetupService) { }
 
   ngOnInit() {
-    
+    this.joined = false // todo remove
   }
 
 
@@ -34,7 +38,33 @@ export class MeetupListItemComponent implements OnInit {
   }
 
   joinText() {
-    return (this.joined == true ? 'Leave' : (this.maxMembers == this.members ? "Full" : "Join"));
+    return (this.joined == true ? 'Leave' : (this.maxMembers == this.members ? "Full": "Join" ));
+  }
+
+  joinButtonClicked(event){
+    if (this.joined)
+      this.meetupService.leaveMeetup(this.meetup.meetupId).subscribe(
+        data => {
+          this.joined = false;
+          this.meetup.meetupRegisteredAttendees--
+        },
+        error => {
+          this.error = error;
+          console.log(error)
+
+        }
+      );
+    else if (this.meetup.meetupMaxAttendees != this.meetup.meetupRegisteredAttendees)
+      this.meetupService.joinMeetup(this.meetup.meetupId).subscribe(
+        data => {
+          this.joined = true;
+          this.meetup.meetupRegisteredAttendees++
+        },
+        error => {
+          this.error = error;
+          console.log(error)
+        }
+      );
   }
 
 }
