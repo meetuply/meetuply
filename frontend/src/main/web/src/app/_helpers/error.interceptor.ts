@@ -20,13 +20,11 @@ export class ErrorInterceptor implements HttpInterceptor {
                   location.reload(true);
                 } else {
                   this.authenticationService.logout();
-                  return throwError("Invalid email or password");
                 }
+
             }
 
-            console.log(err);
-            const error = (err.error.error != null && err.error.errors[0].defaultMessage)
-                          || err.error.message || err.statusText;
+            const error = err.error.message || err.statusText;
             return throwError(error);
         }))
     }
