@@ -50,7 +50,15 @@ public class MeetupService {
         meetupDao.join(meetupID, user.getUserId());
     }
 
+
     public Iterable<Meetup> getMeetupsChunk(Integer startRow, Integer endRow) {
         return meetupDao.getMeetupsChunk(startRow, endRow);
+}
+  
+    public void leave(Integer meetupID) throws Exception {
+        AppUser user = appUserService.getCurrentUser();
+        if (user == null) throw UserNotFoundException.createWith("current");
+        if (meetupDao.get(meetupID) == null) throw MeetupNotFoundException.createWith(meetupID);
+        meetupDao.leave(meetupID, user.getUserId());
     }
 }

@@ -4,6 +4,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -12,13 +14,18 @@ import ua.meetuply.backend.controller.exception.MeetupNotFoundException;
 import ua.meetuply.backend.controller.exception.UserNotFoundException;
 import ua.meetuply.backend.model.ApiError;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Collections;
 import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({ MeetupNotFoundException.class, UserNotFoundException.class, DataAccessException.class})
+    @ExceptionHandler({
+            MeetupNotFoundException.class,
+            UserNotFoundException.class,
+            DataAccessException.class
+    })
     public final ResponseEntity<ApiError> handleException(Exception ex, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
 
@@ -62,3 +69,4 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, headers, status);
     }
 }
+

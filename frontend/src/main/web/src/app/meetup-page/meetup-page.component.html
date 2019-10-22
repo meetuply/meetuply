@@ -34,7 +34,7 @@
   </div>
 
   <div class='additional'>
-    <app-button [text]='joinText()' [type]='joinType()' fontSize='24'></app-button>
+    <app-button [text]='joinText()' [type]='joinType()' fontSize='24' (onClick)="joinButtonClicked($event)"></app-button>
     <div class='time'>
       <div class='icon'>
       </div>
@@ -48,7 +48,7 @@
     </div>
     <div class='members'>
       <div class='icon'></div>
-      <div>{{this.meetup.meetupRegisteredAttendees}}/{{this.meetup.meetupMaxAttendees}}</div>
+      <div>{{this.atendees.length || 0}}/{{this.meetup.meetupMaxAttendees}}</div>
     </div>
   </div>
 </div>

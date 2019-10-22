@@ -5,7 +5,7 @@
 				<img src="assets/img/download.png">
 			</div>
 			<div class='info'>
-				<div class='name'>
+				<div class='name' routerLink="{{'meetups/' + this.id}}">
 					{{this.title}}
 				</div>
 				<div class='place'>
@@ -37,7 +37,10 @@
 			<div>{{this.registeredAttendees}}/{{this.maxAttendees}}</div>
 		</div>
 
-		<app-button [text]="joinText()" href="{{this.id}}" [type]='joinType()' fontSize='20'></app-button>
+		<app-button [text]="joinText()"
+                [type]='joinType()'
+                (onClick)="joinButtonClicked($event)"
+                fontSize='20'></app-button>
 
 	</div>
-<!--</div>-->
+</div>

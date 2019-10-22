@@ -74,4 +74,10 @@ public class MeetupController {
         meetupService.join(meetupID);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{meetupID}/leave")
+    public ResponseEntity leave(@PathVariable("meetupID") Integer meetupID) throws Exception {
+        meetupService.leave(meetupID);
+        return ResponseEntity.ok().build();
+    }
 }

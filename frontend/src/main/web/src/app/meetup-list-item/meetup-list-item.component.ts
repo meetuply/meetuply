@@ -9,6 +9,7 @@ import {UserService} from "../_services";
   styleUrls: ['./meetup-list-item.component.less']
 })
 
+
 export class MeetupListItemComponent implements OnInit {
   @Input() meetup: Meetup;
   @Input() date: Date;
@@ -22,10 +23,10 @@ export class MeetupListItemComponent implements OnInit {
   @Input() registeredAttendees: number;
   @Input() id: number;
 
-  constructor() {
-  }
+  constructor(private meetupService: MeetupService) { }
 
   ngOnInit() {
+//     this.joined = false 
   }
 
   joinType() {
@@ -34,5 +35,31 @@ export class MeetupListItemComponent implements OnInit {
 
   joinText() {
     return (this.joined == true ? 'Leave' : (this.meetup.meetupMaxAttendees == this.meetup.meetupRegisteredAttendees ? "Full" : "Join"));
+  }
+
+  joinButtonClicked(event){
+    if (this.joined)
+      this.meetupService.leaveMeetup(this.meetup.meetupId).subscribe(
+        data => {
+          this.joined = false;
+          this.meetup.meetupRegisteredAttendees--
+        },
+        error => {
+          this.error = error;
+          console.log(error)
+
+        }
+      );
+    else if (this.meetup.meetupMaxAttendees != this.meetup.meetupRegisteredAttendees)
+      this.meetupService.joinMeetup(this.meetup.meetupId).subscribe(
+        data => {
+          this.joined = true;
+          this.meetup.meetupRegisteredAttendees++
+        },
+        error => {
+          this.error = error;
+          console.log(error)
+        }
+      );
   }
 }
