@@ -49,4 +49,11 @@ public class MeetupService {
         if (meetupDao.get(meetupID) == null) throw MeetupNotFoundException.createWith(meetupID);
         meetupDao.join(meetupID, user.getUserId());
     }
+
+    public void leave(Integer meetupID) throws Exception {
+        AppUser user = appUserService.getCurrentUser();
+        if (user == null) throw UserNotFoundException.createWith("current");
+        if (meetupDao.get(meetupID) == null) throw MeetupNotFoundException.createWith(meetupID);
+        meetupDao.leave(meetupID, user.getUserId());
+    }
 }

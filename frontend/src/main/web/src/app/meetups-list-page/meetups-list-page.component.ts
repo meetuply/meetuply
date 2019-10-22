@@ -22,8 +22,8 @@ export class MeetupsListPageComponent implements OnInit {
       title: 'cool',
       location: 'office',
       maxMembers: 15,
-      members: 15,
-      id: 1
+      members: 10,
+      id: 2
     }
 
   ]

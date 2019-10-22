@@ -2,8 +2,13 @@ package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.AppUserDAO;
@@ -11,10 +16,12 @@ import ua.meetuply.backend.dao.RoleDAO;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Role;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
-public class AppUserService {
+public class AppUserService implements UserDetailsService {
 
     @Autowired
     RoleDAO roleDAO;
@@ -93,5 +100,18 @@ public class AppUserService {
     public void activateDeactivatedUser(AppUser user) {
         user.setDeactivated(false);
         appUserDAO.update(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) {
+        AppUser appUser = appUserDAO.findAppUserByEmail(email);
+        if (appUser == null) throw new UsernameNotFoundException(email);
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        User user;
+        if(appUser.getRole().getRoleName().equals("admin"))
+            user = new User(appUser.getEmail(), appUser.getPassword(), grantedAuthorities);
+        else user = new User(appUser.getEmail(), appUser.getPassword(), new HashSet<>());
+        return user;
     }
 }

@@ -6,7 +6,7 @@ export class Meetup{
   meetupRegisteredAttendees: number;
   meetupMinAttendees: number;
   meetupMaxAttendees: number;
-  meetupStartDateTime: string;
+  meetupStartDateTime: Date;
   meetupFinishDateTime: string;
   stateId: number;
   speakerId: number;
