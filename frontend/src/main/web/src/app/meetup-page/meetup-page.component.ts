@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Meetup} from "../_models/meetup";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MeetupService} from "../_services/meetup.service";
 import {User} from "../_models";
 import {Subscription} from "rxjs";
@@ -22,7 +22,7 @@ export class MeetupPageComponent implements OnInit {
   rate = 4;
   joined = true;
   error = null;
-  atendees: User[] = [];
+  attendees: User[] = [];
 
   constructor(
     private meetupService: MeetupService,
@@ -40,6 +40,8 @@ export class MeetupPageComponent implements OnInit {
     this.loading = true;
     this.sub = this.meetupService.get(id).subscribe(
       data => {
+        console.log(data);
+        this.meetup = data;
         this.loading = false;
         this.meetup = data;
         this.getAuthorName(data['speakerId']);
@@ -79,7 +81,7 @@ export class MeetupPageComponent implements OnInit {
       this.meetupService.leaveMeetup(this.meetup.meetupId).subscribe(
         data => {
           this.joined = false;
-          this.atendees = this.atendees.filter(e => e.userId != this.userService.currentUser.userId);
+          this.attendees = this.attendees.filter(e => e.userId != this.userService.currentUser.userId);
         },
         error => {
           this.error = error;
@@ -91,7 +93,7 @@ export class MeetupPageComponent implements OnInit {
       this.meetupService.joinMeetup(this.meetup.meetupId).subscribe(
         data => {
           this.joined = true;
-          this.atendees.unshift(this.userService.currentUser);
+          this.attendees.unshift(this.userService.currentUser);
         },
         error => {
           this.error = error;

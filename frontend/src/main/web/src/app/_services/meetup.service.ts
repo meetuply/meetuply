@@ -15,22 +15,13 @@ export class MeetupService {
   constructor(private http: HttpClient, private userService: UserService) {
   }
 
-  get(id:number) : Observable<Meetup>{
-    console.log("loading meetup in service");
-    return this.http.get<Meetup>(this.meetupApiUrl+`${id}`);
-  }
-
-  getAttendees(meetupId: number): Observable<User[]>{
-    return this.http.get<User[]>(this.meetupApiUrl+`${meetupId}`+'/attendees');
-  }
-
   getMeetupsChunk(startRow: number, endRow: number): Observable<Meetup[]>{
     return this.http.get<Meetup[]>(this.meetupApiUrl+`${startRow}`+"/"+`${endRow}`)
   }
-  
-  get(id: number): Observable<Meetup> {
+
+  get(id:number) : Observable<Meetup>{
     console.log("loading meetup in service");
-    return this.http.get<Meetup>(this.meetupApiUrl + `${id}`);
+    return this.http.get<Meetup>(this.meetupApiUrl+`${id}`);
   }
 
   getSpeaker(id: number): Observable<User> {

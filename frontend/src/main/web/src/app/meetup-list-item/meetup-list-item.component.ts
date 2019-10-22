@@ -23,10 +23,12 @@ export class MeetupListItemComponent implements OnInit {
   @Input() registeredAttendees: number;
   @Input() id: number;
 
+  error;
+
   constructor(private meetupService: MeetupService) { }
 
   ngOnInit() {
-//     this.joined = false 
+//     this.joined = false
   }
 
   joinType() {
