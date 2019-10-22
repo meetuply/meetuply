@@ -10,8 +10,8 @@
     <div class='info'>
       <div class='title'>{{this.meetup.meetupTitle}}</div>
       <div class='detail'>
-        <img *ngIf="photo" src={{this.photo}}>
-        <img *ngIf="!photo" src="assets/img/download.png">
+        <img *ngIf="authorPhoto" src={{this.authorPhoto}}>
+        <img *ngIf="!authorPhoto" src="assets/img/download.png">
         <div>by {{this.author}}</div>
         <app-rating size='16' rating="{{this.rate}}"></app-rating>
       </div>
