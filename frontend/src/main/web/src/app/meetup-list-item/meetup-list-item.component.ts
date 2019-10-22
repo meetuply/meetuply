@@ -32,19 +32,19 @@ export class MeetupListItemComponent implements OnInit {
   }
 
   joinType() {
-    return (this.joined == true ? '2' : (this.meetup.meetupMaxAttendees == this.meetup.meetupRegisteredAttendees ? "3" : "1"));
+    return (this.joined == true ? '2' : (this.maxAttendees == this.registeredAttendees ? "3" : "1"));
   }
 
   joinText() {
-    return (this.joined == true ? 'Leave' : (this.meetup.meetupMaxAttendees == this.meetup.meetupRegisteredAttendees ? "Full" : "Join"));
+    return (this.joined == true ? 'Leave' : (this.maxAttendees == this.registeredAttendees ? "Full" : "Join"));
   }
 
   joinButtonClicked(event){
     if (this.joined)
-      this.meetupService.leaveMeetup(this.meetup.meetupId).subscribe(
+      this.meetupService.leaveMeetup(this.id).subscribe(
         data => {
           this.joined = false;
-          this.meetup.meetupRegisteredAttendees--
+          this.registeredAttendees--
         },
         error => {
           this.error = error;
@@ -52,11 +52,11 @@ export class MeetupListItemComponent implements OnInit {
 
         }
       );
-    else if (this.meetup.meetupMaxAttendees != this.meetup.meetupRegisteredAttendees)
-      this.meetupService.joinMeetup(this.meetup.meetupId).subscribe(
+    else if (this.maxAttendees != this.registeredAttendees)
+      this.meetupService.joinMeetup(this.id).subscribe(
         data => {
           this.joined = true;
-          this.meetup.meetupRegisteredAttendees++
+          this.registeredAttendees++
         },
         error => {
           this.error = error;
