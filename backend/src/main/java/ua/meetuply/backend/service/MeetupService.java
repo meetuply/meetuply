@@ -49,4 +49,8 @@ public class MeetupService {
         if (meetupDao.get(meetupID) == null) throw MeetupNotFoundException.createWith(meetupID);
         meetupDao.join(meetupID, user.getUserId());
     }
+
+    public Iterable<Meetup> getMeetupsChunk(Integer startRow, Integer endRow) {
+        return meetupDao.getMeetupsChunk(startRow, endRow);
+    }
 }

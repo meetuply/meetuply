@@ -53,6 +53,11 @@ public class AppUserService {
         return appUserDAO.get(id);
     }
 
+    public String getUserFullName(Integer id){
+        AppUser user =  appUserDAO.get(id);
+        return user.getFirstName() + " " + user.getLastName();
+    }
+
     public int getCurrentUserID() {
         String email = "";
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

@@ -1,7 +1,6 @@
 <app-left-menu></app-left-menu>
 <div class='content'>
 
-
   <div class='back' (click)="goBack()">
 
   </div>
@@ -25,11 +24,11 @@
     </div>
 
     <div class='about'>
-      Atendees
+      Attendees
     </div>
 
     <div class='atendees'>
-      <app-atendee *ngFor="let atendee of atendees" [name]='atendee.firstName' [surname]=atendee.lastName></app-atendee>
+      <app-atendee *ngFor="let attendee of attendees" [name]='attendee.firstName' [surname]=attendee.lastName></app-atendee>
       <!--[rating]=4-->
     </div>
   </div>

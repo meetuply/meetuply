@@ -1,7 +1,6 @@
 package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -16,7 +15,6 @@ import ua.meetuply.backend.validator.AppUserValidator;
 
 import javax.validation.Valid;
 import javax.annotation.Resource;
-import java.net.InetAddress;
 import java.security.Principal;
 
 
@@ -66,6 +64,11 @@ public class AppUserController {
     @GetMapping("/{id}")
     public AppUser get(@PathVariable("id") Integer userId) {
         return appUserService.getUser(userId);
+    }
+
+    @GetMapping("/{id}/fullName")
+    public String getFullName(@PathVariable("id") Integer userId){
+        return appUserService.getUserFullName(userId);
     }
 
     @RequestMapping("/registerSuccessful")

@@ -8,7 +8,7 @@
 				<div class='name'>
 					{{this.title}}
 				</div>
-				<div class='location'>
+				<div class='place'>
 					<div>by {{this.author}} <app-rating size='12' rating="{{this.rate}}"></app-rating>
 					</div>
 				</div>
@@ -24,21 +24,21 @@
 			<div class='icon'>
 			</div>
 			<div class='date_time'>
-				<div>{{this.date}}</div>
-				<div>{{this.time}}</div>
+				<!--<div>{{this.date}}</div>-->
+				<!--<div>{{this.time}}</div>-->
 			</div>
 		</div>
 		<div class='location'>
 			<div class='icon'></div>
-			<div>{{this.location}}</div>
+			<div>{{this.place}}</div>
 		</div>
 
 		<div class='members'>
 			<div class='icon'></div>
-			<div>{{this.members}}/{{this.maxMembers}}</div>
+			<div>{{this.registeredAttendees}}/{{this.maxAttendees}}</div>
 		</div>
 
-		<app-button [text]="joinText()" href="{{'meetups/' + this.id}}" [type]='joinType()' fontSize='20'></app-button>
+		<app-button [text]="joinText()" href="{{this.id}}" [type]='joinType()' fontSize='20'></app-button>
 
 	</div>
-</div>
+<!--</div>-->

@@ -61,6 +61,11 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
         jdbcTemplate.update("DELETE FROM meetup WHERE uid = ?", id);
     }
 
+    public List<Meetup> getMeetupsChunk(Integer startRow, Integer endRow) {
+        List<Meetup> meetupList = jdbcTemplate.query("SELECT * FROM new_schema.meetup order by uid asc LIMIT ?, ?",new Object[]{startRow, endRow},
+                this);
+        return meetupList;
+    }
 
     public Meetup mapRow(ResultSet rs, int rowNum) throws SQLException {
         Meetup meetup = new Meetup();
