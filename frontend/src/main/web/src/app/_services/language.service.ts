@@ -10,8 +10,8 @@ import { environment } from "../../environments/environment";
 export class LanguageService {
 
 
-  //private languageApiUrl = `${environment.apiUrl}/api/languages/`;
-  private languageApiUrl = 'http://localhost:8080/api/languages';
+  private languageApiUrl = `${environment.apiUrl}/api/languages/`;
+  //private languageApiUrl = 'http://localhost:8080/api/languages';
 
   constructor(private http: HttpClient) { }
 
