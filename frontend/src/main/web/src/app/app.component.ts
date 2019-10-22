@@ -12,10 +12,9 @@ import {AuthenticationService} from "./_services";
 })
 export class AppComponent {
   title = 'meetuply';
-  currentUser: User;
+
 
   constructor( private http: HttpClient, private router: Router, private authenticationService:AuthenticationService) {
-    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
 
 }

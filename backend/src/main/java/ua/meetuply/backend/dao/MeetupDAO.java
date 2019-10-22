@@ -85,4 +85,11 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
                 meetupID, userID);
 
     }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public void leave(Integer meetupID, Integer userID) {
+        jdbcTemplate.update("DELETE FROM `meetup_attendees` WHERE `meetup_id` = ? AND `user_id` = ?",
+                meetupID, userID);
+
+    }
 }

@@ -38,6 +38,7 @@ public class GlobalExceptionHandler {
 
             return handleNotFoundException(mnfe, headers, status, request);
         } else {
+
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
             return handleExceptionInternal(ex, null, headers, status, request);
         }

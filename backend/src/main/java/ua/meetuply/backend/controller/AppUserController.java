@@ -53,8 +53,8 @@ public class AppUserController {
     }
 
     @RequestMapping("/")
-    public Principal user(Principal user) {
-        return user;
+    public AppUser user() {
+        return appUserService.getCurrentUser();
     }
 
     @RequestMapping("/members")
