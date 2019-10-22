@@ -51,24 +51,6 @@ export class MeetupsListPageComponent implements OnInit {
     return num % 2 == 0;
   }
 
-  // getAuthorName(id: number, model) {
-  //   if (model == null){
-  //     model = { author : ""}
-  //   }
-  //   this.loading = true;
-  //   this.userService.get(id).subscribe(
-  //     data => {
-  //       this.loading = false;
-  //       console.log("In method");
-  //       console.log(data);
-  //       model.author = data['firstName']+" " + data['lastName'];},
-  //     error1 => {
-  //       this.loading = false;
-  //     }
-  //   );
-  //   return model;
-  // }
-
   loadMeetupsChunk() {
     console.log("LAST ROW: ");
     console.log(this.lastRow);
@@ -77,7 +59,9 @@ export class MeetupsListPageComponent implements OnInit {
       this.sub = this.meetupService.getMeetupsChunk(this.lastRow, this.step).subscribe(
         data => {
           this.loading = false;
-          this.lastRow += this.step;
+          if (data){
+            this.lastRow += data.length;
+          }
           this.newChunk = data.map(item => {
               return new Meetup_list_item(
                 item,

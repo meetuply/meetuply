@@ -23,7 +23,7 @@ export class Meetup_list_item {
 	  this.date = date;
 	  this.joined = joined;
 	  this.rate = rate;
-	  userService.get(this.id).subscribe(
+	  this.userService.get(meetup.speakerId).subscribe(
 	    user => {
 	      this.author = user['firstName'] + " " + user['lastName'];
       }
