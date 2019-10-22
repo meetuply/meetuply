@@ -1,13 +1,11 @@
 package ua.meetuply.backend.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Meetup;
 
 import java.sql.ResultSet;
@@ -61,6 +59,11 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
         jdbcTemplate.update("DELETE FROM meetup WHERE uid = ?", id);
     }
 
+    public List<Meetup> getMeetupsChunk(Integer startRow, Integer endRow) {
+        List<Meetup> meetupList = jdbcTemplate.query("SELECT * FROM meetup order by uid asc LIMIT ?, ?",new Object[]{startRow, endRow},
+                this);
+        return meetupList;
+    }
 
     public Meetup mapRow(ResultSet rs, int rowNum) throws SQLException {
         Meetup meetup = new Meetup();

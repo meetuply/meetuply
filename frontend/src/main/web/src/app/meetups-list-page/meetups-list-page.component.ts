@@ -1,39 +1,42 @@
-import { Component, OnInit } from '@angular/core';
-import { Meetup_list_item } from "../_models/meetup_list_item"
+import {Component, Input, OnInit} from '@angular/core';
+import {Meetup_list_item} from "../_models/meetup_list_item"
+import {MeetupService} from "../_services/meetup.service";
+import {Subscription} from "rxjs";
+import {UserService} from "../_services";
+import {Meetup} from "../_models/meetup";
 
 @Component({
   selector: 'app-meetups-list-page',
   templateUrl: './meetups-list-page.component.html',
   styleUrls: ['./meetups-list-page.component.less']
 })
+
 export class MeetupsListPageComponent implements OnInit {
 
-
-  //TODO: service to retrieve meetups from backend
-  meetups_list: Meetup_list_item[] = [
-
-    {
-      author: "James charles",
-      joined: false,
-      time: '12:30',
-      date: '19/12/19',
-      rate: 4,
-      description: "ererteivefujdbersujicnwucyadcyn",
-      title: 'cool',
-      location: 'office',
-      maxMembers: 15,
-      members: 10,
-      id: 2
-    }
-
-  ]
-
-
+  loading = false;
+  lastRow = 0;
+  maxMeetupsOnPage: number;
+  step = 4;
+  scrollDistance = 2;
+  meetupsList: Meetup_list_item[] = [];
+  newChunk: Meetup_list_item[];
+  private sub: Subscription;
   filter_shown = false;
+  //todo add author, rating
+  author: string;
 
-  constructor() { }
+  constructor(private userService: UserService,
+              private meetupService: MeetupService) {
+  }
 
   ngOnInit() {
+    this.maxMeetupsOnPage = 10;
+    this.loadMeetupsChunk();
+  }
+
+  onScrollDown() {
+    console.log('scrolled!!');
+    this.loadMeetupsChunk();
   }
 
   toggleFilters() {
@@ -48,4 +51,30 @@ export class MeetupsListPageComponent implements OnInit {
     return num % 2 == 0;
   }
 
+  loadMeetupsChunk() {
+    console.log("LAST ROW: ");
+    console.log(this.lastRow);
+    if (this.lastRow < this.maxMeetupsOnPage) {
+      this.loading = true;
+      this.sub = this.meetupService.getMeetupsChunk(this.lastRow, this.step).subscribe(
+        data => {
+          this.loading = false;
+          if (data){
+            this.lastRow += data.length;
+          }
+          this.newChunk = data.map(item => {
+              return new Meetup_list_item(
+                item,
+                this.userService
+              )
+            }
+          );
+          this.meetupsList.push(...this.newChunk);
+        },
+        error1 => {
+          this.loading = false;
+        }
+      )
+    }
+  }
 }

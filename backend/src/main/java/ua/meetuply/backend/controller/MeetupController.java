@@ -27,6 +27,13 @@ public class MeetupController {
             return meetupService.getAllMeetups();
     }
 
+    @GetMapping("/{startRow}/{endRow}")
+    public @ResponseBody Iterable<Meetup> getMeetupsChunk(@PathVariable("startRow") Integer startRow,
+                                                          @PathVariable("endRow") Integer endRow)
+    {
+        return meetupService.getMeetupsChunk(startRow, endRow);
+    }
+
     @GetMapping("/{meetupId}/attendees")
     public @ResponseBody Iterable<AppUser> getAttendees(@PathVariable("meetupId") Integer meetupId){
         return appUserService.getMeetupAttendees(meetupId);

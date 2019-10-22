@@ -12,38 +12,28 @@
 	</div>
 
 	<app-meetup-filter *ngIf="this.filter_shown"></app-meetup-filter>
-	<div class="main">
-		
-
-
-
+	<div class="main"
+       infinite-scroll
+       [infiniteScrollDistance]="scrollDistance"
+       (scrolled)='this.onScrollDown()'>
 		<div class='left_column'>
-
-
-			<div *ngFor="let meetup_item of this.meetups_list;let i = index">
-
+			<div *ngFor="let meetup_item of this.meetupsList;let i = index">
 				<app-meetup-list-item *ngIf="isOdd(i)" [joined]='meetup_item.joined' author='{{meetup_item.author}}'
-					time='{{meetup_item.time}}' rate='{{meetup_item.rate}}' description='{{meetup_item.description}}'
-					title='{{meetup_item.title}}' location='{{meetup_item.location}}'
-					maxMembers='{{meetup_item.maxMembers}}' members='{{meetup_item.members}}' id='{{meetup_item.id}}'
+					rate='{{meetup_item.rate}}' description='{{meetup_item.description}}'
+					title='{{meetup_item.title}}' place='{{meetup_item.place}}'
+					maxAttendees='{{meetup_item.maxAttendees}}' registeredAttendees='{{meetup_item.registeredAttendees}}'
+                              id='{{meetup_item.id}}'
 					date='{{meetup_item.date}}'></app-meetup-list-item>
 			</div>
 		</div>
 		<div class='right_column'>
-			<div *ngFor="let meetup_item of this.meetups_list;let i = index">
-
+      <div *ngFor="let meetup_item of this.meetupsList;let i = index">
 				<app-meetup-list-item *ngIf="!isOdd(i)" [joined]='meetup_item.joined' author='{{meetup_item.author}}'
-					time='{{meetup_item.time}}' rate='{{meetup_item.rate}}' description='{{meetup_item.description}}'
-					title='{{meetup_item.title}}' location='{{meetup_item.location}}'
-					maxMembers='{{meetup_item.maxMembers}}' members='{{meetup_item.members}}' id='{{meetup_item.id}}'
-					date='{{meetup_item.date}}'></app-meetup-list-item>
+					 rate='{{meetup_item.rate}}' description='{{meetup_item.description}}'
+					title='{{meetup_item.title}}' place='{{meetup_item.place}}'
+					maxAttendees='{{meetup_item.maxAttendees}}' registeredAttendees='{{meetup_item.registeredAttendees}}'
+          id='{{meetup_item.id}}' date='{{meetup_item.date}}' ></app-meetup-list-item>
 			</div>
 		</div>
-
-
-
-
 	</div>
-
-
 </div>

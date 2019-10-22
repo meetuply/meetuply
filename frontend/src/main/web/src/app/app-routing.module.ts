@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'registration', component: RegisterComponent },
   { path: 'speaker', component: SpeakerPageComponent, canActivate: [AuthGuard] },
   { path: 'speakers', component: SpeakerListPageComponent, canActivate: [AuthGuard] },
-  { path: 'meetup/:id', component: MeetupPageComponent, canActivate: [AuthGuard] },
+  { path: 'meetups/:id', component: MeetupPageComponent, canActivate: [AuthGuard] },
   { path: 'meetups', component: MeetupsListPageComponent, canActivate: [AuthGuard] },
   { path: 'confirm', component: RegConfirmationComponent}
 ];

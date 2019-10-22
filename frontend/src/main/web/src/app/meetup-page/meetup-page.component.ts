@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Meetup} from "../_models/meetup";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {MeetupService} from "../_services/meetup.service";
 import {User} from "../_models";
+import {Subscription} from "rxjs";
 import {UserService} from "../_services";
 
 @Component({
@@ -15,11 +16,9 @@ export class MeetupPageComponent implements OnInit {
   //todo ratind
   meetup: Meetup = new Meetup();
   loading = false;
-  private sub: any;
+  private sub: Subscription;
   id: number;
   author: string;
-  date: Date;
-  time: string;
   rate = 4;
   joined = true;
   error = null;
@@ -35,7 +34,6 @@ export class MeetupPageComponent implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
     this.loadMeetup(this.id);
-
   }
 
   loadMeetup(id:number) {
@@ -44,9 +42,9 @@ export class MeetupPageComponent implements OnInit {
       data => {
         this.loading = false;
         this.meetup = data;
-        this.date = data.meetupStartDateTime;
-        this.getMeetupSpeakerName();
-        this.getAttendees();},
+        this.getAuthorName(data['speakerId']);
+        this.getAttendees();
+      },
       error => {
         // this.alertService.error(error);
         this.loading = false;
@@ -59,15 +57,19 @@ export class MeetupPageComponent implements OnInit {
     this.meetupService.getAttendees(this.id).subscribe(
       data => {
         this.loading = false;
-        this.atendees = data;
+        this.attendees = data;
       }
     )
   }
 
-  getMeetupSpeakerName(){
+  getAuthorName(id: number){
+    this.loading = true;
     this.meetupService.getSpeaker(this.meetup.speakerId).subscribe(
       data => {
-        this.author = data['firstName'] +" "+ data['lastName'];
+        this.loading = false;
+        this.author = data['firstName']+" " + data['lastName']},
+      error1 => {
+        this.loading = false;
       }
     );
   }
