@@ -115,7 +115,7 @@ export class MeetupPageComponent implements OnInit {
   }
 
   joinText() {
-    return (this.joined ? 'Leave' : (this.meetup.meetupMinAttendees == this.attendees.length ? "Join" : "Full"));
+    return (this.joined ? 'Leave' : (this.meetup.meetupMaxAttendees == this.attendees.length ? "Full" : "Join"));
   }
 
   ngOnDestroy(){
