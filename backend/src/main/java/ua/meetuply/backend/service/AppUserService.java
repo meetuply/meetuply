@@ -26,8 +26,11 @@ public class AppUserService implements UserDetailsService {
     @Autowired
     RoleDAO roleDAO;
 
-    @Autowired @Lazy
+    @Autowired
     AppUserDAO appUserDAO;
+
+    @Autowired
+    SessionService sessionService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -100,6 +103,7 @@ public class AppUserService implements UserDetailsService {
     public void deactivateUser(AppUser user) {
         user.setDeactivated(true);
         appUserDAO.update(user);
+        sessionService.expireUserSessions(user.getEmail());
     }
 
     public void activateDeactivatedUser(AppUser user) {
@@ -114,8 +118,10 @@ public class AppUserService implements UserDetailsService {
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         User user;
-        if(appUser.getRole().getRoleName().equals("admin"))
+
+        if(appUser.getRole().getRoleName().equals("admin")) {
             user = new User(appUser.getEmail(), appUser.getPassword(), grantedAuthorities);
+        }
         else user = new User(appUser.getEmail(), appUser.getPassword(), new HashSet<>());
         return user;
     }

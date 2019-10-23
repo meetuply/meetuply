@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @RestController
 public class MeetupController {
 
-    @Autowired @Lazy
+    @Autowired
     private MeetupService meetupService;
 
     @Autowired
@@ -80,4 +80,12 @@ public class MeetupController {
         meetupService.leave(meetupID);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/{meetupID}/attendee")
+    public @ResponseBody Boolean leave(
+            @PathVariable("meetupID") Integer meetupID,
+            @RequestParam("id") Integer userID) {
+        return meetupService.isAttendee(meetupID, userID);
+    }
+
 }

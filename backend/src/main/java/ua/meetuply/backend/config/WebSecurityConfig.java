@@ -7,13 +7,19 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ua.meetuply.backend.config.authentication.CustomAuthenticationEntryPoint;
 import ua.meetuply.backend.config.authentication.CustomAuthenticationProvider;
+import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.service.AppUserService;
 
 @Configuration
@@ -29,7 +35,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().httpBasic()
+        http.cors().and()
+                .sessionManagement().maximumSessions(-1).sessionRegistry(sessionRegistry()).and().and()
+                .httpBasic()
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                 .csrf().disable()
@@ -67,22 +75,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    private AppUserService appUserService;
+    AppUserService appUserService;
 
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {
         return authenticationManager();
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(appUserService).passwordEncoder(bCryptPasswordEncoder());
-    }
-
     @Bean
     public CustomAuthenticationProvider authProvider() {
         CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
-        authProvider.setUserDetailsService(appUserService);
+        authProvider.setAppUserService(appUserService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -90,5 +93,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider());
+    }
+
+    @Bean
+    SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 }

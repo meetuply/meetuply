@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {MeetupService} from "../_services/meetup.service";
 import {Meetup} from "../_models/meetup";
 import {UserService} from "../_services";
+import {User} from "../_models";
 
 @Component({
   selector: 'app-meetup-list-item',
@@ -22,13 +23,22 @@ export class MeetupListItemComponent implements OnInit {
   @Input() maxAttendees: number;
   @Input() registeredAttendees: number;
   @Input() uid: number;
-
   error;
+  isAttendeLoaded = false;
 
-  constructor(private meetupService: MeetupService) { }
+  constructor(private meetupService: MeetupService,
+              private userService: UserService
+  ) { }
 
   ngOnInit() {
 //     this.joined = false
+    this.meetupService.isAttendee(this.uid, this.userService.currentUser.userId).subscribe(
+      data => {
+        this.joined = data;
+        this.isAttendeLoaded = true
+      },
+      error => this.error = error
+    );
   }
 
   joinType() {
@@ -48,7 +58,6 @@ export class MeetupListItemComponent implements OnInit {
         },
         error => {
           this.error = error;
-          console.log(error)
 
         }
       );
@@ -60,7 +69,6 @@ export class MeetupListItemComponent implements OnInit {
         },
         error => {
           this.error = error;
-          console.log(error)
         }
       );
   }

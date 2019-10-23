@@ -1,10 +1,13 @@
 package ua.meetuply.backend.config.authentication;
 
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -12,10 +15,12 @@ import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.service.AppUserService;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
+@Setter
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
-
 
     private AppUserService appUserService;
     private PasswordEncoder passwordEncoder;
@@ -34,7 +39,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             else if(!user.isRegistration_confirmed())
                 throw new BadCredentialsException("Email is not confirmed");
             else
-                return new UsernamePasswordAuthenticationToken(username, password, Collections.emptyList());
+                return new UsernamePasswordAuthenticationToken(username, password, appUserService.loadUserByUsername(username).getAuthorities());
         } else {
             throw new BadCredentialsException("Authentication failed");
         }
@@ -45,12 +50,4 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        Assert.notNull(passwordEncoder, "passwordEncoder cannot be null");
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public void setUserDetailsService(AppUserService appUserService) {
-        this.appUserService = appUserService;
-    }
 }

@@ -21,7 +21,7 @@ export class MeetupPageComponent implements OnInit {
   author: string;
   authorPhoto: string;
   rate = 4;
-  joined = true;
+  joined = false;
   error = null;
   attendees: User[] = [];
 
@@ -61,6 +61,12 @@ export class MeetupPageComponent implements OnInit {
       data => {
         this.loading = false;
         this.attendees = data;
+        data.forEach(a => {
+          if (a.userId == this.userService.currentUser.userId) {
+            this.joined = true;
+            return;
+          }
+        })
       }
     )
   }
@@ -70,7 +76,7 @@ export class MeetupPageComponent implements OnInit {
     this.meetupService.getSpeaker(this.meetup.speakerId).subscribe(
       data => {
         this.loading = false;
-        this.author = data['firstName']+" " + data['lastName'];
+        this.author = data['firstName']+ " " + data['lastName'];
         this.authorPhoto = data['photo']},
       error1 => {
         this.loading = false;
@@ -91,7 +97,7 @@ export class MeetupPageComponent implements OnInit {
 
         }
       );
-    else if (this.meetup.meetupMaxAttendees != this.meetup.meetupRegisteredAttendees)
+    else if (this.meetup.meetupMaxAttendees != this.attendees.length)
       this.meetupService.joinMeetup(this.meetup.meetupId).subscribe(
         data => {
           this.joined = true;
@@ -105,11 +111,11 @@ export class MeetupPageComponent implements OnInit {
   }
 
   joinType() {
-    return (this.joined == true ? '2' : (this.meetup.meetupMaxAttendees == this.meetup.meetupRegisteredAttendees ? "3" : "1"));
+    return (this.joined == true ? '2' : (this.meetup.meetupMaxAttendees == this.attendees.length ? "3" : "1"));
   }
 
   joinText() {
-    return (this.joined ? 'Leave' : (this.meetup.meetupMinAttendees == this.meetup.meetupRegisteredAttendees ? "Join" : "Full"));
+    return (this.joined ? 'Leave' : (this.meetup.meetupMaxAttendees == this.attendees.length ? "Full" : "Join"));
   }
 
   ngOnDestroy(){

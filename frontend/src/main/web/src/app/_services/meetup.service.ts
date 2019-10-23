@@ -39,4 +39,9 @@ export class MeetupService {
   leaveMeetup(meetupID: number): Observable<{}> {
     return this.http.delete(this.meetupApiUrl + `${meetupID}` + '/leave');
   }
+
+  isAttendee(meetupID: number, userID: number): Observable<boolean> {
+    return this.http.get<boolean>(this.meetupApiUrl + + `${meetupID}` + '/attendee',
+      { params: {"id": `${userID}`}});
+  }
 }

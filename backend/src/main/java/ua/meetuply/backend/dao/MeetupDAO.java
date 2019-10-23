@@ -1,6 +1,7 @@
 package ua.meetuply.backend.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -94,6 +95,13 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
     public void leave(Integer meetupID, Integer userID) {
         jdbcTemplate.update("DELETE FROM `meetup_attendees` WHERE `meetup_id` = ? AND `user_id` = ?",
                 meetupID, userID);
+
+    }
+
+    public boolean isAttendee(Integer meetupID, Integer userID) {
+        return jdbcTemplate.query("SELECT 1 FROM `meetup_attendees` WHERE `meetup_id` = ? AND `user_id` = ?",
+                new Object[]{meetupID, userID},
+                new BeanPropertyRowMapper<>(Object.class)).size() > 0;
 
     }
 }
