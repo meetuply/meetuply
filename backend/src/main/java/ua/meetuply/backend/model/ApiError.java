@@ -1,19 +1,13 @@
 package ua.meetuply.backend.model;
 
-import java.util.List;
+import lombok.*;
 
+@Getter
+@ToString
+@EqualsAndHashCode
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApiError {
-    private List<String> errors;
-
-    public ApiError(List<String> errors) {
-        this.errors = errors;
-    }
-
-    public List<String> getErrors() {
-        return errors;
-    }
-
-    public void setErrors(List<String> errors) {
-        this.errors = errors;
-    }
+    private String message;
 }

@@ -17,7 +17,7 @@ public class MeetupService {
     @Autowired
     MeetupDAO meetupDao;
 
-    @Autowired @Lazy
+    @Autowired
     AppUserService appUserService;
 
     //todo add state logic
@@ -53,12 +53,16 @@ public class MeetupService {
 
     public Iterable<Meetup> getMeetupsChunk(Integer startRow, Integer endRow) {
         return meetupDao.getMeetupsChunk(startRow, endRow);
-}
+    }
   
     public void leave(Integer meetupID) throws Exception {
         AppUser user = appUserService.getCurrentUser();
         if (user == null) throw UserNotFoundException.createWith("current");
         if (meetupDao.get(meetupID) == null) throw MeetupNotFoundException.createWith(meetupID);
         meetupDao.leave(meetupID, user.getUserId());
+    }
+
+    public boolean isAttendee(Integer meetupID, Integer userID) {
+        return meetupDao.isAttendee(meetupID, userID);
     }
 }

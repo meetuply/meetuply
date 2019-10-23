@@ -38,7 +38,8 @@
 			<div>{{this.registeredAttendees}}/{{this.maxAttendees}}</div>
 		</div>
 
-		<app-button [text]="joinText()"
+		<app-button *ngIf="isAttendeLoaded"
+                [text]="joinText()"
                 [type]='joinType()'
                 (onClick)="joinButtonClicked($event)"
                 fontSize='20'></app-button>

@@ -26,7 +26,7 @@ public class AppUserService implements UserDetailsService {
     @Autowired
     RoleDAO roleDAO;
 
-    @Autowired @Lazy
+    @Autowired
     AppUserDAO appUserDAO;
 
     @Autowired
