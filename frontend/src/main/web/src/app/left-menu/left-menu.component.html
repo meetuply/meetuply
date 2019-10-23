@@ -12,7 +12,7 @@
 	</div>
 	<div id='bottom_menu'>
 		<app-left-menu-item *ngFor="let item of this.bottom_menu_items" sel="{{false}}" [item]="item"
-                        (clck)="childClicked($event)"></app-left-menu-item>
-    <app-logout-menu-item sel="{{false}}" (clck)="childClicked($event)"></app-logout-menu-item>
+                        (clck)="bottomMenuClicked($event)"></app-left-menu-item>
+   <!-- <app-logout-menu-item sel="{{false}}" (clck)="childClicked($event)"></app-logout-menu-item> -->
 	</div>
 </div>
