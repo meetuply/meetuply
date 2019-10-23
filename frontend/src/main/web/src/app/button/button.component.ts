@@ -26,4 +26,6 @@ export class ButtonComponent implements OnInit {
     return 'button btn' + this.type;
   }
 
+
+  //add output when clicked
 }

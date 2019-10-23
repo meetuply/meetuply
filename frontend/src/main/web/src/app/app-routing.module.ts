@@ -8,18 +8,20 @@ import { SpeakerListPageComponent } from "./speaker-list-page/speaker-list-page.
 import { MeetupsListPageComponent } from "./meetups-list-page/meetups-list-page.component";
 import { MeetupPageComponent } from "./meetup-page/meetup-page.component";
 import { AuthGuard } from "./_helpers";
-import {RegConfirmationComponent} from "./reg-confirmation/reg-confirmation.component";
+import { RegConfirmationComponent } from "./reg-confirmation/reg-confirmation.component";
 
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegisterComponent },
-  { path: 'speaker', component: SpeakerPageComponent, canActivate: [AuthGuard] },
+  { path: 'speakers/:id', component: SpeakerPageComponent, canActivate: [AuthGuard] },
   { path: 'speakers', component: SpeakerListPageComponent, canActivate: [AuthGuard] },
+
   { path: 'meetups/:id', component: MeetupPageComponent, canActivate: [AuthGuard] },
   { path: 'meetups', component: MeetupsListPageComponent, canActivate: [AuthGuard] },
   { path: 'confirm', component: RegConfirmationComponent}
+
 ];
 
 @NgModule({
