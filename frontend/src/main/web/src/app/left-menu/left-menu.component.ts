@@ -2,7 +2,7 @@ import {Component, OnInit, Output} from '@angular/core';
 import {Menu_item} from '../menu_item';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
-import {AuthenticationService} from "../_services";
+import {AuthenticationService, UserService} from "../_services";
 
 
 @Component({
@@ -31,16 +31,16 @@ export class LeftMenuComponent implements OnInit {
     { icon: "settings.svg", text: 'settings', redirectTo: null }
   ];
 
-  constructor(private http: HttpClient, private router: Router, private authenticationService: AuthenticationService) {}
+  constructor(private http: HttpClient,
+              private router: Router,
+              private authenticationService: AuthenticationService,
+              private userService: UserService
+  ) {}
 
   childClicked($event) {
     this.selectedItem = $event;
   }
 
   ngOnInit() {
-  }
-
-  logot() {
-    this.authenticationService.logout();
   }
 }
