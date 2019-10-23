@@ -192,7 +192,7 @@ CREATE TABLE `confirmation_token` (
   PRIMARY KEY (`uid`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `confirmation_token_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -201,6 +201,7 @@ CREATE TABLE `confirmation_token` (
 
 LOCK TABLES `confirmation_token` WRITE;
 /*!40000 ALTER TABLE `confirmation_token` DISABLE KEYS */;
+INSERT INTO `confirmation_token` VALUES (44,'09ef4354-d4b7-44d9-a55a-ac4cc80ccf28','2019-10-23 20:18:00',72);
 /*!40000 ALTER TABLE `confirmation_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -784,13 +785,13 @@ CREATE TABLE `user` (
   `allow_notifications` tinyint(1) NOT NULL,
   `role_id` int(10) unsigned NOT NULL,
   `photo` varchar(300) DEFAULT NULL,
-  `description` varchar(500) NOT NULL,
-  `location` varchar(500) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `location` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `email` (`email`),
   KEY `role_id` (`role_id`),
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`uid`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -799,7 +800,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (56,'111@gmail.com','$2a$10$F3vsfcPxDenhA5.rb1CGf.882Nln1SV62wdniRzem8iUr0e/Rs2BG','111','111',1,0,1,3061979,NULL,'Very cool guy','Kyiv'),(57,'222@gmail.com','$2a$10$F60GkxL/u95n0tSlwFfmeeuYJ4m2sQvny2QVRpyt/e5faJRW7nI0O','222','222',1,1,1,3061979,NULL,'Very cool guy','London'),(58,'333@gmail.com','$2a$10$3gOV4.Za8Q4X8qdXlS7O6.wb2qP9GPliw.rjup5d72TPxRc2iFzH2','333','333',1,0,1,3061979,NULL,'Very cool guy','Barcelona'),(59,'444@gmail.com','$2a$10$yaJ80oSP5PquPh2uLODLkuH8tX07SjqMog6BGp2phlQvEYRbIZEZC','444','444',0,0,1,3061979,NULL,'Very cool guy','New York'),(60,'555@gmail.com','$2a$10$F4ljdh8CEyVgT1ZE6ndo3e6qDg7chOipUaNaV7MBPnZRBa5mndVCC','555','555',1,0,1,3061979,NULL,'Very cool guy','Deli'),(70,'admin@gmail.com','$2a$10$nvJa3JKPnKJTYvIcl1Q8hea/HeqDtH3itBA3SkdxkS3Itimmvs9Le','Admin','Admin',1,0,1,5091998,NULL,'Very cool guy','Tokyo'),(71,'mr.sn5.kma@gmail.com','$2a$10$H4fuqIKyS7GnLRqC9NYhTeUgmxDXMubSRVAsbvXC9XAcjP25Lm8wW','San','Nguyen',1,0,1,3061979,NULL,'Very cool guy','Berlin');
+INSERT INTO `user` VALUES (56,'111@gmail.com','$2a$10$F3vsfcPxDenhA5.rb1CGf.882Nln1SV62wdniRzem8iUr0e/Rs2BG','111','111',1,0,1,3061979,NULL,'Very cool guy','Kyiv'),(57,'222@gmail.com','$2a$10$F60GkxL/u95n0tSlwFfmeeuYJ4m2sQvny2QVRpyt/e5faJRW7nI0O','222','222',1,1,1,3061979,NULL,'Very cool guy','London'),(58,'333@gmail.com','$2a$10$3gOV4.Za8Q4X8qdXlS7O6.wb2qP9GPliw.rjup5d72TPxRc2iFzH2','333','333',1,0,1,3061979,NULL,'Very cool guy','Barcelona'),(59,'444@gmail.com','$2a$10$yaJ80oSP5PquPh2uLODLkuH8tX07SjqMog6BGp2phlQvEYRbIZEZC','444','444',0,0,1,3061979,NULL,'Very cool guy','New York'),(60,'555@gmail.com','$2a$10$F4ljdh8CEyVgT1ZE6ndo3e6qDg7chOipUaNaV7MBPnZRBa5mndVCC','555','555',1,0,1,3061979,NULL,'Very cool guy','Deli'),(70,'admin@gmail.com','$2a$10$nvJa3JKPnKJTYvIcl1Q8hea/HeqDtH3itBA3SkdxkS3Itimmvs9Le','Admin','Admin',1,0,1,5091998,NULL,'Very cool guy','Tokyo'),(71,'mr.sn5.kma@gmail.com','$2a$10$H4fuqIKyS7GnLRqC9NYhTeUgmxDXMubSRVAsbvXC9XAcjP25Lm8wW','San','Nguyen',1,0,1,3061979,NULL,'Very cool guy','Berlin'),(72,'999@gmail.com','$2a$10$r9iL9fmw6m8kVbxqMPi3Tenmvl2Ql4W5FHj01bc3eB8NT8rJfFBOO','999','999',0,0,1,3061979,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -908,7 +909,6 @@ CREATE TABLE `user_chat_room` (
 -- Dumping data for table `user_chat_room`
 --
 
-
 LOCK TABLES `user_chat_room` WRITE;
 /*!40000 ALTER TABLE `user_chat_room` DISABLE KEYS */;
 /*!40000 ALTER TABLE `user_chat_room` ENABLE KEYS */;
@@ -950,4 +950,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-23 22:44:46
+-- Dump completed on 2019-10-23 23:18:44
