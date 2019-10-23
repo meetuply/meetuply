@@ -13,6 +13,8 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
+  authenticated = false;
+
   constructor(private http: HttpClient) {
     this.authDataSubject = new BehaviorSubject<string>(localStorage.getItem('authData'));
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
@@ -39,6 +41,7 @@ export class AuthenticationService {
         this.currentUserSubject.next(user);
         localStorage.removeItem('authData');
         this.authDataSubject.next(authData);
+        this.authenticated = true;
         return user;
       }));
   }

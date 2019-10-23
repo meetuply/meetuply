@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -34,7 +35,11 @@ public class GlobalExceptionHandler {
             return new ResponseEntity<>(new ApiError(ex.getMessage()), headers, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler({ UserNotFoundException.class, MeetupNotFoundException.class })
+    @ExceptionHandler({
+            UserNotFoundException.class,
+            MeetupNotFoundException.class,
+            UsernameNotFoundException.class
+    })
     private ResponseEntity<ApiError> handleNotFoundException(Exception ex, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<>(new ApiError(ex.getMessage()), headers, HttpStatus.CONFLICT);
