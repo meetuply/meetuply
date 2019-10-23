@@ -8,5 +8,5 @@ public interface EmailService {
 
     void sendGreetingEmail(AppUser receiver, String templateName, String subject);
     void sendVerificationEmail(AppUser receiver, String templateName, String subject, String verificationCode);
-
+    void sendDeactivatinEmail(AppUser receiver);
 }

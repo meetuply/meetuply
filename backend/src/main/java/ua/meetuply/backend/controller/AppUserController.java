@@ -115,6 +115,7 @@ public class AppUserController {
     public ResponseEntity<AppUser> deactivateUser(@PathVariable("id") Integer userId) {
         AppUser user = appUserService.getUser(userId);
         appUserService.deactivateUser(user);
+        emailService.sendDeactivatinEmail(user);
         return ResponseEntity.ok().build();
     }
 

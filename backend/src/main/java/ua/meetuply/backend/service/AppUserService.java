@@ -104,6 +104,7 @@ public class AppUserService implements UserDetailsService {
         user.setDeactivated(true);
         appUserDAO.update(user);
         sessionService.expireUserSessions(user.getEmail());
+
     }
 
     public void activateDeactivatedUser(AppUser user) {
