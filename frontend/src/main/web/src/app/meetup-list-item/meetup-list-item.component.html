@@ -2,7 +2,8 @@
 	<div class='main'>
 		<div class='profile'>
 			<div class='avatar'>
-				<img src="assets/img/download.png">
+				<img *ngIf="authorPhoto" src={{this.authorPhoto}}>
+        <img *ngIf="!authorPhoto" src="assets/img/download.png">
 			</div>
 			<div class='info'>
 				<div class='name' routerLink="{{this.uid}}">

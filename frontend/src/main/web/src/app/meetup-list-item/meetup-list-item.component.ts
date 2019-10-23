@@ -14,6 +14,7 @@ export class MeetupListItemComponent implements OnInit {
   @Input() date: Date;
   @Input() rate: number;
   @Input() author: string;
+  @Input() authorPhoto: string;
   @Input() joined: boolean;
   @Input() description: string;
   @Input() title: string;

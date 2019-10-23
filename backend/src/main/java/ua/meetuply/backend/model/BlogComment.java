@@ -1,7 +1,14 @@
 package ua.meetuply.backend.model;
 
+import lombok.*;
+
 import java.time.LocalDateTime;
 
+@Getter
+@ToString
+@EqualsAndHashCode
+@Setter
+@NoArgsConstructor
 public class BlogComment {
 
     private Integer blogCommentId;
@@ -10,9 +17,6 @@ public class BlogComment {
     private BlogPost post;
     private AppUser author;
 
-    public BlogComment() {
-    }
-
     public BlogComment(String blogCommentContent, LocalDateTime time, BlogPost post, AppUser author) {
         super();
         this.blogCommentContent=blogCommentContent;
@@ -20,41 +24,4 @@ public class BlogComment {
         this.post=post;
         this.author = author;
     }
-
-    public Integer getBlogCommentId() {
-        return blogCommentId;
-    }
-
-    public void setBlogCommentId(Integer blogCommentId) {
-        this.blogCommentId = blogCommentId;
-    }
-
-    public String getBlogCommentContent() {
-        return blogCommentContent;
-    }
-
-    public void setBlogCommentContent(String blogCommentContent) {
-        this.blogCommentContent = blogCommentContent;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
-    public BlogPost getPost() { return post; }
-
-    public void setPost(BlogPost post) { this.post = post; }
-
-    public AppUser getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(AppUser author) {
-        this.author = author;
-    }
-
 }

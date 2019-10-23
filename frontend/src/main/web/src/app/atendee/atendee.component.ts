@@ -10,7 +10,7 @@ export class AtendeeComponent implements OnInit {
   @Input() name: string;
   @Input() surname: string;
   @Input() rating: number;
-
+  @Input() photo: string;
 
   constructor() { }
 

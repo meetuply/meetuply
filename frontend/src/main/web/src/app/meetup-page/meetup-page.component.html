@@ -1,7 +1,7 @@
 <app-left-menu></app-left-menu>
 <div class='content'>
-
-  <div class='back' (click)="goBack()">
+  <!--(click)="goBack()"-->
+  <div class='back' routerLink="/meetups" >
 
   </div>
 
@@ -10,7 +10,8 @@
     <div class='info'>
       <div class='title'>{{this.meetup.meetupTitle}}</div>
       <div class='detail'>
-        <img src="assets/img/download.png"/>
+        <img *ngIf="authorPhoto" src={{this.authorPhoto}}>
+        <img *ngIf="!authorPhoto" src="assets/img/download.png">
         <div>by {{this.author}}</div>
         <app-rating size='16' rating="{{this.rate}}"></app-rating>
       </div>
@@ -28,7 +29,8 @@
     </div>
 
     <div class='atendees'>
-      <app-atendee *ngFor="let attendee of attendees" [name]='attendee.firstName' [surname]=attendee.lastName></app-atendee>
+      <app-atendee *ngFor="let attendee of attendees" [name]='attendee.firstName'
+                   [photo]='attendee.photo' [surname]=attendee.lastName></app-atendee>
       <!--[rating]=4-->
     </div>
   </div>

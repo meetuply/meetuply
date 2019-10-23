@@ -5,4 +5,5 @@
     lastName: string;
     password: string;
     confirmedPassword: string;
+    photo: string;
 }
