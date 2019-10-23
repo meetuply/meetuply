@@ -3,13 +3,18 @@ package ua.meetuply.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.AppUser;
+import ua.meetuply.backend.model.Filter;
 import ua.meetuply.backend.model.Meetup;
 import ua.meetuply.backend.model.Topic;
 import ua.meetuply.backend.service.AppUserService;
+import ua.meetuply.backend.service.FilterService;
 import ua.meetuply.backend.service.MeetupService;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
 @RequestMapping("api/meetups")
@@ -21,6 +26,9 @@ public class MeetupController {
 
     @Autowired
     private AppUserService appUserService;
+
+    @Resource
+    private FilterService filterService;
 
     @GetMapping()
     public @ResponseBody Iterable<Meetup> getAllMeetups(){
@@ -80,4 +88,12 @@ public class MeetupController {
         meetupService.leave(meetupID);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/filters")
+    public ResponseEntity<Meetup> createFilter (@Valid @RequestBody Filter filter){
+        filter.setUserId(appUserService.getCurrentUserID());
+        filterService.createFilter(filter);
+        return ResponseEntity.ok().build();
+    }
+
 }

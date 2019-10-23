@@ -91,6 +91,10 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getUserByEmail(email);
     }
 
+    public Integer getUserIdByName(String name){
+        return appUserDAO.getUserIdByName(name);
+    }
+
     public void activateUser(AppUser user) {
         user.setRegistration_confirmed(true);
         appUserDAO.update(user);
