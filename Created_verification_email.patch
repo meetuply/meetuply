@@ -1,0 +1,136 @@
+Index: backend/src/main/java/ua/meetuply/backend/controller/AppUserController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- backend/src/main/java/ua/meetuply/backend/controller/AppUserController.java	(revision 0e707cc2b0563083bdb5b878d45dc71df53a06f7)
++++ backend/src/main/java/ua/meetuply/backend/controller/AppUserController.java	(date 1571258152000)
+@@ -1,10 +1,8 @@
+ package ua.meetuply.backend.controller;
+ 
+ import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.ui.Model;
+-import org.springframework.validation.Errors;
+ import org.springframework.web.bind.WebDataBinder;
+ import org.springframework.web.bind.annotation.*;
+ import ua.meetuply.backend.model.ConfirmationToken;
+@@ -25,6 +23,7 @@
+ public class AppUserController {
+ 
+     private static final String GREETING_TEMPLATE_NAME = "email-template.ftl";
++    private static final String VERIFICATION_TEMPLATE_NAME = "verification-email.ftl";
+     private static final String GREETING_SUBJECT = "Greeting";
+ 
+     @Autowired
+@@ -84,7 +83,9 @@
+         ConfirmationToken ct = confirmationService.generateToken(appUserService.getUserByEmail(appUser.getEmail()));
+ 
+         //TODO confirmation email
+-        emailService.sendEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
++//        emailService.sendGreetingEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
++        emailService.sendVerificationEmail(appUser.getEmail(), VERIFICATION_TEMPLATE_NAME, "Verify your account",
++                String.valueOf(ct.getTokenid()));
+         return ResponseEntity.ok().build();
+     }
+ 
+@@ -97,7 +98,7 @@
+             //TODO "The link is invalid or broken!"
+         }
+ 
+-//        emailService.sendEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
++//        emailService.sendGreetingEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
+         return ResponseEntity.ok().build();
+     }
+ }
+\ No newline at end of file
+Index: backend/src/main/java/ua/meetuply/backend/service/EmailService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- backend/src/main/java/ua/meetuply/backend/service/EmailService.java	(revision 0e707cc2b0563083bdb5b878d45dc71df53a06f7)
++++ backend/src/main/java/ua/meetuply/backend/service/EmailService.java	(date 1571257517000)
+@@ -1,7 +1,10 @@
+ package ua.meetuply.backend.service;
+ 
++import java.io.IOException;
++
+ public interface EmailService {
+ 
+-    void sendEmail(String receiver, String templateName, String subject);
++    void sendGreetingEmail(String receiver, String templateName, String subject);
++    void sendVerificationEmail(String receiver, String templateName, String subject, String verificationCode);
+ 
+ }
+Index: backend/src/main/java/ua/meetuply/backend/service/EmailServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- backend/src/main/java/ua/meetuply/backend/service/EmailServiceImpl.java	(revision 0e707cc2b0563083bdb5b878d45dc71df53a06f7)
++++ backend/src/main/java/ua/meetuply/backend/service/EmailServiceImpl.java	(date 1571258051000)
+@@ -41,7 +41,7 @@
+ 
+     @Override
+     @Async
+-    public void sendEmail(String receiver, String templateName, String subject) {
++    public void sendGreetingEmail(String receiver, String templateName, String subject) {
+         Mail mail = prepareMail(receiver, subject);
+ 
+         MimeMessagePreparator messagePreparator = mimeMessage -> prepareMimeMessage(templateName, mail, mimeMessage);
+@@ -52,6 +52,25 @@
+             throw new MailSendException(e.getMessage());
+         }
+     }
++
++    @Override
++    public void sendVerificationEmail(String receiver, String templateName, String subject, String verificationCode) {
++        Mail verificationMail = new Mail();
++        verificationMail.setMailFrom(sender);
++        verificationMail.setMailTo(receiver);
++        verificationMail.setMailSubject(subject);
++        Map<String, Object> model = new HashMap<>();
++        model.put("VERIFICATION_URL", verificationCode);
++        verificationMail.setModel(model);
++        MimeMessagePreparator messagePreparator = mimeMessage -> prepareMimeMessage(templateName, verificationMail, mimeMessage);
++
++        try {
++            javaMailSender.send(messagePreparator);
++        } catch (MailException e) {
++            throw new MailSendException(e.getMessage());
++        }
++
++    }
+ 
+     private void prepareMimeMessage(String templateName, Mail mail, MimeMessage mimeMessage)
+             throws IOException, TemplateException, MessagingException {
+Index: backend/src/main/resources/templates/verification-email.ftl
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- backend/src/main/resources/templates/verification-email.ftl	(date 1571258459000)
++++ backend/src/main/resources/templates/verification-email.ftl	(date 1571258459000)
+@@ -0,0 +1,19 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++    <meta charset="UTF-8">
++    <title>Verify your email</title>
++</head>
++<body>
++<p>Hi there,<br/>
++
++Thanks for using MEETUPLY! Please confirm your email address by clicking on the link below.<br/>
++
++${VERIFICATION_URL}<br/>
++
++If you did not sign up for a MEETUPLY account please disregard this email.<br/>
++
++The MEETUPLY team,
++</p>
++</body>
++</html>
+\ No newline at end of file
