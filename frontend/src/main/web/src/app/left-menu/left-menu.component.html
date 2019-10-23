@@ -1,7 +1,8 @@
 <div id='left_menu'>
 	<div id='avatar'>
 
-		<img src="assets/img/download.png">
+    <img *ngIf=userService.currentUser.photo src={{userService.currentUser.photo}}>
+    <img *ngIf=!userService.currentUser.photo src="assets/img/download.png">
 		<span>{{userService.currentUser.firstName + " " + userService.currentUser.lastName}}</span>
 
 	</div>
