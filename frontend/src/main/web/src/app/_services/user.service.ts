@@ -15,10 +15,7 @@ import {AuthenticationService} from "./authentication.service";
 export class UserService {
 
   private userApiUrl = `${environment.apiUrl}/api/user/`;
-  //private userApiUrl = 'http://localhost:8080/api/user/';
-
   public currentUser: User;
-
 
   constructor(private http: HttpClient, private authenticationService: AuthenticationService) {
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
@@ -29,7 +26,6 @@ export class UserService {
   }
 
   //get speakers (sonly users who made at least 1 meetup ) for now all users
-
   //TODO:lazy load
 
   get(id: number): Observable<User> {
@@ -48,7 +44,6 @@ export class UserService {
     return this.http.get<number[]>(this.userApiUrl + `${userId}/subscribers`);
   }
 
-
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
@@ -65,9 +60,7 @@ export class UserService {
     return this.http.get(this.userApiUrl + 'confirm?token=' + token);
   }
 
-
   getUserLanguages(userId: number): Observable<Language[]> {
     return this.http.get<Language[]>(this.userApiUrl + `${userId}/languages`);
   }
-
 }

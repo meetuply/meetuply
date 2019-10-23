@@ -4,6 +4,7 @@ import {MeetupService} from "../_services/meetup.service";
 import {Subscription} from "rxjs";
 import {UserService} from "../_services";
 import {Meetup} from "../_models/meetup";
+import {RatingService} from "../_services/rating.service";
 
 @Component({
   selector: 'app-meetups-list-page',
@@ -26,7 +27,8 @@ export class MeetupsListPageComponent implements OnInit {
   author: string;
 
   constructor(private userService: UserService,
-              private meetupService: MeetupService) {
+              private meetupService: MeetupService,
+              private ratingService: RatingService) {
   }
 
   ngOnInit() {
@@ -65,7 +67,8 @@ export class MeetupsListPageComponent implements OnInit {
           this.newChunk = data.map(item => {
               return new Meetup_list_item(
                 item,
-                this.userService
+                this.userService,
+                this.ratingService
               )
             }
           );

@@ -29,9 +29,10 @@
     </div>
 
     <div class='atendees'>
-      <app-atendee *ngFor="let attendee of attendees" [name]='attendee.firstName'
-                   [photo]='attendee.photo' [surname]=attendee.lastName></app-atendee>
-      <!--[rating]=4-->
+      <app-atendee *ngFor="let attendee of attendees" [name]='attendee.name'
+                   [photo]='attendee.photo' [surname]=attendee.surname
+                   [rating]='attendee.rating'>
+      </app-atendee>
     </div>
   </div>
 

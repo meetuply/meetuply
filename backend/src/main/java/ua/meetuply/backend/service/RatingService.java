@@ -37,7 +37,9 @@ public class RatingService {
         for (Rating rating: ratings){
             result+=rating.getValue();
         }
-        result/=ratings.size();
+        if(ratings.size() > 0){
+            result/=ratings.size();
+        }
         return result;
     }
 

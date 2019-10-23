@@ -10,7 +10,7 @@ import ua.meetuply.backend.service.RatingService;
 
 import javax.validation.Valid;
 
-@RequestMapping("api/rating")
+@RequestMapping("api/ratings")
 @Transactional
 @RestController
 public class RatingController {
@@ -21,17 +21,15 @@ public class RatingController {
     @Autowired
     private AppUserService appUserService;
 
-    @GetMapping("/all")
+    @GetMapping()
     public @ResponseBody
     Iterable<Rating> getAllRatings() {
-
         return ratingService.getAllRatings();
     }
 
     @GetMapping("/{user-id}")
     public @ResponseBody
     Iterable<Rating> getUserRating(@PathVariable("user-id") Integer id) {
-
         return ratingService.getUserRating(id);
     }
 
