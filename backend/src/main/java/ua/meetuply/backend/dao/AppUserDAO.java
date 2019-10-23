@@ -3,13 +3,10 @@ package ua.meetuply.backend.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import ua.meetuply.backend.model.AppUser;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -76,9 +73,10 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     public void save(AppUser user) {
         jdbcTemplate.update(
                 // TODO role_id
-                "INSERT INTO `user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`, `description`, `location`) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId(), user.getDescription(), user.getLocation()
+
+                "INSERT INTO `user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`, `description`, `location`,`photo`) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId(), user.getDescription(), user.getLocation(), user.getPhoto()
         );
     }
 
@@ -94,11 +92,13 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
                         "allow_notifications = ?, " +
                         "role_id = ?, " +
                         "description = ?, " +
-                        "location = ? WHERE uid = ?",
+                        "location = ?, " +
+                        "photo = ? WHERE uid = ?",
                 appUser.getEmail(), appUser.getPassword(), appUser.getFirstName(),
                 appUser.getLastName(), appUser.isRegistration_confirmed(),
                 appUser.isDeactivated(), appUser.isAllow_notifications(), appUser.getRole().getRoleId(),
-                appUser.getUserId(), appUser.getDescription(), appUser.getLocation());
+                appUser.getDescription(), appUser.getLocation(),appUser.getPhoto(),appUser.getUserId());
+
     }
 
     @Override
@@ -119,6 +119,8 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
                 resultSet.getString("password"),
                 resultSet.getString("description"),
                 resultSet.getString("location")
+                resultSet.getString("photo")
+
         );
         return appUser;
     }

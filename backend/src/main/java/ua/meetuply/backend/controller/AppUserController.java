@@ -1,25 +1,24 @@
 package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.ConfirmationToken;
+
 import ua.meetuply.backend.model.Language;
 import ua.meetuply.backend.service.ConfirmationService;
 import ua.meetuply.backend.service.EmailService;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.LanguageService;
+
 import ua.meetuply.backend.validator.AppUserValidator;
 
-
-import javax.validation.Valid;
 import javax.annotation.Resource;
-import java.net.InetAddress;
-import java.security.Principal;
+import javax.validation.Valid;
 
 
 @RestController
@@ -58,8 +57,8 @@ public class AppUserController {
     }
 
     @RequestMapping("/")
-    public Principal user(Principal user) {
-        return user;
+    public AppUser user() {
+        return appUserService.getCurrentUser();
     }
 
     @RequestMapping("/members")
@@ -80,6 +79,7 @@ public class AppUserController {
         return appUserService.getUser(userId);
     }
 
+
     @GetMapping("/{id}/languages")
     public Iterable<Language> getLanguages(@PathVariable("id") Integer userId) {
         return languageService.getUserLanguages(userId);
@@ -88,6 +88,11 @@ public class AppUserController {
     @GetMapping("/{id}/subscribers")
     public Iterable<Integer> getSubscribers(@PathVariable("id") Integer userId) {
         return appUserService.getUserSubscribers(userId);
+
+    @GetMapping("/{id}/fullName")
+    public String getFullName(@PathVariable("id") Integer userId){
+        return appUserService.getUserFullName(userId);
+
     }
 
     @RequestMapping("/registerSuccessful")

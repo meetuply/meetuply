@@ -1,49 +1,52 @@
 <app-left-menu></app-left-menu>
 <div class='content'>
-	<p class='title'>Meetups</p>
+  <p class='title'>Meetups</p>
 
-	<div class='search_div'>
-		<div class='search_icon'></div>
-		<input type="text" name="search" placeholder="search" />
-		<div class='filters'>
-			<div>Filters</div>
-			<div (click)='toggleFilters()' [ngClass]='getArrowClass()'></div>
-		</div>
-	</div>
+  <div class='search_div'>
+    <div class='search_icon'></div>
+    <input type="text" name="search" placeholder="search"/>
+    <div class='filters'>
+      <div>Filters</div>
+      <div (click)='toggleFilters()' [ngClass]='getArrowClass()'></div>
+    </div>
+  </div>
 
-	<app-meetup-filter *ngIf="this.filter_shown"></app-meetup-filter>
-	<div class="main">
-		
+  <app-meetup-filter *ngIf="this.filter_shown"></app-meetup-filter>
+  <div class="main"
+       infinite-scroll
+       [infiniteScrollDistance]="scrollDistance"
+       (scrolled)='this.onScrollDown()'>
+    <div class='left_column'>
+      <div *ngFor="let meetup_item of this.meetupsList;let i = index">
+        <app-meetup-list-item *ngIf="isOdd(i)"
+                              [joined]='meetup_item.joined'
+                              [author]='meetup_item.author'
+                              [rate]='meetup_item.rate'
+                              [description]='meetup_item.description'
+                              [title]='meetup_item.title'
+                              [place]='meetup_item.place'
+                              [maxAttendees]='meetup_item.maxAttendees'
+                              [registeredAttendees]='meetup_item.registeredAttendees'
+                              [uid]='meetup_item.id'
+                              [date]='meetup_item.date'>
 
-
-
-		<div class='left_column'>
-
-
-			<div *ngFor="let meetup_item of this.meetups_list;let i = index">
-
-				<app-meetup-list-item *ngIf="isOdd(i)" [joined]='meetup_item.joined' author='{{meetup_item.author}}'
-					time='{{meetup_item.time}}' rate='{{meetup_item.rate}}' description='{{meetup_item.description}}'
-					title='{{meetup_item.title}}' location='{{meetup_item.location}}'
-					maxMembers='{{meetup_item.maxMembers}}' members='{{meetup_item.members}}' id='{{meetup_item.id}}'
-					date='{{meetup_item.date}}'></app-meetup-list-item>
-			</div>
-		</div>
-		<div class='right_column'>
-			<div *ngFor="let meetup_item of this.meetups_list;let i = index">
-
-				<app-meetup-list-item *ngIf="!isOdd(i)" [joined]='meetup_item.joined' author='{{meetup_item.author}}'
-					time='{{meetup_item.time}}' rate='{{meetup_item.rate}}' description='{{meetup_item.description}}'
-					title='{{meetup_item.title}}' location='{{meetup_item.location}}'
-					maxMembers='{{meetup_item.maxMembers}}' members='{{meetup_item.members}}' id='{{meetup_item.id}}'
-					date='{{meetup_item.date}}'></app-meetup-list-item>
-			</div>
-		</div>
-
-
-
-
-	</div>
-
-
+        </app-meetup-list-item>
+      </div>
+    </div>
+    <div class='right_column'>
+      <div *ngFor="let meetup_item of this.meetupsList;let i = index">
+        <app-meetup-list-item *ngIf="!isOdd(i)" [joined]='meetup_item.joined' author='{{meetup_item.author}}'
+                              [joined]='meetup_item.joined'
+                              [author]='meetup_item.author'
+                              [rate]='meetup_item.rate'
+                              [description]='meetup_item.description'
+                              [title]='meetup_item.title'
+                              [place]='meetup_item.place'
+                              [maxAttendees]='meetup_item.maxAttendees'
+                              [registeredAttendees]='meetup_item.registeredAttendees'
+                              [uid]='meetup_item.id'
+                              [date]='meetup_item.date'></app-meetup-list-item>
+      </div>
+    </div>
+  </div>
 </div>

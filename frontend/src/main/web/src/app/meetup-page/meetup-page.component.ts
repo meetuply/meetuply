@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {Atendee} from '../_models/atendee'
 import {Meetup} from "../_models/meetup";
 import {ActivatedRoute, Router} from "@angular/router";
-import {MeetupPageService} from "../_services/meetup-page.service";
+import {MeetupService} from "../_services/meetup.service";
 import {User} from "../_models";
+import {Subscription} from "rxjs";
+import {UserService} from "../_services";
 
 @Component({
   selector: 'app-meetup-page',
@@ -15,18 +16,18 @@ export class MeetupPageComponent implements OnInit {
   //todo ratind
   meetup: Meetup = new Meetup();
   loading = false;
-  private sub: any;
+  private sub: Subscription;
   id: number;
   author: string;
-  date: string;
-  time: string;
+  authorPhoto: string;
   rate = 4;
-  joined = true;
+  joined = false;
   error = null;
-  atendees: User[];
+  attendees: User[] = [];
 
   constructor(
-    private meetupPageService: MeetupPageService,
+    private meetupService: MeetupService,
+    private userService: UserService,
     private router: Router,
     private route: ActivatedRoute) {
   }
@@ -34,19 +35,19 @@ export class MeetupPageComponent implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
     this.loadMeetup(this.id);
-
   }
 
   loadMeetup(id:number) {
     this.loading = true;
-    this.sub = this.meetupPageService.get(id).subscribe(
+    this.sub = this.meetupService.get(id).subscribe(
       data => {
+        console.log(data);
+        this.meetup = data;
         this.loading = false;
         this.meetup = data;
-        this.date = data.meetupStartDateTime.substring(0, 10);
-        this.time = data.meetupStartDateTime.substring(11, 16);
-        this.getMeetupSpeakerName();
-        this.getAttendees();},
+        this.getAuthorInfo(data['speakerId']);
+        this.getAttendees();
+      },
       error => {
         // this.alertService.error(error);
         this.loading = false;
@@ -56,28 +57,65 @@ export class MeetupPageComponent implements OnInit {
 
   getAttendees(){
     this.loading = true;
-    this.meetupPageService.getAttendees(this.id).subscribe(
+    this.meetupService.getAttendees(this.id).subscribe(
       data => {
         this.loading = false;
-        this.atendees = data;
+        this.attendees = data;
+        data.forEach(a => {
+          if (a.userId == this.userService.currentUser.userId) {
+            this.joined = true;
+            return;
+          }
+        })
       }
     )
   }
 
-  getMeetupSpeakerName(){
-    this.meetupPageService.getSpeaker(this.meetup.speakerId).subscribe(
+  getAuthorInfo(id: number){
+    this.loading = true;
+    this.meetupService.getSpeaker(this.meetup.speakerId).subscribe(
       data => {
-        this.author = data['firstName'] +" "+ data['lastName'];
+        this.loading = false;
+        this.author = data['firstName']+ " " + data['lastName'];
+        this.authorPhoto = data['photo']},
+      error1 => {
+        this.loading = false;
       }
     );
   }
 
+  joinButtonClicked(event){
+    if (this.joined)
+      this.meetupService.leaveMeetup(this.meetup.meetupId).subscribe(
+        data => {
+          this.joined = false;
+          this.attendees = this.attendees.filter(e => e.userId != this.userService.currentUser.userId);
+        },
+        error => {
+          this.error = error;
+          console.log(error)
+
+        }
+      );
+    else if (this.meetup.meetupMaxAttendees != this.attendees.length)
+      this.meetupService.joinMeetup(this.meetup.meetupId).subscribe(
+        data => {
+          this.joined = true;
+          this.attendees.unshift(this.userService.currentUser);
+        },
+        error => {
+          this.error = error;
+          console.log(error)
+        }
+      );
+  }
+
   joinType() {
-    return (this.joined == true ? '2' : (this.meetup.meetupMaxAttendees == this.meetup.meetupRegisteredAttendees ? "3" : "1"));
+    return (this.joined == true ? '2' : (this.meetup.meetupMaxAttendees == this.attendees.length ? "3" : "1"));
   }
 
   joinText() {
-    return (this.joined == true ? 'Leave' : (this.meetup.meetupMinAttendees == this.meetup.meetupRegisteredAttendees ? "Full" : "Join"));
+    return (this.joined ? 'Leave' : (this.meetup.meetupMaxAttendees == this.attendees.length ? "Full" : "Join"));
   }
 
   ngOnDestroy(){

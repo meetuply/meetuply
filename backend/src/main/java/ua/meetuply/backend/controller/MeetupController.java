@@ -1,6 +1,5 @@
 package ua.meetuply.backend.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,7 @@ import javax.validation.Valid;
 @RestController
 public class MeetupController {
 
-    @Autowired @Lazy
+    @Autowired
     private MeetupService meetupService;
 
     @Autowired
@@ -26,6 +25,13 @@ public class MeetupController {
     @GetMapping()
     public @ResponseBody Iterable<Meetup> getAllMeetups(){
             return meetupService.getAllMeetups();
+    }
+
+    @GetMapping("/{startRow}/{endRow}")
+    public @ResponseBody Iterable<Meetup> getMeetupsChunk(@PathVariable("startRow") Integer startRow,
+                                                          @PathVariable("endRow") Integer endRow)
+    {
+        return meetupService.getMeetupsChunk(startRow, endRow);
     }
 
     @GetMapping("/{meetupId}/attendees")
@@ -62,4 +68,24 @@ public class MeetupController {
         meetupService.deleteMeetup(meetupId);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/{meetupID}/join")
+    public ResponseEntity join(@PathVariable("meetupID") Integer meetupID) throws Exception {
+        meetupService.join(meetupID);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{meetupID}/leave")
+    public ResponseEntity leave(@PathVariable("meetupID") Integer meetupID) throws Exception {
+        meetupService.leave(meetupID);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{meetupID}/attendee")
+    public @ResponseBody Boolean leave(
+            @PathVariable("meetupID") Integer meetupID,
+            @RequestParam("id") Integer userID) {
+        return meetupService.isAttendee(meetupID, userID);
+    }
+
 }

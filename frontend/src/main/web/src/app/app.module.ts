@@ -50,7 +50,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     MeetupListItemComponent,
     MeetupsListPageComponent,
     MeetupPageComponent,
-    RegConfirmationComponent,
+    RegConfirmationComponent
   ],
   imports: [
     BrowserModule,

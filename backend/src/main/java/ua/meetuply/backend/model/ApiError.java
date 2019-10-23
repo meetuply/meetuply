@@ -8,8 +8,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Role {
-
-    private Integer roleId;
-    private String roleName;
+public class ApiError {
+    private String message;
 }

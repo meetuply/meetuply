@@ -7,4 +7,5 @@
     password: string;
     confirmedPassword: string;
     description: string;
+    photo: string;
 }

@@ -1,7 +1,12 @@
 package ua.meetuply.backend.model;
 
-import java.util.Objects;
+import lombok.*;
 
+@Getter
+@ToString
+@EqualsAndHashCode
+@Setter
+@NoArgsConstructor
 public class AppUser {
 
     private Integer userId;
@@ -11,15 +16,18 @@ public class AppUser {
     private Role role;
     private boolean deactivated;
     private String password;
+    private String photo;
     private boolean registration_confirmed;
     private boolean allow_notifications;
     private String description;
     private String location;
 
+
     public AppUser() {
     }
 
-    public AppUser(Integer userId, String email, String firstName, String lastName, Role role, boolean deactivated, boolean registration_confirmed, boolean allow_notifications, String password, String description,String location) {
+    public AppUser(Integer userId, String email, String firstName, String lastName, Role role, boolean deactivated, boolean registration_confirmed, boolean allow_notifications, String password, String description,String location,String photo) {
+
         this.userId = userId;
         this.email = email;
         this.firstName = firstName;
@@ -29,6 +37,7 @@ public class AppUser {
         this.password = password;
         this.registration_confirmed = registration_confirmed;
         this.allow_notifications = allow_notifications;
+        this.photo = photo;
         this.description = description;
         this.location = location;
     }
@@ -109,6 +118,7 @@ public class AppUser {
         return getFirstName() + " " + getLastName();
     }
 
+
     public String getDescription() {
         return description;
     }
@@ -137,4 +147,5 @@ public class AppUser {
     public int hashCode() {
         return Objects.hash(getUserId());
     }
+
 }

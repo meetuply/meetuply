@@ -1,3 +1,4 @@
+
 import { Injectable } from "@angular/core";
 import { User } from "../_models";
 import { Language } from "../_models";
@@ -6,6 +7,9 @@ import { catchError } from "rxjs/operators";
 import { Observable, throwError } from "rxjs";
 import { environment } from "../../environments/environment";
 
+import { map } from 'rxjs/operators';
+import {AuthenticationService} from "./authentication.service";
+
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -13,7 +17,12 @@ export class UserService {
   private userApiUrl = `${environment.apiUrl}/api/user/`;
   //private userApiUrl = 'http://localhost:8080/api/user/';
 
-  constructor(private http: HttpClient) { }
+  public currentUser: User;
+
+
+  constructor(private http: HttpClient, private authenticationService: AuthenticationService) {
+    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+  }
 
   register(user: User): Observable<{}> {
     return this.http.post(this.userApiUrl + 'register', user);

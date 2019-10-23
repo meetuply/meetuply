@@ -1,4 +1,8 @@
-<div [className]="getClass()" [routerLink]="href ? href : null" [style.font-size.px]="fontSize">
+<div [className]="getClass()"
+     [routerLink]="href ? href : null"
+     [style.font-size.px]="fontSize"
+     (click)="onClickButton($event)"
+>
 	<a>
 		{{this.text}}
 	</a>
