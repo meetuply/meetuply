@@ -8,15 +8,11 @@ export class Atendee {
 	photo: string;
 
 	constructor(id:number, name: string, surname: string, photo: string,
-              private ratingService: RatingService){
+              rating:number){
 	  this.id = id;
 	  this.name = name;
 	  this.surname = surname;
 	  this.photo = photo;
-	  this.ratingService.getUserRatingAvg(this.id).subscribe(
-	    avgRating => {
-	      this.rating = avgRating;
-      }
-    )
+	  this.rating = rating;
   }
 }

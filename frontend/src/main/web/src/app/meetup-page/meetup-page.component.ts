@@ -60,8 +60,12 @@ export class MeetupPageComponent implements OnInit {
     this.meetupService.getAttendees(this.id).subscribe(
       async data => {
         this.loading = false;
-        this.attendees = data.map(user => new Atendee(user.userId, user.firstName,
-          user.lastName, user.photo, this.ratingService));
+        this.attendees = await Promise.all(data.map(async user =>{
+          let rating = 0;
+          await this.ratingService.getUserRatingAvg(user.userId).toPromise(
+          ).then(data => {rating = data});
+          return new Atendee(user.userId, user.firstName,
+          user.lastName, user.photo, rating)}));
         data.forEach(a => {
           if (a.userId == this.userService.currentUser.userId) {
             this.joined = true;
@@ -104,12 +108,15 @@ export class MeetupPageComponent implements OnInit {
       );
     else if (this.meetup.meetupMaxAttendees != this.attendees.length)
       this.meetupService.joinMeetup(this.meetup.meetupId).subscribe(
-        data => {
+        async data => {
           this.joined = true;
           let currentUser = this.userService.currentUser;
-          let attendee = new Atendee(currentUser.userId,currentUser.firstName,
-          currentUser.lastName, currentUser.photo, this.ratingService);
-          this.attendees.unshift(attendee);
+          let rating = 0;
+          await this.ratingService.getUserRatingAvg(currentUser.userId).toPromise(
+          ).then(data => {rating = data});
+          let addAttendee = new Atendee(currentUser.userId, currentUser.firstName,
+            currentUser.lastName, currentUser.photo, rating);
+          this.attendees.unshift(addAttendee);
         },
         error => {
           this.error = error;
