@@ -91,8 +91,8 @@ CREATE TABLE `user`
     `is_deactivated`         tinyint(1)       NOT NULL,
     `allow_notifications`    tinyint(1)       NOT NULL,
     `role_id`                integer unsigned NOT NULL,
-    `description`          varchar(500)      NOT NULL,
-    `location`          varchar(500)      NOT NULL,
+    `description`            varchar(500)     NOT NULL,
+    `location`               varchar(500)     NOT NULL,
     `photo`                  varchar(300)     NULL,
 
 

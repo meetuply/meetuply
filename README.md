@@ -6,7 +6,7 @@
 ## Backend
 0. _(Optional)_ Set up a SQL Server locally.
    - Connect via IDE or other software. (For example, "Database" tab in Intellij IDEA). Save url of database (`jdbc:mysql://localhost:3306/<database_schema>?user=<user>&password=<password>&serverTimezone=UTC`)
-   - Run .sql files (/backend/src/main/resources/sql/*.sql)
+   - Run dump.sql file (/backend/src/main/resources/sql/dump.sql)
 1. Sign up environment variables in your IDE (provided by your Teamlead).
 2. Run via IDEA. 
 
