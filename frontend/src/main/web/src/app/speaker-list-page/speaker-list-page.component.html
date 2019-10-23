@@ -7,7 +7,7 @@
 		<input type="text" name="search" placeholder="search" />
 	</div>
 
-	<div class="main">
+	<div class="main" infinite-scroll [infiniteScrollDistance]="scrollDistance" (scrolled)='this.onScrollDown()'>
 
 		<div class='left_column'>
 
@@ -17,7 +17,7 @@
 				<app-speaker-list-item *ngIf="isOdd(i)" name="{{speaker_item.name}}" surname="{{speaker_item.surname}}"
 					description="{{speaker_item.description}}" [languages]="speaker_item.languages"
 					awards="{{speaker_item.awards}}" [following]="speaker_item.following" rate="{{speaker_item.rate}}"
-                               location="{{speaker_item.location}}" id='{{speaker_item.id}}'>
+					location="{{speaker_item.location}}" id='{{speaker_item.id}}'>
 				</app-speaker-list-item>
 			</div>
 		</div>
@@ -26,7 +26,7 @@
 				<app-speaker-list-item *ngIf="!isOdd(i)" name="{{speaker_item.name}}" surname="{{speaker_item.surname}}"
 					description="{{speaker_item.description}}" [languages]="speaker_item.languages"
 					awards="{{speaker_item.awards}}" [following]="speaker_item.following" rate="{{speaker_item.rate}}"
-                               location="{{speaker_item.location}}" id='{{speaker_item.id}}'>
+					location="{{speaker_item.location}}" id='{{speaker_item.id}}'>
 				</app-speaker-list-item>
 			</div>
 		</div>

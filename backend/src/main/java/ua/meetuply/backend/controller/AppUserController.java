@@ -69,6 +69,12 @@ public class AppUserController {
         return appUserService.getAppUsers();
     }
 
+    @GetMapping("/members/{startRow}/{endRow}")
+    public @ResponseBody
+    Iterable<AppUser> getUsersChunk(@PathVariable("startRow") Integer startRow,@PathVariable("endRow") Integer endRow) {
+        return appUserService.getUsersChunk(startRow,endRow);
+    }
+
     @GetMapping("/{id}")
     public AppUser get(@PathVariable("id") Integer userId) {
         return appUserService.getUser(userId);
@@ -93,6 +99,7 @@ public class AppUserController {
     public String viewLogin(Model model) {
         return "registration/loginPage";
     }
+
 
 
 

@@ -21,12 +21,18 @@ export class UserService {
 
   //get speakers (sonly users who made at least 1 meetup ) for now all users
 
+  //TODO:lazy load
+
   get(id: number): Observable<User> {
     return this.http.get<User>(this.userApiUrl + `${id}`);
   }
 
   getAll(): Observable<User[]> {
     return this.http.get<User[]>(this.userApiUrl + 'members')
+  }
+
+  getChunk(start: number, size: number): Observable<User[]> {
+    return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size)
   }
 
   getUserFollowers(userId: number): Observable<number[]> {

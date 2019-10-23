@@ -19,6 +19,8 @@ export class SpeakerPageComponent implements OnInit {
   id: number;
   user: User;
   followers: number;
+  languages: string[];
+
 
 
   histories: History[] = [
@@ -65,6 +67,7 @@ export class SpeakerPageComponent implements OnInit {
 
   goBack() {
     this._location.back();
+
   }
 
   constructor(private _location: Location, private router: Router, private userService: UserService, private route: ActivatedRoute) {
@@ -82,10 +85,17 @@ export class SpeakerPageComponent implements OnInit {
     );
   }
 
+  loadLanguages(id:number) {
+    this.userService.getUserLanguages(id).subscribe(res => 
+      this.languages = res.map(l => l.name)
+    );
+  }
+
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
     this.loadUser(this.id);
     this.loadFollowers(this.id);
+    this.loadLanguages(this.id);
   }
 
 }

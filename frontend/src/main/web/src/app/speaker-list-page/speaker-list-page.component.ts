@@ -15,22 +15,31 @@ import { User, Language } from '../_models'
 export class SpeakerListPageComponent implements OnInit {
 
 
+
+  loading = false;
+  chunkSize = 5;
+  //maxMeetupsOnPage: number;
+  scrollDistance = 2;
+
   speaker_list: Speaker_list_item[] = [];
+  speaker_chunk: Speaker_list_item[];
 
   isOdd(num: number): boolean {
     return num % 2 == 0;
   }
 
+  onScrollDown() {
+    console.log(this.speaker_list.length);
+    this.loadUsersChunk();
+  }
+
+
   constructor(private http: HttpClient, private userService: UserService) { }
 
-  
-  
-
-
-  loadUsers() {
-    this.userService.getAll().subscribe(
+  loadUsersChunk() {
+    this.userService.getChunk(this.speaker_list.length,this.chunkSize).subscribe(
       async users => {
-        this.speaker_list = await Promise.all( users.map(async user =>  {
+        this.speaker_chunk = await Promise.all(users.map(async user => {
 
           var user_languages: string[];
 
@@ -59,6 +68,7 @@ export class SpeakerListPageComponent implements OnInit {
           return list_item;
 
         }))
+        this.speaker_list.push(...this.speaker_chunk);
 
       }
     )
@@ -66,7 +76,7 @@ export class SpeakerListPageComponent implements OnInit {
 
   ngOnInit() {
 
-    this.loadUsers();
+    this.loadUsersChunk();
 
   }
 
