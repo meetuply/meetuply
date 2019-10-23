@@ -33,6 +33,8 @@ public class EmailServiceImpl implements EmailService {
     private static final String NAME = "name";
     private static final String TEMPLATES_PATH = "/templates/";
 
+    private static final String DEACTIVATION_TEMPLATE_NAME = "diactivation-email.ftl";
+
     @Value("${spring.mail.username}")
     private String sender;
 
@@ -64,6 +66,7 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    @Async
     @Override
     public void sendVerificationEmail(AppUser receiver, String templateName, String subject, String verificationCode) {
         Mail verificationMail = new Mail();
@@ -84,6 +87,22 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
+    @Async
+    @Override
+    public void sendDeactivatinEmail(AppUser receiver) {
+        Mail mail = prepareMail(receiver.getEmail(), "Your account was deactivated");
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("name", receiver.getFullName());
+        mail.setModel(model);
+        MimeMessagePreparator messagePreparator = mimeMessage -> prepareMimeMessage(DEACTIVATION_TEMPLATE_NAME, mail, mimeMessage);
+
+        try {
+            javaMailSender.send(messagePreparator);
+        } catch (MailException e) {
+            throw new MailSendException(e.getMessage());
+        }
+    }
     private void prepareMimeMessage(String templateName, Mail mail, MimeMessage mimeMessage)
             throws IOException, TemplateException, MessagingException {
 

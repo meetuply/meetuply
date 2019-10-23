@@ -54,8 +54,15 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
         return userId == null ? -1 : userId;
     }
 
-    public AppUser getUserByEmail(String email) {
-        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE email = ?", new Object[]{email}, this);
+
+    public Integer getUserIdByName(String firstname){
+        Integer userId = jdbcTemplate.queryForObject("SELECT uid FROM user WHERE firstname = ?", new Object[] { firstname }, Integer.class);
+        return userId == null ? -1 : userId;
+    }
+
+
+    public AppUser getUserByEmail(String email){
+        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE email = ?", new Object[] { email }, this);
         return users.size() == 0 ? null : users.get(0);
     }
 

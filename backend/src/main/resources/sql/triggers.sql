@@ -53,3 +53,44 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Max number of attendees cannot be less then current number of registered attendees';
     END IF;
 END;
+
+
+# ********************** user
+DROP TRIGGER IF EXISTS afr_deactivated_user;
+CREATE TRIGGER afr_deactivated_user AFTER UPDATE ON user
+    FOR EACH ROW
+BEGIN
+    IF NEW.is_deactivated = 1 THEN
+
+        SET @FUTURE_MEETUPS = (SELECT GROUP_CONCAT(uid) FROM meetup
+                               WHERE state_id IN (SELECT uid FROM state
+                                                  WHERE state.name = 'Booked'
+                                                     OR state.name = 'Scheduled'));
+        DELETE FROM meetup_attendees
+        WHERE user_id = OLD.uid
+          AND FIND_IN_SET(meetup_id, @FUTURE_MEETUPS);
+
+    END IF;
+END;
+
+
+DROP TRIGGER IF EXISTS afr_deactivated_user_cancel_meetups;
+CREATE TRIGGER afr_deactivated_user_cancel_meetups AFTER UPDATE ON user
+    FOR EACH ROW
+BEGIN
+    IF NEW.is_deactivated = 1 THEN
+
+        SET @FUTURE_MEETUPS = (SELECT GROUP_CONCAT(uid) FROM meetup
+                               WHERE speaker_id = OLD.uid
+                                 AND state_id IN (SELECT uid FROM state
+                                                  WHERE state.name = 'Booked'
+                                                     OR state.name = 'Scheduled'));
+
+        SET @CANCELED_ID = (SELECT uid FROM state WHERE name = 'Canceled');
+
+        UPDATE meetup
+        SET state_id = @CANCELED_ID
+        WHERE FIND_IN_SET(uid, @FUTURE_MEETUPS);
+
+    END IF;
+END;

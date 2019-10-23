@@ -77,19 +77,18 @@ public class AppUserService implements UserDetailsService {
     }
 
     public int getCurrentUserID() {
-        String email = "";
+        String email;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             email = ((UserDetails) principal).getUsername();
         } else {
             email = principal.toString();
         }
-        int userId = appUserDAO.getUserIdByEmail(email);
-        return userId;
+        return appUserDAO.getUserIdByEmail(email);
     }
 
     public AppUser getCurrentUser() {
-        String email = "";
+        String email;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             email = ((UserDetails) principal).getUsername();
@@ -103,6 +102,10 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getUserByEmail(email);
     }
 
+    public Integer getUserIdByName(String name){
+        return appUserDAO.getUserIdByName(name);
+    }
+
     public void activateUser(AppUser user) {
         user.setRegistration_confirmed(true);
         appUserDAO.update(user);
@@ -112,6 +115,7 @@ public class AppUserService implements UserDetailsService {
         user.setDeactivated(true);
         appUserDAO.update(user);
         sessionService.expireUserSessions(user.getEmail());
+
     }
 
     public void activateDeactivatedUser(AppUser user) {
