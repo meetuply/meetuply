@@ -80,7 +80,6 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     public void save(AppUser user) {
         jdbcTemplate.update(
                 // TODO role_id
-
                 "INSERT INTO `user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`, `description`, `location`,`photo`) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId(), user.getDescription(), user.getLocation(), user.getPhoto()

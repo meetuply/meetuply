@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Meetup} from "../_models/meetup";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {MeetupService} from "../_services/meetup.service";
-import {User} from "../_models";
 import {Subscription} from "rxjs";
 import {UserService} from "../_services";
+import {RatingService} from "../_services/rating.service";
+import {Atendee} from "../_models/atendee";
 
 @Component({
   selector: 'app-meetup-page',
@@ -13,7 +14,6 @@ import {UserService} from "../_services";
 })
 export class MeetupPageComponent implements OnInit {
 
-  //todo ratind
   meetup: Meetup = new Meetup();
   loading = false;
   private sub: Subscription;
@@ -23,12 +23,12 @@ export class MeetupPageComponent implements OnInit {
   rate = 4;
   joined = false;
   error = null;
-  attendees: User[] = [];
+  attendees: Atendee[] = [];
 
   constructor(
     private meetupService: MeetupService,
     private userService: UserService,
-    private router: Router,
+    private ratingService: RatingService,
     private route: ActivatedRoute) {
   }
 
@@ -58,15 +58,17 @@ export class MeetupPageComponent implements OnInit {
   getAttendees(){
     this.loading = true;
     this.meetupService.getAttendees(this.id).subscribe(
-      data => {
+      async data => {
         this.loading = false;
-        this.attendees = data;
+        this.attendees = data.map(user => new Atendee(user.userId, user.firstName,
+          user.lastName, user.photo, this.ratingService));
         data.forEach(a => {
           if (a.userId == this.userService.currentUser.userId) {
             this.joined = true;
             return;
           }
-        })
+        }
+      )
       }
     )
   }
@@ -77,11 +79,14 @@ export class MeetupPageComponent implements OnInit {
       data => {
         this.loading = false;
         this.author = data['firstName']+ " " + data['lastName'];
-        this.authorPhoto = data['photo']},
-      error1 => {
-        this.loading = false;
+        this.authorPhoto = data['photo']
       }
     );
+    this.ratingService.getUserRatingAvg(this.meetup.speakerId).subscribe(
+      avgRating => {
+        this.rate = avgRating;
+      }
+    )
   }
 
   joinButtonClicked(event){
@@ -89,7 +94,7 @@ export class MeetupPageComponent implements OnInit {
       this.meetupService.leaveMeetup(this.meetup.meetupId).subscribe(
         data => {
           this.joined = false;
-          this.attendees = this.attendees.filter(e => e.userId != this.userService.currentUser.userId);
+          this.attendees = this.attendees.filter(e => e.id != this.userService.currentUser.userId);
         },
         error => {
           this.error = error;
@@ -101,7 +106,10 @@ export class MeetupPageComponent implements OnInit {
       this.meetupService.joinMeetup(this.meetup.meetupId).subscribe(
         data => {
           this.joined = true;
-          this.attendees.unshift(this.userService.currentUser);
+          let currentUser = this.userService.currentUser;
+          let attendee = new Atendee(currentUser.userId,currentUser.firstName,
+          currentUser.lastName, currentUser.photo, this.ratingService);
+          this.attendees.unshift(attendee);
         },
         error => {
           this.error = error;

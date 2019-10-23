@@ -21,6 +21,7 @@
         <app-meetup-list-item *ngIf="isOdd(i)"
                               [joined]='meetup_item.joined'
                               [author]='meetup_item.author'
+                              [authorPhoto]="meetup_item.authorPhoto"
                               [rate]='meetup_item.rate'
                               [description]='meetup_item.description'
                               [title]='meetup_item.title'
@@ -35,7 +36,9 @@
     </div>
     <div class='right_column'>
       <div *ngFor="let meetup_item of this.meetupsList;let i = index">
-        <app-meetup-list-item *ngIf="!isOdd(i)" [joined]='meetup_item.joined' author='{{meetup_item.author}}'
+        <app-meetup-list-item *ngIf="!isOdd(i)" [joined]='meetup_item.joined'
+                              [author]='meetup_item.author'
+                              [authorPhoto]="meetup_item.authorPhoto"
                               [joined]='meetup_item.joined'
                               [author]='meetup_item.author'
                               [rate]='meetup_item.rate'
