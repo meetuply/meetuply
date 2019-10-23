@@ -65,6 +65,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async
     public void sendVerificationEmail(AppUser receiver, String templateName, String subject, String verificationCode) {
         Mail verificationMail = new Mail();
         verificationMail.setMailFrom(sender);

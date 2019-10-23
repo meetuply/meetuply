@@ -66,19 +66,18 @@ public class AppUserService implements UserDetailsService {
     }
 
     public int getCurrentUserID() {
-        String email = "";
+        String email;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             email = ((UserDetails) principal).getUsername();
         } else {
             email = principal.toString();
         }
-        int userId = appUserDAO.getUserIdByEmail(email);
-        return userId;
+        return appUserDAO.getUserIdByEmail(email);
     }
 
     public AppUser getCurrentUser() {
-        String email = "";
+        String email;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             email = ((UserDetails) principal).getUsername();
