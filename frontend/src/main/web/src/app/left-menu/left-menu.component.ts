@@ -34,7 +34,7 @@ export class LeftMenuComponent implements OnInit {
   constructor(private http: HttpClient,
               private router: Router,
               private authenticationService: AuthenticationService,
-              private userService: UserService
+              public userService: UserService
   ) {}
 
   childClicked($event) {

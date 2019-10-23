@@ -88,6 +88,7 @@ public class AppUserController {
     @GetMapping("/{id}/subscribers")
     public Iterable<Integer> getSubscribers(@PathVariable("id") Integer userId) {
         return appUserService.getUserSubscribers(userId);
+    }
 
     @GetMapping("/{id}/fullName")
     public String getFullName(@PathVariable("id") Integer userId){

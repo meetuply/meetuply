@@ -2,6 +2,8 @@ package ua.meetuply.backend.model;
 
 import lombok.*;
 
+import java.util.Objects;
+
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -23,8 +25,6 @@ public class AppUser {
     private String location;
 
 
-    public AppUser() {
-    }
 
     public AppUser(Integer userId, String email, String firstName, String lastName, Role role, boolean deactivated, boolean registration_confirmed, boolean allow_notifications, String password, String description,String location,String photo) {
 
@@ -42,6 +42,7 @@ public class AppUser {
         this.location = location;
     }
 
+    /*
     public Integer getUserId() {
         return userId;
     }
@@ -81,7 +82,7 @@ public class AppUser {
     public void setRole(Role role) {
         this.role = role;
     }
-
+    */
     public boolean isDeactivated() {
         return deactivated;
     }
@@ -141,6 +142,14 @@ public class AppUser {
         if (!(o instanceof AppUser)) return false;
         AppUser appUser = (AppUser) o;
         return getUserId().equals(appUser.getUserId());
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     @Override

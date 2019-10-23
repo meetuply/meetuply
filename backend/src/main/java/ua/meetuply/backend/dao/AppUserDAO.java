@@ -118,7 +118,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
                 resultSet.getBoolean("allow_notifications"),
                 resultSet.getString("password"),
                 resultSet.getString("description"),
-                resultSet.getString("location")
+                resultSet.getString("location"),
                 resultSet.getString("photo")
 
         );

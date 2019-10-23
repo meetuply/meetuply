@@ -20,7 +20,7 @@ export class SpeakerPageComponent implements OnInit {
   user: User;
   followers: number;
   languages: string[];
-
+  rate: 3;
 
 
   histories: History[] = [
