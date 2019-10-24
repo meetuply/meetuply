@@ -8,4 +8,7 @@
     confirmedPassword: string;
     description: string;
     photo: string;
+    role: {
+      roleName: string;
+    }
 }

@@ -9,7 +9,12 @@ import { MeetupsListPageComponent } from "./meetups-list-page/meetups-list-page.
 import { MeetupPageComponent } from "./meetup-page/meetup-page.component";
 import { AuthGuard } from "./_helpers";
 import { RegConfirmationComponent } from "./reg-confirmation/reg-confirmation.component";
+
 import { CreateMeetupPageComponent } from "./create-meetup-page/create-meetup-page.component";
+
+import {UserDeactivationComponent} from "./user-deactivation/user-deactivation.component";
+import {AdminGuard} from "./_helpers/admin.guard";
+
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -20,7 +25,9 @@ const routes: Routes = [
   { path: 'meetups/create', component: CreateMeetupPageComponent, canActivate: [AuthGuard] },
   { path: 'meetups/:id', component: MeetupPageComponent, canActivate: [AuthGuard] },
   { path: 'meetups', component: MeetupsListPageComponent, canActivate: [AuthGuard] },
-  { path: 'confirm', component: RegConfirmationComponent}
+  { path: 'confirm', component: RegConfirmationComponent},
+
+  { path: 'deactivation', component: UserDeactivationComponent, canActivate: [AdminGuard] },
 
 ];
 

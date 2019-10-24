@@ -1,8 +1,5 @@
 import {Meetup} from "./meetup";
-import {UserService} from "../_services";
-import {RatingService} from "../_services/rating.service";
 
-//todo get author
 export class Meetup_list_item {
   meetup: Meetup;
 	author: string;
@@ -17,21 +14,13 @@ export class Meetup_list_item {
 	get registeredAttendees() {return this.meetup.meetupRegisteredAttendees}
 	get id() {return this.meetup.meetupId}
 
-	//todo add rating, joined
-	constructor(meetup: Meetup, private userService: UserService,
-              private ratingService: RatingService){
+	//todo joined
+	constructor(meetup: Meetup, author: string, authorPhoto: string,
+              rate: number){
 	  this.meetup = meetup;
 	  this.joined = true;
-	  this.userService.get(meetup.speakerId).subscribe(
-	    user => {
-	      this.authorPhoto = user['photo'];
-	      this.author = user['firstName'] + " " + user['lastName'];
-      }
-    );
-    this.ratingService.getUserRatingAvg(meetup.speakerId).subscribe(
-      avgRating => {
-        this.rate = avgRating;
-      }
-    )
+	  this.author = author;
+	  this.authorPhoto = authorPhoto;
+	  this.rate = rate;
   }
 }

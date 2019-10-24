@@ -1,12 +1,12 @@
 package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.controller.exception.MeetupNotFoundException;
 import ua.meetuply.backend.controller.exception.UserNotFoundException;
 import ua.meetuply.backend.dao.MeetupDAO;
 import ua.meetuply.backend.model.AppUser;
+import ua.meetuply.backend.model.Filter;
 import ua.meetuply.backend.model.Meetup;
 
 import java.util.List;
@@ -15,10 +15,10 @@ import java.util.List;
 public class MeetupService {
 
     @Autowired
-    MeetupDAO meetupDao;
+    private MeetupDAO meetupDao;
 
     @Autowired
-    AppUserService appUserService;
+    private AppUserService appUserService;
 
     //todo add state logic
     public void createMeetup(Meetup meetup) {
@@ -69,4 +69,9 @@ public class MeetupService {
     public boolean isAttendee(Integer meetupID, Integer userID) {
         return meetupDao.isAttendee(meetupID, userID);
     }
+
+    public List<Meetup> findMeetupsByFilter(Filter filter) {
+        return meetupDao.findMeetupsByFilter(filter);
+    }
+
 }

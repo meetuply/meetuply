@@ -7,10 +7,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import ua.meetuply.backend.model.Filter;
 import ua.meetuply.backend.model.Meetup;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -19,6 +21,10 @@ import java.util.List;
 @Repository
 public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
 
+    //TODO SELECT * FROM meetups WHERE rating = ? and date > dateFrom and date < dateTo
+    private static final String FIND_MEETUPS_BY_FILTER_DATE_RATING_QUERY = "SELECT * from meetup where meetup.start_date_time >= ? AND meetup.finish_date_time <= ? AND meetup.speaker_id in (select rated_user_id from rating group by rated_user_id having avg(value) >= ?)";
+    private static final String FIND_MEETUPS_BY_FILTER_DATE_QUERY = "SELECT * from meetup where meetup.start_date_time >= ? AND meetup.finish_date_time <= ?";
+    private static final String FIND_MEETUPS_BY_FILTER_RATING_QUERY = "SELECT * from meetup where meetup.speaker_id in (select rated_user_id from rating group by rated_user_id having avg(value) >= ?)";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -69,6 +75,7 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
         return meetupList;
     }
 
+    @Override
     public Meetup mapRow(ResultSet rs, int rowNum) throws SQLException {
         Meetup meetup = new Meetup();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -106,4 +113,15 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
                 new BeanPropertyRowMapper<>(Object.class)).size() > 0;
 
     }
+
+    public List<Meetup> findMeetupsByFilter(Filter filter) {
+        Double rating = filter.getRating();
+        Timestamp dateFrom = filter.getDateFrom();
+        Timestamp dateTo = filter.getDateTo();
+        return (rating == 0.0) ? jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATE_QUERY,
+                new Object[] {dateFrom, dateTo}, this) : (dateFrom == null && dateTo == null ? jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_RATING_QUERY,
+                new Object[] {rating}, this): jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATE_RATING_QUERY,
+                new Object[] {dateFrom, dateTo, rating}, this));
+    }
+
 }

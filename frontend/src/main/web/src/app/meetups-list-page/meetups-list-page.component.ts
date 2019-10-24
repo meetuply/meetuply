@@ -23,7 +23,6 @@ export class MeetupsListPageComponent implements OnInit {
   newChunk: Meetup_list_item[];
   private sub: Subscription;
   filter_shown = false;
-  //todo add author, rating
   author: string;
 
   constructor(private userService: UserService,
@@ -32,7 +31,7 @@ export class MeetupsListPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.maxMeetupsOnPage = 10;
+    this.maxMeetupsOnPage = 50;
     this.loadMeetupsChunk();
   }
 
@@ -59,20 +58,28 @@ export class MeetupsListPageComponent implements OnInit {
     if (this.lastRow < this.maxMeetupsOnPage) {
       this.loading = true;
       this.sub = this.meetupService.getMeetupsChunk(this.lastRow, this.step).subscribe(
-        data => {
+        async data => {
           this.loading = false;
           if (data){
             this.lastRow += data.length;
-          }
-          this.newChunk = data.map(item => {
-              return new Meetup_list_item(
-                item,
-                this.userService,
-                this.ratingService
-              )
+          this.newChunk = await Promise.all(data.map( async item => {
+              let username = "";
+              let photo = "";
+              let rating = 0;
+              await this.userService.get(item.speakerId).toPromise().then(
+                speaker => {
+                  username = speaker.firstName + " " + speaker.lastName;
+                  photo = speaker.photo;
+                }
+              );
+              await this.ratingService.getUserRatingAvg(item.speakerId).toPromise().then(
+                rate => {rating = rate}
+              );
+              return new Meetup_list_item(item, username, photo, rating)
             }
-          );
+          ));
           this.meetupsList.push(...this.newChunk);
+        }
         },
         error1 => {
           this.loading = false;
