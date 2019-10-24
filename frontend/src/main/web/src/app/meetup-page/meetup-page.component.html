@@ -1,65 +1,57 @@
 <app-left-menu></app-left-menu>
 <div class='content'>
+  <!--(click)="goBack()"-->
+  <div class='back' routerLink="/meetups" >
 
+  </div>
 
+  <div class='main'>
 
-	<div class='back' (click)="goBack()">
+    <div class='info'>
+      <div class='title'>{{this.meetup.meetupTitle}}</div>
+      <div class='detail'>
+        <img *ngIf="authorPhoto" src={{this.authorPhoto}}>
+        <img *ngIf="!authorPhoto" src="assets/img/download.png">
+        <div>by {{this.author}}</div>
+        <app-rating size='16' rating="{{this.rate}}"></app-rating>
+      </div>
+    </div>
 
-	</div>
+    <div class='about'>
+      About
+    </div>
+    <div class='description'>
+      {{this.meetup.meetupDescription}}
+    </div>
 
-	<div class='main'>
+    <div class='about'>
+      Attendees
+    </div>
 
-		<div class='info'>
-			<div class='title'>{{this.title}}</div>
-			<div class='detail'>
-				<img src="assets/img/download.png" />
-				<div>by {{this.author}}</div>
-				<app-rating size='16' rating="{{this.rate}}"></app-rating>
-			</div>
-		</div>
+    <div class='atendees'>
+      <app-atendee *ngFor="let attendee of attendees" [name]='attendee.name'
+                   [photo]='attendee.photo' [surname]=attendee.surname
+                   [rating]='attendee.rating'>
+      </app-atendee>
+    </div>
+  </div>
 
-		<div class='about'>
-			About
-		</div>
-		<div class='description'>
-			{{this.description}}
-		</div>
-
-		<div class='about'>
-			Atendees
-		</div>
-
-		<div class='atendees'>
-
-
-
-			<app-atendee *ngFor="let atendee of this.atendees" [name]='atendee.name' [surname]=atendee.surname
-				[rating]='atendee.rating'></app-atendee>
-		</div>
-
-	</div>
-
-	<div class='additional'>
-		<app-button [text]='joinText()' [type]='joinType()' fontSize='24'></app-button>
-		<div class='time'>
-			<div class='icon'>
-			</div>
-			<div class='date_time'>
-				<div>{{this.date}}</div>
-				<div>{{this.time}}</div>
-			</div>
-		</div>
-		<div class='location'>
-			<div class='icon'></div>
-			<div>{{this.location}}</div>
-		</div>
-
-		<div class='members'>
-			<div class='icon'></div>
-			<div>{{this.members}}/{{this.maxMembers}}</div>
-		</div>
-
-	</div>
-
-
+  <div class='additional'>
+    <app-button [text]='joinText()' [type]='joinType()' fontSize='24' (onClick)="joinButtonClicked($event)"></app-button>
+    <div class='time'>
+      <div class='icon'>
+      </div>
+      <div class='date_time'>
+        <div>{{this.meetup.meetupStartDateTime | date:'MMM d, y h:mm a'}}</div>
+      </div>
+    </div>
+    <div class='location'>
+      <div class='icon'></div>
+      <div class='text'>{{this.meetup.meetupPlace}}</div>
+    </div>
+    <div class='members'>
+      <div class='icon'></div>
+      <div>{{this.attendees.length || 0}}/{{this.meetup.meetupMaxAttendees}}</div>
+    </div>
+  </div>
 </div>

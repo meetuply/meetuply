@@ -3,11 +3,11 @@
 		<div class='profile'>
 			<div class='avatar'>
 				<img src="assets/img/download.png">
-        <app-rating size='16' rating="{{this.rate}}"></app-rating>
+				<app-rating size='16' rating="{{this.rate}}"></app-rating>
 			</div>
 			<div class='info'>
 				<div class='name'>
-					{{this.name + " " + this.surname}}
+					<a [routerLink]="link()">{{this.name + " " + this.surname}}</a>
 				</div>
 				<div class='location'>
 					<div class='icon'></div>
@@ -31,6 +31,6 @@
 			<div class='icon'></div>
 			<div> {{this.awards}}</div>
 		</div>
-    <app-button [text]="followText()" href="{{'speakers/' + this.id}}" type='2' fontSize='20'></app-button>
+		<app-button [text]="followText()" [type]='followType()' fontSize='20'></app-button>
 	</div>
 </div>

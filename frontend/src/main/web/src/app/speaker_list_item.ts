@@ -7,4 +7,5 @@ export class Speaker_list_item {
 	languages: string[];
 	following: boolean;
 	awards: number;
+	id: number;
 }

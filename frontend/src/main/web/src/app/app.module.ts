@@ -27,6 +27,7 @@ import { MeetupPageComponent } from './meetup-page/meetup-page.component';
 import { RegConfirmationComponent } from './reg-confirmation/reg-confirmation.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MeetupListItemComponent,
     MeetupsListPageComponent,
     MeetupPageComponent,
-    RegConfirmationComponent,
+    RegConfirmationComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +59,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
+    InfiniteScrollModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

@@ -1,8 +1,11 @@
 <div id='left_menu'>
 	<div id='avatar'>
 
-		<img src="assets/img/download.png">
-		<span>Pavlo Petrenko</span>
+
+    <img *ngIf=userService.currentUser.photo src={{userService.currentUser.photo}}>
+    <img *ngIf=!userService.currentUser.photo src="assets/img/download.png">
+		<span>{{userService.currentUser.firstName + " " + userService.currentUser.lastName}}</span>
+
 
 	</div>
 	<div id='menu'>
@@ -12,7 +15,7 @@
 	</div>
 	<div id='bottom_menu'>
 		<app-left-menu-item *ngFor="let item of this.bottom_menu_items" sel="{{false}}" [item]="item"
-                        (clck)="childClicked($event)"></app-left-menu-item>
-    <app-logout-menu-item sel="{{false}}" (clck)="childClicked($event)"></app-logout-menu-item>
+                        (clck)="bottomMenuClicked($event)"></app-left-menu-item>
+   <!-- <app-logout-menu-item sel="{{false}}" (clck)="childClicked($event)"></app-logout-menu-item> -->
 	</div>
 </div>

@@ -13,7 +13,7 @@ ${VERIFICATION_URL}<br/>
 
 If you did not sign up for a MEETUPLY account please disregard this email.<br/>
 
-The MEETUPLY team,
+The MEETUPLY team
 </p>
 </body>
 </html>

@@ -1,5 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Atendee } from '../_models/atendee'
+import {Component, OnInit} from '@angular/core';
+import {Meetup} from "../_models/meetup";
+import {ActivatedRoute} from "@angular/router";
+import {MeetupService} from "../_services/meetup.service";
+import {Subscription} from "rxjs";
+import {UserService} from "../_services";
+import {RatingService} from "../_services/rating.service";
+import {Atendee} from "../_models/atendee";
 
 @Component({
   selector: 'app-meetup-page',
@@ -8,57 +14,129 @@ import { Atendee } from '../_models/atendee'
 })
 export class MeetupPageComponent implements OnInit {
 
-
-  //TODO: retrieve from backend using specific meetup id or other
-
-  title = 'James char lecture';
-  author = 'james char';
-  location = 'location';
+  meetup: Meetup = new Meetup();
+  loading = false;
+  private sub: Subscription;
+  id: number;
+  author: string;
+  authorPhoto: string;
   rate = 4;
+  joined = false;
+  error = null;
+  attendees: Atendee[] = [];
 
-  description = "wurecbhih debrecbhih brecbhibrecbbrecbhih dbrecbrecbhih debrecbhih debrecbhih debrecbhih debrecbhih debrecbhih debhih brecbhih debrecbhih de debrecbhih debrecbhih deebrecbhih dehih debrecbhih debrecbhih debrecbhih debrecbhih debrecbhih dedebrbrecbhih debrecbhih deecbhihbrecbbrecbhih debrecbhih dedebrecbhih debrecbhih debrecbhih de debrecbhih deebrecbhih debrecbhih de debrecbhih derecbrebrecbhih debrecbhih debhih debrecbhih debhih debrecbhih debrecbhih debrecbhih debrecbhih debrecbhih debrecbhih debrecbhih debrecbhih debrecbhih debi";
-  time = "15:00";
-  date = "13/10/19";
-  maxMembers = 20;
-  members = 17;
-  joined = true;
-  id = 0;
-
-  atendees: Atendee[] = [
-    {
-      name: "john",
-      surname: "dee",
-      rating: 4
-    },
-    {
-      name: "johwefn",
-      surname: "dee",
-      rating: 5
-    },
-    {
-      name: "joker",
-      surname: "lol",
-      rating: 1
-    }
-  ]
-
-  constructor() { }
-
-  ngOnInit() {
+  constructor(
+    private meetupService: MeetupService,
+    private userService: UserService,
+    private ratingService: RatingService,
+    private route: ActivatedRoute) {
   }
 
+  ngOnInit() {
+    this.id = this.route.snapshot.params['id'];
+    this.loadMeetup(this.id);
+  }
+
+  loadMeetup(id:number) {
+    this.loading = true;
+    this.sub = this.meetupService.get(id).subscribe(
+      data => {
+        console.log(data);
+        this.meetup = data;
+        this.loading = false;
+        this.meetup = data;
+        this.getAuthorInfo(data['speakerId']);
+        this.getAttendees();
+      },
+      error => {
+        // this.alertService.error(error);
+        this.loading = false;
+      }
+    );
+  }
+
+  getAttendees(){
+    this.loading = true;
+    this.meetupService.getAttendees(this.id).subscribe(
+      async data => {
+        this.loading = false;
+        this.attendees = await Promise.all(data.map(async user =>{
+          let rating = 0;
+          await this.ratingService.getUserRatingAvg(user.userId).toPromise(
+          ).then(data => {rating = data});
+          return new Atendee(user.userId, user.firstName,
+          user.lastName, user.photo, rating)}));
+        data.forEach(a => {
+          if (a.userId == this.userService.currentUser.userId) {
+            this.joined = true;
+            return;
+          }
+        }
+      )
+      }
+    )
+  }
+
+  getAuthorInfo(id: number){
+    this.loading = true;
+    this.meetupService.getSpeaker(this.meetup.speakerId).subscribe(
+      data => {
+        this.loading = false;
+        this.author = data['firstName']+ " " + data['lastName'];
+        this.authorPhoto = data['photo']
+      }
+    );
+    this.ratingService.getUserRatingAvg(this.meetup.speakerId).subscribe(
+      avgRating => {
+        this.rate = avgRating;
+      }
+    )
+  }
+
+  joinButtonClicked(event){
+    if (this.joined)
+      this.meetupService.leaveMeetup(this.meetup.meetupId).subscribe(
+        data => {
+          this.joined = false;
+          this.attendees = this.attendees.filter(e => e.id != this.userService.currentUser.userId);
+        },
+        error => {
+          this.error = error;
+          console.log(error)
+
+        }
+      );
+    else if (this.meetup.meetupMaxAttendees != this.attendees.length)
+      this.meetupService.joinMeetup(this.meetup.meetupId).subscribe(
+        async data => {
+          this.joined = true;
+          let currentUser = this.userService.currentUser;
+          let rating = 0;
+          await this.ratingService.getUserRatingAvg(currentUser.userId).toPromise(
+          ).then(data => {rating = data});
+          let addAttendee = new Atendee(currentUser.userId, currentUser.firstName,
+            currentUser.lastName, currentUser.photo, rating);
+          this.attendees.unshift(addAttendee);
+        },
+        error => {
+          this.error = error;
+          console.log(error)
+        }
+      );
+  }
 
   joinType() {
-    return (this.joined == true ? '2' : (this.maxMembers == this.members ? "3" : "1"));
+    return (this.joined == true ? '2' : (this.meetup.meetupMaxAttendees == this.attendees.length ? "3" : "1"));
   }
 
   joinText() {
-    return (this.joined == true ? 'Leave' : (this.maxMembers == this.members ? "Full" : "Join"));
+    return (this.joined ? 'Leave' : (this.meetup.meetupMaxAttendees == this.attendees.length ? "Full" : "Join"));
   }
 
+  ngOnDestroy(){
+    if (this.sub) this.sub.unsubscribe;
+  }
 
   goBack() {
-
   }
-
 }
