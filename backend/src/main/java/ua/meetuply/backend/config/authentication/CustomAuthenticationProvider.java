@@ -33,7 +33,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
         AppUser user = appUserService.getUserByEmail(username);
 
-        if (passwordEncoder.matches(password, user.getPassword())) {
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             if(user.isDeactivated())
                 throw new BadCredentialsException("User is deactivated");
             else if(!user.isRegistration_confirmed())
