@@ -10,8 +10,7 @@ import { User } from "../_models";
 @Injectable({ providedIn: 'root' })
 export class MeetupService {
 
-  //private meetupApiUrl = `${environment.apiUrl}/api/meetups/`;
-  private meetupApiUrl = `http://localhost:8080/api/meetups/`;
+  private meetupApiUrl = `${environment.apiUrl}/api/meetups/`;
 
   constructor(private http: HttpClient, private userService: UserService) {
   }
