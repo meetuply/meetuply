@@ -1,8 +1,8 @@
 package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Filter;
@@ -14,6 +14,7 @@ import ua.meetuply.backend.service.MeetupService;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 @RequestMapping("api/meetups")
 @RestController
@@ -100,6 +101,17 @@ public class MeetupController {
         filter.setUserId(appUserService.getCurrentUserID());
         filterService.createFilter(filter);
         return ResponseEntity.ok().build();
+    }
+
+    //TODO rename url
+    @GetMapping("/filter-test")
+    public @ResponseBody List<Meetup> getMeetupsByFilter(@RequestParam(value="filter") Integer filterId, Model model){
+        Filter filter = filterService.getFilter(filterId);
+        List<Meetup> meetups = meetupService.findMeetupsByFilter(filter);
+        model.addAttribute(meetups);
+        //TODO decide what page will be here
+//        return "";
+        return meetups;
     }
 
 }
