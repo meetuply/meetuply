@@ -15,7 +15,18 @@ import {AuthenticationService} from "./authentication.service";
 export class UserService {
 
   private userApiUrl = `${environment.apiUrl}/api/user/`;
-  public currentUser: User;
+  //private userApiUrl = `http://localhost:8080/api/user/`;
+  public currentUser: User;/* = {
+    firstName: "sasha",
+    lastName: "faryna",
+    password: "k",
+    confirmedPassword: "k",
+    description: "esc",
+    email: "email",
+    location: "kyiv",
+    photo: "assets/img/download.png",
+    userId: 2
+  }*/
 
   constructor(private http: HttpClient, private authenticationService: AuthenticationService) {
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
@@ -26,7 +37,6 @@ export class UserService {
   }
 
   //get speakers (sonly users who made at least 1 meetup ) for now all users
-  //TODO:lazy load
 
   get(id: number): Observable<User> {
     return this.http.get<User>(this.userApiUrl + `${id}`);

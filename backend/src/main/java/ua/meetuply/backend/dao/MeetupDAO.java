@@ -42,6 +42,8 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
 
     @Override
     public void save(Meetup meetup) {
+
+
         jdbcTemplate.update("INSERT INTO meetup (`uid`,`place`, `title`, `description`,`registered_attendees`, `min_attendees`, `max_attendees`," +
                         "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", null,
                 meetup.getMeetupPlace(),meetup.getMeetupTitle(), meetup.getMeetupDescription(),

@@ -28,7 +28,11 @@ import { RegConfirmationComponent } from './reg-confirmation/reg-confirmation.co
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+
+import { CreateMeetupPageComponent } from './create-meetup-page/create-meetup-page.component';
+
 import { UserDeactivationComponent } from './user-deactivation/user-deactivation.component';
+
 
 @NgModule({
   declarations: [
@@ -52,7 +56,11 @@ import { UserDeactivationComponent } from './user-deactivation/user-deactivation
     MeetupsListPageComponent,
     MeetupPageComponent,
     RegConfirmationComponent,
+
+    CreateMeetupPageComponent,
+
     UserDeactivationComponent
+
   ],
   imports: [
     BrowserModule,

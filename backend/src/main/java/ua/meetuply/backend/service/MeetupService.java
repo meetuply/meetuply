@@ -22,8 +22,12 @@ public class MeetupService {
 
     //todo add state logic
     public void createMeetup(Meetup meetup) {
+
         meetup.setStateId(1);
+
+        //meetup.setSpeakerId(1);
         meetup.setSpeakerId(appUserService.getCurrentUserID());
+
         meetupDao.save(meetup);
     }
 

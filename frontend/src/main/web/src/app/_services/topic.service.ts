@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Language } from "../_models/language";
+import { Topic } from "../_models";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { catchError } from "rxjs/operators";
 import { Observable, throwError } from "rxjs";
@@ -7,21 +7,17 @@ import { environment } from "../../environments/environment";
 
 
 @Injectable({ providedIn: 'root' })
-export class LanguageService {
+export class TopicService {
 
 
-  private languageApiUrl = `${environment.apiUrl}/api/languages/`;
-  //private languageApiUrl = 'http://localhost:8080/api/languages';
+  //private languageApiUrl = `${environment.apiUrl}/api/languages/`;
+  private topicApiUrl = 'http://localhost:8080/api/topics';
 
   constructor(private http: HttpClient) { }
 
 
-  get(id: number): Observable<Language> {
-    return this.http.get<Language>(this.languageApiUrl + `${id}`);
-  }
-
-  getAll():Observable<Language[]> {
-    return this.http.get<Language[]>(this.languageApiUrl);
+  getAll():Observable<Topic[]> {
+    return this.http.get<Topic[]>(this.topicApiUrl);
   }
 
   private handleError(error: HttpErrorResponse) {
