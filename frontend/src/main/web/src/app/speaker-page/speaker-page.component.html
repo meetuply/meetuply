@@ -15,10 +15,10 @@
 
 			<div class='other'>
 				<div class='info'>
-					<div class='name'>
+					<div class='name' *ngIf="user">
 						{{this.user.firstName + " " + this.user.lastName}}
 					</div>
-					<div class='location'>
+					<div class='location' *ngIf="user && this.user.location">
 						<div class='icon'></div>
 						<div>{{this.user.location}}</div>
 					</div>
@@ -37,10 +37,10 @@
 
 		</div>
 
-		<div class='about'>
+		<div class='about' *ngIf="user && this.user.description">
 			About me
 		</div>
-		<div class='description'>
+		<div class='description' *ngIf="user && this.user.description">
 			{{this.user.description}}
 		</div>
 
