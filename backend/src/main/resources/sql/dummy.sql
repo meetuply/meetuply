@@ -13,9 +13,12 @@ DELETE FROM topic;
 DELETE FROM state;
 DELETE FROM ban_reason;
 DELETE FROM language;
+DELETE FROM role;
 
-INSERT INTO `language` (`name`, `uid`) VALUES ('ea', 11);
-INSERT INTO `language` (`name`, `uid`) VALUES ('amet', 12);
+INSERT INTO `role` VALUES ('admin',2), ('user',1);
+
+INSERT INTO `language` (`name`, `uid`) VALUES ('ea', 1);
+INSERT INTO `language` (`name`, `uid`) VALUES ('amet', 2);
 INSERT INTO `language` (`name`, `uid`) VALUES ('ex', 3);
 INSERT INTO `language` (`name`, `uid`) VALUES ('voluptatem', 4);
 INSERT INTO `language` (`name`, `uid`) VALUES ('voluptate', 5);
@@ -46,12 +49,12 @@ INSERT INTO `ban_reason` (`name`, `uid`) VALUES ('soluta', 18);
 INSERT INTO `ban_reason` (`name`, `uid`) VALUES ('non', 19);
 INSERT INTO `ban_reason` (`name`, `uid`) VALUES ('nihil', 20);
 
-INSERT INTO `state` (`name`, `uid`) VALUES ('ut', 1);
-INSERT INTO `state` (`name`, `uid`) VALUES ('officiis', 2);
-INSERT INTO `state` (`name`, `uid`) VALUES ('aut', 3);
-INSERT INTO `state` (`name`, `uid`) VALUES ('sequi', 4);
+INSERT INTO `state` (`name`, `uid`) VALUES ('Scheduled', 1);
+INSERT INTO `state` (`name`, `uid`) VALUES ('Booked', 2);
+INSERT INTO `state` (`name`, `uid`) VALUES ('Canceled', 3);
+INSERT INTO `state` (`name`, `uid`) VALUES ('In progress', 4);
 INSERT INTO `state` (`name`, `uid`) VALUES ('Terminated', 5);
-INSERT INTO `state` (`name`, `uid`) VALUES ('in', 6);
+INSERT INTO `state` (`name`, `uid`) VALUES ('Passed', 6);
 
 
 INSERT INTO `topic` (`name`, `uid`) VALUES ('nostrum', 1);
