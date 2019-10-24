@@ -28,6 +28,7 @@ import { RegConfirmationComponent } from './reg-confirmation/reg-confirmation.co
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { CreateMeetupPageComponent } from './create-meetup-page/create-meetup-page.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     MeetupListItemComponent,
     MeetupsListPageComponent,
     MeetupPageComponent,
-    RegConfirmationComponent
+    RegConfirmationComponent,
+    CreateMeetupPageComponent
   ],
   imports: [
     BrowserModule,
