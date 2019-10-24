@@ -17,11 +17,13 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Filter {
+
+    private Integer id;
     private String name;
     private Double rating;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat
     private Timestamp dateFrom;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat
     private Timestamp dateTo;
     private Integer userId;
 
