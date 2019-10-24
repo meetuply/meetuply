@@ -1,7 +1,5 @@
 package ua.meetuply.backend.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.IDAO;
 import ua.meetuply.backend.model.Filter;
@@ -38,4 +36,5 @@ public class FilterServiceImpl implements FilterService {
     public List<Filter> getAllFilters() {
         return filterDao.getAll();
     }
+
 }
