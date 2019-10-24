@@ -57,7 +57,7 @@ import { UserDeactivationComponent } from './user-deactivation/user-deactivation
     MeetupPageComponent,
     RegConfirmationComponent,
 
-    CreateMeetupPageComponent
+    CreateMeetupPageComponent,
 
     UserDeactivationComponent
 
