@@ -2,6 +2,7 @@ package ua.meetuply.backend.validator;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -14,7 +15,8 @@ public class AppUserValidator implements Validator {
 
     private EmailValidator emailValidator = EmailValidator.getInstance();
 
-    private AppUserDAO appUserDAO = new AppUserDAO();
+    @Autowired @Lazy
+    private AppUserDAO appUserDAO;
 
     @Override
     public boolean supports(Class<?> clazz) {
