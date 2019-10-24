@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.AppUserDAO;
@@ -32,8 +33,7 @@ public class AppUserService implements UserDetailsService {
     @Autowired
     SessionService sessionService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();;
 
     public void createAppUser(AppUser appUser) {
         String encrytedPassword = this.passwordEncoder.encode(appUser.getPassword());
