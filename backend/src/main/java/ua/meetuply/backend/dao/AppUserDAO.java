@@ -18,9 +18,6 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     public JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     RoleDAO roleDAO;
 
     public List<AppUser> getMeetupAttendees(Integer id) {
