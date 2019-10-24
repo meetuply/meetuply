@@ -10,8 +10,8 @@ import { environment } from "../../environments/environment";
 export class TopicService {
 
 
-  //private languageApiUrl = `${environment.apiUrl}/api/languages/`;
-  private topicApiUrl = 'http://localhost:8080/api/topics';
+  private topicApiUrl = `${environment.apiUrl}/api/languages/`;
+  //private topicApiUrl = 'http://localhost:8080/api/topics';
 
   constructor(private http: HttpClient) { }
 

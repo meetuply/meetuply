@@ -40,6 +40,9 @@ public class AppUserService implements UserDetailsService {
         appUser.setPassword(encrytedPassword);
         appUser.setDeactivated(false);
         appUser.setAllow_notifications(true);
+        appUser.setPhoto("");
+        appUser.setLocation("");
+        appUser.setDescription("");
         appUser.setRegistration_confirmed(false);
         Role role = appUser.getRole();
         if (role == null) {
