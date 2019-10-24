@@ -14,8 +14,7 @@ public class AppUserValidator implements Validator {
 
     private EmailValidator emailValidator = EmailValidator.getInstance();
 
-    @Autowired
-    private AppUserDAO appUserDAO;
+    private AppUserDAO appUserDAO = new AppUserDAO();
 
     @Override
     public boolean supports(Class<?> clazz) {
