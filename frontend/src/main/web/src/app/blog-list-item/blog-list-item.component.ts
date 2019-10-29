@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {UserService} from "../_services";
+import {BlogService} from "../_services/blog.service";
 
 
 @Component({
@@ -9,24 +11,20 @@ import { Component, OnInit, Input } from '@angular/core';
 
 export class BlogListItemComponent implements OnInit {
 
-  @Input() name: string;
-  @Input() surname: string;
-  @Input() post_title: string;
-  @Input() post_content: string;
-  @Input() id: number;
+  @Input() date: Date;
+  @Input() author: string;
+  @Input() authorPhoto: string;
+  @Input() content: string;
+  @Input() title: string;
+  @Input() uid: number;
+  error;
 
-  constructor() { }
+
+  constructor(private blogService: BlogService,
+              private userService: UserService
+  ) { }
 
   ngOnInit() {
-
-  }
-
-  shorten(text: string):string{
-    var n=300;
-    if (text.length>n){
-      text=text.substr(0,n)+"...";
-    }
-    return text;
   }
 
 }

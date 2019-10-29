@@ -47,15 +47,21 @@
 .post{
   text-align: left;
   margin: 10px 10px 10px 20px;
+  overflow: auto;
 }
 
 .post-title{
   margin: 5px 0px;
   font-weight: bold;
   font-size: 16px;
+  display: block;
+  float: none;
+  overflow: auto;
 }
 
 .post-content{
   font-size: 14px;
   text-overflow: fade;
+  float: none;
+  overflow: auto;
 }

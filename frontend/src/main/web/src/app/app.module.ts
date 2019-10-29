@@ -60,7 +60,7 @@ import { UserDeactivationComponent } from './user-deactivation/user-deactivation
     MeetupPageComponent,
     BlogPageComponent,
     BlogListItemComponent,
-    BlogListPageComponent
+    BlogListPageComponent,
     RegConfirmationComponent,
 
     CreateMeetupPageComponent,

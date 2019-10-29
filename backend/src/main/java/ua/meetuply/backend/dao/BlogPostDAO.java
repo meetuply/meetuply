@@ -33,6 +33,10 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
         return blogPosts;
     }
 
+    public List<BlogPost> getBlogPostsChunk(Integer startRow, Integer endRow) {
+        return jdbcTemplate.query("SELECT * FROM post order by uid asc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
+    }
+
     @Override
     public void save(BlogPost blogPost) {
         jdbcTemplate.update(

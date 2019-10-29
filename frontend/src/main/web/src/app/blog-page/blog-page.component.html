@@ -46,10 +46,13 @@
             </div>
           </div>
 
-          <form class="comment-text">
-            <textarea placeholder="You can leave your comment here"></textarea>
-            <app-button [text]="'>'" fontSize='50' href="" type='4'></app-button>
-          </form>
+          <div class="form-container">
+            <form class="comment-text">
+              <textarea placeholder="You can leave your comment here"></textarea>
+            </form>
+          </div>
+
+          <app-button [text]="'>'" (onClick)="{}" type='4'></app-button>
         </div>
       </div>
     </div>

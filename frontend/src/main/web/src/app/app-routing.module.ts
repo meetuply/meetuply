@@ -29,6 +29,7 @@ const routes: Routes = [
   { path: 'meetups', component: MeetupsListPageComponent, canActivate: [AuthGuard] },
   { path: 'blog', component: BlogListPageComponent, canActivate: [AuthGuard] },
   { path: 'post', component: BlogPageComponent, canActivate: [AuthGuard] },
+  { path: 'blog/:id', component: BlogPageComponent },
   { path: 'confirm', component: RegConfirmationComponent},
   { path: 'deactivation', component: UserDeactivationComponent, canActivate: [AdminGuard] },
 
