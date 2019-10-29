@@ -6,8 +6,9 @@ import { HttpRequest, HttpHandler, HttpInterceptor } from '@angular/common/http'
 export class XhrInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
-    const xhr = req.clone({
-      headers: req.headers.set('X-Requested-With', 'XMLHttpRequest')
+    let xhr = req.clone({
+      headers: req.headers.set('X-Requested-With', 'XMLHttpRequest'),
+      withCredentials: true // TODO
     });
     return next.handle(xhr);
   }

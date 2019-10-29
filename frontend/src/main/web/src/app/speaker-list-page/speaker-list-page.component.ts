@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Speaker_list_item } from '../speaker_list_item';
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from 'rxjs';
+import { environment } from "../../environments/environment";
+import { UserService } from "../_services/user.service"
+import { flatMap } from 'rxjs/operators';
+import { User, Language } from '../_models'
 
 @Component({
   selector: 'app-speaker-list-page',
@@ -10,32 +15,69 @@ import {HttpClient} from "@angular/common/http";
 export class SpeakerListPageComponent implements OnInit {
 
 
-  speaker_list: Speaker_list_item[] = [
-    {
-      name: "Jared", surname: 'Sunn', location: "Barcelona, Spain", rate: 4.5, following: true, awards: 3, languages: ["English", "Spanish"
-      ], description: "Aenean vel seferrgrgrgedrhdtfhedrhdtjrtjurna odio. Suspendisse libero arcu, posuere quis tincidunt eu, tincidunt eget dui. Integer vitae ipsum eu nulla convallis sagittis"
-    },
-    {
-      name: "Jared2", surname: 'Sunn', location: "Barcelona, Spain", rate: 4.5, following: true, awards: 3, languages: ["English", "Spanish"
-      ], description: "Aenean vel seferrgrgrgedrhdtfhedrhdtjrtjurna odio. Suspendisse libero arcu, posuere quis tincidunt eu, tincidunt eget dui. Integer vitae ipsum eu nulla convallis sagittis"
-    },
-    {
-      name: "Jared3", surname: 'Sunn', location: "Barcelona, Spain", rate: 4.5, following: true, awards: 3, languages: ["English", "Spanish"
-      ], description: "Aenean vel seferrgrgrgedrhdtfhedrhdtjrtjurna odio. Suspendisse libero arcu, posuere quis tincidunt eu, tincidunt eget dui. Integer vitae ipsum eu nulla convallis sagittis"
-    },
-    {
-      name: "Jared4", surname: 'Sunn', location: "Bar, Spain", rate: 4.0, following: false, awards: 2, languages: ["English"]
-      , description: "Hallo Aenean vel seferrgrgrgedrhdtfhedrhdtjrtjurna odio. Suspendisse libero arcu, posuere quis tincidunt eu, tincidunt eget dui. Integer vitae ipsum eu nulla convallis sagittis"
-    }
-  ];
+
+  loading = false;
+  chunkSize = 5;
+  //maxMeetupsOnPage: number;
+  scrollDistance = 2;
+
+  speaker_list: Speaker_list_item[] = [];
+  speaker_chunk: Speaker_list_item[];
 
   isOdd(num: number): boolean {
     return num % 2 == 0;
   }
 
-  constructor(private http: HttpClient) { }
+  onScrollDown() {
+    console.log(this.speaker_list.length);
+    this.loadUsersChunk();
+  }
+
+
+  constructor(private http: HttpClient, private userService: UserService) { }
+
+  loadUsersChunk() {
+    this.userService.getChunk(this.speaker_list.length,this.chunkSize).subscribe(
+      async users => {
+        this.speaker_chunk = await Promise.all(users.map(async user => {
+
+          var user_languages: string[];
+
+          var list_item: Speaker_list_item;
+          await this.userService.getUserLanguages(user.userId).toPromise().then(languages =>
+
+
+            user_languages = languages.map(language => language.name)
+
+          );
+
+
+          list_item = {
+            id: user.userId,
+            name: user.firstName,
+            surname: user.lastName,
+            location: user.location,
+            rate: 4,
+            description: user.description,
+            languages: user_languages,
+            following: false,
+            awards: 3
+          };
+
+
+          return list_item;
+
+        }))
+        this.speaker_list.push(...this.speaker_chunk);
+
+      }
+    )
+  }
 
   ngOnInit() {
+
+    this.loadUsersChunk();
+
   }
 
 }

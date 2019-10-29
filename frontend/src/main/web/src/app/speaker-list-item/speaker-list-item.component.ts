@@ -29,10 +29,21 @@ export class SpeakerListItemComponent implements OnInit {
 
   }
 
+  followType(): number {
+    if (this.following === true) {
+      return 2;
+    }
+    return 1;
+  }
+
   constructor() { }
 
   ngOnInit() {
 
+  }
+
+  link():string {
+    return "/speakers/" + this.id;
   }
 
 }

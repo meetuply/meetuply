@@ -1,10 +1,10 @@
 package ua.meetuply.backend.service;
 
-import java.io.IOException;
+import ua.meetuply.backend.model.AppUser;
 
 public interface EmailService {
 
-    void sendGreetingEmail(String receiver, String templateName, String subject);
-    void sendVerificationEmail(String receiver, String templateName, String subject, String verificationCode);
-
+    void sendGreetingEmail(AppUser receiver, String templateName, String subject);
+    void sendVerificationEmail(AppUser receiver, String templateName, String subject, String verificationCode);
+    void sendDeactivatinEmail(AppUser receiver);
 }

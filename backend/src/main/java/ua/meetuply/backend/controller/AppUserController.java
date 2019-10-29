@@ -1,23 +1,24 @@
 package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.ConfirmationToken;
+
+import ua.meetuply.backend.model.Language;
 import ua.meetuply.backend.service.ConfirmationService;
 import ua.meetuply.backend.service.EmailService;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.service.AppUserService;
+import ua.meetuply.backend.service.LanguageService;
+
 import ua.meetuply.backend.validator.AppUserValidator;
 
-
-import javax.validation.Valid;
 import javax.annotation.Resource;
-import java.net.InetAddress;
-import java.security.Principal;
+import javax.validation.Valid;
 
 
 @RestController
@@ -30,6 +31,9 @@ public class AppUserController {
 
     @Autowired
     private AppUserService appUserService;
+
+    @Autowired
+    private LanguageService languageService;
 
     @Autowired
     private ConfirmationService confirmationService;
@@ -53,16 +57,44 @@ public class AppUserController {
     }
 
     @RequestMapping("/")
-    public Principal user(Principal user) {
-        return user;
+    public AppUser user() {
+        return appUserService.getCurrentUser();
     }
 
     @RequestMapping("/members")
     @GetMapping()
-    public @ResponseBody Iterable<AppUser> getAllMeetups(){
+    public @ResponseBody
+    Iterable<AppUser> getAllMeetups() {
         return appUserService.getAppUsers();
     }
 
+    @GetMapping("/members/{startRow}/{endRow}")
+    public @ResponseBody
+    Iterable<AppUser> getUsersChunk(@PathVariable("startRow") Integer startRow,@PathVariable("endRow") Integer endRow) {
+        return appUserService.getUsersChunk(startRow,endRow);
+    }
+
+    @GetMapping("/{id}")
+    public AppUser get(@PathVariable("id") Integer userId) {
+        return appUserService.getUser(userId);
+    }
+
+
+    @GetMapping("/{id}/languages")
+    public Iterable<Language> getLanguages(@PathVariable("id") Integer userId) {
+        return languageService.getUserLanguages(userId);
+    }
+
+    @GetMapping("/{id}/subscribers")
+    public Iterable<Integer> getSubscribers(@PathVariable("id") Integer userId) {
+        return appUserService.getUserSubscribers(userId);
+    }
+
+    @GetMapping("/{id}/fullName")
+    public String getFullName(@PathVariable("id") Integer userId){
+        return appUserService.getUserFullName(userId);
+
+    }
 
     @RequestMapping("/registerSuccessful")
     public String viewRegisterSuccessful(Model model) {
@@ -74,6 +106,9 @@ public class AppUserController {
         return "registration/loginPage";
     }
 
+
+
+
     @GetMapping("/register")
     public String viewRegister() {
         return "registration/registerPage";
@@ -81,7 +116,7 @@ public class AppUserController {
 
     @GetMapping("/address")
     public String adress() {
-        return InetAddress.getLoopbackAddress().getHostName();
+        return System.getenv("HOST_NAME");
     }
 
     @PostMapping("/register")
@@ -89,23 +124,35 @@ public class AppUserController {
         appUserService.createAppUser(appUser);
         ConfirmationToken ct = confirmationService.generateToken(appUserService.getUserByEmail(appUser.getEmail()));
 
-        //TODO confirmation email
-//        emailService.sendGreetingEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
-        emailService.sendVerificationEmail(appUser.getEmail(), VERIFICATION_TEMPLATE_NAME, "Verify your account",
-                "http://" + InetAddress.getLoopbackAddress().getHostName() + "/confirm?token=" + ct.getConfirmationToken());
+        emailService.sendVerificationEmail(appUser, VERIFICATION_TEMPLATE_NAME, "Verify your account",
+                confirmationService.getConfirmLink(ct));
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/confirm")
     public ResponseEntity<AppUser> confirmUser(@RequestParam("token") String confirmationToken) {
 
-        if (confirmationService.confirmUser(confirmationToken)) {
-            // TODO welcome email
+        AppUser user = confirmationService.confirmUser(confirmationToken);
+        if (user != null) {
+            emailService.sendGreetingEmail(user, GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
         } else {
-            //TODO "The link is invalid or broken!"
+            return ResponseEntity.badRequest().build();
         }
+        return ResponseEntity.ok().build();
+    }
 
-//        emailService.sendGreetingEmail(appUser.getEmail(), GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
+    @GetMapping("/deactivate/{id}")
+    public ResponseEntity<AppUser> deactivateUser(@PathVariable("id") Integer userId) {
+        AppUser user = appUserService.getUser(userId);
+        appUserService.deactivateUser(user);
+        emailService.sendDeactivatinEmail(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/activate/{id}")
+    public ResponseEntity<AppUser> activateUser(@PathVariable("id") Integer userId) {
+        AppUser user = appUserService.getUser(userId);
+        appUserService.activateDeactivatedUser(user);
         return ResponseEntity.ok().build();
     }
 }

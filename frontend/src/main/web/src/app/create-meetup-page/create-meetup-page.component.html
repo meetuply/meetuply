@@ -1,0 +1,66 @@
+<app-left-menu></app-left-menu>
+<div class='content'>
+
+	<div class='back' (click)="goBack()">
+
+	</div>
+
+	<div class='main'>
+
+		<div class='title'>
+			Create meetup
+		</div>
+
+		<form class="form">
+			<div class='form_line'><span>Title:</span><input type="text" name="title" placeholder="title" [(ngModel)]="this.meetup_title" required autocomplete="off"/>
+			</div>
+			<div class='form_line'><span>Location:</span><input type="text" name="location" [(ngModel)]="this.meetup_location" placeholder="location"
+					required /></div>
+			<div class='form_line'><span>Start date:</span><input type="date" name="start_date" placeholder="start_date" [(ngModel)]="this.meetup_start_date" required /></div>
+			<div class='form_line'><span>Start time:</span><input type="time" name="start_time" placeholder="start_time" [(ngModel)]="this.meetup_start_time" required /></div>
+
+			<div class='form_line'><span>End date:</span><input type="date" name="end_date" placeholder="end_date" [(ngModel)]="this.meetup_end_date" required /></div>
+			<div class='form_line'><span>End time:</span><input type="time" name="end_time" placeholder="end_time" [(ngModel)]="this.meetup_end_time" required /></div>
+
+
+			
+			<div class='form_line'><span>Maximum members:</span><input type="number" name="maxMembers" value="20"  [(ngModel)]="this.meetup_max_atendees"
+					step="1" min="1" required /></div>
+
+
+			<div class='form_line'><span>Language:</span><select name="language">
+					<option *ngFor="let language of this.languages" name="language" value="{{language | lowercase}}">
+						{{language}}
+					</option>
+				</select></div>
+
+			<div class='form_line'>
+				<span>Topics:</span>
+				<div class='topics_list'>
+					<app-toggle-button *ngFor="let topic of this.topics" name="topics" id='{{topic.topicId}}' text='{{topic.name}}'
+						(toggled)="topicToggled($event)"></app-toggle-button>
+				</div>
+			</div>
+
+
+
+			<div class='form_line'>
+				<span>Description:</span>
+				<textarea placeholder="Description" cols="30" rows="8" name="description"  [(ngModel)]="this.meetup_description" autocomplete="off"></textarea>
+			</div>
+
+
+			<div class='extra'>
+				<app-button text='Create meetup' (onClick)="submit($event)" fontSize='24' type='1'></app-button>
+			</div>
+		</form>
+
+
+
+
+
+	</div>
+
+
+
+</div>

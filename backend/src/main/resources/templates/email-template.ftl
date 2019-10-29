@@ -261,7 +261,7 @@
 
 
                                     <div style="line-height: 26px;">
-                                        <a href="" style="color: #ffffff; text-decoration: none;">SIGN IN</a>
+                                        <a href="${login_url}" style="color: #ffffff; text-decoration: none;">SIGN IN</a>
                                     </div>
                                 </td>
                             </tr>

@@ -35,6 +35,7 @@ export class LoginComponent {
       .subscribe(
         data => {
           console.log("navigate");
+          this.loading = false;
           this.router.navigate([this.returnUrl ? this.returnUrl : "/speakers"]);
         },
         error => {

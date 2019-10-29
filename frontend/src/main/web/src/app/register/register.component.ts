@@ -13,6 +13,7 @@ export class RegisterComponent implements OnInit {
   user: User = new User();
   registered = false;
   error = null;
+  loading = false;
 
   constructor(
     private userService: UserService,
@@ -23,13 +24,19 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
+    this.loading = true;
+    console.log("here");
     this.userService.register(this.user).subscribe(
       data => {
-          if (data == null) {
-            this.registered = true;
-            //this.router.navigate(["/speakers"]);
-          }
-      }, error => this.error = error);
+          this.registered = true;
+          //this.router.navigate(["/speakers"]);
+          this.loading = false;
+          console.log(data);
+      }, error => {
+        this.error = error;
+        this.loading = false;
+        console.log(error)
+      });
   }
 
 }

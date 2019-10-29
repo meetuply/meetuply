@@ -3,24 +3,24 @@
 
 
 	<div class='main'>
-    <div class='back' (click)="goBack()">
+		<div class='back' (click)="goBack()">
 
-  </div>
+		</div>
 		<div class='profile'>
 
 			<div class='avatar'>
 				<img src="assets/img/download.png">
-        <app-rating size='24' rating="{{this.rate}}"></app-rating>
+				<app-rating size='24' rating="{{this.rate}}"></app-rating>
 			</div>
 
 			<div class='other'>
 				<div class='info'>
-					<div class='name'>
-						{{this.name + " " + this.surname}}
+					<div class='name' *ngIf="user">
+						{{this.user.firstName + " " + this.user.lastName}}
 					</div>
-					<div class='location'>
+					<div class='location' *ngIf="user && this.user.location">
 						<div class='icon'></div>
-						<div>{{this.location}}</div>
+						<div>{{this.user.location}}</div>
 					</div>
 
 				</div>
@@ -29,7 +29,7 @@
 					<app-button text='Message speaker' type='1' href='ok' fontSize='20'></app-button>
 				</div>
 				<div class='additional_info'>
-					<span>345 followers</span>
+					<span>{{this.followers}} followers</span>
 				</div>
 
 			</div>
@@ -37,11 +37,11 @@
 
 		</div>
 
-		<div class='about'>
+		<div class='about' *ngIf="user && this.user.description">
 			About me
 		</div>
-		<div class='description'>
-			{{this.description}}
+		<div class='description' *ngIf="user && this.user.description">
+			{{this.user.description}}
 		</div>
 
 
@@ -87,6 +87,25 @@
 
 	</div>
 	<div class='extra'>
+		<div class='languages'>
 
+			<div class='icon'>
+
+			</div>
+			<div class='overall'>
+				<div>
+					Languages
+				</div>
+				<div class='language_list'>
+					<div *ngFor="let language of languages">{{language}}</div>
+				</div>
+			</div>
+
+		</div>
+		<div class='achievements'>
+			<div class='icon'>
+
+			</div>
+		</div>
 	</div>
 </div>

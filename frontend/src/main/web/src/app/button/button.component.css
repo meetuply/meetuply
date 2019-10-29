@@ -9,11 +9,21 @@
   font-size: 20px;
   border-radius: 6px;
   align-items: center;
+  outline:0;
 }
 
 .button a {
   color: white;
   text-decoration: none;
+
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+
 }
 
 .btn1 {
@@ -22,9 +32,9 @@
     4px 4px 25px rgba(42, 139, 242, 0.05), 6px 6px 25px rgba(42, 139, 242, 0.15);
 }
 
-.button:hover a {
-  color: black;
-}
+/*.button:hover a {*/
+/*  color: black;*/
+/*}*/
 .btn2 {
   background: linear-gradient(96.1deg, #ff648b 0%, #ff3366 100%);
   box-shadow: 10px 6px 25px rgba(198, 27, 74, 0.15),

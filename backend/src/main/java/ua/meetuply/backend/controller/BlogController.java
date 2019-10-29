@@ -43,6 +43,7 @@ public class BlogController {
         if (blogPostService.getBlogPostById(blogPostId) == null) {
             return ResponseEntity.badRequest().build();
         }
+        blogPost.setBlogPostId(blogPostId);
         blogPostService.updateBlogPost(blogPost);
         return ResponseEntity.ok().build();
     }
@@ -84,6 +85,7 @@ public class BlogController {
         if (blogCommentService.getBlogCommentById(blogCommentId) == null) {
             return ResponseEntity.badRequest().build();
         }
+        blogComment.setBlogCommentId(blogCommentId);
         blogCommentService.updateBlogComment(blogComment);
         return ResponseEntity.ok().build();
     }
