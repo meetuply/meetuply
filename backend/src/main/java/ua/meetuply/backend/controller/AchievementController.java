@@ -21,6 +21,12 @@ public class AchievementController {
         return achievementService.getAll();
     }
 
+    @GetMapping("/user/{userId}")
+    public @ResponseBody
+    Iterable<Achievement> getUserAchievements(@PathVariable("userId") Integer userId) {
+        return achievementService.getUserAchievements(userId);
+    }
+
     @GetMapping("/{achievementId}")
     public Achievement get(@PathVariable("achievementId") Integer achievementId) {
         return achievementService.get(achievementId);

@@ -1,0 +1,141 @@
+<app-left-menu></app-left-menu>
+<div class="container">
+  <div class='back' (click)="goBack()"></div>
+
+  <div class="page-title">
+    Create achievement
+  </div>
+  <div [formGroup]="this.achievementForm">
+    <div class="achievement-form">
+      <div class="input-wrapper">
+        <div class="input-title">
+          <span>Title:</span>
+        </div>
+        <div class="input_line">
+          <input type="text" formControlName="title" placeholder="title" required/>
+          <span class="help-block" *ngIf="achievementForm.get('title').errors &&
+      (achievementForm.get('title').touched || achievementForm.get('title').dirty)">
+        <span *ngIf="achievementForm.get('title').errors">
+          Title is required
+        </span>
+      </span>
+        </div>
+      </div>
+      <div class="input-wrapper">
+        <div class="input-title">
+          <span>Description:</span>
+        </div>
+        <div class="input_line">
+          <input type="text" formControlName="description" placeholder="description" required/>
+          <span class="help-block" *ngIf="achievementForm.get('description').errors &&
+      (achievementForm.get('description').touched || achievementForm.get('description').dirty)">
+        <span *ngIf="achievementForm.get('description').errors">
+          Description is required
+        </span>
+      </span>
+        </div>
+      </div>
+
+      <div class="input-wrapper">
+        <div class="input-title">
+          <span>Icon:</span>
+        </div>
+        <div class="input_line">
+          <input type="text" formControlName="icon" placeholder="icon" required/>
+          <span class="help-block" *ngIf="achievementForm.get('icon').errors &&
+      (achievementForm.get('icon').touched || achievementForm.get('icon').dirty)">
+        <span *ngIf="achievementForm.get('icon').errors">
+          Icon is required
+        </span>
+      </span>
+        </div>
+      </div>
+
+      <div class="input-wrapper">
+        <select class="achievement-target" (change)="onChange($event.target.value)">
+          <option>
+            followers
+          </option>
+          <option>
+            posts
+          </option>
+          <option>
+            rating
+          </option>
+          <option>
+            meetups
+          </option>
+        </select>
+      </div>
+
+      <ng-container *ngIf="this.showTopics">
+        <div class="input-wrapper topics">
+          <div *ngFor="let topic of this.topics">
+            {{topic.name}} <input type="checkbox" [value]="topic.name" (change)="onCheckChange($event)"/>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="input-wrapper">
+        <div class="input-title">
+          <span>Number:</span>
+        </div>
+        <ng-container *ngIf="this.selectedOption === 'meetups'">
+          <div class="input_line">
+            <input type="number" formControlName="meetups" required/>
+            <br>
+            <span class="help-block" *ngIf="achievementForm.get(this.selectedOption).errors &&
+      (achievementForm.get(this.selectedOption).touched || achievementForm.get(this.selectedOption).dirty)">
+        <span *ngIf="achievementForm.get(this.selectedOption).errors">
+          Number is required
+        </span>
+      </span>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="this.selectedOption === 'followers'">
+          <div class="input_line">
+            <input type="number" formControlName="followers" required/>
+            <br>
+            <span class="help-block" *ngIf="achievementForm.get(this.selectedOption).errors &&
+      (achievementForm.get(this.selectedOption).touched || achievementForm.get(this.selectedOption).dirty)">
+        <span *ngIf="achievementForm.get(this.selectedOption).errors">
+          Number is required
+        </span>
+      </span>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="this.selectedOption === 'posts'">
+          <div class="input_line">
+            <input type="number" formControlName="posts" required/>
+            <br>
+            <span class="help-block" *ngIf="achievementForm.get(this.selectedOption).errors &&
+      (achievementForm.get(this.selectedOption).touched || achievementForm.get(this.selectedOption).dirty)">
+        <span *ngIf="achievementForm.get(this.selectedOption).errors">
+          Number is required
+        </span>
+      </span>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="this.selectedOption === 'rating'">
+          <div class="input_line">
+            <input type="number" formControlName="rating" required/>
+            <br>
+            <span class="help-block" *ngIf="achievementForm.get(this.selectedOption).errors &&
+      (achievementForm.get(this.selectedOption).touched || achievementForm.get(this.selectedOption).dirty)">
+        <span *ngIf="achievementForm.get(this.selectedOption).errors">
+          Number is required
+        </span>
+      </span>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class='create-button'>
+        <app-button text='add' (onClick)="submit()" fontSize='24' type='1'></app-button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -32,4 +32,8 @@ public class AchievementService {
     public List<Achievement> getAll(){
         return achievementDAO.getAll();
     }
+
+    public List<Achievement> getUserAchievements(Integer userId) {
+        return achievementDAO.getUserAchievements(userId);
+    }
 }

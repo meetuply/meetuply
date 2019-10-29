@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import {Injectable, NgModule} from '@angular/core';
-
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -28,11 +27,11 @@ import { RegConfirmationComponent } from './reg-confirmation/reg-confirmation.co
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-
 import { CreateMeetupPageComponent } from './create-meetup-page/create-meetup-page.component';
-
 import { UserDeactivationComponent } from './user-deactivation/user-deactivation.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { AchievementCreatePageComponent } from './achievement-create-page/achievement-create-page.component';
+import { AchievementPanelComponent } from './achievement-panel/achievement-panel.component';
 
 @NgModule({
   declarations: [
@@ -56,11 +55,10 @@ import { UserDeactivationComponent } from './user-deactivation/user-deactivation
     MeetupsListPageComponent,
     MeetupPageComponent,
     RegConfirmationComponent,
-
     CreateMeetupPageComponent,
-
-    UserDeactivationComponent
-
+    UserDeactivationComponent,
+    AchievementCreatePageComponent,
+    AchievementPanelComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +67,8 @@ import { UserDeactivationComponent } from './user-deactivation/user-deactivation
     AppRoutingModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
-    InfiniteScrollModule
+    InfiniteScrollModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
@@ -78,5 +77,3 @@ import { UserDeactivationComponent } from './user-deactivation/user-deactivation
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-
-

@@ -28,6 +28,15 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
         return achievements;
     }
 
+    public List<Achievement> getUserAchievements(Integer userId) {
+        List<Achievement> achievements = jdbcTemplate.query("SELECT uid, title, description, icon," +
+                "followers_number, posts_number, rating from user_achievement " +
+                "inner join achievement on " +
+                "user_achievement.achievement_id = achievement.uid " +
+                "where user_id = ?", new Object[] {userId}, this);
+        return achievements;
+    }
+
     @Override
     public void save(Achievement achievement) {
         jdbcTemplate.update("INSERT INTO achievement (`title`, `description`, `icon`, `followers_number`, " +
