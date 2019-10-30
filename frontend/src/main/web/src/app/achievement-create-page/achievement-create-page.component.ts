@@ -37,20 +37,21 @@ export class AchievementCreatePageComponent implements OnInit {
       }
     );
   }
-  onSubmit(event){
+
+  onSubmit(event) {
     // const topicsFormArray: FormArray = this.achievementForm.get('topics') as FormArray;
     // const topicsValues = topicsFormArray.value;
     let achievement: Achievement = new Achievement();
     achievement.title = this.achievementForm.get('title').value;
     achievement.description = this.achievementForm.get('description').value;
     achievement.icon = this.achievementForm.get('icon').value;
-    if (this.selectedOption == 'followers'){
+    if (this.selectedOption == 'followers') {
       achievement.followers_number = this.achievementForm.get('followers').value;
     } else if (this.selectedOption == 'posts') {
       achievement.posts_number = this.achievementForm.get('posts').value;
     } else if (this.selectedOption == 'rating') {
       achievement.rating = this.achievementForm.get('rating').value;
-    } else if (!this.selectedTopics){
+    } else if (!this.selectedTopics) {
       achievement.meetups = this.achievementForm.get('meetups').value;
     }
     this.achievementService.create(achievement).subscribe(
@@ -65,14 +66,14 @@ export class AchievementCreatePageComponent implements OnInit {
     );
   }
 
-  createForMeetupsSameQuantity(id, topicsValues){
+  createForMeetupsSameQuantity(id, topicsValues) {
     const formData = new FormData();
     formData.append("achievementId", id);
     formData.append("topics", topicsValues);
     formData.append("quantity", this.achievementForm.get('meetups').value);
     this.achievementService.createForMeetupsSameQuantity(formData).subscribe(
-      data =>{
-        if (data){
+      data => {
+        if (data) {
           console.log(data);
         }
       }, error => {
@@ -101,12 +102,16 @@ export class AchievementCreatePageComponent implements OnInit {
     )
   }
 
-    topicToggled($event) {
-      if ($event[1] == true) {
-        this.selectedTopics.add($event[0])
-      } else {
-        this.selectedTopics.delete($event[0]);
-      }
-      console.log(this.selectedTopics)
+  topicToggled($event) {
+    if ($event[1] == true) {
+      this.selectedTopics.add($event[0])
+    } else {
+      this.selectedTopics.delete($event[0]);
     }
+    console.log(this.selectedTopics)
+  }
+
+  goBack() {
+
+  }
 }
