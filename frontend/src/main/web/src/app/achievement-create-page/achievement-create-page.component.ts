@@ -11,22 +11,13 @@ import {TopicService} from "../_services";
 })
 export class AchievementCreatePageComponent implements OnInit {
 
-  //todo update/create validation, allowCount
+  //todo update validation, allowCount
 
-  achievementForm = this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
-      icon: ['', Validators.required],
-      followers: ['', Validators.required],
-      posts: ['', Validators.required],
-      rating: ['', Validators.required],
-      meetups: ['', Validators.required],
-      topics: new FormArray([])
-    }
-  );
+  achievementForm: FormGroup;
   topics: any;
   showTopics: boolean = false;
   selectedOption = 'followers';
+  selectedTopics = new Set();
 
   constructor(private fb: FormBuilder, private achievementService: AchievementService,
               private topicService: TopicService) {
@@ -35,24 +26,59 @@ export class AchievementCreatePageComponent implements OnInit {
   ngOnInit() {
     this.loadTopics();
     this.selectedOption = 'followers';
+    this.achievementForm = this.fb.group({
+        title: ['', Validators.required],
+        description: ['', Validators.required],
+        icon: ['', Validators.required],
+        followers: ['', Validators.required],
+        posts: ['', Validators.required],
+        rating: ['', Validators.required],
+        meetups: ['', Validators.required]
+      }
+    );
+  }
+  onSubmit(event){
+    // const topicsFormArray: FormArray = this.achievementForm.get('topics') as FormArray;
+    // const topicsValues = topicsFormArray.value;
+    let achievement: Achievement = new Achievement();
+    achievement.title = this.achievementForm.get('title').value;
+    achievement.description = this.achievementForm.get('description').value;
+    achievement.icon = this.achievementForm.get('icon').value;
+    if (this.selectedOption == 'followers'){
+      achievement.followers_number = this.achievementForm.get('followers').value;
+    } else if (this.selectedOption == 'posts') {
+      achievement.posts_number = this.achievementForm.get('posts').value;
+    } else if (this.selectedOption == 'rating') {
+      achievement.rating = this.achievementForm.get('rating').value;
+    } else if (!this.selectedTopics){
+      achievement.meetups = this.achievementForm.get('meetups').value;
+    }
+    this.achievementService.create(achievement).subscribe(
+      achievementId => {
+        if (this.selectedTopics) {
+          console.log("New ach Id " + achievementId);
+          this.createForMeetupsSameQuantity(achievementId, Array.from(this.selectedTopics.values()));
+        }
+      }, error => {
+        console.log(error)
+      }
+    );
   }
 
-  submit(event) {
-    // let achievement: Achievement = new Achievement();
-    // achievement.title = this.achievementForm['title'].value;
-    // achievement.description = this.achievementForm['description'].value;
-    // achievement.icon = this.achievementForm['icon'].value;
-    // achievement.followers_number = this.achievementForm['followers_number'].value;
-    // achievement.posts_number = this.achievementForm['posts_number'].value;
-    // this.achievementService.create(achievement).subscribe(
-    //   data => {
-    //     if (!data) {
-    //       alert("Achievement successfully created!");
-    //     }
-    //   }, error => {
-    //     console.log(error)
-    //   }
-    // )
+  createForMeetupsSameQuantity(id, topicsValues){
+    const formData = new FormData();
+    formData.append("achievementId", id);
+    formData.append("topics", topicsValues);
+    formData.append("quantity", this.achievementForm.get('meetups').value);
+    this.achievementService.createForMeetupsSameQuantity(formData).subscribe(
+      data =>{
+        if (data){
+          console.log(data);
+        }
+      }, error => {
+        console.log(error);
+      }
+    );
   }
 
   onChange(selectedValue) {
@@ -75,30 +101,12 @@ export class AchievementCreatePageComponent implements OnInit {
     )
   }
 
-  onCheckChange(event){
-    const formArray: FormArray = this.achievementForm.get('topics') as FormArray;
-    /* Selected */
-    if(event.target.checked){
-      // Add a new control in the arrayForm
-      formArray.push(new FormControl(event.target.value));
+    topicToggled($event) {
+      if ($event[1] == true) {
+        this.selectedTopics.add($event[0])
+      } else {
+        this.selectedTopics.delete($event[0]);
+      }
+      console.log(this.selectedTopics)
     }
-    /* unselected */
-    else{
-      // find the unselected element
-      let i: number = 0;
-      formArray.controls.forEach((ctrl: FormControl) => {
-        if(ctrl.value == event.target.value) {
-          // Remove the unselected element from the arrayForm
-          formArray.removeAt(i);
-          return;
-        }
-        i++;
-      });
-    }
-  }
 }
-
-// const formArray: FormArray = this.achievementForm.get('topics') as FormArray;
-// console.log("removed"+formArray.controls.forEach((ctrl: FormControl)=>{
-//   console.log(" Item: "+ ctrl.value)
-// }))

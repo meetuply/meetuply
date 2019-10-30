@@ -17,6 +17,10 @@ public class TopicService {
         return topicDAO.get(id);
     }
 
+    public Integer getIdByName(String name){
+        return topicDAO.getIdByName(name);
+    }
+
     public void create(Topic topic){
         topicDAO.save(topic);
     }

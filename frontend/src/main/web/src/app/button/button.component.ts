@@ -12,6 +12,7 @@ export class ButtonComponent implements OnInit {
   @Input() href: string;
   @Input() type = 1;
   @Output() onClick = new EventEmitter<any>();
+  @Input() disabled: boolean;
 
   constructor() { }
 

@@ -14,6 +14,7 @@ import {UserDeactivationComponent} from "./user-deactivation/user-deactivation.c
 import {AdminGuard} from "./_helpers/admin.guard";
 import {AchievementCreatePageComponent} from "./achievement-create-page/achievement-create-page.component";
 import {AchievementPanelComponent} from "./achievement-panel/achievement-panel.component";
+import {AchievementsPageComponent} from "./achievements-page/achievements-page.component";
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -27,7 +28,8 @@ const routes: Routes = [
   { path: 'confirm', component: RegConfirmationComponent},
   { path: 'deactivation', component: UserDeactivationComponent, canActivate: [AdminGuard] },
   { path: 'achievement/create', component: AchievementCreatePageComponent},
-  { path: 'achievementpanel', component: AchievementPanelComponent},
+  { path: 'achievements', component: AchievementsPageComponent},
+
 ];
 
 @NgModule({

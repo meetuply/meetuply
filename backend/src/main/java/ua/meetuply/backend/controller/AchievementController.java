@@ -1,6 +1,7 @@
 package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +33,24 @@ public class AchievementController {
         return achievementService.get(achievementId);
     }
 
+//    @PostMapping("/create")
+//    public ResponseEntity<Achievement> create(@RequestBody Achievement achievement){
+//        achievementService.create(achievement);
+//        return ResponseEntity.ok().build();
+//    }
+
     @PostMapping("/create")
-    public ResponseEntity<Achievement> create(@RequestBody Achievement achievement){
-        achievementService.create(achievement);
-        return ResponseEntity.ok().build();
+    public Integer create(@RequestBody Achievement achievement){
+        return achievementService.saveReturnId(achievement);
+    }
+
+    @PostMapping("/meetups-topic/same")
+    public void createForMeetupsSameQuantity(@RequestParam String achievementId,
+                                 @RequestParam String[] topics,
+                                 @RequestParam String quantity){
+        Integer achievementIdInteger = Integer.valueOf(achievementId);
+        Integer quantityInteger = Integer.valueOf(quantity);
+        achievementService.createForMeetupsSameQuantity(achievementIdInteger, topics, quantityInteger);
     }
 
     @PutMapping("/{achievementId}")
@@ -49,11 +64,12 @@ public class AchievementController {
     }
 
     @DeleteMapping("/{achievementId}")
-    public ResponseEntity<Achievement> deleteAchievement(@PathVariable("achievementId") Integer achievementId){
-        if (achievementService.get(achievementId) == null) {
+    public ResponseEntity<Achievement> deleteAchievement(@PathVariable("achievementId") String achievementId){
+        Integer idInteger = Integer.valueOf(achievementId);
+        if (achievementService.get(idInteger) == null) {
             return ResponseEntity.badRequest().build();
         }
-        achievementService.delete(achievementId);
+        achievementService.delete(idInteger);
         return ResponseEntity.ok().build();
     }
 }
