@@ -19,7 +19,7 @@ public class BlogPostService {
 
     public void createBlogPost(BlogPost blogPost) {
         blogPost.setTime(LocalDateTime.now());
-        blogPost.setAuthor(appUserService.getUser(appUserService.getCurrentUserID()));
+        blogPost.setAuthorId(appUserService.getCurrentUserID());
         blogPostDAO.save(blogPost);
     }
 

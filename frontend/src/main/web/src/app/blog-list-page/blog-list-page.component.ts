@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Blog_list_item } from '../_models/blog_list_item';
-import {HttpClient} from "@angular/common/http";
 import { BlogService } from "../_services/blog.service"
 import {Subscription} from "rxjs";
+import {UserService} from "../_services";
 
 @Component({
   selector: 'app-blog-list-page',
@@ -23,7 +23,7 @@ export class BlogListPageComponent implements OnInit {
   postsList: Blog_list_item[] = [];
   newChunk: Blog_list_item[];
 
-  constructor(private blogService: BlogService) {
+  constructor(private blogService: BlogService, private userService: UserService) {
   }
 
   ngOnInit() {
@@ -47,10 +47,14 @@ export class BlogListPageComponent implements OnInit {
           if (data){
             this.lastRow += data.length;
             this.newChunk = await Promise.all(data.map( async item => {
-                // console.log("postid "+item.blogPostId);
-                // console.log("authorid "+ item.author);
-                let username = item.author.firstName + " " + item.author.lastName;
-                let photo = item.author.photo;
+                let username = "";
+                let photo = "";
+                await this.userService.get(item.authorId).toPromise().then(
+                  speaker => {
+                    username = speaker.firstName + " " + speaker.lastName;
+                    photo = speaker.photo;
+                  }
+                );
                 return new Blog_list_item(item, username, photo)
               }
             ));

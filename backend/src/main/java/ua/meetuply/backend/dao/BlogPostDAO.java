@@ -45,7 +45,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
                 blogPost.getBlogPostTitle(),
                 blogPost.getTime(),
                 blogPost.getBlogPostContent(),
-                blogPost.getAuthor().getUserId());
+                blogPost.getAuthorId());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
         blogPost.setBlogPostTitle(resultSet.getString("title"));
         blogPost.setBlogPostContent(resultSet.getString("content"));
         blogPost.setTime(resultSet.getTimestamp("date_time").toLocalDateTime());
-        blogPost.setAuthor(appUserService.getUser(resultSet.getInt("author_id")));
+        blogPost.setAuthorId(resultSet.getInt("author_id"));
         return blogPost;
     }
 }

@@ -28,8 +28,8 @@ const routes: Routes = [
   { path: 'meetups/:id', component: MeetupPageComponent, canActivate: [AuthGuard] },
   { path: 'meetups', component: MeetupsListPageComponent, canActivate: [AuthGuard] },
   { path: 'blog', component: BlogListPageComponent, canActivate: [AuthGuard] },
-  { path: 'post', component: BlogPageComponent, canActivate: [AuthGuard] },
-  { path: 'blog/:id', component: BlogPageComponent },
+  //{ path: 'post', component: BlogPageComponent, canActivate: [AuthGuard] },
+  { path: 'blog/:id', component: BlogPageComponent, canActivate: [AuthGuard] },
   { path: 'confirm', component: RegConfirmationComponent},
   { path: 'deactivation', component: UserDeactivationComponent, canActivate: [AdminGuard] },
 

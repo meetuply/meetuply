@@ -1,8 +1,6 @@
-﻿import {User} from "./user";
-
-export class BlogPost {
+﻿export class BlogPost {
   blogPostId: number;
-  author: User;
+  authorId: number;
   blogPostTitle: string;
   blogPostContent: string;
   time: Date;

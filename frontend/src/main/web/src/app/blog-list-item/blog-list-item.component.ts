@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {UserService} from "../_services";
 import {BlogService} from "../_services/blog.service";
 
 
@@ -20,9 +19,7 @@ export class BlogListItemComponent implements OnInit {
   error;
 
 
-  constructor(private blogService: BlogService,
-              private userService: UserService
-  ) { }
+  constructor(private blogService: BlogService) { }
 
   ngOnInit() {
   }

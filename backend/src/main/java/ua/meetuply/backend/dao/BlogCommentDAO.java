@@ -49,8 +49,8 @@ public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment>
                         "VALUES (?, ?, ?, ?)",
                 blogComment.getTime(),
                 blogComment.getBlogCommentContent(),
-                blogComment.getPost().getBlogPostId(),
-                blogComment.getAuthor().getUserId());
+                blogComment.getPostId(),
+                blogComment.getAuthorId());
     }
 
     @Override
@@ -70,8 +70,8 @@ public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment>
         blogComment.setBlogCommentId(resultSet.getInt("uid"));
         blogComment.setBlogCommentContent(resultSet.getString("content"));
         blogComment.setTime(resultSet.getTimestamp("date_time").toLocalDateTime());
-        blogComment.setPost(blogPostService.getBlogPostById(resultSet.getInt("post_id")));
-        blogComment.setAuthor(appUserService.getUser(resultSet.getInt("author")));
+        blogComment.setPostId(resultSet.getInt("post_id"));
+        blogComment.setAuthorId(resultSet.getInt("author"));
         return blogComment;
     }
 }

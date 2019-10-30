@@ -24,8 +24,8 @@ public class BlogCommentService {
 
     public void createBlogComment(BlogComment blogComment, Integer blogPostId) {
         blogComment.setTime(LocalDateTime.now());
-        blogComment.setAuthor(appUserService.getUser(appUserService.getCurrentUserID()));
-        blogComment.setPost(blogPostDAO.get(blogPostId));
+        blogComment.setAuthorId(appUserService.getCurrentUserID());
+        blogComment.setPostId(blogPostId);
         blogCommentDAO.save(blogComment);
     }
 

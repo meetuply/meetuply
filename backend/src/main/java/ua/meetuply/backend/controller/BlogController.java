@@ -78,7 +78,7 @@ public class BlogController {
         return blogCommentService.getBlogCommentById(blogCommentId);
     }
 
-    @PostMapping("/{post-id}/comments/create")
+    @PostMapping("/{post-id}/comments")
     public ResponseEntity<BlogComment> createNewBlogComment(@PathVariable("post-id") Integer blogPostId,
                                                             @Valid @RequestBody BlogComment blogComment){
         blogCommentService.createBlogComment(blogComment, blogPostId);
