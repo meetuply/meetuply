@@ -47,3 +47,16 @@
     4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);
 }
 
+.button[disabled]{
+  background: #707c97;
+}
+
+.button:hover{
+  opacity: 0.8;
+}
+
+.button:active{
+  background: #086edb;
+  opacity: 1
+}
+

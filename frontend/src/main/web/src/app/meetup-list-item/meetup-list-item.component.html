@@ -5,21 +5,19 @@
 			<div class='avatar'>
 				<img *ngIf="authorPhoto" src={{this.authorPhoto}}>
         <img *ngIf="!authorPhoto" src="assets/img/download.png">
+        <app-rating size='12' rating="{{this.rate}}"></app-rating>
 			</div>
 			<div class='info'>
-				<div class='name' routerLink="{{this.uid}}">
-          {{this.title | slice:0:20}}<span *ngIf="this.title.length > 20">...</span>
+				<div class='title' routerLink="{{this.uid}}">
+          {{this.title}}
 				</div>
 				<div class='place'>
 					<div>by {{this.author}} </div>
-          <app-rating size='12' rating="{{this.rate}}"></app-rating>
 				</div>
 			</div>
 		</div>
 		<div class='description'>
-        <span *ngIf="this.title.length > 20 && this.description.length > 24">
-        {{this.description | slice:0:24}}...</span>
-        <span *ngIf="this.title.length < 20 && this.description.length > 110 ">{{this.description | slice:0:110}}...</span>
+      <span>{{this.description}}</span>
 		</div>
 
 	</div>

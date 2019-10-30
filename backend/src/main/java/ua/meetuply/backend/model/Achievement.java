@@ -17,4 +17,5 @@ public class Achievement {
     private Integer followersNumber;
     private Integer postsNumber;
     private Float rating;
+    private Integer meetups;
 }
