@@ -25,7 +25,6 @@ export class BlogPageComponent implements OnInit {
   maxCommentsOnPage: number;
   step = 4;
   scrollDistance = 2;
-  commentAuthor: string;
   commentsList: Blog_comment_item[] = [];
   newChunk: Blog_comment_item[];
   new_comment: string;
