@@ -42,6 +42,10 @@ public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment>
         return blogComments;
     }
 
+    public List<BlogComment> getBlogCommentsChunk(Integer postId, Integer startRow, Integer endRow) {
+        return jdbcTemplate.query("SELECT * FROM comment WHERE post_id = ? order by uid desc LIMIT ?, ?", new Object[]{postId, startRow, endRow}, this);
+    }
+
     @Override
     public void save(BlogComment blogComment) {
         jdbcTemplate.update(
@@ -74,4 +78,6 @@ public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment>
         blogComment.setAuthorId(resultSet.getInt("author"));
         return blogComment;
     }
+
+
 }

@@ -48,9 +48,9 @@ export class BlogListPageComponent implements OnInit {
                 let username = "";
                 let photo = "";
                 await this.userService.get(item.authorId).toPromise().then(
-                  speaker => {
-                    username = speaker.firstName + " " + speaker.lastName;
-                    photo = speaker.photo;
+                  author => {
+                    username = author.firstName + " " + author.lastName;
+                    photo = author.photo;
                   }
                 );
                 return new Blog_list_item(item, username, photo)

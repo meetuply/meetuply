@@ -38,7 +38,7 @@ public class BlogController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<BlogPost> createNewBlogPost(@Valid @RequestBody BlogPost blogPost){
+    public ResponseEntity<BlogPost> createBlogPost(@Valid @RequestBody BlogPost blogPost){
         blogPostService.createBlogPost(blogPost);
         return ResponseEntity.ok().build();
     }
@@ -73,13 +73,19 @@ public class BlogController {
         return blogCommentService.getBlogCommentsByPostId(blogPostId);
     }
 
+    @GetMapping("/{post-id}/comments/{startRow}/{endRow}")
+    public @ResponseBody
+    Iterable<BlogComment> getBlogPostsChunk(@PathVariable("post-id") Integer blogPostId, @PathVariable("startRow") Integer startRow,@PathVariable("endRow") Integer endRow) {
+        return blogCommentService.getBlogCommentsChunk(blogPostId,startRow,endRow);
+    }
+
     @GetMapping("/comments/{comment-id}")
     public BlogComment getBlogComment(@PathVariable("comment-id") Integer blogCommentId) {
         return blogCommentService.getBlogCommentById(blogCommentId);
     }
 
     @PostMapping("/{post-id}/comments")
-    public ResponseEntity<BlogComment> createNewBlogComment(@PathVariable("post-id") Integer blogPostId,
+    public ResponseEntity<BlogComment> createBlogComment(@PathVariable("post-id") Integer blogPostId,
                                                             @Valid @RequestBody BlogComment blogComment){
         blogCommentService.createBlogComment(blogComment, blogPostId);
         return ResponseEntity.ok().build();

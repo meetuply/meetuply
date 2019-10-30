@@ -18,6 +18,7 @@ import { BlogPageComponent } from './blog-page/blog-page.component';
 import { BlogListPageComponent } from './blog-list-page/blog-list-page.component';
 import { BlogListItemComponent } from './blog-list-item/blog-list-item.component';
 import { BlogCreatePageComponent } from "./blog-create-page/blog-create-page.component";
+import { BlogCommentItemComponent} from "./blog-comment-item/blog-comment-item.component";
 
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from "@angular/forms";
@@ -71,6 +72,7 @@ import { UserDeactivationComponent } from './user-deactivation/user-deactivation
     BlogListItemComponent,
     BlogListPageComponent,
     BlogCreatePageComponent,
+    BlogCommentItemComponent,
 
     RegConfirmationComponent,
 

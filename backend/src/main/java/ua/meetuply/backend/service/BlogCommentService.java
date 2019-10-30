@@ -46,4 +46,8 @@ public class BlogCommentService {
     }
 
     public BlogComment getBlogCommentById(Integer id) {return blogCommentDAO.get(id);}
+
+    public List<BlogComment> getBlogCommentsChunk(Integer postId, Integer startRow,Integer endRow) {
+        return blogCommentDAO.getBlogCommentsChunk(postId,startRow,endRow);
+    }
 }
