@@ -24,8 +24,8 @@ public class BlogCommentService {
 
     public void createBlogComment(BlogComment blogComment, Integer blogPostId) {
         blogComment.setTime(LocalDateTime.now());
-        blogComment.setAuthor(appUserService.getUser(appUserService.getCurrentUserID()));
-        blogComment.setPost(blogPostDAO.get(blogPostId));
+        blogComment.setAuthorId(appUserService.getCurrentUserID());
+        blogComment.setPostId(blogPostId);
         blogCommentDAO.save(blogComment);
     }
 
@@ -42,14 +42,12 @@ public class BlogCommentService {
     }
 
     public List<BlogComment> getBlogCommentsByPostId(Integer id) {
-        List<BlogComment> blogComments = new ArrayList<>();
-        for (BlogComment bc : blogCommentDAO.getAll()){
-            if (bc.getPost().getBlogPostId()==id)
-                blogComments.add(bc);
-        }
-
-        return blogComments;
+        return blogCommentDAO.getByPostId(id);
     }
 
     public BlogComment getBlogCommentById(Integer id) {return blogCommentDAO.get(id);}
+
+    public List<BlogComment> getBlogCommentsChunk(Integer postId, Integer startRow,Integer endRow) {
+        return blogCommentDAO.getBlogCommentsChunk(postId,startRow,endRow);
+    }
 }
