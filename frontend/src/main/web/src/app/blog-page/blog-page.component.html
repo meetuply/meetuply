@@ -6,26 +6,27 @@
 
   </div>
     <div class = 'post-title'>
-      <h1>{{this.post_title}}</h1>
+      <h1>{{this.blogpost.blogPostTitle}}</h1>
     </div>
 
 
 		<div class='author-container'>
       <div class="author">
         <div class='avatar'>
-          <img src="assets/img/download.png">
+          <img *ngIf="authorPhoto" src={{this.authorPhoto}}>
+          <img *ngIf="!authorPhoto" src="assets/img/download.png">
         </div>
 
         <div class='info'>
           <div class='name'>
-            {{this.name + " " + this.surname}}
+            {{this.author}}
           </div>
         </div>
       </div>
 		</div>
 
 		<div class='post-content'>
-			{{this.post_content}}
+      <span>{{this.blogpost.blogPostContent}}</span>
 		</div>
 
     <div class="comments">
@@ -42,7 +43,8 @@
         <div class="new-comment">
           <div class="author">
             <div class='avatar'>
-              <img src="assets/img/download.png">
+              <img *ngIf="authorPhoto" src={{this.authorPhoto}}>
+              <img *ngIf="!authorPhoto" src="assets/img/download.png">
             </div>
           </div>
 

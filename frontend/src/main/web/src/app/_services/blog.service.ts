@@ -27,6 +27,10 @@ export class BlogService {
     return this.http.get<BlogPost[]>(this.blogApiUrl + start + "/" + size)
   }
 
+  createBlogPost(blogPost: BlogPost): Observable<{}> {
+  return this.http.post(this.blogApiUrl, blogPost);
+}
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);

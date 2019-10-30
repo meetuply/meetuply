@@ -34,7 +34,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
     }
 
     public List<BlogPost> getBlogPostsChunk(Integer startRow, Integer endRow) {
-        return jdbcTemplate.query("SELECT * FROM post order by uid asc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
+        return jdbcTemplate.query("SELECT * FROM post order by uid desc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
     }
 
     @Override

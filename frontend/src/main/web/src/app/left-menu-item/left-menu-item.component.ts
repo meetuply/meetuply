@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {Menu_item} from "../menu_item";
+import {Menu_item} from "../_models/menu_item";
 import {Router} from "@angular/router";
 
 @Component({

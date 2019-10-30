@@ -32,13 +32,11 @@ export class BlogListPageComponent implements OnInit {
   }
 
   onScrollDown() {
-    console.log(this.postsList.length);
+    // console.log(this.postsList.length);
     this.loadBlogPostsChunk();
   }
 
   loadBlogPostsChunk() {
-    console.log("LAST ROW: ");
-    console.log(this.lastRow);
     if (this.lastRow < this.maxPostsOnPage) {
       this.loading = true;
       this.sub = this.blogService.getBlogPostsChunk(this.lastRow, this.step).subscribe(
