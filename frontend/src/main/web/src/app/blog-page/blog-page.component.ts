@@ -107,16 +107,18 @@ export class BlogPageComponent implements OnInit {
     var datetime = new Date(Date.now());
 
     var comment: BlogComment = {
-      blogCommentId: 0,
+      // blogCommentId: 0,
       blogCommentContent: this.new_comment,
       authorId: this.userService.currentUser.userId,
-      postId: this.id,
-      time: datetime
+      postId: this.id
+      // time: datetime
     };
 
     this.blogService.createBlogComment(comment).subscribe(data => {
       if (data == null) {
         //refresh
+        window.location.reload();
+        // this.route.navigated = false;
       }
     }, error => {
       alert(error)

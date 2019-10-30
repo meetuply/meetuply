@@ -48,7 +48,7 @@ export class BlogService {
   }
 
   createBlogComment(blogComment: BlogComment): Observable<{}> {
-    return this.http.post(this.blogApiUrl + `${blogComment.postId}` + "/comments", BlogComment);
+    return this.http.post(this.blogApiUrl + `${blogComment.postId}` + "/comments/", blogComment);
   }
 
   private handleError(error: HttpErrorResponse) {
