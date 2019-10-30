@@ -79,8 +79,6 @@ export class CreateMeetupPageComponent implements OnInit {
     }, error => {
       alert(error)
     });
-
-
   }
 
   loadLanguages() {
@@ -99,12 +97,9 @@ export class CreateMeetupPageComponent implements OnInit {
   ngOnInit() {
     this.loadLanguages();
     this.loadTopics();
-
   }
-
 
   goBack() {
     this._location.back();
   }
-
 }

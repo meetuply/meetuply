@@ -11,7 +11,6 @@ import { User } from "../_models";
 export class MeetupService {
 
   private meetupApiUrl = `${environment.apiUrl}/api/meetups/`;
-  //private meetupApiUrl = `http://localhost:8080/api/meetups/`;
 
   constructor(private http: HttpClient, private userService: UserService) {
   }
