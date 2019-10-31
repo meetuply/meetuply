@@ -23,6 +23,7 @@ export class MeetupListItemComponent implements OnInit {
   @Input() maxAttendees: number;
   @Input() registeredAttendees: number;
   @Input() uid: number;
+  @Input() isMy: boolean;
   error;
   isAttendeLoaded = false;
 

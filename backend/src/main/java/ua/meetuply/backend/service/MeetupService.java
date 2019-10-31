@@ -126,6 +126,7 @@ public class MeetupService {
             else
                 throw MeetupStateException.createWith("you cannot switch to Scheduled/Booked from " + stateDAO.get(meetup.getStateId()).getName());
         } else throw PermissionException.createWith("you cannot modify not yours meetups");
+    }
 
     public List<Meetup> findMeetupsByCriterias(Double rating, Timestamp dateFrom, Timestamp dateTo) {
         Filter filterDto = new Filter();
