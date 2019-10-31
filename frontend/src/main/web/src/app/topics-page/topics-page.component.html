@@ -1,0 +1,24 @@
+<app-left-menu></app-left-menu>
+<div class='content'>
+  <p class='title'>Topics</p>
+
+  <div>
+    <label>Topic name:
+      <input #topicName />
+    </label>
+    <!-- (click) passes input value to add() and then clears the input -->
+    <button (click)="add(topicName.value); topicName.value=''">
+      add
+    </button>
+  </div>
+
+  <div class='main'>
+    <ul>
+      <li *ngFor="let topic of topics">
+        <a routerLink="/topics">
+          <span>{{topic.id}}</span> {{topic.name}}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Topic } from "../_models";
+import {Topic} from "../_models";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { catchError } from "rxjs/operators";
 import { Observable, throwError } from "rxjs";
@@ -14,9 +14,14 @@ export class TopicService {
 
   constructor(private http: HttpClient) { }
 
-
+  /** GET topics from the server */
   getAll():Observable<Topic[]> {
     return this.http.get<Topic[]>(this.topicApiUrl);
+  }
+
+  /** POST: add a new topic to the server */
+  createTopic(topic: Topic): Observable<{}> {
+    return this.http.post(this.topicApiUrl, topic);
   }
 
   private handleError(error: HttpErrorResponse) {

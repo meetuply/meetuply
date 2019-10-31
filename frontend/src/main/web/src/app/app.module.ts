@@ -42,6 +42,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AchievementCreatePageComponent } from './achievement-create-page/achievement-create-page.component';
 import { AchievementPanelComponent } from './achievement-panel/achievement-panel.component';
 import { AchievementsPageComponent } from './achievements-page/achievements-page.component';
+import { TopicsPageComponent } from './topics-page/topics-page.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { AchievementsPageComponent } from './achievements-page/achievements-page
     UserDeactivationComponent,
     AchievementCreatePageComponent,
     AchievementPanelComponent,
-    AchievementsPageComponent
+    AchievementsPageComponent,
+    TopicsPageComponent
   ],
   imports: [
     BrowserModule,
