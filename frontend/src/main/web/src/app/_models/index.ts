@@ -2,3 +2,4 @@
 export * from './language';
 export * from './topic';
 export * from './language';
+export * from './post';

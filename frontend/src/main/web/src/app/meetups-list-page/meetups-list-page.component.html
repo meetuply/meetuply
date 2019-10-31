@@ -31,7 +31,8 @@
                               [maxAttendees]='meetup_item.maxAttendees'
                               [registeredAttendees]='meetup_item.registeredAttendees'
                               [uid]='meetup_item.id'
-                              [date]='meetup_item.date'>
+                              [date]='meetup_item.date'
+                              [isMy]="userService.currentUser.userId == meetup_item.meetup.speakerId">
 
         </app-meetup-list-item>
       </div>
@@ -41,8 +42,6 @@
         <app-meetup-list-item *ngIf="!isOdd(i)" [joined]='meetup_item.joined'
                               [author]='meetup_item.author'
                               [authorPhoto]="meetup_item.authorPhoto"
-                              [joined]='meetup_item.joined'
-                              [author]='meetup_item.author'
                               [rate]='meetup_item.rate'
                               [description]='meetup_item.description'
                               [title]='meetup_item.title'
@@ -50,7 +49,10 @@
                               [maxAttendees]='meetup_item.maxAttendees'
                               [registeredAttendees]='meetup_item.registeredAttendees'
                               [uid]='meetup_item.id'
-                              [date]='meetup_item.date'></app-meetup-list-item>
+                              [date]='meetup_item.date'
+                              [isMy]="userService.currentUser.userId == meetup_item.meetup.speakerId">
+
+        </app-meetup-list-item>
       </div>
     </div>
   </div>

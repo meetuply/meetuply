@@ -1,7 +1,6 @@
 package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +31,9 @@ public class AppUserService implements UserDetailsService {
 
     @Autowired
     SessionService sessionService;
+
+    @Autowired
+    StateService stateService;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();;
 
@@ -118,7 +120,8 @@ public class AppUserService implements UserDetailsService {
         user.setDeactivated(true);
         appUserDAO.update(user);
         sessionService.expireUserSessions(user.getEmail());
-
+        stateService.terminateCurrentMeetupsOf(user);
+        stateService.cancelFutureMeetupsOf(user);
     }
 
     public void activateDeactivatedUser(AppUser user) {
@@ -126,9 +129,13 @@ public class AppUserService implements UserDetailsService {
         appUserDAO.update(user);
     }
 
+ 
     public Integer getFollowersNumber(Integer userId){
         return appUserDAO.getFollowersNumber(userId);
-    }
+ 
+    public boolean isAdmin() {
+        return  getCurrentUser().getRole().equals(roleDAO.getRoleByName("admin"));
+
 
     @Override
     public UserDetails loadUserByUsername(String email) {
@@ -138,6 +145,7 @@ public class AppUserService implements UserDetailsService {
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         User user;
 
+        System.out.println(appUser);
         if(appUser.getRole().getRoleName().equals("admin")) {
             user = new User(appUser.getEmail(), appUser.getPassword(), grantedAuthorities);
         }
