@@ -19,14 +19,21 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 
 @Repository
 public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
 
-    //TODO SELECT * FROM meetups WHERE rating = ? and date > dateFrom and date < dateTo
-    private static final String FIND_MEETUPS_BY_FILTER_DATE_RATING_QUERY = "SELECT * from meetup where meetup.start_date_time >= ? AND meetup.finish_date_time <= ? AND meetup.speaker_id in (select rated_user_id from rating group by rated_user_id having avg(value) >= ?)";
-    private static final String FIND_MEETUPS_BY_FILTER_DATE_QUERY = "SELECT * from meetup where meetup.start_date_time >= ? AND meetup.finish_date_time <= ?";
+    private static final String FIND_MEETUPS_BY_FILTER_DATES_RATING_QUERY = "SELECT * from meetup where meetup.start_date_time >= ? AND meetup.finish_date_time <= ? AND meetup.speaker_id in (select rated_user_id from rating group by rated_user_id having avg(value) >= ?)";
+    private static final String FIND_MEETUPS_BY_FILTER_DATEFROM_RATING_QUERY = "SELECT * from meetup where meetup.start_date_time >= ? AND meetup.speaker_id in (select rated_user_id from rating group by rated_user_id having avg(value) >= ?)";
+    private static final String FIND_MEETUPS_BY_FILTER_DATETO_RATING_QUERY = "SELECT * from meetup where meetup.finish_date_time <= ? AND meetup.speaker_id in (select rated_user_id from rating group by rated_user_id having avg(value) >= ?)";
+    private static final String FIND_MEETUPS_BY_FILTER_DATES_QUERY = "SELECT * from meetup where meetup.start_date_time >= ? AND meetup.finish_date_time <= ?";
+    private static final String FIND_MEETUPS_BY_FILTER_DATEFROM_QUERY = "SELECT * from meetup where meetup.start_date_time >= ?";
+    private static final String FIND_MEETUPS_BY_FILTER_DATETO_QUERY = "SELECT * from meetup where meetup.finish_date_time <= ?";
     private static final String FIND_MEETUPS_BY_FILTER_RATING_QUERY = "SELECT * from meetup where meetup.speaker_id in (select rated_user_id from rating group by rated_user_id having avg(value) >= ?)";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -118,11 +125,13 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
         Double rating = filter.getRating();
         Timestamp dateFrom = filter.getDateFrom();
         Timestamp dateTo = filter.getDateTo();
-        return (rating == 0.0) ? jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATE_QUERY,
-                new Object[] {dateFrom, dateTo}, this) : (dateFrom == null && dateTo == null ? jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_RATING_QUERY,
-                new Object[] {rating}, this): jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATE_RATING_QUERY,
-                new Object[] {dateFrom, dateTo, rating}, this));
+        if (rating != null) {
+            return performQueryWhenRatingIsNotNull(rating, dateFrom, dateTo);
+        } else {
+            return performQueryWhenRatingIsNull(dateFrom, dateTo);
+        }
     }
+
 
     public List<Meetup> find(SQLPredicate where) {
         StringBuilder query = new StringBuilder("SELECT * FROM meetup ");
@@ -181,5 +190,34 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
         );
         SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
         return find(where);
+
+    private List<Meetup> performQueryWhenRatingIsNull(Timestamp dateFrom, Timestamp dateTo) {
+        if (nonNull(dateFrom) && isNull(dateTo)) {
+            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATEFROM_QUERY,
+                    new Object[]{dateFrom}, this);
+        } else if (isNull(dateFrom) && nonNull(dateTo)) {
+            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATETO_QUERY,
+                    new Object[]{dateTo}, this);
+        } else {
+            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATES_QUERY,
+                    new Object[]{dateFrom, dateTo}, this);
+        }
+    }
+
+    private List<Meetup> performQueryWhenRatingIsNotNull(Double rating, Timestamp dateFrom, Timestamp dateTo) {
+        if (nonNull(dateFrom) && nonNull(dateTo)) {
+            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATES_RATING_QUERY,
+                    new Object[]{dateFrom, dateTo, rating}, this);
+        } else if (nonNull(dateFrom)) {
+            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATEFROM_RATING_QUERY,
+                    new Object[]{dateFrom, rating}, this);
+        } else if (nonNull(dateTo)) {
+            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATETO_RATING_QUERY,
+                    new Object[]{dateTo, rating}, this);
+        } else {
+            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_RATING_QUERY,
+                    new Object[]{rating}, this);
+        }
+
     }
 }

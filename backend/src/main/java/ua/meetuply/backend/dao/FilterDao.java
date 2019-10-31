@@ -4,7 +4,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.model.Filter;
-import ua.meetuply.backend.model.Topic;
 
 import javax.annotation.Resource;
 import java.sql.ResultSet;
@@ -23,8 +22,8 @@ public class FilterDao implements IDAO<Filter>, RowMapper<Filter> {
 
     @Override
     public Filter get(Integer id) {
-         List <Filter> filters = jdbcTemplate.query(GET_FILTER_QUERY, new Object[]{id}, this);
-         return filters.size() == 0 ? null : filters.get(0);
+        List<Filter> filters = jdbcTemplate.query(GET_FILTER_QUERY, new Object[]{id}, this);
+        return filters.size() == 0 ? null : filters.get(0);
     }
 
     @Override
@@ -54,7 +53,7 @@ public class FilterDao implements IDAO<Filter>, RowMapper<Filter> {
         return new Filter(
                 resultSet.getInt("uid"),
                 resultSet.getString("name"),
-                resultSet.getDouble("rating"),
+                resultSet.getObject("rating") != null ? resultSet.getDouble("rating") : null,
                 resultSet.getTimestamp("date_time_from"),
                 resultSet.getTimestamp("date_time_to"),
                 resultSet.getInt("owner_id")

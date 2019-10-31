@@ -1,0 +1,26 @@
+<app-left-menu></app-left-menu>
+<div class='content'>
+
+  <div class='back' (click)="goBack()"></div>
+	<div class='main'>
+
+		<div class='title'>
+			Create blog post
+		</div>
+
+		<form class="form">
+			<div class='form_line'><span>Title</span><input type="text" name="title" placeholder="Title" [(ngModel)]="this.post_title" required autocomplete="off"/></div>
+
+			<div class='form_line'>
+				<span>Post</span>
+				<textarea placeholder="Write your post" cols="30" rows="8" name="post"  [(ngModel)]="this.post_content" required autocomplete="off"></textarea>
+			</div>
+
+			<div class='extra'>
+				<app-button text='Create post' (onClick)="submit($event)" fontSize='24' type='1'></app-button>
+			</div>
+		</form>
+
+    </div>
+  </div>
+

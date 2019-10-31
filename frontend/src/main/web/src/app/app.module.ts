@@ -5,11 +5,20 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ButtonComponent } from './button/button.component';
+
 import { LeftMenuComponent } from './left-menu/left-menu.component';
 import { LeftMenuItemComponent } from './left-menu-item/left-menu-item.component';
+
 import { SpeakerPageComponent } from './speaker-page/speaker-page.component';
 import { SpeakerListPageComponent } from './speaker-list-page/speaker-list-page.component';
 import { SpeakerListItemComponent } from './speaker-list-item/speaker-list-item.component';
+
+import { BlogPageComponent } from './blog-page/blog-page.component';
+import { BlogListPageComponent } from './blog-list-page/blog-list-page.component';
+import { BlogListItemComponent } from './blog-list-item/blog-list-item.component';
+import { BlogCreatePageComponent } from "./blog-create-page/blog-create-page.component";
+import { BlogCommentItemComponent} from "./blog-comment-item/blog-comment-item.component";
+
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from "@angular/forms";
 import { RatingComponent } from "./rating/rating.component";
@@ -42,11 +51,14 @@ import {MatDialogModule} from "@angular/material/dialog";
     RegisterComponent,
     LandingPageComponent,
     ButtonComponent,
+
     LeftMenuComponent,
     LeftMenuItemComponent,
+
     SpeakerPageComponent,
     SpeakerListPageComponent,
     SpeakerListItemComponent,
+
     RatingComponent,
     LogoutMenuItemComponent,
     MustMatchDirective,
@@ -56,6 +68,13 @@ import {MatDialogModule} from "@angular/material/dialog";
     MeetupListItemComponent,
     MeetupsListPageComponent,
     MeetupPageComponent,
+
+    BlogPageComponent,
+    BlogListItemComponent,
+    BlogListPageComponent,
+    BlogCreatePageComponent,
+    BlogCommentItemComponent,
+
     RegConfirmationComponent,
     CreateMeetupPageComponent,
     UserDeactivationComponent,

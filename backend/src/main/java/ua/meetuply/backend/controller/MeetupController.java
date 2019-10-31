@@ -14,6 +14,7 @@ import ua.meetuply.backend.service.MeetupService;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.List;
 
 @RequestMapping("api/meetups")
@@ -107,12 +108,25 @@ public class MeetupController {
 
     //TODO rename url
     @GetMapping("/filter-test")
-    public @ResponseBody List<Meetup> getMeetupsByFilter(@RequestParam(value="filter") Integer filterId, Model model){
+    public @ResponseBody
+    List<Meetup> getMeetupsByFilter(@RequestParam(value = "filter") Integer filterId, Model model) {
         Filter filter = filterService.getFilter(filterId);
         List<Meetup> meetups = meetupService.findMeetupsByFilter(filter);
         model.addAttribute(meetups);
         //TODO decide what page will be here
-//        return "";
+        //return "";
+        return meetups;
+    }
+
+    //TODO rename url
+    @GetMapping("/criteria-test")
+    public @ResponseBody
+    List<Meetup> getMeetupsByCriteria(@RequestParam(value = "rating", required = false) Double rating,
+                                      @RequestParam(value = "date-from", required = false) Timestamp dateFrom,
+                                      @RequestParam(value = "date-to", required = false) Timestamp dateTo,
+                                      Model model) {
+        List<Meetup> meetups = meetupService.findMeetupsByCriterias(rating, dateFrom, dateTo);
+        model.addAttribute(meetups);
         return meetups;
     }
 
