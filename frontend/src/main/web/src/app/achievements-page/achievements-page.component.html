@@ -11,7 +11,7 @@
     <th scope="col">Rating</th>
     <th scope="col">Meetups</th>
     <th scope="col">Topics</th>
-    <th scope="col">Edit</th>
+    <!--<th scope="col">Edit</th>-->
     <th scope="col">Delete</th>
   </tr>
   </thead>
@@ -21,13 +21,13 @@
     <td>{{achievement.title}}</td>
     <td>{{achievement.description}}</td>
     <td><img *ngIf=achievement.icon src="{{achievement.icon}}"></td>
-    <td>{{achievement.followers_number}}</td>
-    <td>{{achievement.posts_number}}</td>
+    <td>{{achievement.followers}}</td>
+    <td>{{achievement.posts}}</td>
     <td>{{achievement.rating}}</td>
     <td>{{achievement.meetups}}</td>
+    <!--<td></td>-->
     <td></td>
-    <td></td>
-    <td><button class="delete-button" (click)="achievementToggled(achievement.achievementId)"
+    <td class="delete-button-td"><button class="delete-button" (click)="achievementToggled(achievement.achievementId)"
                 name="{{achievement.name}}"  id='{{achievement.uid}}'>x</button></td>
   </tr>
   </tbody>

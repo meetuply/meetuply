@@ -65,6 +65,11 @@ public class MeetupService {
             stateService.update(meetup, stateDAO.get("Booked"));
     }
 
+
+    public Iterable<Meetup> getMeetupsChunk(Integer startRow, Integer endRow) {
+        return meetupDao.getMeetupsChunk(startRow, endRow);
+    }
+
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void leave(Integer meetupID) throws Exception {
         AppUser user = appUserService.getCurrentUser();
@@ -88,6 +93,9 @@ public class MeetupService {
         return meetupDao.findMeetupsByFilter(filter);
     }
 
+
+    public Integer getUserMeetupsNumber(Integer userId){
+        return meetupDao.getUserMeetupsNumber(userId);
 
     public void cancelMeetup(Integer meetupID) throws Exception {
         Meetup meetup = getMeetupById(meetupID);
@@ -134,6 +142,7 @@ public class MeetupService {
         filterDto.setDateFrom(dateFrom);
         filterDto.setDateTo(dateTo);
         return meetupDao.findMeetupsByFilter(filterDto);
+
 
     }
 }

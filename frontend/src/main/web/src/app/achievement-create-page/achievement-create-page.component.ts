@@ -11,7 +11,7 @@ import {TopicService} from "../_services";
 })
 export class AchievementCreatePageComponent implements OnInit {
 
-  //todo update validation, allowCount
+  //todo update validation
 
   achievementForm: FormGroup;
   topics: any;
@@ -45,10 +45,10 @@ export class AchievementCreatePageComponent implements OnInit {
     achievement.title = this.achievementForm.get('title').value;
     achievement.description = this.achievementForm.get('description').value;
     achievement.icon = this.achievementForm.get('icon').value;
-    if (this.selectedOption == 'followers') {
-      achievement.followers_number = this.achievementForm.get('followers').value;
+    if (this.selectedOption == 'followers'){
+      achievement.followers = this.achievementForm.get('followers').value;
     } else if (this.selectedOption == 'posts') {
-      achievement.posts_number = this.achievementForm.get('posts').value;
+      achievement.posts = this.achievementForm.get('posts').value;
     } else if (this.selectedOption == 'rating') {
       achievement.rating = this.achievementForm.get('rating').value;
     } else if (!this.selectedTopics) {
@@ -57,7 +57,7 @@ export class AchievementCreatePageComponent implements OnInit {
     this.achievementService.create(achievement).subscribe(
       achievementId => {
         if (this.selectedTopics) {
-          console.log("New ach Id " + achievementId);
+          console.log("New achievement Id " + achievementId);
           this.createForMeetupsSameQuantity(achievementId, Array.from(this.selectedTopics.values()));
         }
       }, error => {

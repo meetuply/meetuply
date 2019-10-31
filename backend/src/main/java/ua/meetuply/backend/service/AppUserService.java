@@ -129,9 +129,13 @@ public class AppUserService implements UserDetailsService {
         appUserDAO.update(user);
     }
 
+ 
+    public Integer getFollowersNumber(Integer userId){
+        return appUserDAO.getFollowersNumber(userId);
+ 
     public boolean isAdmin() {
         return  getCurrentUser().getRole().equals(roleDAO.getRoleByName("admin"));
-    }
+
 
     @Override
     public UserDetails loadUserByUsername(String email) {

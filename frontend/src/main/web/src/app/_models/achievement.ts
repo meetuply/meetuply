@@ -3,8 +3,8 @@ export class Achievement{
   title: string;
   description: string;
   icon: string;
-  followers_number: number;
-  posts_number: number;
+  followers: number;
+  posts: number;
   rating: number;
   meetups: number;
 }
