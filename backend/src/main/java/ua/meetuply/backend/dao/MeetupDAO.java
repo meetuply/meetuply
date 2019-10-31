@@ -184,12 +184,13 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
     }
 
     public List<Meetup> goingToFinish() {
-        List<SQLPredicate> andList =Arrays.asList(
+        List<SQLPredicate> andList = Arrays.asList(
                 new SQLPredicate("finish_date_time", SQLPredicate.Operation.LESS, "NOW()"),
                 new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS, stateDAO.get("In progress").getStateId())
         );
         SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
         return find(where);
+    }
 
     private List<Meetup> performQueryWhenRatingIsNull(Timestamp dateFrom, Timestamp dateTo) {
         if (nonNull(dateFrom) && isNull(dateTo)) {
