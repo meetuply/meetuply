@@ -33,6 +33,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AchievementCreatePageComponent } from './achievement-create-page/achievement-create-page.component';
 import { AchievementPanelComponent } from './achievement-panel/achievement-panel.component';
 import { AchievementsPageComponent } from './achievements-page/achievements-page.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { AchievementsPageComponent } from './achievements-page/achievements-page
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
     InfiniteScrollModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

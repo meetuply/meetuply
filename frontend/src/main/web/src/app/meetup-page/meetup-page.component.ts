@@ -6,6 +6,7 @@ import {Subscription} from "rxjs";
 import {UserService} from "../_services";
 import {RatingService} from "../_services/rating.service";
 import {Atendee} from "../_models/atendee";
+import {StateService} from "../_services/state.service";
 
 @Component({
   selector: 'app-meetup-page',
@@ -24,12 +25,15 @@ export class MeetupPageComponent implements OnInit {
   joined = false;
   error = null;
   attendees: Atendee[] = [];
+  isMy = false;
+  state: string;
 
   constructor(
     private meetupService: MeetupService,
     private userService: UserService,
     private ratingService: RatingService,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private stateService: StateService) {
   }
 
   ngOnInit() {
@@ -47,6 +51,8 @@ export class MeetupPageComponent implements OnInit {
         this.meetup = data;
         this.getAuthorInfo(data['speakerId']);
         this.getAttendees();
+        this.isMy = this.meetup.speakerId == this.userService.currentUser.userId;
+        this.state = this.stateService.states[this.meetup.stateId];
       },
       error => {
         // this.alertService.error(error);
@@ -125,10 +131,41 @@ export class MeetupPageComponent implements OnInit {
       );
   }
 
-  joinType() {
-    if (this.meetup.speakerId == this.userService.currentUser.userId) {
-      return
+  canCancell() {
+    return this.state == "Scheduled" || this.state == "Booked" || this.state == "Terminated"
+  }
+
+  cancellMeetup(event) {
+    if(confirm("Are you sure that you want to cancel meetup?")) {
+      this.meetupService.cancell(this.id).subscribe(
+        data => this.loadMeetup(this.id),
+        error => this.error = error
+      )
     }
+  }
+
+  canTerminate() {
+    return this.state == "In progress"
+  }
+
+  terminateMeetup(event) {
+    if(confirm("Are you sure that you want to terminate meetup?")) {
+      this.meetupService.terminate(this.id).subscribe(
+        data => this.loadMeetup(this.id),
+        error => this.error = error
+      )
+    }
+  }
+
+  canReschedule() {
+    return this.state == "Terminated"
+  }
+
+  reschedule(event) {
+
+  }
+
+  joinType() {
     return (this.joined == true ? '2' : (this.meetup.meetupMaxAttendees == this.attendees.length ? "3" : "1"));
   }
 

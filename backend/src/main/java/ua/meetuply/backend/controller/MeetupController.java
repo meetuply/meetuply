@@ -125,6 +125,7 @@ public class MeetupController {
     @GetMapping("/{meetupID}/terminate")
     public ResponseEntity terminate(@PathVariable("meetupID") Integer meetupID) throws Exception {
         meetupService.terminateMeetup(meetupID);
+        System.out.println("terminated");
         return ResponseEntity.ok().build();
     }
 
