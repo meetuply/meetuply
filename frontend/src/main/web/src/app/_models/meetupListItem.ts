@@ -1,6 +1,6 @@
 import {Meetup} from "./meetup";
 
-export class Meetup_list_item {
+export class MeetupListItem {
   meetup: Meetup;
 	author: string;
 	authorPhoto: string;

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Meetup_list_item} from "../_models/meetup_list_item"
+import {MeetupListItem} from "../_models/meetupListItem"
 import {MeetupService} from "../_services/meetup.service";
 import {Subscription} from "rxjs";
 import {UserService} from "../_services";
@@ -19,8 +19,8 @@ export class MeetupsListPageComponent implements OnInit {
   maxMeetupsOnPage: number;
   step = 4;
   scrollDistance = 2;
-  meetupsList: Meetup_list_item[] = [];
-  newChunk: Meetup_list_item[];
+  meetupsList: MeetupListItem[] = [];
+  newChunk: MeetupListItem[];
   private sub: Subscription;
   filter_shown = false;
   author: string;
@@ -53,8 +53,6 @@ export class MeetupsListPageComponent implements OnInit {
   }
 
   loadMeetupsChunk() {
-    console.log("LAST ROW: ");
-    console.log(this.lastRow);
     if (this.lastRow < this.maxMeetupsOnPage) {
       this.loading = true;
       this.sub = this.meetupService.getMeetupsChunk(this.lastRow, this.step).subscribe(
@@ -75,7 +73,7 @@ export class MeetupsListPageComponent implements OnInit {
               await this.ratingService.getUserRatingAvg(item.speakerId).toPromise().then(
                 rate => {rating = rate}
               );
-              return new Meetup_list_item(item, username, photo, rating)
+              return new MeetupListItem(item, username, photo, rating)
             }
           ));
           this.meetupsList.push(...this.newChunk);

@@ -4,12 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.AchievementDAO;
 import ua.meetuply.backend.model.Achievement;
-import ua.meetuply.backend.model.Topic;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class AchievementService {
@@ -68,14 +65,19 @@ public class AchievementService {
     public void checkOne(String type){
         Integer currentUserId = appUserService.getCurrentUserID();
         Integer achievementId = null;
-        if (type.equals("followers")){
-            achievementId = achievementDAO.getFollowersAchievementId(currentUserId);
-        } else if (type.equals("posts")){
-            achievementId = achievementDAO.getPostsAchievementId(currentUserId);
-        } else if (type.equals("rating")){
-            achievementId = achievementDAO.getRatingAchievementId(currentUserId);
-        } else if (type.equals("meetups")){
-            achievementId = achievementDAO.getMeetupAchievementId(currentUserId);
+        switch (type) {
+            case "followers":
+                achievementId = achievementDAO.getFollowersAchievementId(currentUserId);
+                break;
+            case "posts":
+                achievementId = achievementDAO.getPostsAchievementId(currentUserId);
+                break;
+            case "rating":
+                achievementId = achievementDAO.getRatingAchievementId(currentUserId);
+                break;
+            case "meetups":
+                achievementId = achievementDAO.getMeetupAchievementId(currentUserId);
+                break;
         }
         if (achievementId != null){
             awardAchievement(currentUserId, achievementId);

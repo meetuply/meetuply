@@ -3,6 +3,7 @@ import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angul
 import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
 import {TopicService} from "../_services";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-achievement-create-page',
@@ -20,7 +21,7 @@ export class AchievementCreatePageComponent implements OnInit {
   selectedTopics = new Set();
 
   constructor(private fb: FormBuilder, private achievementService: AchievementService,
-              private topicService: TopicService) {
+              private topicService: TopicService, private router: Router) {
   }
 
   ngOnInit() {

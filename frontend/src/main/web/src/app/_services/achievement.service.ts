@@ -22,11 +22,11 @@ export class AchievementService {
   // }
 
   create(achievement: Achievement) {
-    return this.http.post<number>(this.achievementApiUrl + 'create', achievement);
+    return this.http.post<number>(this.achievementApiUrl, achievement);
   }
 
   createForMeetupsSameQuantity(formData: FormData) {
-    return this.http.post<any>(this.achievementApiUrl + 'meetups-topic/same', formData);
+    return this.http.post<any>(this.achievementApiUrl + 'meetupsTopic/same', formData);
   }
 
   getUserAchievements(id: number): Observable<Achievement[]> {

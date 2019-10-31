@@ -46,11 +46,11 @@ public class MeetupService {
         return meetupDao.get(id);
     }
 
-    public void updateMeetup(Meetup meetup){
+    public void updateMeetup(Meetup meetup) {
         meetupDao.update(meetup);
     }
 
-    public void deleteMeetup(Integer id){
+    public void deleteMeetup(Integer id) {
         meetupDao.delete(id);
     }
 
@@ -64,7 +64,6 @@ public class MeetupService {
         if (meetup.getMeetupRegisteredAttendees() == meetup.getMeetupMaxAttendees())
             stateService.update(meetup, stateDAO.get("Booked"));
     }
-
 
     public Iterable<Meetup> getMeetupsChunk(Integer startRow, Integer endRow) {
         return meetupDao.getMeetupsChunk(startRow, endRow);
@@ -81,9 +80,7 @@ public class MeetupService {
             stateService.update(meetup, stateDAO.get("Scheduled"));
     }
 
-    public Iterable<Meetup> getMeetupsChunk(Integer startRow, Integer endRow) {
-        return meetupDao.getMeetupsChunk(startRow, endRow);
-    }
+
 
     public boolean isAttendee(Integer meetupID, Integer userID) {
         return meetupDao.isAttendee(meetupID, userID);
@@ -94,8 +91,9 @@ public class MeetupService {
     }
 
 
-    public Integer getUserMeetupsNumber(Integer userId){
+    public Integer getUserMeetupsNumber(Integer userId) {
         return meetupDao.getUserMeetupsNumber(userId);
+    }
 
     public void cancelMeetup(Integer meetupID) throws Exception {
         Meetup meetup = getMeetupById(meetupID);
@@ -103,10 +101,11 @@ public class MeetupService {
 
         if (meetup.getSpeakerId() == appUserService.getCurrentUserID() || appUserService.isAdmin())
             if (meetup.getStateId().equals(stateDAO.get("Booked").getStateId())
-                || meetup.getStateId().equals(stateDAO.get("Scheduled").getStateId())
-                || meetup.getStateId().equals(stateDAO.get("Terminated").getStateId()))
+                    || meetup.getStateId().equals(stateDAO.get("Scheduled").getStateId())
+                    || meetup.getStateId().equals(stateDAO.get("Terminated").getStateId()))
                 stateService.updateState(meetup, stateDAO.get("Canceled"));
-            else throw MeetupStateException.createWith("you cannot switch to Canceled from " + stateDAO.get(meetup.getStateId()).getName());
+            else
+                throw MeetupStateException.createWith("you cannot switch to Canceled from " + stateDAO.get(meetup.getStateId()).getName());
         else throw PermissionException.createWith("you cannot modify not yours meetups");
     }
 
@@ -116,7 +115,8 @@ public class MeetupService {
         if (meetup.getSpeakerId() == appUserService.getCurrentUserID() || appUserService.isAdmin())
             if (meetup.getStateId().equals(stateDAO.get("In progress").getStateId()))
                 stateService.updateState(meetup, stateDAO.get("Terminated"));
-            else throw MeetupStateException.createWith("you cannot switch to Terminated from " + stateDAO.get(meetup.getStateId()).getName());
+            else
+                throw MeetupStateException.createWith("you cannot switch to Terminated from " + stateDAO.get(meetup.getStateId()).getName());
         else throw PermissionException.createWith("you cannot modify not yours meetups");
     }
 
@@ -142,7 +142,8 @@ public class MeetupService {
         filterDto.setDateFrom(dateFrom);
         filterDto.setDateTo(dateTo);
         return meetupDao.findMeetupsByFilter(filterDto);
-
-
     }
+
 }
+
+

@@ -36,24 +36,18 @@ public class AchievementController {
         return achievementService.get(achievementId);
     }
 
-//    @PostMapping("/create")
-//    public ResponseEntity<Achievement> create(@RequestBody Achievement achievement){
-//        achievementService.create(achievement);
-//        return ResponseEntity.ok().build();
-//    }
-
 //    @GetMapping("/test/{achievementId}")
 //    public List<Map<String, Object>> test(@PathVariable("achievementId") String userId) {
 //        Integer id = Integer.valueOf(userId);
 //        return achievementService.test(id);
 //    }
 
-    @PostMapping("/create")
+    @PostMapping()
     public Integer create(@RequestBody Achievement achievement){
         return achievementService.saveReturnId(achievement);
     }
 
-    @PostMapping("/meetups-topic/same")
+    @PostMapping("/meetupsTopic/same")
     public void createForMeetupsSameQuantity(@RequestParam String achievementId,
                                  @RequestParam String[] topics,
                                  @RequestParam String quantity){
