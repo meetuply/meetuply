@@ -1,21 +1,21 @@
-import { Injectable } from "@angular/core";
-import { Topic } from "../_models";
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { catchError } from "rxjs/operators";
-import { Observable, throwError } from "rxjs";
-import { environment } from "../../environments/environment";
+import {Injectable} from "@angular/core";
+import {Topic} from "../_models";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {catchError} from "rxjs/operators";
+import {Observable, throwError} from "rxjs";
+import {environment} from "../../environments/environment";
 
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class TopicService {
-
 
   private topicApiUrl = `${environment.apiUrl}/api/topics/`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
 
-  getAll():Observable<Topic[]> {
+  getAll(): Observable<Topic[]> {
     return this.http.get<Topic[]>(this.topicApiUrl);
   }
 

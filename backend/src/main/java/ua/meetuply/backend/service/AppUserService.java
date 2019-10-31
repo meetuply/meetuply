@@ -126,6 +126,10 @@ public class AppUserService implements UserDetailsService {
         appUserDAO.update(user);
     }
 
+    public Integer getFollowersNumber(Integer userId){
+        return appUserDAO.getFollowersNumber(userId);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) {
         AppUser appUser = appUserDAO.findAppUserByEmail(email);

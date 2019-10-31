@@ -54,7 +54,6 @@ public class MeetupService {
         meetupDao.join(meetupID, user.getUserId());
     }
 
-
     public Iterable<Meetup> getMeetupsChunk(Integer startRow, Integer endRow) {
         return meetupDao.getMeetupsChunk(startRow, endRow);
     }
@@ -74,4 +73,7 @@ public class MeetupService {
         return meetupDao.findMeetupsByFilter(filter);
     }
 
+    public Integer getUserMeetupsNumber(Integer userId){
+        return meetupDao.getUserMeetupsNumber(userId);
+    }
 }

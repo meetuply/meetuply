@@ -75,6 +75,13 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
         return meetupList;
     }
 
+    public Integer getUserMeetupsNumber(Integer userId){
+        Integer meetupsNumber = jdbcTemplate.queryForObject("select count(*) from meetup where speaker_id = ?;",
+                new Object[] {userId}, Integer.class);
+        return meetupsNumber != null ? meetupsNumber : 0;
+    }
+
+
     @Override
     public Meetup mapRow(ResultSet rs, int rowNum) throws SQLException {
         Meetup meetup = new Meetup();

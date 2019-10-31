@@ -106,7 +106,13 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
     @Override
     public void delete(Integer id) {
+        jdbcTemplate.update("DELETE FROM user WHERE uid = ?", id);
+    }
 
+    public Integer getFollowersNumber(Integer id){
+        Integer followersNumber = jdbcTemplate.queryForObject("select count(*) from followers where followed_user_id = ?;",
+                new Object []{id}, Integer.class);
+        return followersNumber != null ? followersNumber : 0;
     }
 
     public AppUser mapRow(ResultSet resultSet, int rowNum) throws SQLException {

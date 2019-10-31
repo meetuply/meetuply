@@ -33,6 +33,7 @@ export class AchievementsPageComponent implements OnInit {
       data=>{
         if (!data){
           console.log("success");
+          location.reload();
         }
       }, error => {
         console.log(error);

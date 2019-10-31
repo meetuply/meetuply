@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.Achievement;
 import ua.meetuply.backend.service.AchievementService;
 
+import java.util.List;
+import java.util.Map;
+
 @RequestMapping("api/achievements")
 @Transactional
 @RestController
@@ -37,6 +40,12 @@ public class AchievementController {
 //    public ResponseEntity<Achievement> create(@RequestBody Achievement achievement){
 //        achievementService.create(achievement);
 //        return ResponseEntity.ok().build();
+//    }
+
+//    @GetMapping("/test/{achievementId}")
+//    public List<Map<String, Object>> test(@PathVariable("achievementId") String userId) {
+//        Integer id = Integer.valueOf(userId);
+//        return achievementService.test(id);
 //    }
 
     @PostMapping("/create")
