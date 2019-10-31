@@ -26,8 +26,14 @@ public class TopicController {
 	public Topic getOneTopic(@PathVariable("topicId") Integer topicId) {
 	    return topicService.get(topicId);
 	}
-	
-	@PostMapping("/create")
+
+    @GetMapping("/name/{topicName}")
+    public Integer getTopicIdByName(@PathVariable("topicName") String topicName) {
+	    return topicService.getIdByName(topicName);
+    }
+
+
+    @PostMapping("/create")
     public ResponseEntity<Topic> createNewTopic(@Valid @RequestBody Topic topic){
         topicService.create(topic);
 		return ResponseEntity.ok().build();

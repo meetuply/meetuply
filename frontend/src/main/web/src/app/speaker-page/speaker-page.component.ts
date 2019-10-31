@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 import { User } from '../_models'
 import { UserService } from '../_services/user.service'
+import {Achievement} from "../_models/achievement";
+import {AchievementService} from "../_services/achievement.service";
 
 @Component({
   selector: 'app-speaker-page',
@@ -21,6 +23,7 @@ export class SpeakerPageComponent implements OnInit {
   followers: number;
   languages: string[];
   rate: 3;
+  achievementList: Achievement[];
 
 
   histories: History[] = [
@@ -70,7 +73,9 @@ export class SpeakerPageComponent implements OnInit {
 
   }
 
-  constructor(private _location: Location, private router: Router, private userService: UserService, private route: ActivatedRoute) {
+  constructor(private _location: Location, private router: Router,
+              private userService: UserService, private route: ActivatedRoute,
+              private achievementService: AchievementService) {
   }
 
   loadUser(id: number) {
@@ -91,11 +96,20 @@ export class SpeakerPageComponent implements OnInit {
     );
   }
 
+  loadAchievements(id:number){
+    this.achievementService.getUserAchievements(id).toPromise().then(
+       achievements => {
+        this.achievementList = achievements;
+      }
+    )
+  }
+
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
     this.loadUser(this.id);
     this.loadFollowers(this.id);
     this.loadLanguages(this.id);
+    this.loadAchievements(this.id);
   }
 
 }

@@ -15,6 +15,7 @@ public class AppUserValidator implements Validator {
 
     private EmailValidator emailValidator = EmailValidator.getInstance();
 
+
     @Autowired @Lazy
     private AppUserDAO appUserDAO;
 

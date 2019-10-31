@@ -33,6 +33,10 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
         return blogPosts;
     }
 
+    public List<BlogPost> getBlogPostsChunk(Integer startRow, Integer endRow) {
+        return jdbcTemplate.query("SELECT * FROM post order by uid desc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
+    }
+
     @Override
     public void save(BlogPost blogPost) {
         jdbcTemplate.update(
@@ -41,7 +45,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
                 blogPost.getBlogPostTitle(),
                 blogPost.getTime(),
                 blogPost.getBlogPostContent(),
-                blogPost.getAuthor().getUserId());
+                blogPost.getAuthorId());
     }
 
     @Override
@@ -63,7 +67,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
         blogPost.setBlogPostTitle(resultSet.getString("title"));
         blogPost.setBlogPostContent(resultSet.getString("content"));
         blogPost.setTime(resultSet.getTimestamp("date_time").toLocalDateTime());
-        blogPost.setAuthor(appUserService.getUser(resultSet.getInt("author_id")));
+        blogPost.setAuthorId(resultSet.getInt("author_id"));
         return blogPost;
     }
 }

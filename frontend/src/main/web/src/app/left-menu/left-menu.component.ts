@@ -1,5 +1,5 @@
 import { Component, OnInit, Output } from '@angular/core';
-import { Menu_item } from '../menu_item';
+import { Menu_item } from '../_models/menu_item';
 import { HttpClient } from "@angular/common/http";
 import { Router,ActivatedRoute } from "@angular/router";
 import { AuthenticationService, UserService } from "../_services";
@@ -52,7 +52,15 @@ export class LeftMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.pathFromRoot[1].url.subscribe(val =>  {  this.selectedItem = val[0].toString()  });
-   
+    this.route.pathFromRoot[1].url.subscribe(val =>  {
+
+        if(val[0].toString() == 'create' && val[1].toString() == 'meetup') {
+          this.selectedItem = 'meetups';
+        } else {
+          this.selectedItem = val[0].toString()
+        }
+
+      });
+
   }
 }

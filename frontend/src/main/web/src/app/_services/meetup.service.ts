@@ -48,4 +48,17 @@ export class MeetupService {
   create(meetup: Meetup): Observable<{}> {
     return this.http.post(this.meetupApiUrl + 'create', meetup);
   }
+
+  terminate(meetupID: number): Observable<{}> {
+    return this.http.get<boolean>(this.meetupApiUrl + + `${meetupID}` + '/terminate');
+  }
+
+  cancell(meetupID: number): Observable<{}> {
+    return this.http.get<boolean>(this.meetupApiUrl + + `${meetupID}` + '/cancel');
+  }
+
+  reschedule(meetup: Meetup): Observable<{}> {
+    return this.http.post(this.meetupApiUrl + 'reschedule', meetup);
+  }
+
 }

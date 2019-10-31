@@ -1,7 +1,6 @@
 package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +32,9 @@ public class AppUserService implements UserDetailsService {
     @Autowired
     SessionService sessionService;
 
+    @Autowired
+    StateService stateService;
+
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();;
 
     public void createAppUser(AppUser appUser) {
@@ -40,6 +42,9 @@ public class AppUserService implements UserDetailsService {
         appUser.setPassword(encrytedPassword);
         appUser.setDeactivated(false);
         appUser.setAllow_notifications(true);
+        appUser.setPhoto("");
+        appUser.setLocation("");
+        appUser.setDescription("");
         appUser.setRegistration_confirmed(false);
         Role role = appUser.getRole();
         if (role == null) {
@@ -115,12 +120,17 @@ public class AppUserService implements UserDetailsService {
         user.setDeactivated(true);
         appUserDAO.update(user);
         sessionService.expireUserSessions(user.getEmail());
-
+        stateService.terminateCurrentMeetupsOf(user);
+        stateService.cancelFutureMeetupsOf(user);
     }
 
     public void activateDeactivatedUser(AppUser user) {
         user.setDeactivated(false);
         appUserDAO.update(user);
+    }
+
+    public boolean isAdmin() {
+        return  getCurrentUser().getRole().equals(roleDAO.getRoleByName("admin"));
     }
 
     @Override
@@ -131,6 +141,7 @@ public class AppUserService implements UserDetailsService {
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         User user;
 
+        System.out.println(appUser);
         if(appUser.getRole().getRoleName().equals("admin")) {
             user = new User(appUser.getEmail(), appUser.getPassword(), grantedAuthorities);
         }

@@ -23,12 +23,6 @@
   flex-direction: column;
 }
 
-.name {
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
 .item .additional {
   margin: 15px;
   margin-right: 0px;
@@ -39,14 +33,6 @@
 
   justify-content: flex-start;
   padding: 10px;
-}
-
-.description {
-  word-break: break-all;
-  word-wrap: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 5px;
 }
 
 .profile {
@@ -144,4 +130,44 @@
 
 .app-button {
   position: -ms-device-fixed;
+}
+
+.title {
+  position: relative;
+  overflow: hidden;
+  text-align: justify;
+  margin-right: -1em;
+  padding-right: 1em;
+  line-height: 1.2em;
+  max-height: 2.4em;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.description {
+  position: relative;
+  overflow: hidden;
+  text-align: justify;
+  margin-right: -1em;
+  padding-right: 1em;
+  line-height: 1.2em;
+  max-height: 4.8em;
+}
+
+.title:before, .description:before {
+  content: '...';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.title:after, .description:after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: 1em;
+  height: 1em;
+  margin-top: 0.2em;
+  background: white;
 }

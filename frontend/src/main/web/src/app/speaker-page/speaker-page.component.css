@@ -193,17 +193,27 @@
 }
 
 .feedback .rating {
-
   margin-top: 15px;
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
+
 .back {
   width: 24px;
   height: 24px;
   background-size: cover;
   background-image: url(/assets/icons/arrow-left.png);
   cursor: pointer;
+}
+
+.achievements{
+  display: flex;
+  flex-direction: row;
+  /*max-width: 100px;*/
+}
+
+.achievement-container{
+  min-width: 100px;
 }

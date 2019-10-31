@@ -16,13 +16,13 @@ public class BlogPost {
     private String blogPostTitle;
     private String blogPostContent;
     private LocalDateTime time;
-    private AppUser author;
+    private Integer authorId;
 
-    public BlogPost(String blogPostTitle, String blogPostContent, LocalDateTime time, AppUser author) {
+    public BlogPost(String blogPostTitle, String blogPostContent, LocalDateTime time, Integer authorId) {
         super();
         this.blogPostTitle=blogPostTitle;
         this.blogPostContent = blogPostContent;
         this.time = time;
-        this.author = author;
+        this.authorId = authorId;
     }
 }

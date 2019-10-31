@@ -14,7 +14,7 @@ export class Meetup_list_item {
 	get registeredAttendees() {return this.meetup.meetupRegisteredAttendees}
 	get id() {return this.meetup.meetupId}
 
-	//todo joined
+
 	constructor(meetup: Meetup, author: string, authorPhoto: string,
               rate: number){
 	  this.meetup = meetup;

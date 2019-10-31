@@ -1,16 +1,24 @@
 import { BrowserModule } from '@angular/platform-browser';
 import {Injectable, NgModule} from '@angular/core';
-
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ButtonComponent } from './button/button.component';
+
 import { LeftMenuComponent } from './left-menu/left-menu.component';
 import { LeftMenuItemComponent } from './left-menu-item/left-menu-item.component';
+
 import { SpeakerPageComponent } from './speaker-page/speaker-page.component';
 import { SpeakerListPageComponent } from './speaker-list-page/speaker-list-page.component';
 import { SpeakerListItemComponent } from './speaker-list-item/speaker-list-item.component';
+
+import { BlogPageComponent } from './blog-page/blog-page.component';
+import { BlogListPageComponent } from './blog-list-page/blog-list-page.component';
+import { BlogListItemComponent } from './blog-list-item/blog-list-item.component';
+import { BlogCreatePageComponent } from "./blog-create-page/blog-create-page.component";
+import { BlogCommentItemComponent} from "./blog-comment-item/blog-comment-item.component";
+
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from "@angular/forms";
 import { RatingComponent } from "./rating/rating.component";
@@ -28,11 +36,13 @@ import { RegConfirmationComponent } from './reg-confirmation/reg-confirmation.co
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-
 import { CreateMeetupPageComponent } from './create-meetup-page/create-meetup-page.component';
-
 import { UserDeactivationComponent } from './user-deactivation/user-deactivation.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { AchievementCreatePageComponent } from './achievement-create-page/achievement-create-page.component';
+import { AchievementPanelComponent } from './achievement-panel/achievement-panel.component';
+import { AchievementsPageComponent } from './achievements-page/achievements-page.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -41,11 +51,14 @@ import { UserDeactivationComponent } from './user-deactivation/user-deactivation
     RegisterComponent,
     LandingPageComponent,
     ButtonComponent,
+
     LeftMenuComponent,
     LeftMenuItemComponent,
+
     SpeakerPageComponent,
     SpeakerListPageComponent,
     SpeakerListItemComponent,
+
     RatingComponent,
     LogoutMenuItemComponent,
     MustMatchDirective,
@@ -55,12 +68,19 @@ import { UserDeactivationComponent } from './user-deactivation/user-deactivation
     MeetupListItemComponent,
     MeetupsListPageComponent,
     MeetupPageComponent,
+
+    BlogPageComponent,
+    BlogListItemComponent,
+    BlogListPageComponent,
+    BlogCreatePageComponent,
+    BlogCommentItemComponent,
+
     RegConfirmationComponent,
-
     CreateMeetupPageComponent,
-
-    UserDeactivationComponent
-
+    UserDeactivationComponent,
+    AchievementCreatePageComponent,
+    AchievementPanelComponent,
+    AchievementsPageComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +89,9 @@ import { UserDeactivationComponent } from './user-deactivation/user-deactivation
     AppRoutingModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
-    InfiniteScrollModule
+    InfiniteScrollModule,
+    ReactiveFormsModule,
+    MatDialogModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
@@ -78,5 +100,3 @@ import { UserDeactivationComponent } from './user-deactivation/user-deactivation
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-
-
