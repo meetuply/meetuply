@@ -9,6 +9,7 @@ import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Filter;
 import ua.meetuply.backend.model.Meetup;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Component
@@ -74,4 +75,11 @@ public class MeetupService {
         return meetupDao.findMeetupsByFilter(filter);
     }
 
+    public List<Meetup> findMeetupsByCriterias(Double rating, Timestamp dateFrom, Timestamp dateTo) {
+        Filter filterDto = new Filter();
+        filterDto.setRating(rating);
+        filterDto.setDateFrom(dateFrom);
+        filterDto.setDateTo(dateTo);
+        return meetupDao.findMeetupsByFilter(filterDto);
+    }
 }
