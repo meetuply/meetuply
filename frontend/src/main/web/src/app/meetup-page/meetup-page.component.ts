@@ -126,6 +126,9 @@ export class MeetupPageComponent implements OnInit {
   }
 
   joinType() {
+    if (this.meetup.speakerId == this.userService.currentUser.userId) {
+      return
+    }
     return (this.joined == true ? '2' : (this.meetup.meetupMaxAttendees == this.attendees.length ? "3" : "1"));
   }
 

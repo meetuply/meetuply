@@ -4,24 +4,16 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.util.WebUtils;
 import ua.meetuply.backend.controller.exception.MeetupNotFoundException;
+import ua.meetuply.backend.controller.exception.MeetupStateException;
+import ua.meetuply.backend.controller.exception.PermissionException;
 import ua.meetuply.backend.controller.exception.UserNotFoundException;
 import ua.meetuply.backend.model.ApiError;
-
-import java.nio.file.AccessDeniedException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -42,7 +34,23 @@ public class GlobalExceptionHandler {
     })
     private ResponseEntity<ApiError> handleNotFoundException(Exception ex, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<>(new ApiError(ex.getMessage()), headers, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new ApiError(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({
+            MeetupStateException.class
+    })
+    private ResponseEntity<ApiError> handleNotAcceptableException(Exception ex, WebRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<>(new ApiError(ex.getMessage()), headers, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler({
+            PermissionException.class
+    })
+    private ResponseEntity<ApiError> handleForbiddenException(Exception ex, WebRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<>(new ApiError(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

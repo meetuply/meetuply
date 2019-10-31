@@ -80,6 +80,7 @@ public class MeetupController {
 
     @PutMapping("/{meetupID}/join")
     public ResponseEntity join(@PathVariable("meetupID") Integer meetupID) throws Exception {
+        System.out.println(meetupID);
         meetupService.join(meetupID);
         return ResponseEntity.ok().build();
     }
@@ -127,6 +128,24 @@ public class MeetupController {
         List<Meetup> meetups = meetupService.findMeetupsByCriterias(rating, dateFrom, dateTo);
         model.addAttribute(meetups);
         return meetups;
+    }
+
+    @GetMapping("/{meetupID}/cancel")
+    public ResponseEntity cancel(@PathVariable("meetupID") Integer meetupID) throws Exception {
+        meetupService.cancelMeetup(meetupID);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{meetupID}/terminate")
+    public ResponseEntity terminate(@PathVariable("meetupID") Integer meetupID) throws Exception {
+        meetupService.terminateMeetup(meetupID);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/reschedule")
+    public ResponseEntity reschedule(@RequestBody Meetup meetup) throws Exception {
+        meetupService.rescheduleTerminatedMeetup(meetup);
+        return ResponseEntity.ok().build();
     }
 
 }
