@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Meetup {
-
     private Integer meetupId;
     private String meetupPlace;
     private String meetupTitle;

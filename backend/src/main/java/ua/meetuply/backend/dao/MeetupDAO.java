@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Filter;
 import ua.meetuply.backend.model.Meetup;
 
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -93,14 +95,12 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
         return meetup;
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void join(Integer meetupID, Integer userID) {
         jdbcTemplate.update("INSERT INTO `meetup_attendees` (`meetup_id`, `user_id`) VALUES (?, ?)",
                 meetupID, userID);
-
+        System.out.println("insert meetup " + meetupID + " user " + userID);
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void leave(Integer meetupID, Integer userID) {
         jdbcTemplate.update("DELETE FROM `meetup_attendees` WHERE `meetup_id` = ? AND `user_id` = ?",
                 meetupID, userID);
@@ -124,4 +124,62 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
                 new Object[] {dateFrom, dateTo, rating}, this));
     }
 
+    public List<Meetup> find(SQLPredicate where) {
+        StringBuilder query = new StringBuilder("SELECT * FROM meetup ");
+        if (where != null) query.append("WHERE ").append(where.toString());
+        System.out.println(query);
+        return jdbcTemplate.query(query.toString(), this);
+    }
+
+
+    @Autowired
+    private StateDAO stateDAO;
+
+    public List<Meetup> futureScheduledAndBookedMeetupsOf(AppUser user){
+        List<SQLPredicate> andList = Arrays.asList(
+                new SQLPredicate("state_id", SQLPredicate.Operation.IN, Arrays.asList(stateDAO.get("Scheduled").getStateId(),
+                                                                                             stateDAO.get("Booked").getStateId())),
+                new SQLPredicate("speaker_id", SQLPredicate.Operation.EQUALS, user.getUserId())
+        );
+        SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
+        return find(where);
+    }
+
+    public List<Meetup> currentMeetupsOf(AppUser user){
+        List<SQLPredicate> andList =Arrays.asList(
+                new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS, stateDAO.get("In progress").getStateId()),
+                new SQLPredicate("speaker_id", SQLPredicate.Operation.EQUALS, user.getUserId())
+        );
+        SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
+        return find(where);
+    }
+
+    public List<Meetup> notEnoughAttendees1Hour() {
+        List<SQLPredicate> andList = Arrays.asList(
+                new SQLPredicate("start_date_time", SQLPredicate.Operation.LESS, "NOW() + INTERVAL 1 HOUR"),
+                new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS, stateDAO.get("Scheduled").getStateId()),
+                new SQLPredicate("min_attendees", SQLPredicate.Operation.GREATER, "registered_attendees")
+        );
+        SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
+        return find(where);
+    }
+
+    public List<Meetup> goingToStart() {
+        List<SQLPredicate> andList =Arrays.asList(
+                new SQLPredicate("state_id", SQLPredicate.Operation.IN, Arrays.asList(stateDAO.get("Scheduled").getStateId(),
+                                                                                             stateDAO.get("Booked").getStateId())),
+                new SQLPredicate("start_date_time", SQLPredicate.Operation.LESS, "NOW()")
+        );
+        SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
+        return find(where);
+    }
+
+    public List<Meetup> goingToFinish() {
+        List<SQLPredicate> andList =Arrays.asList(
+                new SQLPredicate("finish_date_time", SQLPredicate.Operation.LESS, "NOW()"),
+                new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS, stateDAO.get("In progress").getStateId())
+        );
+        SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
+        return find(where);
+    }
 }
