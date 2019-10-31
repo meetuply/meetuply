@@ -24,10 +24,12 @@ export class MeetupsListPageComponent implements OnInit {
   private sub: Subscription;
   filter_shown = false;
   author: string;
+  userID: number;
 
   constructor(private userService: UserService,
               private meetupService: MeetupService,
               private ratingService: RatingService) {
+    this.userID = this.userService.currentUser.userId;
   }
 
   ngOnInit() {

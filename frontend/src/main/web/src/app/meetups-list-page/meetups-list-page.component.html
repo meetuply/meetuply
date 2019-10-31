@@ -31,7 +31,7 @@
                               [registeredAttendees]='meetup_item.registeredAttendees'
                               [uid]='meetup_item.id'
                               [date]='meetup_item.date'
-                              [isMy]="userService.currentUser.userId == meetup_item.meetup.speakerId">
+                              [isMy]="userID == meetup_item.meetup.speakerId">
 
         </app-meetup-list-item>
       </div>
@@ -49,7 +49,7 @@
                               [registeredAttendees]='meetup_item.registeredAttendees'
                               [uid]='meetup_item.id'
                               [date]='meetup_item.date'
-                              [isMy]="userService.currentUser.userId == meetup_item.meetup.speakerId">
+                              [isMy]="userID == meetup_item.meetup.speakerId">
 
         </app-meetup-list-item>
       </div>
