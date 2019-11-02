@@ -31,12 +31,11 @@ export class MeetupsListPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.maxMeetupsOnPage = 50;
+    this.maxMeetupsOnPage = 1600;
     this.loadMeetupsChunk();
   }
 
   onScrollDown() {
-    console.log('scrolled!!');
     this.loadMeetupsChunk();
   }
 

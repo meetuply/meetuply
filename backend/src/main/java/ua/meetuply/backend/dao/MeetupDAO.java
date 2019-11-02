@@ -36,6 +36,8 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private StateDAO stateDAO;
 
     @Override
     public Meetup get(Integer id) {
@@ -55,7 +57,7 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
 
         jdbcTemplate.update("INSERT INTO meetup (`uid`,`place`, `title`, `description`,`registered_attendees`, `min_attendees`, `max_attendees`," +
                         "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", null,
-                meetup.getMeetupPlace(),meetup.getMeetupTitle(), meetup.getMeetupDescription(),
+                meetup.getMeetupPlace(), meetup.getMeetupTitle(), meetup.getMeetupDescription(),
                 meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
                 meetup.getMeetupStartDateTime(), meetup.getMeetupFinishDateTime(), meetup.getStateId(), meetup.getSpeakerId());
     }
@@ -64,9 +66,9 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void update(Meetup meetup) {
         jdbcTemplate.update("UPDATE meetup SET place = ?, " +
-                "title = ?, description = ? ,registered_attendees = ?, min_attendees = ?," +
-                "max_attendees = ?, start_date_time = ?, finish_date_time = ?," +
-                "state_id = ?, speaker_id = ? WHERE uid = ?", meetup.getMeetupPlace(), meetup.getMeetupTitle(),
+                        "title = ?, description = ? ,registered_attendees = ?, min_attendees = ?," +
+                        "max_attendees = ?, start_date_time = ?, finish_date_time = ?," +
+                        "state_id = ?, speaker_id = ? WHERE uid = ?", meetup.getMeetupPlace(), meetup.getMeetupTitle(),
                 meetup.getMeetupDescription(),
                 meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
                 meetup.getMeetupStartDateTime(), meetup.getMeetupFinishDateTime(), meetup.getStateId(), meetup.getSpeakerId(),
@@ -79,17 +81,16 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
     }
 
     public List<Meetup> getMeetupsChunk(Integer startRow, Integer endRow) {
-        List<Meetup> meetupList = jdbcTemplate.query("SELECT * FROM meetup order by uid asc LIMIT ?, ?",new Object[]{startRow, endRow},
+        List<Meetup> meetupList = jdbcTemplate.query("SELECT * FROM meetup order by start_date_time asc LIMIT ?, ?", new Object[]{startRow, endRow},
                 this);
         return meetupList;
     }
 
-    public Integer getUserMeetupsNumber(Integer userId){
+    public Integer getUserMeetupsNumber(Integer userId) {
         Integer meetupsNumber = jdbcTemplate.queryForObject("select count(*) from meetup where speaker_id = ?;",
-                new Object[] {userId}, Integer.class);
+                new Object[]{userId}, Integer.class);
         return meetupsNumber != null ? meetupsNumber : 0;
     }
-
 
     @Override
     public Meetup mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -139,7 +140,6 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
         }
     }
 
-
     public List<Meetup> find(SQLPredicate where) {
         StringBuilder query = new StringBuilder("SELECT * FROM meetup ");
         if (where != null) query.append("WHERE ").append(where.toString());
@@ -147,22 +147,18 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
         return jdbcTemplate.query(query.toString(), this);
     }
 
-
-    @Autowired
-    private StateDAO stateDAO;
-
-    public List<Meetup> futureScheduledAndBookedMeetupsOf(AppUser user){
+    public List<Meetup> futureScheduledAndBookedMeetupsOf(AppUser user) {
         List<SQLPredicate> andList = Arrays.asList(
                 new SQLPredicate("state_id", SQLPredicate.Operation.IN, Arrays.asList(stateDAO.get("Scheduled").getStateId(),
-                                                                                             stateDAO.get("Booked").getStateId())),
+                        stateDAO.get("Booked").getStateId())),
                 new SQLPredicate("speaker_id", SQLPredicate.Operation.EQUALS, user.getUserId())
         );
         SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
         return find(where);
     }
 
-    public List<Meetup> currentMeetupsOf(AppUser user){
-        List<SQLPredicate> andList =Arrays.asList(
+    public List<Meetup> currentMeetupsOf(AppUser user) {
+        List<SQLPredicate> andList = Arrays.asList(
                 new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS, stateDAO.get("In progress").getStateId()),
                 new SQLPredicate("speaker_id", SQLPredicate.Operation.EQUALS, user.getUserId())
         );
@@ -181,9 +177,9 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
     }
 
     public List<Meetup> goingToStart() {
-        List<SQLPredicate> andList =Arrays.asList(
+        List<SQLPredicate> andList = Arrays.asList(
                 new SQLPredicate("state_id", SQLPredicate.Operation.IN, Arrays.asList(stateDAO.get("Scheduled").getStateId(),
-                                                                                             stateDAO.get("Booked").getStateId())),
+                        stateDAO.get("Booked").getStateId())),
                 new SQLPredicate("start_date_time", SQLPredicate.Operation.LESS, "NOW()")
         );
         SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
@@ -226,6 +222,5 @@ public class MeetupDAO implements IDAO<Meetup>, RowMapper<Meetup> {
             return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_RATING_QUERY,
                     new Object[]{rating}, this);
         }
-
     }
 }

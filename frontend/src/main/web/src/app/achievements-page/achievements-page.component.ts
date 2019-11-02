@@ -33,7 +33,12 @@ export class AchievementsPageComponent implements OnInit {
       data=>{
         if (!data){
           console.log("success");
-          location.reload();
+          const index = this.achievements.indexOf(this.achievements.find(
+            x => x.achievementId), 0);
+          if (index > -1) {
+            this.achievements.splice(index, 1);
+          }
+          // location.reload();
         }
       }, error => {
         console.log(error);
