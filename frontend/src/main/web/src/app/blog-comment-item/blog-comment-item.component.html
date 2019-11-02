@@ -1,20 +1,23 @@
 <div class='item'>
   <div class = 'main'>
-    <div class='author'>
+    <div class='author' [routerLink]="['/speakers/',blog_comment_item.authorId]">
       <div class='avatar'>
-        <img *ngIf="authorPhoto" src={{this.authorPhoto}}>
-        <img *ngIf="!authorPhoto" src="assets/img/download.png">
+        <img *ngIf="blog_comment_item.authorPhoto" src={{this.blog_comment_item.authorPhoto}}>
+        <img *ngIf="!blog_comment_item.authorPhoto" src="assets/img/download.png">
       </div>
         <div class='info'>
           <div class='name'>
-            {{this.author}}
+            {{this.blog_comment_item.author}}
           </div>
         </div>
     </div>
 
     <div class='comment'>
       <div class='comment-content'>
-        <span>{{this.content}}</span>
+        <span>{{this.blog_comment_item.content}}</span>
+      </div>
+      <div class="comment-time">
+        {{this.blog_comment_item.date}}
       </div>
     </div>
   </div>

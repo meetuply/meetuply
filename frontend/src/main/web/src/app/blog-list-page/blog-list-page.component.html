@@ -2,22 +2,41 @@
 <div class='content'>
   <p class='title'>Blog</p>
 
-  <div class='search_div'>
-    <div class='search_icon'></div>
-    <input type="text" name="search" placeholder="Search" />
+  <div class="header">
+    <div class="filter">
+      <p>Filter by:</p>
+      <p class="filter-on" id="subs" (click)="filterBy($event, 'subs')">subscriptions</p>
+      <p>|</p>
+      <p class="filter-off" id="all" (click)="filterBy($event, 'all')">all</p>
+      <p>|</p>
+      <p class="filter-off" id="my" (click)="filterBy($event, 'my')">my posts</p>
+    </div>
+
+    <div class="create-new">
+      <p [routerLink]="['create']">New post</p>
+    </div>
   </div>
 
+<!--  <div class='search_div'>-->
+<!--    <div class='search_icon'></div>-->
+<!--    <input type="text" name="search" placeholder="Search" />-->
+<!--  </div>-->
+
   <div class="main" infinite-scroll [infiniteScrollDistance]="scrollDistance" (scrolled)='this.onScrollDown()'>
+    <div id="message">
+      No posts here!
+    </div>
     <div class='posts_column'>
       <div *ngFor="let post_item of this.postsList;let i = index">
 
         <app-blog-list-item
-                              [author]='post_item.author'
-                              [authorPhoto]="post_item.authorPhoto"
-                              [title]='post_item.title'
-                              [content]='post_item.content'
-                              [uid]='post_item.id'
-                              [date]='post_item.date'>
+          [blog_list_item]='post_item'>
+<!--                              [author]='post_item.author'-->
+<!--                              [authorPhoto]="post_item.authorPhoto"-->
+<!--                              [title]='post_item.title'-->
+<!--                              [content]='post_item.content'-->
+<!--                              [uid]='post_item.id'-->
+<!--                              [date]='post_item.date'>-->
 
         </app-blog-list-item>
       </div>
