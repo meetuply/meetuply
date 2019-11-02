@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {UserService} from "../_services";
+import {MeetupService} from "../_services/meetup.service";
 
 
 @Component({
@@ -7,7 +9,6 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./speaker-list-item.component.css']
 })
 export class SpeakerListItemComponent implements OnInit {
-
 
   @Input() name: string;
   @Input() surname: string;
@@ -18,10 +19,9 @@ export class SpeakerListItemComponent implements OnInit {
   @Input() languages: Array<string>;
   @Input() description: string;
   @Input() id: number;
+  error;
 
   followText(): string {
-
-
     if (this.following === true) {
       return "Followed";
     }
@@ -36,7 +36,7 @@ export class SpeakerListItemComponent implements OnInit {
     return 1;
   }
 
-  constructor() { }
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
 
@@ -44,6 +44,28 @@ export class SpeakerListItemComponent implements OnInit {
 
   link():string {
     return "/speakers/" + this.id;
+  }
+
+  followButtonClicked(event){
+    if (this.following)
+      this.userService.unfollow(this.id).subscribe(
+        data => {
+          this.following = false;
+        },
+        error => {
+          this.error = error;
+          console.log(error);
+        }
+      );
+    else
+      this.userService.follow(this.id).subscribe(
+        data => {
+          this.following = true;
+        },
+        error => {
+          this.error = error;
+        }
+      );
   }
 
 }

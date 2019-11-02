@@ -1,11 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Speaker_list_item } from '../_models/speaker_list_item';
-import { HttpClient } from "@angular/common/http";
-import { Observable } from 'rxjs';
-import { environment } from "../../environments/environment";
-import { UserService } from "../_services/user.service"
-import { flatMap } from 'rxjs/operators';
-import { User, Language } from '../_models'
+import {Component, OnInit} from '@angular/core';
+import {Speaker_list_item} from '../_models/speaker_list_item';
+import {HttpClient} from "@angular/common/http";
+import {UserService} from "../_services/user.service"
 
 @Component({
   selector: 'app-speaker-list-page',
@@ -13,7 +9,6 @@ import { User, Language } from '../_models'
   styleUrls: ['./speaker-list-page.component.css', '../fonts.css']
 })
 export class SpeakerListPageComponent implements OnInit {
-
 
 
   loading = false;
@@ -24,6 +19,9 @@ export class SpeakerListPageComponent implements OnInit {
   speaker_list: Speaker_list_item[] = [];
   speaker_chunk: Speaker_list_item[];
 
+  constructor(private http: HttpClient, private userService: UserService) {
+  }
+
   isOdd(num: number): boolean {
     return num % 2 == 0;
   }
@@ -33,11 +31,8 @@ export class SpeakerListPageComponent implements OnInit {
     this.loadUsersChunk();
   }
 
-
-  constructor(private http: HttpClient, private userService: UserService) { }
-
   loadUsersChunk() {
-    this.userService.getChunk(this.speaker_list.length,this.chunkSize).subscribe(
+    this.userService.getChunk(this.speaker_list.length, this.chunkSize).subscribe(
       async users => {
         this.speaker_chunk = await Promise.all(users.map(async user => {
 
@@ -48,9 +43,7 @@ export class SpeakerListPageComponent implements OnInit {
 
 
             user_languages = languages.map(language => language.name)
-
           );
-
 
           list_item = {
             id: user.userId,
@@ -64,10 +57,9 @@ export class SpeakerListPageComponent implements OnInit {
             awards: 3
           };
 
-
           return list_item;
 
-        }))
+        }));
         this.speaker_list.push(...this.speaker_chunk);
 
       }

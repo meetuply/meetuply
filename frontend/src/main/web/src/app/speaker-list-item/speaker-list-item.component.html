@@ -31,6 +31,6 @@
 			<div class='icon'></div>
 			<div> {{this.awards}}</div>
 		</div>
-		<app-button [text]="followText()" [type]='followType()' fontSize='20'></app-button>
+		<app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)"  fontSize='20'></app-button>
 	</div>
 </div>

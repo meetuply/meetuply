@@ -30,8 +30,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
 
     @Override
     public List<BlogPost> getAll() {
-        List<BlogPost> blogPosts = jdbcTemplate.query("SELECT * FROM post", this);
-        return blogPosts;
+        return jdbcTemplate.query("SELECT * FROM post", this);
     }
 
     public List<BlogPost> getBlogPostsChunk(Integer startRow, Integer endRow,String filter) {
