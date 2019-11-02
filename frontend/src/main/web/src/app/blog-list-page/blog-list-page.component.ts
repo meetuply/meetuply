@@ -47,13 +47,15 @@ export class BlogListPageComponent implements OnInit {
             this.newChunk = await Promise.all(data.map( async item => {
                 let username = "";
                 let photo = "";
+                let authorid=0;
                 await this.userService.get(item.authorId).toPromise().then(
                   author => {
                     username = author.firstName + " " + author.lastName;
                     photo = author.photo;
+                    authorid=author.userId;
                   }
                 );
-                return new Blog_list_item(item, username, photo)
+                return new Blog_list_item(item, username, photo,authorid)
               }
             ));
             this.postsList.push(...this.newChunk);
@@ -66,6 +68,20 @@ export class BlogListPageComponent implements OnInit {
     }
   }
 
+  filterBy(event, item) {
+    switch(item){
+      case 0:
+        alert("filerere");
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+    }
+  }
 
+  ngOnDestroy() {
+    if (this.sub) this.sub.unsubscribe();
+  }
 
 }

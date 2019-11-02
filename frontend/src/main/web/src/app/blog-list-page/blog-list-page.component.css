@@ -20,6 +20,33 @@
   margin-left: 5px;
 }
 
+.header{
+  display: flex;
+  flex-direction: row;
+}
+
+.filter{
+  display: flex;
+  flex-direction: row;
+  margin-right: 20em;
+}
+
+.filter *{
+  margin-left: 5px;
+}
+
+.filter-link{
+  cursor: pointer;
+}
+
+.create-new{
+  text-align: right;
+  float: right;
+  cursor: pointer;
+  font-weight: bold;
+  color: #086edb;
+}
+
 .search_div {
   display: flex;
   flex-direction: row;

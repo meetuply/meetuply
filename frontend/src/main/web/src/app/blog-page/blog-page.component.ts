@@ -20,6 +20,7 @@ export class BlogPageComponent implements OnInit {
   id: number;
   author: string;
   authorPhoto: string;
+  authorId: number;
   error = null;
   lastRow = 0;
   maxCommentsOnPage: number;
@@ -37,17 +38,18 @@ export class BlogPageComponent implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
     this.loadBlogPost(this.id);
+    this.loadBlogCommentsChunk(this.id);
     this.maxCommentsOnPage = 50;
   }
 
   onScrollDown() {
-    this.loadBlogCommentsChunk();
+    this.loadBlogCommentsChunk(this.id);
   }
 
-  loadBlogCommentsChunk() {
+  loadBlogCommentsChunk(id:number) {
     if (this.lastRow < this.maxCommentsOnPage) {
       this.loading = true;
-      this.sub = this.blogService.getBlogCommentsChunk(this.blogpost.blogPostId, this.lastRow, this.step).subscribe(
+      this.sub = this.blogService.getBlogCommentsChunk(id, this.lastRow, this.step).subscribe(
         async data => {
           this.loading = false;
           if (data) {
@@ -55,13 +57,15 @@ export class BlogPageComponent implements OnInit {
             this.newChunk = await Promise.all(data.map(async item => {
                 let username = "";
                 let photo = "";
+                let authorid = 0;
                 await this.userService.get(item.authorId).toPromise().then(
                   author => {
                     username = author.firstName + " " + author.lastName;
                     photo = author.photo;
+                    authorid=author.userId;
                   }
                 );
-                return new Blog_comment_item(item, username, photo)
+                return new Blog_comment_item(item, username, photo, authorid)
               }
             ));
             this.commentsList.push(...this.newChunk);
@@ -79,11 +83,10 @@ export class BlogPageComponent implements OnInit {
     this.sub = this.blogService.getBlogPost(id).subscribe(
       data => {
         this.blogpost = data;
+        this.blogpost.blogPostContent=this.blogpost.blogPostContent.replace(/(?:\r\n|\r|\n)/g, '<br/>');
         this.loading = false;
         // console.log(this.blogpost.blogPostContent);
         this.getAuthorInfo(data['authorId']);
-
-        this.loadBlogCommentsChunk();
       },
       error => {
         // this.alertService.error(error);
@@ -104,14 +107,11 @@ export class BlogPageComponent implements OnInit {
   }
 
   submitComment($event) {
-    var datetime = new Date(Date.now());
 
-    var comment: BlogComment = {
-      // blogCommentId: 0,
+    let comment: BlogComment = {
       blogCommentContent: this.new_comment,
       authorId: this.userService.currentUser.userId,
       postId: this.id
-      // time: datetime
     };
 
     this.blogService.createBlogComment(comment).subscribe(data => {
@@ -126,15 +126,11 @@ export class BlogPageComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    if (this.sub) this.sub.unsubscribe;
+    if (this.sub) this.sub.unsubscribe();
   }
 
   goBack() {
     this._location.back();
-  }
-
-  formatContent(str: string) {
-    return str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
   }
 
 }

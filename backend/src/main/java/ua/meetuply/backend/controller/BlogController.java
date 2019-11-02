@@ -38,13 +38,13 @@ public class BlogController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<BlogPost> createBlogPost(@Valid @RequestBody BlogPost blogPost){
+    public ResponseEntity createBlogPost(@Valid @RequestBody BlogPost blogPost){
         blogPostService.createBlogPost(blogPost);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{post-id}")
-    public ResponseEntity<BlogPost> updateBlogPost(@PathVariable("post-id") Integer blogPostId,
+    public ResponseEntity updateBlogPost(@PathVariable("post-id") Integer blogPostId,
                                                    @RequestBody BlogPost blogPost) {
         if (blogPostService.getBlogPostById(blogPostId) == null) {
             return ResponseEntity.badRequest().build();
@@ -55,7 +55,7 @@ public class BlogController {
     }
 
     @DeleteMapping("/{post-id}")
-    public ResponseEntity<BlogPost> deleteBlogPost(@PathVariable("post-id") Integer blogPostId){
+    public ResponseEntity deleteBlogPost(@PathVariable("post-id") Integer blogPostId){
         if (blogPostService.getBlogPostById(blogPostId) == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -85,14 +85,14 @@ public class BlogController {
     }
 
     @PostMapping("/{post-id}/comments")
-    public ResponseEntity<BlogComment> createBlogComment(@PathVariable("post-id") Integer blogPostId,
+    public ResponseEntity createBlogComment(@PathVariable("post-id") Integer blogPostId,
                                                             @Valid @RequestBody BlogComment blogComment){
         blogCommentService.createBlogComment(blogComment, blogPostId);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/comments/{comment-id}")
-    public ResponseEntity<BlogComment> updateBlogComment(@PathVariable("comment-id") Integer blogCommentId,
+    public ResponseEntity updateBlogComment(@PathVariable("comment-id") Integer blogCommentId,
                                                       @RequestBody BlogComment blogComment) {
         if (blogCommentService.getBlogCommentById(blogCommentId) == null) {
             return ResponseEntity.badRequest().build();
@@ -103,7 +103,7 @@ public class BlogController {
     }
 
     @DeleteMapping("/comments/{comment-id}")
-    public ResponseEntity<BlogComment> deleteBlogComment(@PathVariable("comment-id") Integer blogCommentId){
+    public ResponseEntity deleteBlogComment(@PathVariable("comment-id") Integer blogCommentId){
         if (blogCommentService.getBlogCommentById(blogCommentId) == null) {
             ResponseEntity.badRequest().build();
         }
