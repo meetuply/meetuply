@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-achievements-page',
@@ -11,7 +12,7 @@ export class AchievementsPageComponent implements OnInit {
 
   achievements: Achievement[];
 
-  constructor(private achievementService: AchievementService) { }
+  constructor(private achievementService: AchievementService, private location: Location) { }
 
   ngOnInit() {
     this.loadAchievements();
@@ -38,11 +39,14 @@ export class AchievementsPageComponent implements OnInit {
           if (index > -1) {
             this.achievements.splice(index, 1);
           }
-          // location.reload();
         }
       }, error => {
         console.log(error);
       }
     );
+  }
+
+  public goBack(){
+    this.location.back();
   }
 }

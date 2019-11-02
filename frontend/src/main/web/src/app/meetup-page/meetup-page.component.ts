@@ -176,7 +176,4 @@ export class MeetupPageComponent implements OnInit {
   ngOnDestroy(){
     if (this.sub) this.sub.unsubscribe;
   }
-
-  goBack() {
-  }
 }
