@@ -386,7 +386,8 @@ CREATE TABLE `saved_filter`
 (
     `uid`            integer unsigned NOT NULL AUTO_INCREMENT,
     `name`           varchar(100)     NOT NULL,
-    `rating`         float            NULL,
+    `rating_from`    float            NULL,
+    `rating_to`      float            NULL,
     `date_time_from` datetime         NULL,
     `date_time_to`   datetime         NULL,
     `owner_id`       integer unsigned NOT NULL,
