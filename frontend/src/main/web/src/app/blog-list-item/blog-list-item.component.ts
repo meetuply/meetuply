@@ -11,15 +11,8 @@ import {Blog_list_item} from "../_models/blog_list_item";
 
 export class BlogListItemComponent implements OnInit {
 
-  // @Input() date: Date;
-  // @Input() author: string;
-  // @Input() authorPhoto: string;
-  // @Input() content: string;
-  // @Input() title: string;
-  // @Input() uid: number;
   @Input() blog_list_item: Blog_list_item;
   error;
-
 
   constructor(private blogService: BlogService) { }
 

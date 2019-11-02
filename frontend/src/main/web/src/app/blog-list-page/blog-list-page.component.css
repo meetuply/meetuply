@@ -20,6 +20,14 @@
   margin-left: 5px;
 }
 
+#message{
+  text-align: center;
+  width:100%;
+  font-size: 4em;
+  font-weight: bold;
+  display: none;
+}
+
 .header{
   display: flex;
   flex-direction: row;
@@ -35,8 +43,13 @@
   margin-left: 5px;
 }
 
-.filter-link{
+.filter-off{
   cursor: pointer;
+  font-weight: normal;
+}
+
+.filter-on{
+  font-weight: bold;
 }
 
 .create-new{

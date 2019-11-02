@@ -38,18 +38,17 @@ export class BlogPageComponent implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
     this.loadBlogPost(this.id);
-    this.loadBlogCommentsChunk(this.id);
     this.maxCommentsOnPage = 50;
   }
 
   onScrollDown() {
-    this.loadBlogCommentsChunk(this.id);
+    this.loadBlogCommentsChunk();
   }
 
-  loadBlogCommentsChunk(id:number) {
+  loadBlogCommentsChunk() {
     if (this.lastRow < this.maxCommentsOnPage) {
       this.loading = true;
-      this.sub = this.blogService.getBlogCommentsChunk(id, this.lastRow, this.step).subscribe(
+      this.sub = this.blogService.getBlogCommentsChunk(this.id, this.lastRow, this.step).subscribe(
         async data => {
           this.loading = false;
           if (data) {
@@ -78,6 +77,13 @@ export class BlogPageComponent implements OnInit {
     }
   }
 
+  reloadComments(){
+    this.commentsList=[];
+    this.lastRow=0;
+    this.loadBlogCommentsChunk();
+  }
+
+
   loadBlogPost(id: number) {
     this.loading = true;
     this.sub = this.blogService.getBlogPost(id).subscribe(
@@ -85,7 +91,6 @@ export class BlogPageComponent implements OnInit {
         this.blogpost = data;
         this.blogpost.blogPostContent=this.blogpost.blogPostContent.replace(/(?:\r\n|\r|\n)/g, '<br/>');
         this.loading = false;
-        // console.log(this.blogpost.blogPostContent);
         this.getAuthorInfo(data['authorId']);
       },
       error => {
@@ -93,6 +98,7 @@ export class BlogPageComponent implements OnInit {
         this.loading = false;
       }
     );
+    this.loadBlogCommentsChunk();
   }
 
   getAuthorInfo(id: number) {
@@ -107,7 +113,6 @@ export class BlogPageComponent implements OnInit {
   }
 
   submitComment($event) {
-
     let comment: BlogComment = {
       blogCommentContent: this.new_comment,
       authorId: this.userService.currentUser.userId,
@@ -117,8 +122,7 @@ export class BlogPageComponent implements OnInit {
     this.blogService.createBlogComment(comment).subscribe(data => {
       if (data == null) {
         //refresh
-        window.location.reload();
-        // this.route.navigated = false;
+        this.reloadComments();
       }
     }, error => {
       alert(error)

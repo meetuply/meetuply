@@ -19,6 +19,7 @@ export class BlogListPageComponent implements OnInit {
   scrollDistance = 2;
   private sub: Subscription;
   author: string;
+  filter:string;
 
   postsList: Blog_list_item[] = [];
   newChunk: Blog_list_item[];
@@ -27,6 +28,7 @@ export class BlogListPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.changeFilter("subs");
     this.maxPostsOnPage = 50;
     this.loadBlogPostsChunk();
   }
@@ -39,7 +41,7 @@ export class BlogListPageComponent implements OnInit {
   loadBlogPostsChunk() {
     if (this.lastRow < this.maxPostsOnPage) {
       this.loading = true;
-      this.sub = this.blogService.getBlogPostsChunk(this.lastRow, this.step).subscribe(
+      this.sub = this.blogService.getBlogPostsChunk(this.lastRow, this.step,this.filter).subscribe(
         async data => {
           this.loading = false;
           if (data){
@@ -59,6 +61,8 @@ export class BlogListPageComponent implements OnInit {
               }
             ));
             this.postsList.push(...this.newChunk);
+            if (this.postsList.length>0) this.hideMessage();
+            else this.showMessage();
           }
         },
         error1 => {
@@ -69,15 +73,38 @@ export class BlogListPageComponent implements OnInit {
   }
 
   filterBy(event, item) {
-    switch(item){
-      case 0:
-        alert("filerere");
+    if (item==="subs" || item==="all" || item==="my") {
+      this.postsList = [];
+      this.lastRow = 0;
+      this.changeFilter(item);
+      this.loadBlogPostsChunk();
+    }
+  }
+
+  changeFilter(filter:string){
+    this.filter=filter;
+    document.getElementById('subs').setAttribute("class","filter-off");
+    document.getElementById('all').setAttribute("class","filter-off");
+    document.getElementById('my').setAttribute("class","filter-off");
+    switch (filter) {
+      case "subs":
+        document.getElementById('subs').setAttribute("class","filter-on");
         break;
-      case 1:
+      case "all":
+        document.getElementById('all').setAttribute("class","filter-on");
         break;
-      case 2:
+      case "my":
+        document.getElementById('my').setAttribute("class","filter-on");
         break;
     }
+  }
+
+  hideMessage(){
+    document.getElementById('message').setAttribute("style","display: none;");
+  }
+
+  showMessage(){
+    document.getElementById('message').setAttribute("style","display: flex;");
   }
 
   ngOnDestroy() {

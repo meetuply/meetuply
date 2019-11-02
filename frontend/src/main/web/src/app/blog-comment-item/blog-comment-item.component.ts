@@ -10,11 +10,6 @@ import {Blog_comment_item} from "../_models/blog_comment_item";
 
 export class BlogCommentItemComponent implements OnInit {
 
-  // @Input() date: Date;
-  // @Input() author: string;
-  // @Input() authorPhoto: string;
-  // @Input() content: string;
-  // @Input() uid: number;
   @Input() blog_comment_item: Blog_comment_item;
   error;
 

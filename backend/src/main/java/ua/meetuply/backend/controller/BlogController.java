@@ -31,10 +31,13 @@ public class BlogController {
         return blogPostService.getBlogPostById(blogPostId);
     }
 
-    @GetMapping("/{startRow}/{endRow}")
+    @GetMapping("/{filter}/{startRow}/{endRow}")
     public @ResponseBody
-    Iterable<BlogPost> getBlogPostsChunk(@PathVariable("startRow") Integer startRow,@PathVariable("endRow") Integer endRow) {
-        return blogPostService.getBlogPostsChunk(startRow,endRow);
+    Iterable<BlogPost> getBlogPostsChunk(@PathVariable("startRow") Integer startRow,
+                                         @PathVariable("endRow") Integer endRow,
+                                         @PathVariable("filter") String filter) {
+//        Log.println(filter);
+        return blogPostService.getBlogPostsChunk(startRow,endRow,filter);
     }
 
     @PostMapping("/")
