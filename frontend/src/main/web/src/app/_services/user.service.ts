@@ -78,7 +78,9 @@ export class UserService {
     return this.http.delete(this.userApiUrl + 'following/' + userId)
   }
 
-  follow(userId:number): Observable<{}>{
-    return this.http.post(this.userApiUrl + 'following', userId)
+  follow(userId: number): Observable<{}>{
+    return this.http.post(this.userApiUrl + 'following/' + userId, {});
   }
+
+
 }

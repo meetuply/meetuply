@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Speaker_list_item} from '../_models/speaker_list_item';
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "../_services/user.service"
+import {User} from "../_models";
 
 @Component({
   selector: 'app-speaker-list-page',
@@ -35,14 +36,16 @@ export class SpeakerListPageComponent implements OnInit {
     this.userService.getChunk(this.speaker_list.length, this.chunkSize).subscribe(
       async users => {
         this.speaker_chunk = await Promise.all(users.map(async user => {
-
-          var user_languages: string[];
-
-          var list_item: Speaker_list_item;
+          let user_languages: string[];
+          let list_item: Speaker_list_item;
           await this.userService.getUserLanguages(user.userId).toPromise().then(languages =>
-
-
             user_languages = languages.map(language => language.name)
+          );
+
+          let followers: number[];
+          let follow: boolean;
+          await this.userService.getUserFollowers(user.userId).toPromise().then(f =>
+            followers = f
           );
 
           list_item = {
@@ -53,7 +56,7 @@ export class SpeakerListPageComponent implements OnInit {
             rate: 4,
             description: user.description,
             languages: user_languages,
-            following: false,
+            following: (followers.indexOf(this.userService.currentUser.userId)==-1) ? false : true,
             awards: 3
           };
 

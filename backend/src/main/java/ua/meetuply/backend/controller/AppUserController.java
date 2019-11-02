@@ -138,21 +138,21 @@ public class AppUserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/following/{userId}")
-    public ResponseEntity follow(@PathVariable Integer userId) {
-        if (appUserService.getUserSubscribers(appUserService.getCurrentUserID()).indexOf(userId) != -1) {
+    @PostMapping("/following/{id}")
+    public ResponseEntity follow(@PathVariable Integer id) {
+        if (appUserService.getUserSubscribers(appUserService.getCurrentUserID()).indexOf(id) != -1) {
             return ResponseEntity.badRequest().build();
         }
-        appUserService.follow(userId);
+        appUserService.follow(id);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/following/{userId}")
-    public ResponseEntity unfollow(@PathVariable("userId") Integer userId) {
-        if (appUserService.getUserSubscriptions(appUserService.getCurrentUserID()).indexOf(userId) == -1) {
+    @DeleteMapping("/following/{id}")
+    public ResponseEntity unfollow(@PathVariable("id") Integer id) {
+        if (appUserService.getUserSubscriptions(appUserService.getCurrentUserID()).indexOf(id) == -1) {
             return ResponseEntity.badRequest().build();
         }
-        appUserService.unfollow(userId);
+        appUserService.unfollow(id);
         return ResponseEntity.ok().build();
     }
 }
