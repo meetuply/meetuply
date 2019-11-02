@@ -15,11 +15,14 @@
     <div class='post'>
       <div class='post-title'>
         <span *ngIf="this.blog_list_item.title.length > 50">{{this.blog_list_item.title | slice:0:50}}...</span>
-        <span *ngIf="this.blog_list_item.title.length < 50">{{this.title}}</span>
+        <span *ngIf="this.blog_list_item.title.length < 50">{{this.blog_list_item.title}}</span>
       </div>
       <div class='post-content'>
         <span *ngIf="this.blog_list_item.content.length > 300">{{this.blog_list_item.content | slice:0:300}}...</span>
         <span *ngIf="this.blog_list_item.content.length < 300">{{this.blog_list_item.content}}</span>
+      </div>
+      <div class="post-time">
+        <p>{{this.blog_list_item.date.toString().replace("T"," ")}}</p>
       </div>
     </div>
 

@@ -5,7 +5,7 @@ export class Blog_comment_item {
   author: string;
   authorPhoto: string;
   authorId: number;
-  // get date() {return this.comment.time}
+  get date() {return this.comment.time}
   get content(){ return this.comment.blogCommentContent}
   // get id() {return this.comment.blogCommentId}
 

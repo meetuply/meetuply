@@ -92,13 +92,13 @@ export class BlogPageComponent implements OnInit {
         this.blogpost.blogPostContent=this.blogpost.blogPostContent.replace(/(?:\r\n|\r|\n)/g, '<br/>');
         this.loading = false;
         this.getAuthorInfo(data['authorId']);
+        this.loadBlogCommentsChunk();
       },
       error => {
         // this.alertService.error(error);
         this.loading = false;
       }
     );
-    this.loadBlogCommentsChunk();
   }
 
   getAuthorInfo(id: number) {
@@ -113,16 +113,20 @@ export class BlogPageComponent implements OnInit {
   }
 
   submitComment($event) {
+    let datetime = new Date(Date.now());
+
     let comment: BlogComment = {
       blogCommentContent: this.new_comment,
       authorId: this.userService.currentUser.userId,
-      postId: this.id
+      postId: this.id,
+      time: datetime
     };
 
     this.blogService.createBlogComment(comment).subscribe(data => {
       if (data == null) {
         //refresh
         this.reloadComments();
+        this.new_comment="";
       }
     }, error => {
       alert(error)
