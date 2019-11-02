@@ -56,7 +56,7 @@ export class SpeakerListPageComponent implements OnInit {
             rate: 4,
             description: user.description,
             languages: user_languages,
-            following: (followers.indexOf(this.userService.currentUser.userId)==-1) ? false : true,
+            following: (followers.indexOf(this.userService.currentUser.userId) != -1),
             awards: 3
           };
 

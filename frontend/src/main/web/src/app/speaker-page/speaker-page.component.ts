@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { History } from '../history'
 import { Feedback } from "../feedback"
 import { Location } from '@angular/common';
-import { HttpClient } from "@angular/common/http";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { User } from '../_models'
 import { UserService } from '../_services/user.service'
 import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
+import {MeetupListItem} from "../_models/meetupListItem";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-speaker-page',
@@ -17,13 +18,17 @@ import {AchievementService} from "../_services/achievement.service";
 })
 export class SpeakerPageComponent implements OnInit {
 
-
   id: number;
   user: User;
-  followers: number;
+  followers: number[];
   languages: string[];
   rate: 3;
+  following: boolean;
   achievementList: Achievement[];
+  error;
+
+  loading = false;
+  private sub: Subscription;
 
 
   histories: History[] = [
@@ -79,19 +84,21 @@ export class SpeakerPageComponent implements OnInit {
   }
 
   loadUser(id: number) {
-    this.userService.get(id).subscribe(user => 
+    this.userService.get(id).subscribe(user =>
       this.user = user
     );
+
   }
 
   loadFollowers(id:number) {
-    this.userService.getUserFollowers(id).subscribe(res => 
-      this.followers = res.length
-    );
+    this.userService.getUserFollowers(id).subscribe(res => {
+      this.followers = res;
+      this.following=(this.followers.indexOf(this.userService.currentUser.userId) != -1)
+    });
   }
 
   loadLanguages(id:number) {
-    this.userService.getUserLanguages(id).subscribe(res => 
+    this.userService.getUserLanguages(id).subscribe(res =>
       this.languages = res.map(l => l.name)
     );
   }
@@ -110,6 +117,41 @@ export class SpeakerPageComponent implements OnInit {
     this.loadFollowers(this.id);
     this.loadLanguages(this.id);
     this.loadAchievements(this.id);
+  }
+
+  followText(): string {
+    if (this.following === true) {
+      return "Followed";
+    }
+    return "Follow";
+  }
+
+  followType(): number {
+    if (this.following === true) {
+      return 2;
+    }
+    return 1;
+  }
+
+  followButtonClicked(event){
+    if (this.following)
+      this.userService.unfollow(this.id).subscribe(
+        data => {
+          this.following = false;
+        },
+        error => {
+          this.error = error;
+        }
+      );
+    else
+      this.userService.follow(this.id).subscribe(
+        data => {
+          this.following = true;
+        },
+        error => {
+          this.error = error;
+        }
+      );
   }
 
 }

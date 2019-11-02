@@ -36,7 +36,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
 
     public List<AppUser> getUsersChunk(Integer startRow, Integer endRow) {
-        return jdbcTemplate.query("SELECT * FROM user order by uid asc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
+        return jdbcTemplate.query("SELECT * FROM user WHERE is_deactivated=0 order by uid asc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
     }
 
     @Override

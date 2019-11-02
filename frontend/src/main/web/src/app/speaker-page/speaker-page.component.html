@@ -25,11 +25,11 @@
 
         </div>
         <div class='additional'>
-          <app-button text='Follow' type='1' href='ok' fontSize='20'></app-button>
+          <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)"  fontSize='20'></app-button>
           <app-button text='Message speaker' type='1' href='ok' fontSize='20'></app-button>
         </div>
         <div class='additional_info'>
-          <span>{{this.followers}} followers</span>
+          <span>{{this.followers.length}} followers</span>
         </div>
 
       </div>

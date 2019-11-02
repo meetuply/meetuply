@@ -54,7 +54,6 @@ export class SpeakerListItemComponent implements OnInit {
         },
         error => {
           this.error = error;
-          console.log(error);
         }
       );
     else
