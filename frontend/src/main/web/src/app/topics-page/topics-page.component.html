@@ -12,12 +12,16 @@
     </button>
   </div>
 
-  <div class='main'>
-    <ul>
+  <app-topic-search></app-topic-search>
+
+  <div>
+    <ul class='topics'>
       <li *ngFor="let topic of topics">
-        <a routerLink="/topics">
-          <span>{{topic.id}}</span> {{topic.name}}
+        <a routerLink="/topics/{{topic.topicId}}">
+          {{topic.name}}
         </a>
+        <button class="delete" title="delete topic"
+                (click)="delete(topic)">x</button>
       </li>
     </ul>
   </div>

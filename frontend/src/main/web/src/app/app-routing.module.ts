@@ -21,6 +21,7 @@ import {AchievementCreatePageComponent} from "./achievement-create-page/achievem
 import {AchievementPanelComponent} from "./achievement-panel/achievement-panel.component";
 import {AchievementsPageComponent} from "./achievements-page/achievements-page.component";
 import {TopicsPageComponent} from "./topics-page/topics-page.component";
+import {TopicPageComponent} from "./topic-page/topic-page.component";
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -39,7 +40,8 @@ const routes: Routes = [
   { path: 'deactivation', component: UserDeactivationComponent, canActivate: [AdminGuard] },
   { path: 'achievement/create', component: AchievementCreatePageComponent},
   { path: 'achievements', component: AchievementsPageComponent},
-  { path: 'topics', component: TopicsPageComponent},
+  { path: 'topics', component: TopicsPageComponent/*, canActivate: [AdminGuard] */},
+  { path: 'topics/:id', component: TopicPageComponent/*, canActivate: [AdminGuard] */},
 
 ];
 

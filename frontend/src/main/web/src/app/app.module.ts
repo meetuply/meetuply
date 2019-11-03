@@ -43,6 +43,8 @@ import { AchievementCreatePageComponent } from './achievement-create-page/achiev
 import { AchievementPanelComponent } from './achievement-panel/achievement-panel.component';
 import { AchievementsPageComponent } from './achievements-page/achievements-page.component';
 import { TopicsPageComponent } from './topics-page/topics-page.component';
+import { TopicPageComponent } from './topic-page/topic-page.component';
+import { TopicSearchComponent } from './topic-search/topic-search.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +83,9 @@ import { TopicsPageComponent } from './topics-page/topics-page.component';
     AchievementCreatePageComponent,
     AchievementPanelComponent,
     AchievementsPageComponent,
-    TopicsPageComponent
+    TopicsPageComponent,
+    TopicPageComponent,
+    TopicSearchComponent
   ],
   imports: [
     BrowserModule,

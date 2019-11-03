@@ -13,35 +13,27 @@ export class TopicsPageComponent implements OnInit {
   topics: Topic[];
 
   getTopics(): void {
-    this.topicService.getAll()
-      .subscribe(topics => this.topics = topics);
+    this.topicService.getAll().subscribe(topics => this.topics = topics);
   }
 
   add(name: string): void {
-    //delete
-    this.topics.push({ name } as Topic);
-    //delete
-
     name = name.trim();
     if (!name) { return; }
     this.topicService.createTopic({ name } as Topic)
-      .subscribe(topic => {
-        this.topics.push(topic);
+      .subscribe(topics => {
+        this.getTopics();
       });
+  }
+
+  delete(topic: Topic): void {
+    this.topics = this.topics.filter(h => h !== topic);
+    this.topicService.deleteTopic(topic).subscribe();
   }
 
   constructor(private topicService: TopicService) { }
 
   ngOnInit() {
     this.getTopics();
-
-    //delete
-    this.topics = [
-      { id: 11, name: 'Test Topic 1' },
-      { id: 12, name: 'Test Topic 2' },
-      { id: 13, name: 'Test Topic 3' }
-    ];
-    //delete
   }
 
 }

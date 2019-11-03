@@ -1,0 +1,12 @@
+<div *ngIf="topic">
+  <h2>{{topic.name}}</h2>
+  <div><span>id: </span>{{topic.topicId}}</div>
+  <div>
+    <label>name:
+      <input [(ngModel)]="topic.name" placeholder="name"/>
+    </label>
+  </div>
+</div>
+
+<button (click)="goBack()">go back</button>
+<button (click)="save()">save</button>
