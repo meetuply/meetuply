@@ -41,18 +41,6 @@ public class AppUserController {
     @Resource(name = "emailServiceImpl")
     private EmailService emailService;
 
-    @InitBinder
-    protected void initBinder(WebDataBinder dataBinder) {
-        Object target = dataBinder.getTarget();
-        if (target == null) {
-            return;
-        }
-        System.out.println("Target=" + target);
-        if (target.getClass() == AppUser.class) {
-            dataBinder.setValidator(appUserValidator);
-        }
-    }
-
     @RequestMapping("/")
     public AppUser user() {
         return appUserService.getCurrentUser();
@@ -147,6 +135,26 @@ public class AppUserController {
     public ResponseEntity<AppUser> activateUser(@PathVariable("id") Integer userId) {
         AppUser user = appUserService.getUser(userId);
         appUserService.activateDeactivatedUser(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/following/{id}")
+    public ResponseEntity follow(@PathVariable Integer id) {
+        if (appUserService.getUserSubscriptions(appUserService.getCurrentUserID()).indexOf(id) != -1 ||
+            appUserService.getCurrentUserID()==id) {
+            return ResponseEntity.badRequest().build();
+        }
+        appUserService.follow(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/following/{id}")
+    public ResponseEntity unfollow(@PathVariable("id") Integer id) {
+        if (appUserService.getUserSubscriptions(appUserService.getCurrentUserID()).indexOf(id) == -1 ||
+                appUserService.getCurrentUserID()==id) {
+            return ResponseEntity.badRequest().build();
+        }
+        appUserService.unfollow(id);
         return ResponseEntity.ok().build();
     }
 }

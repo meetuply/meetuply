@@ -1,17 +1,16 @@
 package ua.meetuply.backend.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import ua.meetuply.backend.model.Ban;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.BanReasonService;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class BanDAO implements RowMapper<Ban> {
@@ -25,23 +24,23 @@ public class BanDAO implements RowMapper<Ban> {
 	@Autowired
     BanReasonService banReasonService;
 	
-	public Ban get(Integer reason_id, Integer by_user_id, Integer reported_user_id) {
-        List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban WHERE reason_id = ? AND by_user_id = ? AND reported_user_id = ?", new Object[] { reason_id, by_user_id, reported_user_id }, this);
+	public Ban get(Integer reasonId, Integer byUserId, Integer reportedUserId) {
+        List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban WHERE reason_id = ? AND by_user_id = ? AND reported_user_id = ?", new Object[] { reasonId, byUserId, reportedUserId }, this);
         return bans.size() == 0 ? null : bans.get(0);
     }
 
-    public List<Ban> getByReason(Integer reason_id) {
-        List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban WHERE reason_id = ?", new Object[] { reason_id }, this);
+    public List<Ban> getByReason(Integer reasonId) {
+        List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban WHERE reason_id = ?", new Object[] { reasonId }, this);
         return bans;
     }
 
-    public List<Ban> getByAuthor(Integer by_user_id) {
-        List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban WHERE by_user_id = ?", new Object[] { by_user_id }, this);
+    public List<Ban> getByAuthor(Integer byUserId) {
+        List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban WHERE by_user_id = ?", new Object[] { byUserId }, this);
         return bans;
     }
 
-    public List<Ban> getByReported(Integer reported_user_id) {
-        List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban WHERE reported_user_id = ?", new Object[] { reported_user_id }, this);
+    public List<Ban> getByReported(Integer reportedUserId) {
+        List<Ban> bans = jdbcTemplate.query("SELECT * FROM ban WHERE reported_user_id = ?", new Object[] { reportedUserId }, this);
         return bans;
     }
 
@@ -65,8 +64,8 @@ public class BanDAO implements RowMapper<Ban> {
         		ban.getDescription(), ban.getBanReason().getBanReasonId(), ban.getAuthor().getUserId(), ban.getReported().getUserId());
     }
 
-    public void delete(Integer reason_id, Integer by_user_id, Integer reported_user_id) {
-        jdbcTemplate.update("DELETE FROM ban WHERE reason_id = ? AND by_user_id = ? AND reported_user_id = ?", reason_id, by_user_id, reported_user_id);
+    public void delete(Integer reasonId, Integer byUserId, Integer reportedUserId) {
+        jdbcTemplate.update("DELETE FROM ban WHERE reason_id = ? AND by_user_id = ? AND reported_user_id = ?", reasonId, byUserId, reportedUserId);
     }
 
     @Override

@@ -13,7 +13,6 @@ export class UserDeactivationComponent implements OnInit {
 
   loading = false;
   chunkSize = 5;
-  //maxMeetupsOnPage: number;
   scrollDistance = 2;
 
   speaker_list: Speaker_list_item[] = [];
@@ -28,7 +27,6 @@ export class UserDeactivationComponent implements OnInit {
     this.loadUsersChunk();
   }
 
-
   constructor(private http: HttpClient, private userService: UserService) { }
 
   loadUsersChunk() {
@@ -40,12 +38,8 @@ export class UserDeactivationComponent implements OnInit {
 
           var list_item: Speaker_list_item;
           await this.userService.getUserLanguages(user.userId).toPromise().then(languages =>
-
-
             user_languages = languages.map(language => language.name)
-
           );
-
 
           list_item = {
             id: user.userId,

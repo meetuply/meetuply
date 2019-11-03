@@ -4,7 +4,6 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
 import {environment} from "../../environments/environment";
 
-import {map} from 'rxjs/operators';
 import {BlogComment} from "../_models/comment";
 
 @Injectable({providedIn: 'root'})
@@ -23,8 +22,8 @@ export class BlogService {
     return this.http.get<BlogPost[]>(this.blogApiUrl)
   }
 
-  getBlogPostsChunk(start: number, size: number): Observable<BlogPost[]> {
-    return this.http.get<BlogPost[]>(this.blogApiUrl + start + "/" + size)
+  getBlogPostsChunk(start: number, size: number, filter:string): Observable<BlogPost[]> {
+    return this.http.get<BlogPost[]>(this.blogApiUrl + filter + "/" + start + "/" + size)
   }
 
   createBlogPost(blogPost: BlogPost): Observable<{}> {

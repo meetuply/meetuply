@@ -19,9 +19,9 @@ export class BlogCreatePageComponent implements OnInit {
   post_content: string;
 
   submit($event) {
-    var datetime = new Date(Date.now());
+    let datetime = new Date(Date.now());
 
-    var blogpost: BlogPost = {
+    let blogpost: BlogPost = {
       blogPostId: 0,
       blogPostTitle: this.post_title,
       blogPostContent: this.post_content,

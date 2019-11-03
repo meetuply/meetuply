@@ -21,6 +21,10 @@
   margin: 15px 0px;
 }
 
+.author-container .author{
+  cursor: pointer;
+}
+
 .avatar img {
   max-width: 60px;
   max-width: 60px;

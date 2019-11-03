@@ -20,6 +20,46 @@
   margin-left: 5px;
 }
 
+#message{
+  text-align: center;
+  width:100%;
+  font-size: 4em;
+  font-weight: bold;
+  display: none;
+}
+
+.header{
+  display: flex;
+  flex-direction: row;
+}
+
+.filter{
+  display: flex;
+  flex-direction: row;
+  margin-right: 20em;
+}
+
+.filter *{
+  margin-left: 5px;
+}
+
+.filter-off{
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.filter-on{
+  font-weight: bold;
+}
+
+.create-new{
+  text-align: right;
+  float: right;
+  cursor: pointer;
+  font-weight: bold;
+  color: #086edb;
+}
+
 .search_div {
   display: flex;
   flex-direction: row;

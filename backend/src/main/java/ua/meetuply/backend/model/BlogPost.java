@@ -17,12 +17,4 @@ public class BlogPost {
     private String blogPostContent;
     private LocalDateTime time;
     private Integer authorId;
-
-    public BlogPost(String blogPostTitle, String blogPostContent, LocalDateTime time, Integer authorId) {
-        super();
-        this.blogPostTitle=blogPostTitle;
-        this.blogPostContent = blogPostContent;
-        this.time = time;
-        this.authorId = authorId;
-    }
 }
