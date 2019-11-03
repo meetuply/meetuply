@@ -1,7 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {UserService} from "../_services";
-import {MeetupService} from "../_services/meetup.service";
-
 
 @Component({
   selector: 'app-speaker-list-item',

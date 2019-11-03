@@ -10,6 +10,7 @@ import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
 import {MeetupListItem} from "../_models/meetupListItem";
 import {Subscription} from "rxjs";
+import {RatingService} from "../_services/rating.service";
 
 @Component({
   selector: 'app-speaker-page',
@@ -22,7 +23,7 @@ export class SpeakerPageComponent implements OnInit {
   user: User;
   followers: number[];
   languages: string[];
-  rate: 3;
+  rate: number;
   following: boolean;
   achievementList: Achievement[];
   error;
@@ -80,14 +81,14 @@ export class SpeakerPageComponent implements OnInit {
 
   constructor(private _location: Location, private router: Router,
               private userService: UserService, private route: ActivatedRoute,
-              private achievementService: AchievementService) {
+              private achievementService: AchievementService,
+              private ratingService: RatingService) {
   }
 
   loadUser(id: number) {
     this.userService.get(id).subscribe(user =>
       this.user = user
     );
-
   }
 
   loadFollowers(id:number) {
@@ -111,12 +112,17 @@ export class SpeakerPageComponent implements OnInit {
     )
   }
 
+  loadRating(id:number){
+    this.ratingService.getUserRatingAvg(id);
+  }
+
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
     this.loadUser(this.id);
     this.loadFollowers(this.id);
     this.loadLanguages(this.id);
     this.loadAchievements(this.id);
+    this.loadRating(this.id);
   }
 
   followText(): string {
@@ -138,6 +144,7 @@ export class SpeakerPageComponent implements OnInit {
       this.userService.unfollow(this.id).subscribe(
         data => {
           this.following = false;
+          this.loadFollowers(this.id);
         },
         error => {
           this.error = error;
@@ -147,6 +154,7 @@ export class SpeakerPageComponent implements OnInit {
       this.userService.follow(this.id).subscribe(
         data => {
           this.following = true;
+          this.loadFollowers(this.id);
         },
         error => {
           this.error = error;

@@ -140,7 +140,8 @@ public class AppUserController {
 
     @PostMapping("/following/{id}")
     public ResponseEntity follow(@PathVariable Integer id) {
-        if (appUserService.getUserSubscribers(appUserService.getCurrentUserID()).indexOf(id) != -1) {
+        if (appUserService.getUserSubscribers(appUserService.getCurrentUserID()).indexOf(id) != -1 ||
+            appUserService.getCurrentUserID()==id) {
             return ResponseEntity.badRequest().build();
         }
         appUserService.follow(id);
@@ -149,7 +150,8 @@ public class AppUserController {
 
     @DeleteMapping("/following/{id}")
     public ResponseEntity unfollow(@PathVariable("id") Integer id) {
-        if (appUserService.getUserSubscriptions(appUserService.getCurrentUserID()).indexOf(id) == -1) {
+        if (appUserService.getUserSubscriptions(appUserService.getCurrentUserID()).indexOf(id) == -1 ||
+                appUserService.getCurrentUserID()==id) {
             return ResponseEntity.badRequest().build();
         }
         appUserService.unfollow(id);

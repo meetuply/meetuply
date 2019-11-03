@@ -10,7 +10,7 @@
 
       <div class='avatar'>
         <img src="assets/img/download.png">
-        <app-rating size='24' rating="{{this.rate}}"></app-rating>
+        <app-rating size='24' rating="{{this.user}}"></app-rating>
       </div>
 
       <div class='other'>
@@ -28,7 +28,7 @@
           <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)"  fontSize='20'></app-button>
           <app-button text='Message speaker' type='1' href='ok' fontSize='20'></app-button>
         </div>
-        <div class='additional_info'>
+        <div class='additional_info' *ngIf="user && this.followers">
           <span>{{this.followers.length}} followers</span>
         </div>
 
