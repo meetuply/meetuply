@@ -24,7 +24,7 @@
           </div>
 
         </div>
-        <div class='additional'>
+        <div class='additional' *ngIf="currentUser!=this.id">
           <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)"  fontSize='20'></app-button>
           <app-button text='Message speaker' type='1' href='ok' fontSize='20'></app-button>
         </div>

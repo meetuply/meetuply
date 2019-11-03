@@ -1,13 +1,13 @@
 <div class='item'>
 	<div class='main'>
 		<div class='profile'>
-			<div class='avatar'>
+			<div class='avatar' [routerLink]="link()">
 				<img src="assets/img/download.png">
 				<app-rating size='16' rating="{{this.speaker_list_item.rate}}"></app-rating>
 			</div>
 			<div class='info'>
-				<div class='name'>
-					<a [routerLink]="link()">{{this.speaker_list_item.name + " " + this.speaker_list_item.surname}}</a>
+				<div class='name' [routerLink]="link()">
+					<a>{{this.speaker_list_item.name + " " + this.speaker_list_item.surname}}</a>
 				</div>
 				<div class='location'>
 					<div class='icon'></div>
@@ -31,6 +31,6 @@
 			<div class='icon'></div>
 			<div> {{this.speaker_list_item.awards}}</div>
 		</div>
-		<app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)"  fontSize='20'></app-button>
+		<app-button *ngIf="currentUser!=this.speaker_list_item.id" [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)"  fontSize='20'></app-button>
 	</div>
 </div>

@@ -28,9 +28,7 @@ export class SpeakerPageComponent implements OnInit {
   achievementList: Achievement[];
   error;
 
-  loading = false;
-  private sub: Subscription;
-
+  currentUser: number;
 
   histories: History[] = [
     {
@@ -117,6 +115,7 @@ export class SpeakerPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.currentUser=this.userService.currentUser.userId;
     this.id = this.route.snapshot.params['id'];
     this.loadUser(this.id);
     this.loadFollowers(this.id);

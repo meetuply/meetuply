@@ -9,16 +9,8 @@ import {Speaker_list_item} from "../_models/speaker_list_item";
 })
 export class SpeakerListItemComponent implements OnInit {
 
-  // @Input() name: string;
-  // @Input() surname: string;
-  // @Input() location: string;
-  // @Input() rate: number;
-  // @Input() following: Boolean;
-  // @Input() awards: number;
-  // @Input() languages: Array<string>;
-  // @Input() description: string;
-  // @Input() id: number;
   @Input() speaker_list_item: Speaker_list_item;
+  currentUser: number;
   error;
 
   followText(): string {
@@ -39,7 +31,7 @@ export class SpeakerListItemComponent implements OnInit {
   constructor(private userService: UserService) { }
 
   ngOnInit() {
-
+    this.currentUser=this.userService.currentUser.userId;
   }
 
   link():string {

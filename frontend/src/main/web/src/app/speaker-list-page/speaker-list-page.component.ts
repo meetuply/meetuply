@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Speaker_list_item} from '../_models/speaker_list_item';
 import {HttpClient} from "@angular/common/http";
-import {UserService} from "../_services/user.service"
+import {UserService} from "../_services"
 import {RatingService} from "../_services/rating.service";
 
 @Component({
@@ -65,9 +65,6 @@ export class SpeakerListPageComponent implements OnInit {
             return list_item;
 
         }));
-        // this.speaker_list.forEach( (item, index) => {
-        //   if(item.id === this.userService.currentUser.userId) this.speaker_list.splice(index,1);
-        // });
         this.speaker_list.push(...this.speaker_chunk);
 
       }
@@ -75,7 +72,6 @@ export class SpeakerListPageComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.loadUsersChunk();
   }
 
