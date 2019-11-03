@@ -45,7 +45,6 @@ export class MeetupPageComponent implements OnInit {
     this.loading = true;
     this.sub = this.meetupService.get(id).subscribe(
       data => {
-        console.log(data);
         this.meetup = data;
         this.loading = false;
         this.meetup = data;

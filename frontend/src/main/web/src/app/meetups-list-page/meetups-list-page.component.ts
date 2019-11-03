@@ -1,10 +1,8 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MeetupListItem} from "../_models/meetupListItem"
 import {MeetupService} from "../_services/meetup.service";
 import {Subscription} from "rxjs";
 import {UserService} from "../_services";
-import {Meetup} from "../_models/meetup";
-import {RatingService} from "../_services/rating.service";
 
 @Component({
   selector: 'app-meetups-list-page',
@@ -20,14 +18,12 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
   step = 4;
   scrollDistance = 2;
   meetupsList: MeetupListItem[] = [];
-  newChunk: MeetupListItem[];
   private sub: Subscription;
   filter_shown = false;
   author: string;
 
   constructor(private userService: UserService,
-              private meetupService: MeetupService,
-              private ratingService: RatingService) {
+              private meetupService: MeetupService) {
   }
 
   ngOnInit() {
@@ -51,14 +47,13 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
     return num % 2 == 0;
   }
 
-   loadMeetupsChunk() {
+  loadMeetupsChunk() {
     if (this.lastRow < this.maxMeetupsOnPage) {
       this.loading = true;
       this.meetupService.getMeetupsChunkWithUsernameAndRating(this.lastRow, this.step).toPromise().then(
-          data => {
+        data => {
           this.loading = false;
           if (data) {
-            console.log(data);
             this.lastRow += data.length;
             this.meetupsList.push(...data);
           }
@@ -69,7 +64,7 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.sub){
+    if (this.sub) {
       this.sub.unsubscribe();
     }
   }

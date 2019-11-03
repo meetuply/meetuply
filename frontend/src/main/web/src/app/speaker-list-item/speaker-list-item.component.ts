@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {UserService} from "../_services";
 import {Speaker_list_item} from "../_models/speaker_list_item";
 
@@ -15,7 +15,7 @@ export class SpeakerListItemComponent implements OnInit {
 
   followText(): string {
     if (this.speaker_list_item.following === true) {
-      return "Followed";
+      return "Unfollow";
     }
     return "Follow";
 
@@ -28,17 +28,18 @@ export class SpeakerListItemComponent implements OnInit {
     return 1;
   }
 
-  constructor(private userService: UserService) { }
-
-  ngOnInit() {
-    this.currentUser=this.userService.currentUser.userId;
+  constructor(private userService: UserService) {
   }
 
-  link():string {
+  ngOnInit() {
+    this.currentUser = this.userService.currentUser.userId;
+  }
+
+  link(): string {
     return "/speakers/" + this.speaker_list_item.id;
   }
 
-  followButtonClicked(event){
+  followButtonClicked(event) {
     if (this.speaker_list_item.following)
       this.userService.unfollow(this.speaker_list_item.id).subscribe(
         data => {
