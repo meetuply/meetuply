@@ -36,7 +36,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
     public List<BlogPost> getBlogPostsChunk(Integer startRow, Integer endRow,String filter) {
         switch (filter){
             case "subs":
-                List<Integer> subs = appUserService.getUserSubscribers(appUserService.getCurrentUserID());
+                List<Integer> subs = appUserService.getUserSubscriptions(appUserService.getCurrentUserID());
                 if (subs.size()>1){
                     List<String> subsstring = new ArrayList<>(subs.size());
                     for (Integer i : subs) {

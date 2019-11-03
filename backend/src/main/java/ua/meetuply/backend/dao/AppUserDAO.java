@@ -72,7 +72,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     }
 
     public void follow(Integer currentUserID, Integer userId){
-        jdbcTemplate.update("INSERT INTO `followers` (`follower_id`, `followed_user_id`) VALUES (?, ?)", currentUserID, userId);
+        jdbcTemplate.update("INSERT INTO followers (`follower_id`, `followed_user_id`) VALUES (?, ?)", currentUserID, userId);
     }
 
     public void unfollow(int currentUserID, Integer userId) {

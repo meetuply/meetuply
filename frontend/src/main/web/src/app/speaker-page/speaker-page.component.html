@@ -17,6 +17,7 @@
         <div class='info'>
           <div class='name' *ngIf="user">
             {{this.user.firstName + " " + this.user.lastName}}
+            <span *ngIf="currentUser==this.id">(you)</span>
           </div>
           <div class='location' *ngIf="user && this.user.location">
             <div class='icon'></div>

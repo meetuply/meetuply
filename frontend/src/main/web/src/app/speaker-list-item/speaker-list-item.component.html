@@ -8,6 +8,7 @@
 			<div class='info'>
 				<div class='name' [routerLink]="link()">
 					<a>{{this.speaker_list_item.name + " " + this.speaker_list_item.surname}}</a>
+          <span *ngIf="currentUser==this.speaker_list_item.id">(you)</span>
 				</div>
 				<div class='location'>
 					<div class='icon'></div>
