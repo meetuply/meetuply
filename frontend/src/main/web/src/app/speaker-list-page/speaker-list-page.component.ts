@@ -1,11 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Speaker_list_item } from '../_models/speaker_list_item';
-import { HttpClient } from "@angular/common/http";
-import { Observable } from 'rxjs';
-import { environment } from "../../environments/environment";
-import { UserService } from "../_services/user.service"
-import { flatMap } from 'rxjs/operators';
-import { User, Language } from '../_models'
+import {Component, OnInit} from '@angular/core';
+import {Speaker_list_item} from '../_models/speaker_list_item';
+import {HttpClient} from "@angular/common/http";
+import {UserService} from "../_services/user.service"
+import {RatingService} from "../_services/rating.service";
 
 @Component({
   selector: 'app-speaker-list-page',
@@ -14,15 +11,16 @@ import { User, Language } from '../_models'
 })
 export class SpeakerListPageComponent implements OnInit {
 
-
-
   loading = false;
   chunkSize = 5;
-  //maxMeetupsOnPage: number;
   scrollDistance = 2;
 
   speaker_list: Speaker_list_item[] = [];
   speaker_chunk: Speaker_list_item[];
+
+  constructor(private http: HttpClient, private userService: UserService,
+              private ratingService: RatingService) {
+  }
 
   isOdd(num: number): boolean {
     return num % 2 == 0;
@@ -33,41 +31,43 @@ export class SpeakerListPageComponent implements OnInit {
     this.loadUsersChunk();
   }
 
-
-  constructor(private http: HttpClient, private userService: UserService) { }
-
   loadUsersChunk() {
-    this.userService.getChunk(this.speaker_list.length,this.chunkSize).subscribe(
+    this.userService.getChunk(this.speaker_list.length, this.chunkSize).subscribe(
       async users => {
         this.speaker_chunk = await Promise.all(users.map(async user => {
+            let user_languages: string[];
+            let list_item: Speaker_list_item;
+            await this.userService.getUserLanguages(user.userId).toPromise().then(languages =>
+              user_languages = languages.map(language => language.name)
+            );
 
-          var user_languages: string[];
+            let rating = this.ratingService.getUserRatingAvg(user.userId).toPromise().then(r => rating = r);
 
-          var list_item: Speaker_list_item;
-          await this.userService.getUserLanguages(user.userId).toPromise().then(languages =>
+            let followers: number[];
+            let follow: boolean;
+            await this.userService.getUserFollowers(user.userId).toPromise().then(f =>
+              followers = f
+            );
 
-
-            user_languages = languages.map(language => language.name)
-
-          );
-
-
-          list_item = {
-            id: user.userId,
-            name: user.firstName,
-            surname: user.lastName,
-            location: user.location,
-            rate: 4,
-            description: user.description,
-            languages: user_languages,
-            following: false,
-            awards: 3
-          };
+            list_item = {
+              id: user.userId,
+              name: user.firstName,
+              surname: user.lastName,
+              location: user.location,
+              rate: rating,
+              description: user.description,
+              languages: user_languages,
+              following: (followers.indexOf(this.userService.currentUser.userId) != -1),
+              awards: 3
+            };
 
 
-          return list_item;
+            return list_item;
 
-        }))
+        }));
+        // this.speaker_list.forEach( (item, index) => {
+        //   if(item.id === this.userService.currentUser.userId) this.speaker_list.splice(index,1);
+        // });
         this.speaker_list.push(...this.speaker_chunk);
 
       }
@@ -77,7 +77,6 @@ export class SpeakerListPageComponent implements OnInit {
   ngOnInit() {
 
     this.loadUsersChunk();
-
   }
 
 }

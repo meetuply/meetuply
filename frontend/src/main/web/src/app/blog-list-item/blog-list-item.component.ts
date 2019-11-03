@@ -14,7 +14,7 @@ export class BlogListItemComponent implements OnInit {
   @Input() blog_list_item: Blog_list_item;
   error;
 
-  constructor(private blogService: BlogService) { }
+  constructor() { }
 
   ngOnInit() {
   }

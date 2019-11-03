@@ -21,7 +21,7 @@ public class BlogController {
     @Autowired
     BlogPostService blogPostService;
 
-    @GetMapping("")
+    @GetMapping()
     public @ResponseBody Iterable<BlogPost> getAllBlogPosts() {
         return blogPostService.getBlogPosts();
     }
@@ -36,11 +36,10 @@ public class BlogController {
     Iterable<BlogPost> getBlogPostsChunk(@PathVariable("startRow") Integer startRow,
                                          @PathVariable("endRow") Integer endRow,
                                          @PathVariable("filter") String filter) {
-//        Log.println(filter);
         return blogPostService.getBlogPostsChunk(startRow,endRow,filter);
     }
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity createBlogPost(@Valid @RequestBody BlogPost blogPost){
         blogPostService.createBlogPost(blogPost);
         return ResponseEntity.ok().build();

@@ -74,6 +74,10 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getUserSubscribers(id);
     }
 
+    public List<Integer> getUserSubscriptions(Integer id) {
+        return appUserDAO.getUserSubscriptions(id);
+    }
+
     public AppUser getUser(Integer id) {
         return appUserDAO.get(id);
     }
@@ -135,6 +139,13 @@ public class AppUserService implements UserDetailsService {
         return getCurrentUser().getRole().equals(roleDAO.getRoleByName("admin"));
     }
 
+    public void follow(Integer userId) {
+        appUserDAO.follow(getCurrentUserID(), userId);
+    }
+
+    public void unfollow(Integer userId) {
+        appUserDAO.unfollow(getCurrentUserID(), userId);
+    }
 
     public Integer getFollowersNumber(Integer userId) {
         return appUserDAO.getFollowersNumber(userId);
@@ -155,5 +166,6 @@ public class AppUserService implements UserDetailsService {
         } else user = new User(appUser.getEmail(), appUser.getPassword(), new HashSet<>());
         return user;
     }
+
 
 }
