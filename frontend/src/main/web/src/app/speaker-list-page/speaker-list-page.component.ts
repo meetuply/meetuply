@@ -12,7 +12,7 @@ import {RatingService} from "../_services/rating.service";
 export class SpeakerListPageComponent implements OnInit {
 
   loading = false;
-  chunkSize = 5;
+  chunkSize = 10;
   scrollDistance = 2;
 
   speaker_list: Speaker_list_item[] = [];
@@ -44,7 +44,6 @@ export class SpeakerListPageComponent implements OnInit {
             let rating = this.ratingService.getUserRatingAvg(user.userId).toPromise().then(r => rating = r);
 
             let followers: number[];
-            let follow: boolean;
             await this.userService.getUserFollowers(user.userId).toPromise().then(f =>
               followers = f
             );
@@ -60,7 +59,6 @@ export class SpeakerListPageComponent implements OnInit {
               following: (followers.indexOf(this.userService.currentUser.userId) != -1),
               awards: 3
             };
-
 
             return list_item;
 
