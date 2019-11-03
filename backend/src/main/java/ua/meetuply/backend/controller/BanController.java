@@ -30,64 +30,64 @@ public class BanController {
         return banService.getAll();
     }
 
-    @GetMapping("/one/author={ban_authorId}&reported={reported_userId}&reason={ban_reasonId}")
-    public Ban getOneBan(@PathVariable("ban_reasonId") Integer reason_id, @PathVariable("ban_authorId") Integer by_user_id, @PathVariable("reported_userId") Integer reported_user_id) {
-        return banService.get(reason_id, by_user_id, reported_user_id);
+    @GetMapping("/one/author={banAuthorId}&reported={reportedUserId}&reason={banReasonId}")
+    public Ban getOneBan(@PathVariable("banReasonId") Integer banReasonId, @PathVariable("banAuthorId") Integer banAuthorId, @PathVariable("reportedUserId") Integer reportedUserId) {
+        return banService.get(banReasonId, banAuthorId, reportedUserId);
     }
 
-    @GetMapping("/reason={ban_reasonId}")
-    public Iterable<Ban> getBansWithOneReason(@PathVariable("ban_reasonId") Integer reason_id) {
-        return banService.getByReason(reason_id);
+    @GetMapping("/reason={banReasonId}")
+    public Iterable<Ban> getBansWithOneReason(@PathVariable("banReasonId") Integer banReasonId) {
+        return banService.getByReason(banReasonId);
     }
 
-    @GetMapping("/author={ban_authorId}")
-    public Iterable<Ban> getBansWithOneAuthor(@PathVariable("ban_authorId") Integer by_user_id) {
-        return banService.getByAuthor(by_user_id);
+    @GetMapping("/author={banAuthorId}")
+    public Iterable<Ban> getBansWithOneAuthor(@PathVariable("banAuthorId") Integer banAuthorId) {
+        return banService.getByAuthor(banAuthorId);
     }
 
-    @GetMapping("/reported={reported_userId}")
-    public Iterable<Ban> getBansWithOneReported(@PathVariable("reported_userId") Integer reported_user_id) {
-        return banService.getByReported(reported_user_id);
+    @GetMapping("/reported={reportedUserId}")
+    public Iterable<Ban> getBansWithOneReported(@PathVariable("reportedUserId") Integer reportedUserId) {
+        return banService.getByReported(reportedUserId);
     }
 
-    @PostMapping("/create/reported={reported_userId}&reason={ban_reasonId}")
-    public ResponseEntity<Ban> createNewBan(@PathVariable("ban_reasonId") Integer ban_reason_id,
-            @PathVariable("reported_userId") Integer reported_user_id, @Valid @RequestBody Ban ban){
-        if(banReasonService.get(ban_reason_id) == null || appUserService.getUser(reported_user_id) == null) {
+    @PostMapping("/reported={reportedUserId}&reason={banReasonId}")
+    public ResponseEntity createNewBan(@PathVariable("banReasonId") Integer banReasonId,
+                                            @PathVariable("reportedUserId") Integer reportedUserId, @Valid @RequestBody Ban ban){
+        if(banReasonService.get(banReasonId) == null || appUserService.getUser(reportedUserId) == null) {
             return ResponseEntity.notFound().build();
         }
         else {
-            banService.create(ban, ban_reason_id, reported_user_id);
+            banService.create(ban, banReasonId, reportedUserId);
             return ResponseEntity.ok().build();
         }
     }
 
-    @PutMapping("/reported={reported_userId}&reason={ban_reasonId}")
-    public ResponseEntity<Ban> updateBan(@PathVariable("ban_reasonId") Integer ban_reason_id,
-        @PathVariable("reported_userId") Integer reported_user_id, @RequestBody Ban ban) {
-        Integer by_user_id = appUserService.getCurrentUserID();
-        if (banService.get(ban_reason_id, by_user_id, reported_user_id) == null) {
-            ResponseEntity.badRequest().build();
-        }
-        if(banReasonService.get(ban_reason_id) == null || appUserService.getUser(reported_user_id) == null) {
+    @PutMapping("/reported={reportedUserId}&reason={banReasonId}")
+    public ResponseEntity updateBan(@PathVariable("banReasonId") Integer banReasonId,
+                                         @PathVariable("reportedUserId") Integer reportedUserId, @RequestBody Ban ban) {
+        Integer banAuthorId = appUserService.getCurrentUserID();
+        if (banService.get(banReasonId, banAuthorId, reportedUserId) == null) {
             return ResponseEntity.notFound().build();
         }
+ /*       if(banReasonService.get(banReasonId) == null || appUserService.getUser(reportedUserId) == null) {
+            return ResponseEntity.notFound().build();
+        }*/
         else {
-            ban.setBanReason(banReasonService.get(ban_reason_id));
-            ban.setAuthor(appUserService.getUser(by_user_id));
-            ban.setReported(appUserService.getUser(reported_user_id));
+            ban.setBanReason(banReasonService.get(banReasonId));
+            ban.setAuthor(appUserService.getUser(banAuthorId));
+            ban.setReported(appUserService.getUser(reportedUserId));
             banService.update(ban);
             return ResponseEntity.ok().build();
         }
     }
 
-    @DeleteMapping("/author={ban_authorId}&reported={reported_userId}&reason={ban_reasonId}")
-    public ResponseEntity<Ban> deleteBan(@PathVariable("ban_reasonId") Integer reason_id,
-        @PathVariable("ban_authorId") Integer by_user_id, @PathVariable("reported_userId") Integer reported_user_id){
-        if (banService.get(reason_id, by_user_id, reported_user_id) == null) {
-            ResponseEntity.badRequest().build();
+    @DeleteMapping("/author={banAuthorId}&reported={reportedUserId}&reason={banReasonId}")
+    public ResponseEntity deleteBan(@PathVariable("banReasonId") Integer banReasonId,
+                                         @PathVariable("banAuthorId") Integer banAuthorId, @PathVariable("reportedUserId") Integer reportedUserId){
+        if (banService.get(banReasonId, banAuthorId, reportedUserId) == null) {
+            return ResponseEntity.notFound().build();
         }
-        banService.delete(reason_id, by_user_id, reported_user_id);
+        banService.delete(banReasonId, banAuthorId, reportedUserId);
         return ResponseEntity.ok().build();
     }
 }
