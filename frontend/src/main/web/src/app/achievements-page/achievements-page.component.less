@@ -1,19 +1,25 @@
+.container {
+  text-aligh: center;
+}
 table {
-  width: 80%;
+  width: auto;
   border-collapse: collapse;
-  margin-left: 10%;
+  margin-left: 20%;
+  margin-bottom: 50px;
 }
 tr:nth-of-type(odd) {
-  background: #eee;
+  background: #d0f5ef;
 }
 tr{
-  border: solid medium;
+  border: solid thin;
   font-weight: bold;
 }
 th {
   background: #333;
   color: white;
   font-weight: bold;
+  font-style: italic;
+  height: 20px;
 }
 td, th {
   padding: 6px;
@@ -32,24 +38,33 @@ caption{
 .delete-button{
   width: 40px;
   height: 40px;
-  background: firebrick;
+  background: #ff3366;
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   border-radius: 6px;
   content: "x";
+  color: white;
   font-weight: bold;
   font-size: 20px;
   border: none;
 }
 
-.delete-button:active{
-  background: darkred;
-}
-
 .delete-button:hover{
   opacity: 0.9;
+  background: #000;
 }
 
 .delete-button-td{
   text-align: center;
+}
+
+.back {
+  width: 24px;
+  height: 24px;
+  background-size: cover;
+  background-image: url(/assets/icons/arrow-left.png);
+  cursor: pointer;
+  margin-left: 17%;
+  margin-top: 40px;
+  margin-bottom: 10px;
 }

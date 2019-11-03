@@ -24,7 +24,7 @@ public class StateDAO implements RowMapper<State> {
 
     public State get(Integer id) {
         if (states == null) load();
-        return states.stream().filter(s -> s.getStateId() == id).findFirst().orElse(null);
+        return states.stream().filter(s -> s.getStateId().equals(id)).findFirst().orElse(null);
     }
 
     public State get(String name) {

@@ -36,12 +36,6 @@ public class AchievementController {
         return achievementService.get(achievementId);
     }
 
-//    @GetMapping("/test/{achievementId}")
-//    public List<Map<String, Object>> test(@PathVariable("achievementId") String userId) {
-//        Integer id = Integer.valueOf(userId);
-//        return achievementService.test(id);
-//    }
-
     @PostMapping()
     public Integer create(@RequestBody Achievement achievement){
         return achievementService.saveReturnId(achievement);
@@ -57,7 +51,7 @@ public class AchievementController {
     }
 
     @PutMapping("/{achievementId}")
-    public ResponseEntity<Achievement> updateAchievement(@PathVariable("achievementId") Integer achievementId, @RequestBody Achievement achievement) {
+    public ResponseEntity updateAchievement(@PathVariable("achievementId") Integer achievementId, @RequestBody Achievement achievement) {
         if (achievementService.get(achievementId) == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -67,7 +61,7 @@ public class AchievementController {
     }
 
     @DeleteMapping("/{achievementId}")
-    public ResponseEntity<Achievement> deleteAchievement(@PathVariable("achievementId") String achievementId){
+    public ResponseEntity deleteAchievement(@PathVariable("achievementId") String achievementId){
         Integer idInteger = Integer.valueOf(achievementId);
         if (achievementService.get(idInteger) == null) {
             return ResponseEntity.badRequest().build();

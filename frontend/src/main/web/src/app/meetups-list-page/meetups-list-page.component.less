@@ -61,22 +61,38 @@
 }
 .main {
   margin-top: 15px;
-  width: 100%;
+  //max-width: 900px;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  //flex-direction: column;
+
 }
 
 .main * {
-  width: 95%;
+  //width: 95%;
+  //flex: 1 50%;
 }
 
 .left_column {
   margin-right: 5px;
+  flex-flow: row wrap;
+  //flex: 1 30%;
+  //flex-direction: column;
+  //justify-content: center;
 }
+
+//.left_column:nth-of-type(even){
+//  flex: 1 10%;
+//}
+//
+//.left_column:nth-of-type(odd){
+//  flex: 2 10%;
+//}
 
 .right_column {
   margin-left: 5px;
+  flex-flow: row wrap;
+  //flex:  1 30%;
+  justify-content: center;
 }
 
 .speaker_item {

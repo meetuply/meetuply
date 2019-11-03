@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.AchievementDAO;
 import ua.meetuply.backend.model.Achievement;
+import ua.meetuply.backend.model.AchievementType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,10 +23,6 @@ public class AchievementService {
 
     @Autowired
     MeetupService meetupService;
-
-//    public List<Map<String, Object>> test(Integer userId){
-//        return achievementDAO.test(userId);
-//    }
 
     public Achievement get(Integer id) {
         return achievementDAO.get(id);
@@ -62,37 +59,37 @@ public class AchievementService {
         return achievementDAO.getUserAchievements(userId);
     }
 
-    public void checkOne(String type){
+    public void checkOne(AchievementType type){
         Integer currentUserId = appUserService.getCurrentUserID();
         Integer achievementId = null;
         switch (type) {
-            case "followers":
+            case FOLLOWERS:
                 achievementId = achievementDAO.getFollowersAchievementId(currentUserId);
                 break;
-            case "posts":
+            case POSTS:
                 achievementId = achievementDAO.getPostsAchievementId(currentUserId);
                 break;
-            case "rating":
+            case RATING:
                 achievementId = achievementDAO.getRatingAchievementId(currentUserId);
                 break;
-            case "meetups":
+            case MEETUPS:
                 achievementId = achievementDAO.getMeetupAchievementId(currentUserId);
                 break;
         }
         if (achievementId != null){
-            awardAchievement(currentUserId, achievementId);
+            awardOne(currentUserId, achievementId);
         }
     }
 
-//    public void checkOneMeetupTopid(Integer topicId){
-//        Integer currentUserId = appUserService.getCurrentUserID();
-//        List<Map<String, String>> achievementsForUser =
-//               achievementDAO.getAchievementIdTopicQuantityForUserSum(currentUserId);
-//        Map<String,List<Map<String,Object>>> map=
-//                achievementsForUser.stream().collect(Collectors.groupingBy(m-> m.remove("achievement_id")));
-//    }
+    public void checkMultiple(AchievementType type){
+        Integer currentUserId = appUserService.getCurrentUserID();
+        List<Integer> achievementIdList = achievementDAO.getMeetupTopicAchievementId(currentUserId);
+        for (Integer achievementId: achievementIdList){
+            awardOne(achievementId, currentUserId);
+        }
+    }
 
-    public void awardAchievement(Integer achievementId, Integer userId) {
+    public void awardOne(Integer achievementId, Integer userId) {
         achievementDAO.updateAchievementUser(achievementId, userId);
     }
 }

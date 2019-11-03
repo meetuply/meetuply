@@ -1,9 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
 import {TopicService} from "../_services";
-import {Router} from "@angular/router";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-achievement-create-page',
@@ -21,7 +21,7 @@ export class AchievementCreatePageComponent implements OnInit {
   selectedTopics = new Set();
 
   constructor(private fb: FormBuilder, private achievementService: AchievementService,
-              private topicService: TopicService, private router: Router) {
+              private topicService: TopicService, private location: Location) {
   }
 
   ngOnInit() {
@@ -113,6 +113,6 @@ export class AchievementCreatePageComponent implements OnInit {
   }
 
   goBack() {
-
+    this.location.back();
   }
 }
