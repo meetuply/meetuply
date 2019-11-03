@@ -3,20 +3,20 @@
 		<div class='profile'>
 			<div class='avatar'>
 				<img src="assets/img/download.png">
-				<app-rating size='16' rating="{{this.rate}}"></app-rating>
+				<app-rating size='16' rating="{{this.speaker_list_item.rate}}"></app-rating>
 			</div>
 			<div class='info'>
 				<div class='name'>
-					<a [routerLink]="link()">{{this.name + " " + this.surname}}</a>
+					<a [routerLink]="link()">{{this.speaker_list_item.name + " " + this.speaker_list_item.surname}}</a>
 				</div>
 				<div class='location'>
 					<div class='icon'></div>
-					<div>{{this.location}}</div>
+					<div>{{this.speaker_list_item.location}}</div>
 				</div>
 			</div>
 		</div>
 		<div class='description'>
-			{{this.description}}
+			{{this.speaker_list_item.description}}
 		</div>
 	</div>
 	<div class='additional'>
@@ -24,12 +24,12 @@
 			<div class='icon'>
 			</div>
 			<div>
-				<div *ngFor="let language of this.languages">{{language}}</div>
+				<div *ngFor="let language of this.speaker_list_item.languages">{{language}}</div>
 			</div>
 		</div>
 		<div class='awards'>
 			<div class='icon'></div>
-			<div> {{this.awards}}</div>
+			<div> {{this.speaker_list_item.awards}}</div>
 		</div>
 		<app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)"  fontSize='20'></app-button>
 	</div>
