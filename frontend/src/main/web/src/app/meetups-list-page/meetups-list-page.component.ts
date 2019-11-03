@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MeetupListItem} from "../_models/meetupListItem"
 import {MeetupService} from "../_services/meetup.service";
 import {Subscription} from "rxjs";
@@ -12,7 +12,7 @@ import {RatingService} from "../_services/rating.service";
   styleUrls: ['./meetups-list-page.component.less']
 })
 
-export class MeetupsListPageComponent implements OnInit {
+export class MeetupsListPageComponent implements OnInit, OnDestroy {
 
   loading = false;
   lastRow = 0;
@@ -51,37 +51,26 @@ export class MeetupsListPageComponent implements OnInit {
     return num % 2 == 0;
   }
 
-  loadMeetupsChunk() {
+   loadMeetupsChunk() {
     if (this.lastRow < this.maxMeetupsOnPage) {
       this.loading = true;
-      this.sub = this.meetupService.getMeetupsChunk(this.lastRow, this.step).subscribe(
-        async data => {
+      this.meetupService.getMeetupsChunkWithUsernameAndRating(this.lastRow, this.step).toPromise().then(
+          data => {
           this.loading = false;
-          if (data){
+          if (data) {
+            console.log(data);
             this.lastRow += data.length;
-          this.newChunk = await Promise.all(data.map( async item => {
-              let username = "";
-              let photo = "";
-              let rating = 0;
-              await this.userService.get(item.speakerId).toPromise().then(
-                speaker => {
-                  username = speaker.firstName + " " + speaker.lastName;
-                  photo = speaker.photo;
-                }
-              );
-              await this.ratingService.getUserRatingAvg(item.speakerId).toPromise().then(
-                rate => {rating = rate}
-              );
-              return new MeetupListItem(item, username, photo, rating)
-            }
-          ));
-          this.meetupsList.push(...this.newChunk);
-        }
-        },
-        error1 => {
-          this.loading = false;
-        }
-      )
+            this.meetupsList.push(...data);
+          }
+        }, error1 => {
+          console.log(error1);
+        })
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.sub){
+      this.sub.unsubscribe();
     }
   }
 }

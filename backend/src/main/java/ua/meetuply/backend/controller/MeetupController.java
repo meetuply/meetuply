@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Filter;
 import ua.meetuply.backend.model.Meetup;
-import ua.meetuply.backend.model.Topic;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.FilterService;
 import ua.meetuply.backend.service.MeetupService;
@@ -35,11 +34,18 @@ public class MeetupController {
             return meetupService.getAllMeetups();
     }
 
+//    @GetMapping("/{startRow}/{endRow}")
+//    public @ResponseBody Iterable<Meetup> getMeetupsChunk(@PathVariable("startRow") Integer startRow,
+//                                                          @PathVariable("endRow") Integer endRow)
+//    {
+//        return meetupService.getMeetupsChunk(startRow, endRow);
+//    }
+
     @GetMapping("/{startRow}/{endRow}")
-    public @ResponseBody Iterable<Meetup> getMeetupsChunk(@PathVariable("startRow") Integer startRow,
+    public @ResponseBody Iterable<Meetup> getMeetupsChunkWithUsernameAndRating(@PathVariable("startRow") Integer startRow,
                                                           @PathVariable("endRow") Integer endRow)
     {
-        return meetupService.getMeetupsChunk(startRow, endRow);
+        return meetupService.getMeetupsChunkWithUsernameAndRating(startRow, endRow);
     }
 
     @GetMapping("/{meetupId}/attendees")
@@ -48,7 +54,7 @@ public class MeetupController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Meetup> createMeetup(@Valid @RequestBody Meetup meetup){
+    public ResponseEntity createMeetup(@Valid @RequestBody Meetup meetup){
 
         meetupService.createMeetup(meetup);
         return ResponseEntity.ok().build();
@@ -60,9 +66,9 @@ public class MeetupController {
     }
 
     @PutMapping("/{meetupId}")
-    public ResponseEntity<Meetup> updateMeetup(@PathVariable("meetupId") Integer meetupId, @RequestBody Meetup meetup) {
+    public ResponseEntity updateMeetup(@PathVariable("meetupId") Integer meetupId, @RequestBody Meetup meetup) {
         if (meetupService.getMeetupById(meetupId) == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         meetup.setMeetupId(meetupId);
         meetupService.updateMeetup(meetup);
@@ -70,9 +76,9 @@ public class MeetupController {
     }
 
     @DeleteMapping("/{meetupId}")
-    public ResponseEntity<Topic> deleteTopic(@PathVariable("meetupId") Integer meetupId){
+    public ResponseEntity deleteMeetup(@PathVariable("meetupId") Integer meetupId){
         if (meetupService.getMeetupById(meetupId) == null) {
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         meetupService.deleteMeetup(meetupId);
         return ResponseEntity.ok().build();
@@ -97,7 +103,6 @@ public class MeetupController {
             @RequestParam("id") Integer userID) {
         return meetupService.isAttendee(meetupID, userID);
     }
-
 
     @PostMapping("/filters")
     public ResponseEntity<Meetup> createFilter (@Valid @RequestBody Filter filter){
@@ -125,7 +130,7 @@ public class MeetupController {
                                       @RequestParam(value = "date-from", required = false) Timestamp dateFrom,
                                       @RequestParam(value = "date-to", required = false) Timestamp dateTo,
                                       Model model) {
-        List<Meetup> meetups = meetupService.findMeetupsByCriterias(rating, dateFrom, dateTo);
+        List<Meetup> meetups = meetupService.findMeetupsByCriteria(rating, dateFrom, dateTo);
         model.addAttribute(meetups);
         return meetups;
     }
@@ -148,5 +153,4 @@ public class MeetupController {
         meetupService.rescheduleTerminatedMeetup(meetup);
         return ResponseEntity.ok().build();
     }
-
 }

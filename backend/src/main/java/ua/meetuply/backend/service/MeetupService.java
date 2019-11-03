@@ -65,8 +65,9 @@ public class MeetupService {
             stateService.update(meetup, stateDAO.get("Booked"));
     }
 
-    public Iterable<Meetup> getMeetupsChunk(Integer startRow, Integer endRow) {
-        return meetupDao.getMeetupsChunk(startRow, endRow);
+
+    public Iterable<Meetup> getMeetupsChunkWithUsernameAndRating(Integer startRow, Integer endRow) {
+        return meetupDao.getMeetupsChunkWithUsernameAndRating(startRow, endRow);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -79,7 +80,6 @@ public class MeetupService {
         if (meetup.getMeetupRegisteredAttendees() != meetup.getMeetupMaxAttendees())
             stateService.update(meetup, stateDAO.get("Scheduled"));
     }
-
 
 
     public boolean isAttendee(Integer meetupID, Integer userID) {
@@ -136,14 +136,11 @@ public class MeetupService {
         } else throw PermissionException.createWith("you cannot modify not yours meetups");
     }
 
-    public List<Meetup> findMeetupsByCriterias(Double rating, Timestamp dateFrom, Timestamp dateTo) {
+    public List<Meetup> findMeetupsByCriteria(Double rating, Timestamp dateFrom, Timestamp dateTo) {
         Filter filterDto = new Filter();
         filterDto.setRating(rating);
         filterDto.setDateFrom(dateFrom);
         filterDto.setDateTo(dateTo);
         return meetupDao.findMeetupsByFilter(filterDto);
     }
-
 }
-
-

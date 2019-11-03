@@ -23,7 +23,7 @@
       {{this.meetup.meetupDescription}}
     </div>
 
-    <div class='about'>
+    <div class='about' *ngIf="attendees.length != 0">
       Attendees
     </div>
 

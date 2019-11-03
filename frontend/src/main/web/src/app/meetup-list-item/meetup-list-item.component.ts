@@ -10,17 +10,7 @@ import {UserService} from "../_services";
 
 
 export class MeetupListItemComponent implements OnInit {
-  @Input() date: Date;
-  @Input() rate: number;
-  @Input() author: string;
-  @Input() authorPhoto: string;
-  @Input() joined: boolean;
-  @Input() description: string;
-  @Input() title: string;
-  @Input() place: string;
-  @Input() maxAttendees: number;
-  @Input() registeredAttendees: number;
-  @Input() uid: number;
+  @Input() meetupListItem;
   @Input() isMy: boolean;
   error;
   isAttendeLoaded = false;
@@ -30,10 +20,9 @@ export class MeetupListItemComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-//     this.joined = false
-    this.meetupService.isAttendee(this.uid, this.userService.currentUser.userId).subscribe(
+    this.meetupService.isAttendee(this.meetupListItem.meetupId, this.userService.currentUser.userId).subscribe(
       data => {
-        this.joined = data;
+        this.meetupListItem.joined = data;
         this.isAttendeLoaded = true
       },
       error => this.error = error
@@ -41,30 +30,32 @@ export class MeetupListItemComponent implements OnInit {
   }
 
   joinType() {
-    return (this.joined == true ? '2' : (this.maxAttendees == this.registeredAttendees ? "3" : "1"));
+    return (this.meetupListItem.joined == true ? '2' : (this.meetupListItem.meetupMaxAttendees ==
+    this.meetupListItem.meetupRegisteredAttendees ? "3" : "1"));
   }
 
   joinText() {
-    return (this.joined == true ? 'Leave' : (this.maxAttendees == this.registeredAttendees ? "Full" : "Join"));
+    return (this.meetupListItem.joined == true ? 'Leave' : (this.meetupListItem.meetupMaxAttendees ==
+    this.meetupListItem.meetupRegisteredAttendees ? "Full" : "Join"));
   }
 
   joinButtonClicked(event){
-    if (this.joined)
-      this.meetupService.leaveMeetup(this.uid).subscribe(
+    if (this.meetupListItem.joined)
+      this.meetupService.leaveMeetup(this.meetupListItem.meetupId).subscribe(
         data => {
-          this.joined = false;
-          this.registeredAttendees--
+          this.meetupListItem.joined = false;
+          this.meetupListItem.meetupRegisteredAttendees--
         },
         error => {
           this.error = error;
 
         }
       );
-    else if (this.maxAttendees != this.registeredAttendees)
-      this.meetupService.joinMeetup(this.uid).subscribe(
+    else if (this.meetupListItem.meetupMaxAttendees != this.meetupListItem.meetupRegisteredAttendees)
+      this.meetupService.joinMeetup(this.meetupListItem.meetupId).subscribe(
         data => {
-          this.joined = true;
-          this.registeredAttendees++
+          this.meetupListItem.joined = true;
+          this.meetupListItem.meetupRegisteredAttendees++
         },
         error => {
           this.error = error;
