@@ -12,7 +12,11 @@
           {{this.meetupListItem.meetupTitle}}
 				</div>
 				<div class='place'>
-					<div>by {{this.meetupListItem.speakerFirstName}} </div>
+					<div [routerLink]="['/speakers/', meetupListItem.speakerId]">
+          by
+            <span class="authorName">{{this.meetupListItem.speakerFirstName}} {{this.meetupListItem.speakerLastName}}
+          </span>
+          </div>
 				</div>
 			</div>
 		</div>

@@ -4,13 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.meetuply.backend.model.AppUser;
-import ua.meetuply.backend.model.ConfirmationToken;
-import ua.meetuply.backend.model.Language;
-import ua.meetuply.backend.service.AppUserService;
-import ua.meetuply.backend.service.ConfirmationService;
-import ua.meetuply.backend.service.EmailService;
-import ua.meetuply.backend.service.LanguageService;
+import ua.meetuply.backend.model.*;
+
+import ua.meetuply.backend.service.*;
 import ua.meetuply.backend.validator.AppUserValidator;
 
 import javax.annotation.Resource;
@@ -37,6 +33,9 @@ public class AppUserController {
     @Autowired
     private AppUserValidator appUserValidator;
 
+    @Autowired
+    private ChatService chatService;
+
     @Resource(name = "emailServiceImpl")
     private EmailService emailService;
 
@@ -50,6 +49,18 @@ public class AppUserController {
     public @ResponseBody
     Iterable<AppUser> getAllMeetups() {
         return appUserService.getAppUsers();
+    }
+
+    @GetMapping("/{userId}/rooms")
+    public @ResponseBody
+    Iterable<Integer> getRoomsByUserID(@PathVariable("userId") Integer userId){
+        return chatService.getChatRoomsByUser(userId);
+    }
+
+    @GetMapping("/{userId}/roomsList")
+    public @ResponseBody
+    Iterable<ChatroomThumbnail> getRoomsThumbnail(@PathVariable("userId") Integer userId){
+        return chatService.getChatRoomsThumbnails(userId);
     }
 
     @GetMapping("/members/{startRow}/{endRow}")
