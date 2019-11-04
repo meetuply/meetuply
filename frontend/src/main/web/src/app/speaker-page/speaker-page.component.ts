@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 import { User } from '../_models'
 import { UserService } from '../_services/user.service'
+import { ChatService } from '../_services/chat.service'
 
 @Component({
   selector: 'app-speaker-page',
@@ -22,6 +23,8 @@ export class SpeakerPageComponent implements OnInit {
   languages: string[];
   rate: 3;
 
+
+  commonRoomId: number;
 
   histories: History[] = [
     {
@@ -70,32 +73,59 @@ export class SpeakerPageComponent implements OnInit {
 
   }
 
-  constructor(private _location: Location, private router: Router, private userService: UserService, private route: ActivatedRoute) {
+  constructor(private _location: Location, private router: Router, private userService: UserService, private chatService: ChatService, private route: ActivatedRoute) {
   }
 
   loadUser(id: number) {
-    this.userService.get(id).subscribe(user => 
+    this.userService.get(id).subscribe(user =>
       this.user = user
     );
   }
 
-  loadFollowers(id:number) {
-    this.userService.getUserFollowers(id).subscribe(res => 
+  loadFollowers(id: number) {
+    this.userService.getUserFollowers(id).subscribe(res =>
       this.followers = res.length
     );
   }
 
-  loadLanguages(id:number) {
-    this.userService.getUserLanguages(id).subscribe(res => 
+  loadLanguages(id: number) {
+    this.userService.getUserLanguages(id).subscribe(res =>
       this.languages = res.map(l => l.name)
     );
   }
 
+
+
+  loadCommonRoom(id1: number, id2: number) {
+    this.chatService.haveCommonRoom(id1, id2).subscribe(
+      common => this.commonRoomId = common
+    )
+  }
+
+
+  message() {
+
+    if (this.id != this.userService.currentUser.userId) {
+      if (this.commonRoomId == -1) {
+
+        this.chatService.createCommmonRoom(this.id, this.userService.currentUser.userId).subscribe(
+          room => this.router.navigateByUrl("/chats/" + room)
+        )
+      } else {
+        this.router.navigateByUrl("/chats/" + this.commonRoomId)
+      }
+    }
+  }
+
+
+
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
+    this.loadCommonRoom(this.id, this.userService.currentUser.userId);
     this.loadUser(this.id);
     this.loadFollowers(this.id);
     this.loadLanguages(this.id);
+
   }
 
 }

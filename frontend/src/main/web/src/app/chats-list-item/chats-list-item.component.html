@@ -1,0 +1,11 @@
+<div class='thumbnail' [routerLink]="link()">
+	<img *ngIf="user.photo" src={{user.photo}}>
+	<img *ngIf="!user.photo" src="assets/img/download.png">
+	<div class='main_contents'>
+		<div class='main_info'>{{user.firstName}} {{user.lastName}}</div>
+		<div class='last_msg' [ngStyle]="textStyle()">{{message.content}}</div>
+	</div>
+	<div class='extra'>
+		{{this.time()}}
+	</div>
+</div>

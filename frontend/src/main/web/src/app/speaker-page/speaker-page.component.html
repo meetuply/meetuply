@@ -25,8 +25,8 @@
 
 				</div>
 				<div class='additional'>
-					<app-button text='Follow' type='1' href='ok' fontSize='20'></app-button>
-					<app-button text='Message speaker' type='1' href='ok' fontSize='20'></app-button>
+					<app-button text='Follow' type='1' (click)="follow()" fontSize='20'></app-button>
+					<app-button text='Message speaker' type='1' (click)="message()" fontSize='20'></app-button>
 				</div>
 				<div class='additional_info'>
 					<span>{{this.followers}} followers</span>

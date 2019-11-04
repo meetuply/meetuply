@@ -8,8 +8,8 @@ import { Observable, throwError } from "rxjs";
 import { environment } from "../../environments/environment";
 
 import { map } from 'rxjs/operators';
-import {AuthenticationService} from "./authentication.service";
-
+import { AuthenticationService } from "./authentication.service";
+import { ChatThumbnail } from '../_models/chatThumbnail'
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -46,6 +46,8 @@ export class UserService {
     return this.http.get<User[]>(this.userApiUrl + 'members')
   }
 
+
+
   getChunk(start: number, size: number): Observable<User[]> {
     return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size)
   }
@@ -53,6 +55,15 @@ export class UserService {
   getUserFollowers(userId: number): Observable<number[]> {
     return this.http.get<number[]>(this.userApiUrl + `${userId}/subscribers`);
   }
+
+  getRooms(userId: number): Observable<number[]> {
+    return this.http.get<number[]>(this.userApiUrl + userId + "/rooms");
+  }
+
+  getRoomsThumbnails(userId: number): Observable<ChatThumbnail[]> {
+    return this.http.get<ChatThumbnail[]>(this.userApiUrl + userId + "/roomsList");
+  }
+
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {

@@ -1,0 +1,24 @@
+<app-left-menu></app-left-menu>
+<div [ngStyle]='setStyle()' class='content'>
+
+	<div class='title_info'>
+		<div class='back' (click)="goBack()">
+
+		</div>
+		<div class='other_user'>
+			<img *ngIf="this.other.photo" src={{this.authorPhoto}}>
+			<img *ngIf="!this.other.photo" src="assets/img/download.png">
+			<div class='info'>{{this.other.firstName}} {{this.other.lastName}}</div>
+		</div>
+	</div>
+	<div class='messages'>
+
+		<app-chat-message *ngFor="let message of this.messages" [msg]='message'></app-chat-message>
+
+	</div>
+
+	<div class='send_menu'>
+		<input type='text' [(ngModel)]="this.message" class='input' (keydown)="onKeydown($event)">
+		<app-button fontSize='24' text='Send' type='1' (click)='this.sendMessage()'></app-button>
+	</div>
+</div>

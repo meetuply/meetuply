@@ -32,6 +32,10 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { CreateMeetupPageComponent } from './create-meetup-page/create-meetup-page.component';
 
 import { UserDeactivationComponent } from './user-deactivation/user-deactivation.component';
+import { ChatPageComponent } from './chat-page/chat-page.component';
+import { ChatsListPageComponent } from './chats-list-page/chats-list-page.component';
+import { ChatsListItemComponent } from './chats-list-item/chats-list-item.component';
+import { ChatMessageComponent } from './chat-message/chat-message.component';
 
 
 @NgModule({
@@ -59,7 +63,12 @@ import { UserDeactivationComponent } from './user-deactivation/user-deactivation
 
     CreateMeetupPageComponent,
 
-    UserDeactivationComponent
+    UserDeactivationComponent,
+
+    ChatPageComponent,
+    ChatsListPageComponent,
+    ChatsListItemComponent,
+    ChatMessageComponent
 
   ],
   imports: [

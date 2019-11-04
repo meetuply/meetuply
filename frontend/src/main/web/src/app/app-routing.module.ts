@@ -11,9 +11,10 @@ import { AuthGuard } from "./_helpers";
 import { RegConfirmationComponent } from "./reg-confirmation/reg-confirmation.component";
 
 import { CreateMeetupPageComponent } from "./create-meetup-page/create-meetup-page.component";
-
-import {UserDeactivationComponent} from "./user-deactivation/user-deactivation.component";
-import {AdminGuard} from "./_helpers/admin.guard";
+import { ChatPageComponent } from "./chat-page/chat-page.component";
+import { ChatsListPageComponent } from "./chats-list-page/chats-list-page.component";
+import { UserDeactivationComponent } from "./user-deactivation/user-deactivation.component";
+import { AdminGuard } from "./_helpers/admin.guard";
 
 
 const routes: Routes = [
@@ -25,8 +26,10 @@ const routes: Routes = [
   { path: 'create/meetup', component: CreateMeetupPageComponent, canActivate: [AuthGuard] },
   { path: 'meetups/:id', component: MeetupPageComponent, canActivate: [AuthGuard] },
   { path: 'meetups', component: MeetupsListPageComponent, canActivate: [AuthGuard] },
-  { path: 'confirm', component: RegConfirmationComponent},
-  { path: 'deactivation', component: UserDeactivationComponent, canActivate: [AdminGuard] },
+  { path: 'confirm', component: RegConfirmationComponent },
+  { path: 'chats/:id', component: ChatPageComponent, canActivate: [AdminGuard]},
+  { path: 'chats', component: ChatsListPageComponent, canActivate: [AdminGuard]},
+  { path: 'deactivation', component: UserDeactivationComponent, canActivate: [AdminGuard] }
 
 ];
 
