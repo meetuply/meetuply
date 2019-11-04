@@ -40,11 +40,11 @@ export class TopicService {
 
   /* GET topics whose name contains search term */
   searchTopics(term: string): Observable<Topic[]> {
-    if (!term.trim()) {
+    if (!term.trim() || term.includes(";")) {
       // if not search term, return empty topic array.
       return of([]);
     }
-    return this.http.get<Topic[]>(this.topicApiUrl + `name/${term}`);
+    return this.http.get<Topic[]>(this.topicApiUrl + `topicName/${term}`);
   }
 
   private handleError(error: HttpErrorResponse) {

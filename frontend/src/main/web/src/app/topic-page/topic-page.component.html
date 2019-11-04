@@ -1,12 +1,15 @@
-<div *ngIf="topic">
-  <h2>{{topic.name}}</h2>
-  <div><span>id: </span>{{topic.topicId}}</div>
-  <div>
-    <label>name:
-      <input [(ngModel)]="topic.name" placeholder="name"/>
-    </label>
+<app-left-menu></app-left-menu>
+<div class='content'>
+  <p class='title'>Topics</p>
+  <div *ngIf="topic">
+    <h2>{{topic.name}}</h2>
+    <div>
+      <label>name:
+        <input [(ngModel)]="topic.name" placeholder="name"/>
+      </label>
+    </div>
   </div>
-</div>
 
-<button (click)="goBack()">go back</button>
-<button (click)="save()">save</button>
+  <button (click)="goBack()">go back</button>
+  <button (click)="save()">save</button>
+</div>
