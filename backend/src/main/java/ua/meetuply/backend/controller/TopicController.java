@@ -32,6 +32,10 @@ public class TopicController {
 	    return topicService.getIdByName(topicName);
     }
 
+    @GetMapping("topicName/{topicName}")
+    public Iterable<Topic> getTopicByName(@PathVariable("topicName") String topicName) {
+        return topicService.getByName(topicName);
+    }
 
     @PostMapping()
     public ResponseEntity createNewTopic(@Valid @RequestBody Topic topic){

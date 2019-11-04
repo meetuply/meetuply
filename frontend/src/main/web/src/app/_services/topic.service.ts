@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Topic} from "../_models";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError} from "rxjs/operators";
-import {Observable, throwError} from "rxjs";
+import {Observable, throwError, of} from "rxjs";
 import {environment} from "../../environments/environment";
 
 
@@ -14,9 +14,38 @@ export class TopicService {
   constructor(private http: HttpClient) {
   }
 
-
-  getAll(): Observable<Topic[]> {
+/** GET topics from the server */
+  getAll():Observable<Topic[]> {
     return this.http.get<Topic[]>(this.topicApiUrl);
+  }
+
+  /** GET topic by id. Will 404 if id not found */
+  getTopic(id: number): Observable<Topic> {
+    return this.http.get<Topic>(this.topicApiUrl + `${id}`);
+  }
+
+  /** PUT: update the topic on the server */
+  updateTopic (topic: Topic): Observable<Topic> {
+    return this.http.put<Topic>(this.topicApiUrl + `${topic.topicId}`, topic);
+  }
+
+  /** POST: add a new topic to the server */
+  createTopic(topic: Topic): Observable<Topic> {
+    return this.http.post<Topic>(this.topicApiUrl, topic);
+  }
+
+  /** DELETE: delete the topic from the server */
+  deleteTopic(topic: Topic): Observable<Topic> {
+    return this.http.delete<Topic>(this.topicApiUrl + `${topic.topicId}`);
+  }
+
+  /* GET topics whose name contains search term */
+  searchTopics(term: string): Observable<Topic[]> {
+    if (!term.trim() || term.includes(";")) {
+      // if not search term, return empty topic array.
+      return of([]);
+    }
+    return this.http.get<Topic[]>(this.topicApiUrl + `topicName/${term}`);
   }
 
   private handleError(error: HttpErrorResponse) {

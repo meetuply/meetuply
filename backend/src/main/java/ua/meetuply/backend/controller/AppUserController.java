@@ -3,7 +3,6 @@ package ua.meetuply.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.ConfirmationToken;
@@ -123,17 +122,19 @@ public class AppUserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/deactivate/{id}")
-    public ResponseEntity<AppUser> deactivateUser(@PathVariable("id") Integer userId) {
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity deactivateUser(@PathVariable("id") Integer userId) {
         AppUser user = appUserService.getUser(userId);
+        if(user == null) return ResponseEntity.notFound().build();
         appUserService.deactivateUser(user);
         emailService.sendDeactivatinEmail(user);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/activate/{id}")
-    public ResponseEntity<AppUser> activateUser(@PathVariable("id") Integer userId) {
+    @PutMapping("/activate/{id}")
+    public ResponseEntity activateUser(@PathVariable("id") Integer userId) {
         AppUser user = appUserService.getUser(userId);
+        if(user == null) return ResponseEntity.notFound().build();
         appUserService.activateDeactivatedUser(user);
         return ResponseEntity.ok().build();
     }
