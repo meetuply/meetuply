@@ -32,17 +32,21 @@ public class TopicController {
 	    return topicService.getIdByName(topicName);
     }
 
+    @GetMapping("topicName/{topicName}")
+    public Iterable<Topic> getTopicByName(@PathVariable("topicName") String topicName) {
+        return topicService.getByName(topicName);
+    }
 
-    @PostMapping("/create")
-    public ResponseEntity<Topic> createNewTopic(@Valid @RequestBody Topic topic){
+    @PostMapping()
+    public ResponseEntity createNewTopic(@Valid @RequestBody Topic topic){
         topicService.create(topic);
 		return ResponseEntity.ok().build();
     }
     
     @PutMapping("/{topicId}")
-    public ResponseEntity<Topic> updateTopic(@PathVariable("topicId") Integer topicId, @RequestBody Topic topic) {
+    public ResponseEntity updateTopic(@PathVariable("topicId") Integer topicId, @RequestBody Topic topic) {
     	if (topicService.get(topicId) == null) {
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
     	topic.setTopicId(topicId);
         topicService.update(topic);
@@ -50,9 +54,9 @@ public class TopicController {
     }
 
     @DeleteMapping("/{topicId}")
-    public ResponseEntity<Topic> deleteTopic(@PathVariable("topicId") Integer topicId){
+    public ResponseEntity deleteTopic(@PathVariable("topicId") Integer topicId){
     	if (topicService.get(topicId) == null) {
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         topicService.delete(topicId);
     	return ResponseEntity.ok().build();

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.TopicDAO;
 import ua.meetuply.backend.model.Topic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -19,6 +20,15 @@ public class TopicService {
 
     public Integer getIdByName(String name){
         return topicDAO.getIdByName(name);
+    }
+
+    public List<Topic> getByName(String name){
+        List<Topic> topics = topicDAO.getAll();
+        List<Topic> result = new ArrayList<Topic>();
+        for (Topic topic : topics) {
+            if(topic.getName().contains(name)) result.add(topic);
+        }
+        return result;
     }
 
     public void create(Topic topic){

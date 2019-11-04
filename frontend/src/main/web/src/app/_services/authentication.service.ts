@@ -50,6 +50,7 @@ export class AuthenticationService {
   }
 
   logout(): Observable<{}> {
+    this.authenticated = false;
     console.log("logout");
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');

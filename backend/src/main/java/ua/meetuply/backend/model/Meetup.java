@@ -22,4 +22,9 @@ public class Meetup {
     private LocalDateTime meetupFinishDateTime;
     private Integer stateId;
     private Integer speakerId;
+
+    private String speakerFirstName;
+    private String speakerLastName;
+    private Float rating;
+    private String speakerPhoto;
 }

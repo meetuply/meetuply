@@ -1,0 +1,18 @@
+<app-left-menu></app-left-menu>
+<div class='content'>
+
+
+
+	<div class='top'>
+		<div class='title'>Chats</div>
+		<app-button fontSize='20' (click)='click()' type='1' text='Create new chat'></app-button>
+	</div>
+
+	<div class='thumbnails'>
+		<app-chats-list-item class='thumb' *ngFor="let room_thumbnail of this.rooms" [user]="room_thumbnail.user"
+			[message]="room_thumbnail.message" [roomId]='room_thumbnail.roomId'></app-chats-list-item>
+
+	</div>
+
+
+</div>

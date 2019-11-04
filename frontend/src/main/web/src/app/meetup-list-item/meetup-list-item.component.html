@@ -3,47 +3,48 @@
 	<div class='main'>
 		<div class='profile'>
 			<div class='avatar'>
-				<img *ngIf="authorPhoto" src={{this.authorPhoto}}>
-        <img *ngIf="!authorPhoto" src="assets/img/download.png">
-        <app-rating size='12' rating="{{this.rate}}"></app-rating>
+				<img *ngIf="meetupListItem.speakerPhoto" src={{meetupListItem.speakerPhoto}}>
+        <img *ngIf="!meetupListItem.speakerPhoto" src="assets/img/download.png">
+        <app-rating size='12' rating="{{this.meetupListItem.rating}}"></app-rating>
 			</div>
 			<div class='info'>
-				<div class='title' routerLink="{{this.uid}}">
-          {{this.title}}
+				<div class='title' routerLink="{{this.meetupListItem.meetupId}}">
+          {{this.meetupListItem.meetupTitle}}
 				</div>
 				<div class='place'>
-					<div>by {{this.author}} </div>
+					<div [routerLink]="['/speakers/', meetupListItem.speakerId]">
+          by
+            <span class="authorName">{{this.meetupListItem.speakerFirstName}} {{this.meetupListItem.speakerLastName}}
+          </span>
+          </div>
 				</div>
 			</div>
 		</div>
 		<div class='description'>
-      <span>{{this.description}}</span>
+      <span>{{this.meetupListItem.meetupDescription}}</span>
 		</div>
-
 	</div>
 	<div class='additional'>
 		<div class='time'>
 			<div class='icon'>
 			</div>
 			<div class='date_time'>
-				<div>{{this.date | date:'MMM d, y h:mm a' }}</div>
+				<div>{{this.meetupListItem.meetupStartDateTime | date:'MMM d, y h:mm a' }}</div>
 			</div>
 		</div>
 		<div class='location'>
 			<div class='icon'></div>
-			<div>{{this.place}}</div>
+			<div>{{this.meetupListItem.meetupPlace}}</div>
 		</div>
-
 		<div class='members'>
 			<div class='icon'></div>
-			<div>{{this.registeredAttendees}}/{{this.maxAttendees}}</div>
+			<div>{{this.meetupListItem.meetupRegisteredAttendees}}/{{this.meetupListItem.meetupMaxAttendees}}</div>
 		</div>
-
-		<app-button *ngIf="isAttendeLoaded && !isMy"
+		<app-button *ngIf="(state == 'Booked' || state == 'Scheduled') && isAttendeLoaded && !isMy"
                 [text]="joinText()"
                 [type]='joinType()'
                 (onClick)="joinButtonClicked($event)"
                 fontSize='20'></app-button>
-
+    <div *ngIf="state != 'Booked' && state != 'Scheduled'" class="state">{{this.state}}</div>
 	</div>
 </div>

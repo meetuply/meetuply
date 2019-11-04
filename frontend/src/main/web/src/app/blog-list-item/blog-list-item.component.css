@@ -18,6 +18,7 @@
   margin: 5px;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 
 .author .info {
@@ -51,7 +52,7 @@
 }
 
 .post-title{
-  margin: 5px 0px;
+  margin: 8px 0px;
   font-weight: bold;
   font-size: 16px;
   display: block;
@@ -62,8 +63,15 @@
 
 .post-content{
   font-size: 14px;
+  margin-top: 5px;
   text-overflow: fade;
   float: none;
   overflow: hidden;
   white-space: initial;
+}
+
+.post-time{
+  margin-top: 10px;
+  font-size: 12px;
+  color: #7f7f7f;
 }

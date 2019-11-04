@@ -11,10 +11,12 @@
       <div class='detail'>
         <img *ngIf="authorPhoto" src={{this.authorPhoto}}>
         <img *ngIf="!authorPhoto" src="assets/img/download.png">
-        <div>by {{this.author}}</div>
+        <div [routerLink]="['/speakers/', this.meetup.speakerId]">by
+          <span class="authorName">{{this.author}}</span></div>
         <app-rating size='16' rating="{{this.rate}}"></app-rating>
       </div>
     </div>
+
 
     <div class='about'>
       About
@@ -23,7 +25,7 @@
       {{this.meetup.meetupDescription}}
     </div>
 
-    <div class='about'>
+    <div class='about' *ngIf="attendees.length != 0">
       Attendees
     </div>
 
@@ -36,12 +38,14 @@
   </div>
 
   <div class='additional'>
-    <app-button *ngIf="!isMy" [text]='joinText()' [type]='joinType()' fontSize='24' (onClick)="joinButtonClicked($event)"></app-button>
-    <app-button *ngIf="isMy && canCancell()" [text]='"Cancel"' [type]='2' fontSize='24' (onClick)="cancellMeetup($event)"></app-button>
-    <app-button *ngIf="isMy && canTerminate()" [text]='"Terminate"' [type]='2' fontSize='24' (onClick)="terminateMeetup($event)"></app-button>
-    <app-button *ngIf="isMy && canReschedule()" [text]='"Reschedule"' [type]='1' fontSize='24' (onClick)="reschedule($event)"></app-button>
+    <app-button *ngIf="(state == 'Booked' || state == 'Scheduled') && !hasAccess" [text]='joinText()' [type]='joinType()' fontSize='24' (onClick)="joinButtonClicked($event)"></app-button>
+    <app-button *ngIf="hasAccess && canCancell()" [text]='"Cancel"' [type]='2' fontSize='24' (onClick)="cancellMeetup($event)"></app-button>
+    <app-button *ngIf="hasAccess && canTerminate()" [text]='"Terminate"' [type]='2' fontSize='24' (onClick)="terminateMeetup($event)"></app-button>
+    <app-button *ngIf="hasAccess && canReschedule()" [text]='"Reschedule"' [type]='1' fontSize='24' (onClick)="reschedule($event)"></app-button>
 
 
+    <div class="error" *ngIf="error">{{error}}</div>
+    <div class="status">{{state}}</div>
     <div class='time'>
       <div class='icon'>
       </div>

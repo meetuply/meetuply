@@ -1,0 +1,12 @@
+<div class='message' [ngClass]="{
+	'foreign_message': this.foreign,
+	'own_message': !this.foreign
+}">
+	<div class='contents'>
+		{{this.msg.content}}
+	</div>
+	<div class='extra'>
+		{{time()}}
+	</div>
+	
+</div>

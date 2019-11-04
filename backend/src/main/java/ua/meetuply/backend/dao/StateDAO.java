@@ -8,7 +8,8 @@ import ua.meetuply.backend.model.State;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class StateDAO implements RowMapper<State> {
@@ -16,20 +17,13 @@ public class StateDAO implements RowMapper<State> {
     @Autowired
     public JdbcTemplate jdbcTemplate;
 
-    private List<State> states;
-
-    public void load() {
-        states = jdbcTemplate.query("SELECT * FROM state", this);
-    }
-
     public State get(Integer id) {
-        if (states == null) load();
-        return states.stream().filter(s -> s.getStateId() == id).findFirst().orElse(null);
+        return jdbcTemplate.queryForObject("SELECT * FROM state WHERE uid = ?", new Object[]{id}, State.class);
     }
 
-    public State get(String name) {
-        if (states == null) load();
-        return states.stream().filter(s -> s.getName().equals(name)).findFirst().orElse(null);
+    public Map<String, State> getAll() {
+        return jdbcTemplate.query("SELECT * FROM state", this)
+                .stream().collect(Collectors.toMap(State::getName, s -> s));
     }
 
     @Override
@@ -38,9 +32,5 @@ public class StateDAO implements RowMapper<State> {
                 resultSet.getInt("uid"),
                 resultSet.getString("name")
         );
-    }
-
-    public Iterable<State> getAll() {
-        return states;
     }
 }

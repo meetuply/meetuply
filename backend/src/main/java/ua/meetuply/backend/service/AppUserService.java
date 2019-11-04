@@ -35,7 +35,7 @@ public class AppUserService implements UserDetailsService {
     @Autowired
     StateService stateService;
 
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void createAppUser(AppUser appUser) {
         String encrytedPassword = this.passwordEncoder.encode(appUser.getPassword());
@@ -58,13 +58,15 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getAppUsers();
     }
 
-    public List<AppUser> getUsersChunk(Integer startRow,Integer endRow) {
-        return appUserDAO.getUsersChunk(startRow,endRow);
+    public List<AppUser> getUsersChunk(Integer startRow, Integer endRow) {
+        return appUserDAO.getUsersChunk(startRow, endRow);
     }
 
-    public List<AppUser> getMeetupAttendees(Integer meetupId) {return appUserDAO.getMeetupAttendees(meetupId);}
+    public List<AppUser> getMeetupAttendees(Integer meetupId) {
+        return appUserDAO.getMeetupAttendees(meetupId);
+    }
 
-    public Integer getUserIdByEmail(String email){
+    public Integer getUserIdByEmail(String email) {
         return appUserDAO.getUserIdByEmail(email);
     }
 
@@ -72,12 +74,16 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getUserSubscribers(id);
     }
 
-    public AppUser getUser(Integer id){
+    public List<Integer> getUserSubscriptions(Integer id) {
+        return appUserDAO.getUserSubscriptions(id);
+    }
+
+    public AppUser getUser(Integer id) {
         return appUserDAO.get(id);
     }
 
-    public String getUserFullName(Integer id){
-        AppUser user =  appUserDAO.get(id);
+    public String getUserFullName(Integer id) {
+        AppUser user = appUserDAO.get(id);
         return user.getFirstName() + " " + user.getLastName();
     }
 
@@ -103,11 +109,11 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getUserByEmail(email);
     }
 
-    public AppUser getUserByEmail(String email){
+    public AppUser getUserByEmail(String email) {
         return appUserDAO.getUserByEmail(email);
     }
 
-    public Integer getUserIdByName(String name){
+    public Integer getUserIdByName(String name) {
         return appUserDAO.getUserIdByName(name);
     }
 
@@ -130,8 +136,21 @@ public class AppUserService implements UserDetailsService {
     }
 
     public boolean isAdmin() {
-        return  getCurrentUser().getRole().equals(roleDAO.getRoleByName("admin"));
+        return getCurrentUser().getRole().equals(roleDAO.getRoleByName("admin"));
     }
+
+    public void follow(Integer userId) {
+        appUserDAO.follow(getCurrentUserID(), userId);
+    }
+
+    public void unfollow(Integer userId) {
+        appUserDAO.unfollow(getCurrentUserID(), userId);
+    }
+
+    public Integer getFollowersNumber(Integer userId) {
+        return appUserDAO.getFollowersNumber(userId);
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String email) {
@@ -142,10 +161,11 @@ public class AppUserService implements UserDetailsService {
         User user;
 
         System.out.println(appUser);
-        if(appUser.getRole().getRoleName().equals("admin")) {
+        if (appUser.getRole().getRoleName().equals("admin")) {
             user = new User(appUser.getEmail(), appUser.getPassword(), grantedAuthorities);
-        }
-        else user = new User(appUser.getEmail(), appUser.getPassword(), new HashSet<>());
+        } else user = new User(appUser.getEmail(), appUser.getPassword(), new HashSet<>());
         return user;
     }
+
+
 }

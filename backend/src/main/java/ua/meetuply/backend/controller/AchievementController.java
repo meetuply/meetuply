@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.Achievement;
 import ua.meetuply.backend.service.AchievementService;
 
+import java.util.List;
+import java.util.Map;
+
 @RequestMapping("api/achievements")
 @Transactional
 @RestController
@@ -33,18 +36,12 @@ public class AchievementController {
         return achievementService.get(achievementId);
     }
 
-//    @PostMapping("/create")
-//    public ResponseEntity<Achievement> create(@RequestBody Achievement achievement){
-//        achievementService.create(achievement);
-//        return ResponseEntity.ok().build();
-//    }
-
-    @PostMapping("/create")
+    @PostMapping()
     public Integer create(@RequestBody Achievement achievement){
         return achievementService.saveReturnId(achievement);
     }
 
-    @PostMapping("/meetups-topic/same")
+    @PostMapping("/meetupsTopic/same")
     public void createForMeetupsSameQuantity(@RequestParam String achievementId,
                                  @RequestParam String[] topics,
                                  @RequestParam String quantity){
@@ -54,7 +51,7 @@ public class AchievementController {
     }
 
     @PutMapping("/{achievementId}")
-    public ResponseEntity<Achievement> updateAchievement(@PathVariable("achievementId") Integer achievementId, @RequestBody Achievement achievement) {
+    public ResponseEntity updateAchievement(@PathVariable("achievementId") Integer achievementId, @RequestBody Achievement achievement) {
         if (achievementService.get(achievementId) == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -64,7 +61,7 @@ public class AchievementController {
     }
 
     @DeleteMapping("/{achievementId}")
-    public ResponseEntity<Achievement> deleteAchievement(@PathVariable("achievementId") String achievementId){
+    public ResponseEntity deleteAchievement(@PathVariable("achievementId") String achievementId){
         Integer idInteger = Integer.valueOf(achievementId);
         if (achievementService.get(idInteger) == null) {
             return ResponseEntity.badRequest().build();

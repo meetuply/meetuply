@@ -25,7 +25,7 @@ export class MeetupPageComponent implements OnInit {
   joined = false;
   error = null;
   attendees: Atendee[] = [];
-  isMy = false;
+  hasAccess = false;
   state: string;
 
   constructor(
@@ -45,13 +45,12 @@ export class MeetupPageComponent implements OnInit {
     this.loading = true;
     this.sub = this.meetupService.get(id).subscribe(
       data => {
-        console.log(data);
         this.meetup = data;
         this.loading = false;
         this.meetup = data;
         this.getAuthorInfo(data['speakerId']);
         this.getAttendees();
-        this.isMy = this.meetup.speakerId == this.userService.currentUser.userId;
+        this.hasAccess = this.meetup.speakerId == this.userService.currentUser.userId || this.userService.currentUser.role.roleName == 'admin';
         this.state = this.stateService.states[this.meetup.stateId];
       },
       error => {
@@ -174,9 +173,6 @@ export class MeetupPageComponent implements OnInit {
   }
 
   ngOnDestroy(){
-    if (this.sub) this.sub.unsubscribe;
-  }
-
-  goBack() {
+    if (this.sub) this.sub.unsubscribe();
   }
 }

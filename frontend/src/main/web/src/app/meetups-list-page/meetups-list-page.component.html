@@ -1,7 +1,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <app-left-menu></app-left-menu>
 <div class='content'>
-  <p class='title'>Meetups</p>
+  <p class='title'>Meetups<app-button *ngIf="userService.currentUser.role.roleName != 'admin'"
+                                      [text]="'Create meetup'"
+                                      [type]='1' fontSize='24' (onClick)="addButtonClicked($event)"></app-button>
+  </p>
 
   <div class='search_div'>
     <div class='search_icon'></div>
@@ -13,46 +16,35 @@
   </div>
 
   <app-meetup-filter *ngIf="this.filter_shown"></app-meetup-filter>
+
   <div class="main"
        infinite-scroll
        [infiniteScrollDistance]="scrollDistance"
        (scrolled)='this.onScrollDown()'>
     <div class='left_column'>
-      <div *ngFor="let meetup_item of this.meetupsList;let i = index">
-        <app-meetup-list-item *ngIf="isOdd(i)"
-                              [joined]='meetup_item.joined'
-                              [author]='meetup_item.author'
-                              [authorPhoto]="meetup_item.authorPhoto"
-                              [rate]='meetup_item.rate'
-                              [description]='meetup_item.description'
-                              [title]='meetup_item.title'
-                              [place]='meetup_item.place'
-                              [maxAttendees]='meetup_item.maxAttendees'
-                              [registeredAttendees]='meetup_item.registeredAttendees'
-                              [uid]='meetup_item.id'
-                              [date]='meetup_item.date'
-                              [isMy]="userID == meetup_item.meetup.speakerId">
 
+      <div *ngFor="let meetupItem of this.meetupsList;let i = index">
+        <app-meetup-list-item
+          *ngIf="isOdd(i)"
+                              [meetupListItem]='meetupItem'
+                              [isMy]="userService.currentUser.userId == meetupItem.speakerId"
+                              [state]="stateService.states[meetupItem.stateId]">
         </app-meetup-list-item>
       </div>
     </div>
+
+
     <div class='right_column'>
-      <div *ngFor="let meetup_item of this.meetupsList;let i = index">
-        <app-meetup-list-item *ngIf="!isOdd(i)" [joined]='meetup_item.joined'
-                              [author]='meetup_item.author'
-                              [authorPhoto]="meetup_item.authorPhoto"
-                              [rate]='meetup_item.rate'
-                              [description]='meetup_item.description'
-                              [title]='meetup_item.title'
-                              [place]='meetup_item.place'
-                              [maxAttendees]='meetup_item.maxAttendees'
-                              [registeredAttendees]='meetup_item.registeredAttendees'
-                              [uid]='meetup_item.id'
-                              [date]='meetup_item.date'
-                              [isMy]="userID == meetup_item.meetup.speakerId">
-
-        </app-meetup-list-item>
-      </div>
+    <div *ngFor="let meetupItem of this.meetupsList;let i = index">
+    <app-meetup-list-item *ngIf="!isOdd(i)"
+                              [meetupListItem]="meetupItem"
+                              [isMy]="userService.currentUser.userId == meetupItem.speakerId"
+                              [state]="stateService.states[meetupItem.stateId]">
+    </app-meetup-list-item>
     </div>
+    </div>
+
   </div>
 </div>
+
+

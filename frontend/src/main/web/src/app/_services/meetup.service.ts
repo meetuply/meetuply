@@ -5,6 +5,7 @@ import { Meetup } from "../_models/meetup";
 import { environment } from "../../environments/environment";
 import { UserService } from "./user.service";
 import { User } from "../_models";
+import {MeetupListItem} from "../_models/meetupListItem";
 
 
 @Injectable({ providedIn: 'root' })
@@ -17,6 +18,10 @@ export class MeetupService {
 
   getMeetupsChunk(startRow: number, endRow: number): Observable<Meetup[]> {
     return this.http.get<Meetup[]>(this.meetupApiUrl + `${startRow}` + "/" + `${endRow}`)
+  }
+
+  getMeetupsChunkWithUsernameAndRating(startRow: number, endRow: number): Observable<MeetupListItem[]> {
+    return this.http.get<MeetupListItem[]>(this.meetupApiUrl + `${startRow}` + "/" + `${endRow}`)
   }
 
   get(id: number): Observable<Meetup> {
@@ -50,15 +55,14 @@ export class MeetupService {
   }
 
   terminate(meetupID: number): Observable<{}> {
-    return this.http.get<boolean>(this.meetupApiUrl + + `${meetupID}` + '/terminate');
+    return this.http.patch(this.meetupApiUrl + `${meetupID}` + '/terminate', null);
   }
 
   cancell(meetupID: number): Observable<{}> {
-    return this.http.get<boolean>(this.meetupApiUrl + + `${meetupID}` + '/cancel');
+    return this.http.patch(this.meetupApiUrl + `${meetupID}` + '/cancel', null);
   }
 
   reschedule(meetup: Meetup): Observable<{}> {
-    return this.http.post(this.meetupApiUrl + 'reschedule', meetup);
+    return this.http.patch(this.meetupApiUrl + `${meetup.meetupId}` + '/reschedule', meetup);
   }
-
 }

@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ua.meetuply.backend.model.Achievement;
+import ua.meetuply.backend.model.Topic;
 
 import java.math.BigInteger;
 import java.sql.*;
@@ -15,56 +15,114 @@ import java.util.List;
 @Repository
 public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement> {
 
+    private static final String GET_ONE_QUERY = "SELECT * FROM achievement WHERE uid = ?";
+    private static final String GET_ALL_QUERY = "SELECT * FROM achievement";
+    private static final String GET_USER_ACHIEVEMENTS_QUERY = "SELECT uid, title, description, icon," +
+            "followers, posts, rating, meetups from user_achievement " +
+            "inner join achievement on " +
+            "user_achievement.achievement_id = achievement.uid " +
+            "where user_id = ?";
+    private static final String SAVE_ACHIEVEMENT_QUERY = "INSERT INTO achievement (`title`, `description`, `icon`, followers, " +
+            "posts, `rating`, `meetups`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String SAVE_ACHIEVEMENT_MEETUP_QUERY = "insert into achievement_topic (`achievement_id`, `topic_id`, `quantity`) " +
+            "values (?,?,?)";
+    private static final String SAVE_AND_RETURN_ID_QUERY = "INSERT INTO achievement (`title`, `description`, `icon`, followers, " +
+            "posts, `rating`, `meetups`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_QUERY = "UPDATE achievement SET title = ?, description = ?, " +
+            "icon = ?, followers = ?, posts = ?, rating = ?, " +
+            "meetups = ? WHERE uid = ?";
+    private static final String DELETE_QUERY = "DELETE FROM achievement WHERE uid = ?";
+    private static final String GET_MEETUP_ACHIEVEMENT_ID_QUERY = "select uid from achievement\n" +
+            "where uid not in\n" +
+            "(select achievement_id from user_achievement where user_id = ?)\n" +
+            "and meetups in (select count(*) from meetup where speaker_id = ?)\n" +
+            "and posts is null\n" +
+            "and followers is null\n" +
+            "and rating is null\n" +
+            "order by followers asc\n" +
+            "limit 1;";
+    private static final String GET_FOLLOWERS_ACHIEVEMENT_ID_QUERY = "select uid from achievement\n" +
+            "where uid not in\n" +
+            "(select achievement_id from user_achievement where user_id = ?)\n" +
+            "and followers in (select count(*) from followers where followed_user_id = ?)\n" +
+            "and meetups is null\n" +
+            "and posts is null\n" +
+            "and rating is null\n" +
+            "order by followers asc\n" +
+            "limit 1;";
+    private static final String GET_POSTS_ACHIEVEMENT_ID_QUERY = "select uid from achievement " +
+            "where uid not in " +
+            "(select achievement_id from user_achievement where user_id = ?)\n" +
+            "and posts in (select count(*) from post where author_id = ?)\n" +
+            "and meetups is null\n" +
+            "and followers is null\n" +
+            "and rating is null\n" +
+            "order by posts asc\n" +
+            "limit 1;";
+    private static final String GET_RATING_ACHIEVEMENT_ID_QUERY = "select uid from achievement\n" +
+            "where uid not in\n" +
+            "(select achievement_id from user_achievement where user_id = ?)\n" +
+            "and rating in (select avg(value) from rating where rated_user_id = ?)\n" +
+            "and posts is null\n" +
+            "and followers is null\n" +
+            "and meetups is null\n" +
+            "order by rating asc\n" +
+            "limit 1;";
+    private static final String UPDATE_ACHIEVEMENT_USER_QUERY = "insert into user_achievement (`achievement_id`, `user_id`) values (?, ?)";
+    private static final String GET_ACHIEVEMENTS_ID_FOR_MEETUP_TOPIC_QUERY =
+            "select achievement_id from achievement_topic\n" +
+                    "where achievement_id not in (select achievement_id from user_achievement where user_id = 1)\n" +
+                    "and achievement_id in (select achievement_id from achievement_topic as a\n" +
+                    "inner join (select topic_id, count(meetup_id) as user_quantity from meetup_topic\n" +
+                    "inner join meetup on meetup.uid = meetup_topic.meetup_id\n" +
+                    "where speaker_id = ?\n" +
+                    "group by topic_id) as b on a.topic_id = b.topic_id\n" +
+                    "where a.quantity = b.user_quantity)\n" +
+                    "group by achievement_id\n" +
+                    "having sum(quantity) <= (select count(uid) from meetup where speaker_id = ?)";
+
     @Autowired
     public JdbcTemplate jdbcTemplate;
 
     @Override
     public Achievement get(Integer id) {
-        List<Achievement> achievements = jdbcTemplate.query("SELECT * FROM achievement WHERE uid = ?", new Object[] {id}, this);
+        List<Achievement> achievements = jdbcTemplate.query(GET_ONE_QUERY, new Object[]{id}, this);
         return achievements.size() == 0 ? null : achievements.get(0);
     }
 
     @Override
     public List<Achievement> getAll() {
-        List<Achievement> achievements = jdbcTemplate.query("SELECT * FROM achievement", this);
+        List<Achievement> achievements = jdbcTemplate.query(GET_ALL_QUERY, this);
         return achievements;
     }
 
     public List<Achievement> getUserAchievements(Integer userId) {
-        List<Achievement> achievements = jdbcTemplate.query("SELECT uid, title, description, icon," +
-                "followers_number, posts_number, rating, meetups from user_achievement " +
-                "inner join achievement on " +
-                "user_achievement.achievement_id = achievement.uid " +
-                "where user_id = ?", new Object[] {userId}, this);
+        List<Achievement> achievements = jdbcTemplate.query(GET_USER_ACHIEVEMENTS_QUERY, new Object[]{userId}, this);
         return achievements;
     }
 
     @Override
     public void save(Achievement achievement) {
-        jdbcTemplate.update("INSERT INTO achievement (`title`, `description`, `icon`, `followers_number`, " +
-                        "`posts_number`, `rating`, `meetups`) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update(SAVE_ACHIEVEMENT_QUERY,
                 achievement.getTitle(), achievement.getDescription(), achievement.getIcon(),
-        achievement.getFollowersNumber(), achievement.getPostsNumber(), achievement.getRating(),
+                achievement.getFollowers(), achievement.getPosts(), achievement.getRating(),
                 achievement.getMeetups());
     }
 
-    public void saveAchievementMeetup(Integer achievementId, Integer topicId, Integer quantity){
-        jdbcTemplate.update("Insert into achievement_topic (`achievement_id`, `topic_id`, `quantity`) " +
-                "values (?,?,?)",
+    public void saveAchievementMeetup(Integer achievementId, Integer topicId, Integer quantity) {
+        jdbcTemplate.update(SAVE_ACHIEVEMENT_MEETUP_QUERY,
                 achievementId, topicId, quantity);
     }
 
     public Integer saveReturnId(Achievement achievement) {
-        String query = "INSERT INTO achievement (`title`, `description`, `icon`, `followers_number`, " +
-                "`posts_number`, `rating`, `meetups`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = con.prepareStatement(SAVE_AND_RETURN_ID_QUERY, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, achievement.getTitle());
             ps.setString(2, achievement.getDescription());
             ps.setString(3, achievement.getIcon());
-            ps.setObject(4, achievement.getFollowersNumber(), JDBCType.INTEGER);
-            ps.setObject(5, achievement.getPostsNumber(), JDBCType.INTEGER);
+            ps.setObject(4, achievement.getFollowers(), JDBCType.INTEGER);
+            ps.setObject(5, achievement.getPosts(), JDBCType.INTEGER);
             ps.setObject(6, achievement.getRating(), JDBCType.FLOAT);
             ps.setObject(7, achievement.getMeetups(), JDBCType.INTEGER);
             return ps;
@@ -75,17 +133,41 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
 
     @Override
     public void update(Achievement achievement) {
-        jdbcTemplate.update("UPDATE achievement SET title = ?, description = ?, " +
-                "icon = ?, followers_number = ?, posts_number = ?, rating = ?, " +
-                        "meetups = ? WHERE uid = ?",
+        jdbcTemplate.update(UPDATE_QUERY,
                 achievement.getTitle(), achievement.getDescription(), achievement.getIcon(),
-                achievement.getFollowersNumber(), achievement.getPostsNumber(),
+                achievement.getFollowers(), achievement.getPosts(),
                 achievement.getRating(), achievement.getMeetups(), achievement.getAchievementId());
     }
 
     @Override
     public void delete(Integer id) {
-        jdbcTemplate.update("DELETE FROM achievement WHERE uid = ?", id);
+        jdbcTemplate.update(DELETE_QUERY, id);
+    }
+
+    public List<Integer> getMeetupTopicAchievementId(Integer userId) {
+        return jdbcTemplate.queryForList(GET_ACHIEVEMENTS_ID_FOR_MEETUP_TOPIC_QUERY,
+                new Object[]{userId}, Integer.class);
+    }
+
+    public Integer getMeetupAchievementId(Integer userId) {
+        return jdbcTemplate.queryForObject(GET_MEETUP_ACHIEVEMENT_ID_QUERY, new Object[]{userId}, Integer.class);
+    }
+
+    public Integer getFollowersAchievementId(Integer userId) {
+        return jdbcTemplate.queryForObject(GET_FOLLOWERS_ACHIEVEMENT_ID_QUERY, new Object[]{userId}, Integer.class);
+    }
+
+    public Integer getPostsAchievementId(Integer userId) {
+        return jdbcTemplate.queryForObject(GET_POSTS_ACHIEVEMENT_ID_QUERY, new Object[]{userId}, Integer.class);
+    }
+
+    public Integer getRatingAchievementId(Integer userId) {
+        return jdbcTemplate.queryForObject(GET_RATING_ACHIEVEMENT_ID_QUERY, new Object[]{userId}, Integer.class);
+    }
+
+    public void updateAchievementUser(Integer achievementId, Integer userId) {
+        jdbcTemplate.update(UPDATE_ACHIEVEMENT_USER_QUERY,
+                achievementId, userId);
     }
 
     @Override
@@ -95,8 +177,8 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
                 resultSet.getString("title"),
                 resultSet.getString("description"),
                 resultSet.getString("icon"),
-                resultSet.getInt("followers_number"),
-                resultSet.getInt("posts_number"),
+                resultSet.getInt("followers"),
+                resultSet.getInt("posts"),
                 resultSet.getFloat("rating"),
                 resultSet.getInt("meetups")
         );

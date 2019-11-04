@@ -1,7 +1,7 @@
 export class BlogComment {
   // blogCommentId: number;
   blogCommentContent: string;
-  // time: Date;
+  time: Date;
   postId: number;
   authorId: number;
 }

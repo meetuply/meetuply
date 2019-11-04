@@ -11,7 +11,7 @@
 
 
 		<div class='author-container'>
-      <div class="author">
+      <div class='author' [routerLink]="['/speakers/',this.authorId]">
         <div class='avatar'>
           <img *ngIf="authorPhoto" src={{this.authorPhoto}}>
           <img *ngIf="!authorPhoto" src="assets/img/download.png">
@@ -26,14 +26,13 @@
 		</div>
 
 		<div class='post-content'>
-<!--      {{formatContent(this.blogpost.blogPostContent)}}-->
-      <p [innerHTML]="formatContent(this.blogpost.blogPostContent)"></p>
+      <p [innerHTML]="this.blogpost.blogPostContent"></p>
 		</div>
 
     <div class="comments">
       <div class="comments-header">
         <h2>Comments</h2>
-        <a class="view-all-link" href="">view all</a>
+<!--        <a class="view-all-link" href="">view all</a>-->
       </div>
 
       <div class="new-comment-container">
@@ -65,11 +64,7 @@
           <div *ngFor="let comment_item of this.commentsList;let i = index">
 
             <app-blog-comment-item
-              [author]='comment_item.author'
-              [authorPhoto]="comment_item.authorPhoto"
-              [content]='comment_item.content'
-              [uid]='comment_item.id'
-              [date]='comment_item.date'>
+              [blog_comment_item]='comment_item'>
 
             </app-blog-comment-item>
           </div>
