@@ -135,22 +135,22 @@ public class MeetupController {
         return meetups;
     }
 
-    @GetMapping("/{meetupID}/cancel")
-    public ResponseEntity cancel(@PathVariable("meetupID") Integer meetupID) throws Exception {
-        meetupService.cancelMeetup(meetupID);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/{meetupID}/terminate")
-    public ResponseEntity terminate(@PathVariable("meetupID") Integer meetupID) throws Exception {
-        meetupService.terminateMeetup(meetupID);
-        System.out.println("terminated");
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/reschedule")
-    public ResponseEntity reschedule(@RequestBody Meetup meetup) throws Exception {
-        meetupService.rescheduleTerminatedMeetup(meetup);
+    @PatchMapping("/{meetupID}/{action}")
+    public ResponseEntity changeState
+            (@PathVariable("meetupID") Integer meetupID,
+             @PathVariable("action") String action,
+             @RequestBody Meetup meetup) throws Exception {
+        switch (action) {
+            case "cancel":
+                meetupService.cancelMeetup(meetupID);
+                break;
+            case "terminate":
+                meetupService.terminateMeetup(meetupID);
+                break;
+            case "reschedule":
+                meetupService.rescheduleTerminatedMeetup(meetup);
+                break;
+        }
         return ResponseEntity.ok().build();
     }
 }

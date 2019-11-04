@@ -55,14 +55,14 @@ export class MeetupService {
   }
 
   terminate(meetupID: number): Observable<{}> {
-    return this.http.get<boolean>(this.meetupApiUrl + + `${meetupID}` + '/terminate');
+    return this.http.patch(this.meetupApiUrl + `${meetupID}` + '/terminate', null);
   }
 
   cancell(meetupID: number): Observable<{}> {
-    return this.http.get<boolean>(this.meetupApiUrl + + `${meetupID}` + '/cancel');
+    return this.http.patch(this.meetupApiUrl + `${meetupID}` + '/cancel', null);
   }
 
   reschedule(meetup: Meetup): Observable<{}> {
-    return this.http.post(this.meetupApiUrl + 'reschedule', meetup);
+    return this.http.patch(this.meetupApiUrl + `${meetup.meetupId}` + '/reschedule', meetup);
   }
 }

@@ -9,10 +9,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import ua.meetuply.backend.controller.exception.MeetupNotFoundException;
 import ua.meetuply.backend.controller.exception.MeetupStateException;
+import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.controller.exception.PermissionException;
-import ua.meetuply.backend.controller.exception.UserNotFoundException;
 import ua.meetuply.backend.model.ApiError;
 
 @ControllerAdvice
@@ -28,8 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            UserNotFoundException.class,
-            MeetupNotFoundException.class,
+            NotFoundException.class,
             UsernameNotFoundException.class
     })
     private ResponseEntity<ApiError> handleNotFoundException(Exception ex, WebRequest request) {

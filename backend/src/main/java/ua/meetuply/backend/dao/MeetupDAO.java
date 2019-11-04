@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Filter;
 import ua.meetuply.backend.model.Meetup;
+import ua.meetuply.backend.model.State.StateNames;
+import ua.meetuply.backend.service.StateService;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -52,7 +54,7 @@ public class MeetupDAO implements IDAO<Meetup> {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private StateDAO stateDAO;
+    private StateService stateService;
 
     @Override
     public Meetup get(Integer id) {
@@ -140,8 +142,9 @@ public class MeetupDAO implements IDAO<Meetup> {
 
     public List<Meetup> futureScheduledAndBookedMeetupsOf(AppUser user) {
         List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("state_id", SQLPredicate.Operation.IN, Arrays.asList(stateDAO.get("Scheduled").getStateId(),
-                        stateDAO.get("Booked").getStateId())),
+                new SQLPredicate("state_id", SQLPredicate.Operation.IN,
+                        Arrays.asList(stateService.get(StateNames.SCHEDULED.name).getStateId(),
+                                      stateService.get(StateNames.BOOKED.name).getStateId())),
                 new SQLPredicate("speaker_id", SQLPredicate.Operation.EQUALS, user.getUserId())
         );
         SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
@@ -150,7 +153,8 @@ public class MeetupDAO implements IDAO<Meetup> {
 
     public List<Meetup> currentMeetupsOf(AppUser user) {
         List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS, stateDAO.get("In progress").getStateId()),
+                new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS,
+                        stateService.get(StateNames.IN_PROGRESS.name).getStateId()),
                 new SQLPredicate("speaker_id", SQLPredicate.Operation.EQUALS, user.getUserId())
         );
         SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
@@ -160,7 +164,8 @@ public class MeetupDAO implements IDAO<Meetup> {
     public List<Meetup> notEnoughAttendees1Hour() {
         List<SQLPredicate> andList = Arrays.asList(
                 new SQLPredicate("start_date_time", SQLPredicate.Operation.LESS, "NOW() + INTERVAL 1 HOUR"),
-                new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS, stateDAO.get("Scheduled").getStateId()),
+                new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS,
+                        stateService.get(StateNames.SCHEDULED.name).getStateId()),
                 new SQLPredicate("min_attendees", SQLPredicate.Operation.GREATER, "registered_attendees")
         );
         SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
@@ -169,8 +174,9 @@ public class MeetupDAO implements IDAO<Meetup> {
 
     public List<Meetup> goingToStart() {
         List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("state_id", SQLPredicate.Operation.IN, Arrays.asList(stateDAO.get("Scheduled").getStateId(),
-                        stateDAO.get("Booked").getStateId())),
+                new SQLPredicate("state_id", SQLPredicate.Operation.IN,
+                        Arrays.asList(stateService.get(StateNames.SCHEDULED.name).getStateId(),
+                                      stateService.get(StateNames.BOOKED.name).getStateId())),
                 new SQLPredicate("start_date_time", SQLPredicate.Operation.LESS, "NOW()")
         );
         SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
@@ -180,7 +186,8 @@ public class MeetupDAO implements IDAO<Meetup> {
     public List<Meetup> goingToFinish() {
         List<SQLPredicate> andList = Arrays.asList(
                 new SQLPredicate("finish_date_time", SQLPredicate.Operation.LESS, "NOW()"),
-                new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS, stateDAO.get("In progress").getStateId())
+                new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS,
+                        stateService.get(StateNames.IN_PROGRESS.name).getStateId())
         );
         SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
         return find(where);

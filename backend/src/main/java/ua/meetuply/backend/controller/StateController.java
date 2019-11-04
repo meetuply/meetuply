@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.meetuply.backend.model.State;
 import ua.meetuply.backend.service.StateService;
 
+import java.util.Map;
+
 @RequestMapping("api/states")
 @RestController
 public class StateController {
@@ -16,7 +18,8 @@ public class StateController {
     private StateService stateService;
 
     @GetMapping()
-    public @ResponseBody Iterable<State> getAllRatings() {
+    public @ResponseBody
+    Map<String, State> getAllRatings() {
         return stateService.getAll();
     }
 
