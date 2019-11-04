@@ -16,6 +16,18 @@ import java.util.List;
 @Repository
 public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
 
+    private static final String GET_ALL_QUERY = "SELECT * FROM post";
+    private static final String GET_BY_ID_QUERY = "SELECT * FROM post WHERE uid = ?";
+    private static final String SAVE_QUERY = "INSERT INTO `post` (`title`, `date_time`, `content`, `author_id`) VALUES (?, ?, ?, ?)";
+    private static final String DELETE_QUERY = "DELETE FROM post WHERE uid = ?";
+    private static final String UPDATE_QUERY = "UPDATE post SET content = ? AND title = ? WHERE uid = ?";
+
+    private static final String FIND_POSTS_BY_FILTER_ALL = "SELECT * FROM post order by uid desc LIMIT ?, ?";
+    private static final String FIND_POSTS_BY_FILTER_MY = "SELECT * FROM post WHERE author_id = ? order by uid desc LIMIT ?, ? ";
+    private static final String FIND_POSTS_BY_FILTER_SUBS = "SELECT * FROM post WHERE author_id IN ? order by uid desc LIMIT ?, ? ";
+    private static final String FIND_POSTS_BY_FILTER_SUBS_ONE = "SELECT * FROM post WHERE author_id = ? order by uid desc LIMIT ?, ? ";
+    private static final String FIND_POSTS_BY_USER_ID = "SELECT * FROM post WHERE author_id=? order by uid desc LIMIT ?, ?";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -24,13 +36,17 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
 
     @Override
     public BlogPost get(Integer id) {
-        List<BlogPost> blogPosts = jdbcTemplate.query("SELECT * FROM post WHERE uid = ?", new Object[]{id}, this);
+        List<BlogPost> blogPosts = jdbcTemplate.query(GET_BY_ID_QUERY, new Object[]{id}, this);
         return blogPosts.size() == 0 ? null : blogPosts.get(0);
+    }
+
+    public Iterable<BlogPost> getBlogPostByUserId(Integer startRow,Integer endRow,Integer userId) {
+        return jdbcTemplate.query(FIND_POSTS_BY_USER_ID, new Object[]{userId,startRow,endRow}, this);
     }
 
     @Override
     public List<BlogPost> getAll() {
-        return jdbcTemplate.query("SELECT * FROM post", this);
+        return jdbcTemplate.query(GET_ALL_QUERY, this);
     }
 
     public List<BlogPost> getBlogPostsChunk(Integer startRow, Integer endRow,String filter) {
@@ -43,25 +59,24 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
                         subsstring.add(String.valueOf(i));
                     }
                     String str="("+String.join(",", subsstring)+")";
-                    return jdbcTemplate.query("SELECT * FROM post WHERE author_id IN ? order by uid desc LIMIT ?, ? ", new Object[]{str, startRow, endRow}, this);
+                    return jdbcTemplate.query(FIND_POSTS_BY_FILTER_SUBS, new Object[]{str, startRow, endRow}, this);
                 }
                 else if (subs.size()==1){
-                    return jdbcTemplate.query("SELECT * FROM post WHERE author_id = ? order by uid desc LIMIT ?, ? ", new Object[]{subs.get(0), startRow, endRow}, this);
+                    return jdbcTemplate.query(FIND_POSTS_BY_FILTER_SUBS_ONE, new Object[]{subs.get(0), startRow, endRow}, this);
                 }
                 else return new ArrayList<BlogPost>();
             case "my":
-                return jdbcTemplate.query("SELECT * FROM post WHERE author_id = ? order by uid desc LIMIT ?, ? ", new Object[]{appUserService.getCurrentUserID(), startRow, endRow}, this);
+                return jdbcTemplate.query(FIND_POSTS_BY_FILTER_MY, new Object[]{appUserService.getCurrentUserID(), startRow, endRow}, this);
             case "all":
             default:
-                return jdbcTemplate.query("SELECT * FROM post order by uid desc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
+                return jdbcTemplate.query(FIND_POSTS_BY_FILTER_ALL, new Object[]{startRow, endRow}, this);
         }
     }
 
     @Override
     public void save(BlogPost blogPost) {
         jdbcTemplate.update(
-                "INSERT INTO `post` (`title`, `date_time`, `content`, `author_id`) " +
-                        "VALUES (?, ?, ?, ?)",
+                SAVE_QUERY,
                 blogPost.getBlogPostTitle(),
                 blogPost.getTime(),
                 blogPost.getBlogPostContent(),
@@ -70,13 +85,12 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
 
     @Override
     public void update(BlogPost blogPost) {
-        jdbcTemplate.update("UPDATE post SET content = ? AND title = ? WHERE uid = ?",
-                blogPost.getBlogPostContent(), blogPost.getBlogPostTitle(), blogPost.getBlogPostId());
+        jdbcTemplate.update(UPDATE_QUERY, blogPost.getBlogPostContent(), blogPost.getBlogPostTitle(), blogPost.getBlogPostId());
     }
 
     @Override
     public void delete(Integer id) {
-        jdbcTemplate.update("DELETE FROM post WHERE uid = ?", id);
+        jdbcTemplate.update(DELETE_QUERY, id);
     }
 
     @Override
@@ -90,4 +104,6 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
         blogPost.setAuthorId(resultSet.getInt("author_id"));
         return blogPost;
     }
+
+
 }

@@ -60,20 +60,24 @@
       </div>
     </div>
 
+    <div class='about' *ngIf="lastPost && user">
+      Last blog post
+      <a class="view-all-link" routerLink="/blog/user/{{this.id}}">view all</a>
+    </div>
+    <div class='blogpost'>
+      <app-blog-list-item *ngIf="lastPost && user" [blog_list_item]='lastPost'></app-blog-list-item>
+    </div>
+
     <div class='about'>
       History
     </div>
     <div class='histories'>
-
-
       <div *ngFor="let history of this.histories;let i = index">
         <div *ngIf="i < 4" class='history'>
           <span class='title'>{{history.title}}</span>
           <span class='contents'>{{history.contents}}</span>
         </div>
       </div>
-
-
     </div>
 
     <div class='about'>

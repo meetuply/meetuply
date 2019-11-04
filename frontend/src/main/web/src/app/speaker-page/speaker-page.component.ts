@@ -4,15 +4,17 @@ import { Feedback } from "../feedback"
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { User } from '../_models'
+import {BlogPost, User} from '../_models'
 import { UserService } from '../_services/user.service'
 
 import { ChatService } from '../_services/chat.service'
 import { Achievement } from "../_models/achievement";
 import { AchievementService } from "../_services/achievement.service";
 import { MeetupListItem } from "../_models/meetupListItem";
-import { Subscription } from "rxjs";
 import { RatingService } from "../_services/rating.service";
+import {BlogService} from "../_services/blog.service";
+import {Blog_list_item} from "../_models/blog_list_item";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -30,6 +32,10 @@ export class SpeakerPageComponent implements OnInit {
   following: boolean;
   achievementList: Achievement[] = [];
   error;
+  loading: boolean;
+  private sub: Subscription;
+
+  lastPost: Blog_list_item;
 
   currentUser: number;
 
@@ -79,26 +85,45 @@ export class SpeakerPageComponent implements OnInit {
 
   goBack() {
     this._location.back();
-
   }
 
 
   constructor(private _location: Location, private router: Router,
     private userService: UserService, private route: ActivatedRoute,
     private achievementService: AchievementService,
-    private ratingService: RatingService, private chatService: ChatService) {
+    private ratingService: RatingService, private chatService: ChatService,
+              private blogService:BlogService) {}
 
+  ngOnInit() {
+    this.currentUser = this.userService.currentUser.userId;
+    this.id = this.route.snapshot.params['id'];
+    this.loadCommonRoom(this.id, this.userService.currentUser.userId);
+    this.loadUser(this.id);
+    this.loadFollowers(this.id);
+    this.loadLanguages(this.id);
+    this.loadAchievements(this.id);
+    this.loadRating(this.id);
   }
 
   loadUser(id: number) {
-    this.userService.get(id).subscribe(user =>
+    this.loading=true;
+    this.userService.get(id).subscribe( user =>
       this.user = user
     );
+
+    this.loading = true;
+    this.sub = this.userService.get(id).subscribe(
+      async user => {
+        this.loading = false;
+        if (user) {
+          this.user = user;
+          await this.loadLastPost(id);
+        }});
   }
 
 
   loadFollowers(id: number) {
-    this.userService.getUserFollowers(id).subscribe(res => {
+    this.userService.getUserFollowers(id).subscribe( res => {
       this.followers = res;
       this.following = (this.followers.indexOf(this.userService.currentUser.userId) != -1)
     });
@@ -110,7 +135,12 @@ export class SpeakerPageComponent implements OnInit {
     );
   }
 
-
+  loadLastPost(id: number){
+    this.blogService.getBlogPostsByUserId(0,1, id).subscribe(posts =>
+      this.lastPost=new Blog_list_item(posts.pop(),
+        this.user.firstName+" "+this.user.lastName,
+        this.user.photo, this.id))
+  }
 
   loadCommonRoom(id1: number, id2: number) {
     this.chatService.haveCommonRoom(id1, id2).subscribe(
@@ -133,9 +163,6 @@ export class SpeakerPageComponent implements OnInit {
     }
   }
 
-
-
-
   loadAchievements(id: number) {
     this.achievementService.getUserAchievements(id).toPromise().then(
       achievements => {
@@ -146,19 +173,6 @@ export class SpeakerPageComponent implements OnInit {
 
   loadRating(id: number) {
     this.ratingService.getUserRatingAvg(id);
-  }
-
-
-  ngOnInit() {
-    this.currentUser = this.userService.currentUser.userId;
-    this.id = this.route.snapshot.params['id'];
-    this.loadCommonRoom(this.id, this.userService.currentUser.userId);
-    this.loadUser(this.id);
-    this.loadFollowers(this.id);
-    this.loadLanguages(this.id);
-
-    this.loadAchievements(this.id);
-    this.loadRating(this.id);
   }
 
   followText(): string {

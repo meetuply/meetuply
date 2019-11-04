@@ -19,11 +19,15 @@ export class BlogService {
   }
 
   getAllBlogPosts(): Observable<BlogPost[]> {
-    return this.http.get<BlogPost[]>(this.blogApiUrl)
+    return this.http.get<BlogPost[]>(this.blogApiUrl);
+  }
+
+  getBlogPostsByUserId(start: number, size: number, id:number): Observable<BlogPost[]>{
+    return this.http.get<BlogPost[]>(this.blogApiUrl + "user/"+`${id}` +"/"+ start + "/" + size);
   }
 
   getBlogPostsChunk(start: number, size: number, filter:string): Observable<BlogPost[]> {
-    return this.http.get<BlogPost[]>(this.blogApiUrl + filter + "/" + start + "/" + size)
+    return this.http.get<BlogPost[]>(this.blogApiUrl + filter + "/" + start + "/" + size);
   }
 
   createBlogPost(blogPost: BlogPost): Observable<{}> {
@@ -35,15 +39,15 @@ export class BlogService {
   }
 
   getAllBlogComments(): Observable<BlogComment[]> {
-    return this.http.get<BlogComment[]>(this.blogApiUrl + "comments")
+    return this.http.get<BlogComment[]>(this.blogApiUrl + "comments");
   }
 
   getBlogPostComments(id: number): Observable<BlogComment[]> {
-    return this.http.get<BlogComment[]>(this.blogApiUrl + `${id}` + "/comments")
+    return this.http.get<BlogComment[]>(this.blogApiUrl + `${id}` + "/comments");
   }
 
   getBlogCommentsChunk(id: number, start: number, size: number): Observable<BlogComment[]> {
-    return this.http.get<BlogComment[]>(this.blogApiUrl + `${id}` + "/comments/" + start + "/" + size)
+    return this.http.get<BlogComment[]>(this.blogApiUrl + `${id}` + "/comments/" + start + "/" + size);
   }
 
   createBlogComment(blogComment: BlogComment): Observable<{}> {

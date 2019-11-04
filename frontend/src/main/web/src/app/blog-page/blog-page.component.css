@@ -128,11 +128,16 @@ textarea {
 
 .form-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-shrink: 10;
   margin: 2px;
   width: 100%;
   height: 100%;
+}
+
+#form-error{
+  color: #cc0000;
+  display: none;
 }
 
 .form-container .comment-text{

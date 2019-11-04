@@ -10,10 +10,12 @@
 
 		<form class="form">
 			<div class='form_line'><span>Title</span><input type="text" name="title" placeholder="Title" [(ngModel)]="this.post_title" required autocomplete="off"/></div>
+      <p class="form-error" id="title-error">Title can't be empty</p>
 
 			<div class='form_line'>
 				<span>Post</span>
 				<textarea placeholder="Write your post" cols="30" rows="8" name="post"  [(ngModel)]="this.post_content" required autocomplete="off"></textarea>
+        <p class="form-error" id="content-error">Post can't be empty</p>
 			</div>
 
 			<div class='extra'>

@@ -16,20 +16,23 @@ import {BlogComment} from "../_models/comment";
 export class BlogPageComponent implements OnInit {
 
   blogpost: BlogPost = new BlogPost();
-  loading = false;
   id: number;
   author: string;
   authorPhoto: string;
   authorId: number;
-  error = null;
+
   lastRow = 0;
   maxCommentsOnPage: number;
-  step = 4;
+  step = 10;
   scrollDistance = 2;
+
   commentsList: Blog_comment_item[] = [];
   newChunk: Blog_comment_item[];
   new_comment: string;
+
   private sub: Subscription;
+  loading = false;
+  error = null;
 
   constructor(private userService: UserService, private blogService: BlogService,
               private _location: Location, private route: ActivatedRoute) {
@@ -39,6 +42,7 @@ export class BlogPageComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
     this.loadBlogPost(this.id);
     this.maxCommentsOnPage = 50;
+    this.new_comment="";
   }
 
   onScrollDown() {
@@ -113,24 +117,32 @@ export class BlogPageComponent implements OnInit {
   }
 
   submitComment($event) {
-    let datetime = new Date(Date.now());
+    if (this.new_comment.length>0)
+    {
+      let datetime = new Date(Date.now());
 
-    let comment: BlogComment = {
-      blogCommentContent: this.new_comment,
-      authorId: this.userService.currentUser.userId,
-      postId: this.id,
-      time: datetime
-    };
+      let comment: BlogComment = {
+        blogCommentContent: this.new_comment,
+        authorId: this.userService.currentUser.userId,
+        postId: this.id,
+        time: datetime
+      };
 
-    this.blogService.createBlogComment(comment).subscribe(data => {
-      if (data == null) {
-        //refresh
-        this.reloadComments();
-        this.new_comment="";
-      }
-    }, error => {
-      alert(error)
-    });
+      this.blogService.createBlogComment(comment).subscribe(data => {
+        if (data == null) {
+          //refresh
+          this.reloadComments();
+          this.new_comment="";
+        }
+      }, error => {
+        alert(error)
+      });
+
+      window.document.getElementById("form-error").setAttribute("style","display:none;");
+    }
+    else{
+      window.document.getElementById("form-error").setAttribute("style","display:block;");
+    }
   }
 
   ngOnDestroy() {
