@@ -52,6 +52,9 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { TopicsPageComponent } from './topics-page/topics-page.component';
 import { TopicPageComponent } from './topic-page/topic-page.component';
 import { TopicSearchComponent } from './topic-search/topic-search.component';
+import { BanReasonsPageComponent } from './ban-reasons-page/ban-reasons-page.component';
+import { BanReasonPageComponent } from './ban-reason-page/ban-reason-page.component';
+import { BanReasonSearchComponent } from './ban-reason-search/ban-reason-search.component';
 
 
 @NgModule({
@@ -99,7 +102,10 @@ import { TopicSearchComponent } from './topic-search/topic-search.component';
     AchievementsPageComponent,
     TopicsPageComponent,
     TopicPageComponent,
-    TopicSearchComponent
+    TopicSearchComponent,
+    BanReasonsPageComponent,
+    BanReasonPageComponent,
+    BanReasonSearchComponent
   ],
   imports: [
     BrowserModule,

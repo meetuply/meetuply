@@ -26,6 +26,8 @@ import { AchievementPanelComponent } from "./achievement-panel/achievement-panel
 import { AchievementsPageComponent } from "./achievements-page/achievements-page.component";
 import { TopicsPageComponent } from "./topics-page/topics-page.component";
 import { TopicPageComponent } from "./topic-page/topic-page.component";
+import {BanReasonsPageComponent} from "./ban-reasons-page/ban-reasons-page.component";
+import {BanReasonPageComponent} from "./ban-reason-page/ban-reason-page.component";
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -46,8 +48,10 @@ const routes: Routes = [
   { path: 'deactivation', component: UserDeactivationComponent, canActivate: [AdminGuard] },
   { path: 'achievement/create', component: AchievementCreatePageComponent/*, canActivate: [AdminGuard] */},
   { path: 'achievements', component: AchievementsPageComponent/*, canActivate: [AdminGuard] */},
-  { path: 'topics', component: TopicsPageComponent/*, canActivate: [AdminGuard] */},
-  { path: 'topics/:id', component: TopicPageComponent/*, canActivate: [AdminGuard] */},
+  { path: 'topics', component: TopicsPageComponent, canActivate: [AdminGuard] },
+  { path: 'topics/:id', component: TopicPageComponent, canActivate: [AdminGuard] },
+  { path: 'ban_reasons', component: BanReasonsPageComponent, canActivate: [AdminGuard] },
+  { path: 'ban_reasons/:id', component: BanReasonPageComponent, canActivate: [AdminGuard] },
 
 ];
 
