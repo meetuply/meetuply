@@ -6,11 +6,14 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 import { User } from '../_models'
 import { UserService } from '../_services/user.service'
-import {Achievement} from "../_models/achievement";
-import {AchievementService} from "../_services/achievement.service";
-import {MeetupListItem} from "../_models/meetupListItem";
-import {Subscription} from "rxjs";
-import {RatingService} from "../_services/rating.service";
+
+import { ChatService } from '../_services/chat.service'
+import { Achievement } from "../_models/achievement";
+import { AchievementService } from "../_services/achievement.service";
+import { MeetupListItem } from "../_models/meetupListItem";
+import { Subscription } from "rxjs";
+import { RatingService } from "../_services/rating.service";
+
 
 @Component({
   selector: 'app-speaker-page',
@@ -25,10 +28,12 @@ export class SpeakerPageComponent implements OnInit {
   languages: string[];
   rate: number;
   following: boolean;
-  achievementList: Achievement[];
+  achievementList: Achievement[] = [];
   error;
 
   currentUser: number;
+
+  commonRoomId: number;
 
   histories: History[] = [
     {
@@ -77,10 +82,12 @@ export class SpeakerPageComponent implements OnInit {
 
   }
 
+
   constructor(private _location: Location, private router: Router,
-              private userService: UserService, private route: ActivatedRoute,
-              private achievementService: AchievementService,
-              private ratingService: RatingService) {
+    private userService: UserService, private route: ActivatedRoute,
+    private achievementService: AchievementService,
+    private ratingService: RatingService, private chatService: ChatService) {
+
   }
 
   loadUser(id: number) {
@@ -89,37 +96,67 @@ export class SpeakerPageComponent implements OnInit {
     );
   }
 
-  loadFollowers(id:number) {
+
+  loadFollowers(id: number) {
     this.userService.getUserFollowers(id).subscribe(res => {
       this.followers = res;
-      this.following=(this.followers.indexOf(this.userService.currentUser.userId) != -1)
+      this.following = (this.followers.indexOf(this.userService.currentUser.userId) != -1)
     });
   }
 
-  loadLanguages(id:number) {
+  loadLanguages(id: number) {
     this.userService.getUserLanguages(id).subscribe(res =>
       this.languages = res.map(l => l.name)
     );
   }
 
-  loadAchievements(id:number){
+
+
+  loadCommonRoom(id1: number, id2: number) {
+    this.chatService.haveCommonRoom(id1, id2).subscribe(
+      common => this.commonRoomId = common
+    )
+  }
+
+
+  message() {
+
+    if (this.id != this.userService.currentUser.userId) {
+      if (this.commonRoomId == -1) {
+
+        this.chatService.createCommmonRoom(this.id, this.userService.currentUser.userId).subscribe(
+          room => this.router.navigateByUrl("/chats/" + room)
+        )
+      } else {
+        this.router.navigateByUrl("/chats/" + this.commonRoomId)
+      }
+    }
+  }
+
+
+
+
+  loadAchievements(id: number) {
     this.achievementService.getUserAchievements(id).toPromise().then(
-       achievements => {
+      achievements => {
         this.achievementList = achievements;
       }
     )
   }
 
-  loadRating(id:number){
+  loadRating(id: number) {
     this.ratingService.getUserRatingAvg(id);
   }
 
+
   ngOnInit() {
-    this.currentUser=this.userService.currentUser.userId;
+    this.currentUser = this.userService.currentUser.userId;
     this.id = this.route.snapshot.params['id'];
+    this.loadCommonRoom(this.id, this.userService.currentUser.userId);
     this.loadUser(this.id);
     this.loadFollowers(this.id);
     this.loadLanguages(this.id);
+
     this.loadAchievements(this.id);
     this.loadRating(this.id);
   }
@@ -138,7 +175,7 @@ export class SpeakerPageComponent implements OnInit {
     return 1;
   }
 
-  followButtonClicked(event){
+  followButtonClicked(event) {
     if (this.following)
       this.userService.unfollow(this.id).subscribe(
         data => {
@@ -159,6 +196,7 @@ export class SpeakerPageComponent implements OnInit {
           this.error = error;
         }
       );
+
   }
 
 }
