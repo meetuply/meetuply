@@ -23,11 +23,13 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   filter_shown = false;
   author: string;
+  userID: number;
 
   constructor(private router: Router,
               public userService: UserService,
               private meetupService: MeetupService,
               public stateService: StateService) {
+    this.userID = this.userService.currentUser.userId;
   }
 
   ngOnInit() {

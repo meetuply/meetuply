@@ -22,13 +22,13 @@
        [infiniteScrollDistance]="scrollDistance"
        (scrolled)='this.onScrollDown()'>
     <div class='left_column'>
+
       <div *ngFor="let meetupItem of this.meetupsList;let i = index">
         <app-meetup-list-item
           *ngIf="isOdd(i)"
                               [meetupListItem]='meetupItem'
                               [isMy]="userService.currentUser.userId == meetupItem.speakerId"
                               [state]="stateService.states[meetupItem.stateId]">
-
         </app-meetup-list-item>
       </div>
     </div>
