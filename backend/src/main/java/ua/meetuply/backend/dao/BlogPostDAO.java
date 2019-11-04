@@ -10,6 +10,7 @@ import ua.meetuply.backend.service.AppUserService;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -29,8 +30,31 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
 
     @Override
     public List<BlogPost> getAll() {
-        List<BlogPost> blogPosts = jdbcTemplate.query("SELECT * FROM post", this);
-        return blogPosts;
+        return jdbcTemplate.query("SELECT * FROM post", this);
+    }
+
+    public List<BlogPost> getBlogPostsChunk(Integer startRow, Integer endRow,String filter) {
+        switch (filter){
+            case "subs":
+                List<Integer> subs = appUserService.getUserSubscriptions(appUserService.getCurrentUserID());
+                if (subs.size()>1){
+                    List<String> subsstring = new ArrayList<>(subs.size());
+                    for (Integer i : subs) {
+                        subsstring.add(String.valueOf(i));
+                    }
+                    String str="("+String.join(",", subsstring)+")";
+                    return jdbcTemplate.query("SELECT * FROM post WHERE author_id IN ? order by uid desc LIMIT ?, ? ", new Object[]{str, startRow, endRow}, this);
+                }
+                else if (subs.size()==1){
+                    return jdbcTemplate.query("SELECT * FROM post WHERE author_id = ? order by uid desc LIMIT ?, ? ", new Object[]{subs.get(0), startRow, endRow}, this);
+                }
+                else return new ArrayList<BlogPost>();
+            case "my":
+                return jdbcTemplate.query("SELECT * FROM post WHERE author_id = ? order by uid desc LIMIT ?, ? ", new Object[]{appUserService.getCurrentUserID(), startRow, endRow}, this);
+            case "all":
+            default:
+                return jdbcTemplate.query("SELECT * FROM post order by uid desc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
+        }
     }
 
     @Override
@@ -41,7 +65,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
                 blogPost.getBlogPostTitle(),
                 blogPost.getTime(),
                 blogPost.getBlogPostContent(),
-                blogPost.getAuthor().getUserId());
+                blogPost.getAuthorId());
     }
 
     @Override
@@ -63,7 +87,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
         blogPost.setBlogPostTitle(resultSet.getString("title"));
         blogPost.setBlogPostContent(resultSet.getString("content"));
         blogPost.setTime(resultSet.getTimestamp("date_time").toLocalDateTime());
-        blogPost.setAuthor(appUserService.getUser(resultSet.getInt("author_id")));
+        blogPost.setAuthorId(resultSet.getInt("author_id"));
         return blogPost;
     }
 }

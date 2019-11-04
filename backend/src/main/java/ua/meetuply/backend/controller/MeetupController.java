@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Filter;
 import ua.meetuply.backend.model.Meetup;
-import ua.meetuply.backend.model.Topic;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.FilterService;
 import ua.meetuply.backend.service.MeetupService;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.List;
 
 @RequestMapping("api/meetups")
@@ -34,11 +34,18 @@ public class MeetupController {
             return meetupService.getAllMeetups();
     }
 
+//    @GetMapping("/{startRow}/{endRow}")
+//    public @ResponseBody Iterable<Meetup> getMeetupsChunk(@PathVariable("startRow") Integer startRow,
+//                                                          @PathVariable("endRow") Integer endRow)
+//    {
+//        return meetupService.getMeetupsChunk(startRow, endRow);
+//    }
+
     @GetMapping("/{startRow}/{endRow}")
-    public @ResponseBody Iterable<Meetup> getMeetupsChunk(@PathVariable("startRow") Integer startRow,
+    public @ResponseBody Iterable<Meetup> getMeetupsChunkWithUsernameAndRating(@PathVariable("startRow") Integer startRow,
                                                           @PathVariable("endRow") Integer endRow)
     {
-        return meetupService.getMeetupsChunk(startRow, endRow);
+        return meetupService.getMeetupsChunkWithUsernameAndRating(startRow, endRow);
     }
 
     @GetMapping("/{meetupId}/attendees")
@@ -47,7 +54,7 @@ public class MeetupController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Meetup> createMeetup(@Valid @RequestBody Meetup meetup){
+    public ResponseEntity createMeetup(@Valid @RequestBody Meetup meetup){
 
         meetupService.createMeetup(meetup);
         return ResponseEntity.ok().build();
@@ -59,9 +66,9 @@ public class MeetupController {
     }
 
     @PutMapping("/{meetupId}")
-    public ResponseEntity<Meetup> updateMeetup(@PathVariable("meetupId") Integer meetupId, @RequestBody Meetup meetup) {
+    public ResponseEntity updateMeetup(@PathVariable("meetupId") Integer meetupId, @RequestBody Meetup meetup) {
         if (meetupService.getMeetupById(meetupId) == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         meetup.setMeetupId(meetupId);
         meetupService.updateMeetup(meetup);
@@ -69,9 +76,9 @@ public class MeetupController {
     }
 
     @DeleteMapping("/{meetupId}")
-    public ResponseEntity<Topic> deleteTopic(@PathVariable("meetupId") Integer meetupId){
+    public ResponseEntity deleteMeetup(@PathVariable("meetupId") Integer meetupId){
         if (meetupService.getMeetupById(meetupId) == null) {
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         meetupService.deleteMeetup(meetupId);
         return ResponseEntity.ok().build();
@@ -79,6 +86,7 @@ public class MeetupController {
 
     @PutMapping("/{meetupID}/join")
     public ResponseEntity join(@PathVariable("meetupID") Integer meetupID) throws Exception {
+        System.out.println(meetupID);
         meetupService.join(meetupID);
         return ResponseEntity.ok().build();
     }
@@ -96,7 +104,6 @@ public class MeetupController {
         return meetupService.isAttendee(meetupID, userID);
     }
 
-
     @PostMapping("/filters")
     public ResponseEntity<Meetup> createFilter (@Valid @RequestBody Filter filter){
         filter.setUserId(appUserService.getCurrentUserID());
@@ -106,13 +113,44 @@ public class MeetupController {
 
     //TODO rename url
     @GetMapping("/filter-test")
-    public @ResponseBody List<Meetup> getMeetupsByFilter(@RequestParam(value="filter") Integer filterId, Model model){
+    public @ResponseBody
+    List<Meetup> getMeetupsByFilter(@RequestParam(value = "filter") Integer filterId, Model model) {
         Filter filter = filterService.getFilter(filterId);
         List<Meetup> meetups = meetupService.findMeetupsByFilter(filter);
         model.addAttribute(meetups);
         //TODO decide what page will be here
-//        return "";
+        //return "";
         return meetups;
     }
 
+    //TODO rename url
+    @GetMapping("/criteria-test")
+    public @ResponseBody
+    List<Meetup> getMeetupsByCriteria(@RequestParam(value = "rating", required = false) Double rating,
+                                      @RequestParam(value = "date-from", required = false) Timestamp dateFrom,
+                                      @RequestParam(value = "date-to", required = false) Timestamp dateTo,
+                                      Model model) {
+        List<Meetup> meetups = meetupService.findMeetupsByCriteria(rating, dateFrom, dateTo);
+        model.addAttribute(meetups);
+        return meetups;
+    }
+
+    @GetMapping("/{meetupID}/cancel")
+    public ResponseEntity cancel(@PathVariable("meetupID") Integer meetupID) throws Exception {
+        meetupService.cancelMeetup(meetupID);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{meetupID}/terminate")
+    public ResponseEntity terminate(@PathVariable("meetupID") Integer meetupID) throws Exception {
+        meetupService.terminateMeetup(meetupID);
+        System.out.println("terminated");
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/reschedule")
+    public ResponseEntity reschedule(@RequestBody Meetup meetup) throws Exception {
+        meetupService.rescheduleTerminatedMeetup(meetup);
+        return ResponseEntity.ok().build();
+    }
 }

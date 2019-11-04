@@ -19,7 +19,7 @@ public class BlogPostService {
 
     public void createBlogPost(BlogPost blogPost) {
         blogPost.setTime(LocalDateTime.now());
-        blogPost.setAuthor(appUserService.getUser(appUserService.getCurrentUserID()));
+        blogPost.setAuthorId(appUserService.getCurrentUserID());
         blogPostDAO.save(blogPost);
     }
 
@@ -36,4 +36,8 @@ public class BlogPostService {
     }
 
     public BlogPost getBlogPostById(Integer id) {return blogPostDAO.get(id);}
+
+    public List<BlogPost> getBlogPostsChunk(Integer startRow,Integer endRow,String filter) {
+        return blogPostDAO.getBlogPostsChunk(startRow,endRow,filter);
+    }
 }

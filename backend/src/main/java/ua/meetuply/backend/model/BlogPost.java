@@ -16,13 +16,5 @@ public class BlogPost {
     private String blogPostTitle;
     private String blogPostContent;
     private LocalDateTime time;
-    private AppUser author;
-
-    public BlogPost(String blogPostTitle, String blogPostContent, LocalDateTime time, AppUser author) {
-        super();
-        this.blogPostTitle=blogPostTitle;
-        this.blogPostContent = blogPostContent;
-        this.time = time;
-        this.author = author;
-    }
+    private Integer authorId;
 }

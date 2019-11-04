@@ -36,7 +36,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
 
     public List<AppUser> getUsersChunk(Integer startRow, Integer endRow) {
-        return jdbcTemplate.query("SELECT * FROM user order by uid asc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
+        return jdbcTemplate.query("SELECT * FROM user WHERE is_deactivated=0 AND registration_confirmed=1 order by uid asc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
     }
 
     @Override
@@ -67,6 +67,17 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
         return jdbcTemplate.queryForList("SELECT follower_id FROM followers WHERE followed_user_id = ?", new Object[]{id}, Integer.class);
     }
 
+    public List<Integer> getUserSubscriptions(Integer id) {
+        return jdbcTemplate.queryForList("SELECT followed_user_id FROM followers WHERE follower_id = ?", new Object[]{id}, Integer.class);
+    }
+
+    public void follow(Integer currentUserID, Integer userId){
+        jdbcTemplate.update("INSERT INTO followers (`follower_id`, `followed_user_id`) VALUES (?, ?)", currentUserID, userId);
+    }
+
+    public void unfollow(int currentUserID, Integer userId) {
+        jdbcTemplate.update("DELETE FROM followers WHERE follower_id = ? AND followed_user_id = ?", currentUserID,userId);
+    }
 
     @Override
     public List<AppUser> getAll() {
@@ -106,7 +117,13 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
     @Override
     public void delete(Integer id) {
+        jdbcTemplate.update("DELETE FROM user WHERE uid = ?", id);
+    }
 
+    public Integer getFollowersNumber(Integer id){
+        Integer followersNumber = jdbcTemplate.queryForObject("select count(*) from followers where followed_user_id = ?;",
+                new Object []{id}, Integer.class);
+        return followersNumber != null ? followersNumber : 0;
     }
 
     public AppUser mapRow(ResultSet resultSet, int rowNum) throws SQLException {

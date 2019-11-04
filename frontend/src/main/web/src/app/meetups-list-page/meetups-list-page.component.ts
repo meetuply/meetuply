@@ -1,10 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Meetup_list_item} from "../_models/meetup_list_item"
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {MeetupListItem} from "../_models/meetupListItem"
 import {MeetupService} from "../_services/meetup.service";
 import {Subscription} from "rxjs";
 import {UserService} from "../_services";
-import {Meetup} from "../_models/meetup";
-import {RatingService} from "../_services/rating.service";
 
 @Component({
   selector: 'app-meetups-list-page',
@@ -12,31 +10,28 @@ import {RatingService} from "../_services/rating.service";
   styleUrls: ['./meetups-list-page.component.less']
 })
 
-export class MeetupsListPageComponent implements OnInit {
+export class MeetupsListPageComponent implements OnInit, OnDestroy {
 
   loading = false;
   lastRow = 0;
   maxMeetupsOnPage: number;
-  step = 4;
+  meetupsChunkSize = 10;
   scrollDistance = 2;
-  meetupsList: Meetup_list_item[] = [];
-  newChunk: Meetup_list_item[];
+  meetupsList: MeetupListItem[] = [];
   private sub: Subscription;
   filter_shown = false;
   author: string;
 
   constructor(private userService: UserService,
-              private meetupService: MeetupService,
-              private ratingService: RatingService) {
+              private meetupService: MeetupService) {
   }
 
   ngOnInit() {
-    this.maxMeetupsOnPage = 50;
+    this.maxMeetupsOnPage = 1600;
     this.loadMeetupsChunk();
   }
 
   onScrollDown() {
-    console.log('scrolled!!');
     this.loadMeetupsChunk();
   }
 
@@ -53,38 +48,24 @@ export class MeetupsListPageComponent implements OnInit {
   }
 
   loadMeetupsChunk() {
-    console.log("LAST ROW: ");
-    console.log(this.lastRow);
     if (this.lastRow < this.maxMeetupsOnPage) {
       this.loading = true;
-      this.sub = this.meetupService.getMeetupsChunk(this.lastRow, this.step).subscribe(
-        async data => {
+      this.meetupService.getMeetupsChunkWithUsernameAndRating(this.lastRow, this.meetupsChunkSize).toPromise().then(
+        data => {
           this.loading = false;
-          if (data){
+          if (data) {
             this.lastRow += data.length;
-          this.newChunk = await Promise.all(data.map( async item => {
-              let username = "";
-              let photo = "";
-              let rating = 0;
-              await this.userService.get(item.speakerId).toPromise().then(
-                speaker => {
-                  username = speaker.firstName + " " + speaker.lastName;
-                  photo = speaker.photo;
-                }
-              );
-              await this.ratingService.getUserRatingAvg(item.speakerId).toPromise().then(
-                rate => {rating = rate}
-              );
-              return new Meetup_list_item(item, username, photo, rating)
-            }
-          ));
-          this.meetupsList.push(...this.newChunk);
-        }
-        },
-        error1 => {
-          this.loading = false;
-        }
-      )
+            this.meetupsList.push(...data);
+          }
+        }, error1 => {
+          console.log(error1);
+        })
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.sub) {
+      this.sub.unsubscribe();
     }
   }
 }

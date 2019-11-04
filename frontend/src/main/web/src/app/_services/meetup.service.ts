@@ -5,19 +5,23 @@ import { Meetup } from "../_models/meetup";
 import { environment } from "../../environments/environment";
 import { UserService } from "./user.service";
 import { User } from "../_models";
+import {MeetupListItem} from "../_models/meetupListItem";
 
 
 @Injectable({ providedIn: 'root' })
 export class MeetupService {
 
   private meetupApiUrl = `${environment.apiUrl}/api/meetups/`;
-  //private meetupApiUrl = `http://localhost:8080/api/meetups/`;
 
   constructor(private http: HttpClient, private userService: UserService) {
   }
 
   getMeetupsChunk(startRow: number, endRow: number): Observable<Meetup[]> {
     return this.http.get<Meetup[]>(this.meetupApiUrl + `${startRow}` + "/" + `${endRow}`)
+  }
+
+  getMeetupsChunkWithUsernameAndRating(startRow: number, endRow: number): Observable<MeetupListItem[]> {
+    return this.http.get<MeetupListItem[]>(this.meetupApiUrl + `${startRow}` + "/" + `${endRow}`)
   }
 
   get(id: number): Observable<Meetup> {
@@ -48,5 +52,17 @@ export class MeetupService {
 
   create(meetup: Meetup): Observable<{}> {
     return this.http.post(this.meetupApiUrl + 'create', meetup);
+  }
+
+  terminate(meetupID: number): Observable<{}> {
+    return this.http.get<boolean>(this.meetupApiUrl + + `${meetupID}` + '/terminate');
+  }
+
+  cancell(meetupID: number): Observable<{}> {
+    return this.http.get<boolean>(this.meetupApiUrl + + `${meetupID}` + '/cancel');
+  }
+
+  reschedule(meetup: Meetup): Observable<{}> {
+    return this.http.post(this.meetupApiUrl + 'reschedule', meetup);
   }
 }

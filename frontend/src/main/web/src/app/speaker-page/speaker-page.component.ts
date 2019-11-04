@@ -2,12 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { History } from '../history'
 import { Feedback } from "../feedback"
 import { Location } from '@angular/common';
-import { HttpClient } from "@angular/common/http";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { User } from '../_models'
 import { UserService } from '../_services/user.service'
+
 import { ChatService } from '../_services/chat.service'
+import { Achievement } from "../_models/achievement";
+import { AchievementService } from "../_services/achievement.service";
+import { MeetupListItem } from "../_models/meetupListItem";
+import { Subscription } from "rxjs";
+import { RatingService } from "../_services/rating.service";
+
 
 @Component({
   selector: 'app-speaker-page',
@@ -16,13 +22,16 @@ import { ChatService } from '../_services/chat.service'
 })
 export class SpeakerPageComponent implements OnInit {
 
-
   id: number;
   user: User;
-  followers: number;
+  followers: number[];
   languages: string[];
-  rate: 3;
+  rate: number;
+  following: boolean;
+  achievementList: Achievement[] = [];
+  error;
 
+  currentUser: number;
 
   commonRoomId: number;
 
@@ -73,7 +82,12 @@ export class SpeakerPageComponent implements OnInit {
 
   }
 
-  constructor(private _location: Location, private router: Router, private userService: UserService, private chatService: ChatService, private route: ActivatedRoute) {
+
+  constructor(private _location: Location, private router: Router,
+    private userService: UserService, private route: ActivatedRoute,
+    private achievementService: AchievementService,
+    private ratingService: RatingService, private chatService: ChatService) {
+
   }
 
   loadUser(id: number) {
@@ -82,10 +96,12 @@ export class SpeakerPageComponent implements OnInit {
     );
   }
 
+
   loadFollowers(id: number) {
-    this.userService.getUserFollowers(id).subscribe(res =>
-      this.followers = res.length
-    );
+    this.userService.getUserFollowers(id).subscribe(res => {
+      this.followers = res;
+      this.following = (this.followers.indexOf(this.userService.currentUser.userId) != -1)
+    });
   }
 
   loadLanguages(id: number) {
@@ -119,12 +135,67 @@ export class SpeakerPageComponent implements OnInit {
 
 
 
+
+  loadAchievements(id: number) {
+    this.achievementService.getUserAchievements(id).toPromise().then(
+      achievements => {
+        this.achievementList = achievements;
+      }
+    )
+  }
+
+  loadRating(id: number) {
+    this.ratingService.getUserRatingAvg(id);
+  }
+
+
   ngOnInit() {
+    this.currentUser = this.userService.currentUser.userId;
     this.id = this.route.snapshot.params['id'];
     this.loadCommonRoom(this.id, this.userService.currentUser.userId);
     this.loadUser(this.id);
     this.loadFollowers(this.id);
     this.loadLanguages(this.id);
+
+    this.loadAchievements(this.id);
+    this.loadRating(this.id);
+  }
+
+  followText(): string {
+    if (this.following === true) {
+      return "Unfollow";
+    }
+    return "Follow";
+  }
+
+  followType(): number {
+    if (this.following === true) {
+      return 2;
+    }
+    return 1;
+  }
+
+  followButtonClicked(event) {
+    if (this.following)
+      this.userService.unfollow(this.id).subscribe(
+        data => {
+          this.following = false;
+          this.loadFollowers(this.id);
+        },
+        error => {
+          this.error = error;
+        }
+      );
+    else
+      this.userService.follow(this.id).subscribe(
+        data => {
+          this.following = true;
+          this.loadFollowers(this.id);
+        },
+        error => {
+          this.error = error;
+        }
+      );
 
   }
 

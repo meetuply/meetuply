@@ -7,9 +7,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import ua.meetuply.backend.model.Topic;
+
 
 @Repository
 public class TopicDAO implements IDAO<Topic>, RowMapper<Topic> {
@@ -23,6 +25,11 @@ public class TopicDAO implements IDAO<Topic>, RowMapper<Topic> {
         return topics.size() == 0 ? null : topics.get(0);
     }
 
+    public Integer getIdByName(String name) {
+        List<Topic> topics = jdbcTemplate.query("SELECT * FROM topic WHERE name=? ", new Object[] { name }, this);
+        return topics.size() == 0 ? null : topics.get(0).getTopicId();
+    }
+
     @Override
     public List<Topic> getAll() {
         List<Topic> topics = jdbcTemplate.query("SELECT * FROM topic", this);
@@ -32,7 +39,7 @@ public class TopicDAO implements IDAO<Topic>, RowMapper<Topic> {
     @Override
     public void save(Topic topic) {
         jdbcTemplate.update("INSERT INTO `topic` (`name`) " + "VALUES (?)",
-                topic.getName());
+                topic.getName().toLowerCase());
     }
 
     @Override

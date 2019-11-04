@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
-
+import {Component, OnInit, Input} from '@angular/core';
+import {UserService} from "../_services";
+import {Speaker_list_item} from "../_models/speaker_list_item";
 
 @Component({
   selector: 'app-speaker-list-item',
@@ -8,42 +9,55 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class SpeakerListItemComponent implements OnInit {
 
-
-  @Input() name: string;
-  @Input() surname: string;
-  @Input() location: string;
-  @Input() rate: number;
-  @Input() following: Boolean;
-  @Input() awards: number;
-  @Input() languages: Array<string>;
-  @Input() description: string;
-  @Input() id: number;
+  @Input() speaker_list_item: Speaker_list_item;
+  currentUser: number;
+  error;
 
   followText(): string {
-
-
-    if (this.following === true) {
-      return "Followed";
+    if (this.speaker_list_item.following === true) {
+      return "Unfollow";
     }
     return "Follow";
 
   }
 
   followType(): number {
-    if (this.following === true) {
+    if (this.speaker_list_item.following === true) {
       return 2;
     }
     return 1;
   }
 
-  constructor() { }
-
-  ngOnInit() {
-
+  constructor(private userService: UserService) {
   }
 
-  link():string {
-    return "/speakers/" + this.id;
+  ngOnInit() {
+    this.currentUser = this.userService.currentUser.userId;
+  }
+
+  link(): string {
+    return "/speakers/" + this.speaker_list_item.id;
+  }
+
+  followButtonClicked(event) {
+    if (this.speaker_list_item.following)
+      this.userService.unfollow(this.speaker_list_item.id).subscribe(
+        data => {
+          this.speaker_list_item.following = false;
+        },
+        error => {
+          this.error = error;
+        }
+      );
+    else
+      this.userService.follow(this.speaker_list_item.id).subscribe(
+        data => {
+          this.speaker_list_item.following = true;
+        },
+        error => {
+          this.error = error;
+        }
+      );
   }
 
 }

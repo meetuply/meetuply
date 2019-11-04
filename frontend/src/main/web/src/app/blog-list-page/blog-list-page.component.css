@@ -1,0 +1,103 @@
+.content {
+  margin-left: 17%;
+  margin-right: 17%;
+  margin-top: 5%;
+}
+
+.search_icon {
+  background-image: url(/assets/icons/search.png);
+  background-size: 16px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+.title {
+  text-align: left;
+  font-size: 24px;
+  font-weight: bolder;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  margin-left: 5px;
+}
+
+#message{
+  text-align: center;
+  width:100%;
+  font-size: 4em;
+  font-weight: bold;
+  display: none;
+}
+
+.header{
+  display: flex;
+  flex-direction: row;
+}
+
+.filter{
+  display: flex;
+  flex-direction: row;
+  margin-right: 20em;
+}
+
+.filter *{
+  margin-left: 5px;
+}
+
+.filter-off{
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.filter-on{
+  font-weight: bold;
+}
+
+.create-new{
+  text-align: right;
+  float: right;
+  cursor: pointer;
+  font-weight: bold;
+  color: #086edb;
+}
+
+.search_div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 6px;
+
+  /*border: 5px solid
+  */
+  box-shadow: 10px 6px 25px rgba(112, 124, 151, 0.1),
+  4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);
+}
+
+.search_div * {
+  margin: 10px;
+}
+
+.search_div input {
+  width: 100%;
+  font-size: 16px;
+  border: 0px;
+}
+
+.search_div input:focus {
+  outline: 0;
+}
+.main {
+  margin-top: 15px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.main * {
+  width: 100%;
+}
+
+.post_item {
+  box-shadow: 10px 6px 25px rgba(112, 124, 151, 0.1),
+  4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);
+}

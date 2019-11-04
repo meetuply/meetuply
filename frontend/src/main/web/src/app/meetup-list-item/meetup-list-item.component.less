@@ -1,13 +1,13 @@
 .item {
   margin-top: 12px;
-
   display: flex;
   flex-direction: row;
-
+  flex-flow: nowrap;
+  flex: 1 50%;
   max-width: 600px;
-  max-height: 230px;
+  max-height: 600px;
   box-shadow: 10px 6px 25px rgba(112, 124, 151, 0.1),
-    4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);
+  4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);
 }
 
 .item * {
@@ -18,35 +18,18 @@
   margin: 15px;
   margin-right: 0px;
   width: 70%;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.name {
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
 }
 
 .item .additional {
   margin: 15px;
   margin-right: 0px;
-
+  min-width: 30%;
+  max-width: 35%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-
   justify-content: flex-start;
   padding: 10px;
-}
-
-.description {
-  word-break: break-all;
-  word-wrap: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 5px;
 }
 
 .profile {
@@ -61,7 +44,6 @@
 }
 
 .avatar img {
-  max-width: 60px;
   max-width: 60px;
   border-radius: 50%;
 }
@@ -81,14 +63,14 @@
 }
 
 .location .icon {
-  width: 18px;
+  min-width: 18px;
   height: 18px;
   background-image: url(/assets/icons/pin.png);
   background-size: cover;
 }
 
 .location .text {
-  padding-left: 10px;
+  //padding-left: 10px;
 }
 
 .languages {
@@ -99,7 +81,7 @@
 
 .languages .icon {
   margin-top: 10px;
-  width: 16px;
+  min-width: 16px;
   height: 16px;
   background-image: url(/assets/icons/presentation.png);
   background-size: 16px;
@@ -115,7 +97,7 @@
 
 
 .time .icon {
-  width: 18px;
+  min-width: 18px;
   height: 18px;
   background-image: url(/assets/icons/calendar.png);
   background-size: cover;
@@ -145,3 +127,60 @@
 .app-button {
   position: -ms-device-fixed;
 }
+
+.location {
+  max-width: 120px;
+  max-height: 45px;
+  overflow:hidden;
+  word-wrap: break-spaces;
+  flex-direction: row;
+}
+
+.title {
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  margin-right: -1em;
+  padding-right: 1em;
+  line-height: 1.2em;
+  max-height: 2.4em;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.description {
+  position: relative;
+  overflow: hidden;
+  text-align: justify;
+  margin-right: -1em;
+  padding-right: 1em;
+  line-height: 1.2em;
+  max-height: 4.8em;
+}
+
+.title:before, .description:before {
+  content: '...';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.title:after, .description:after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: 1em;
+  height: 1em;
+  margin-top: 0.2em;
+  background: white;
+}
+
+.place{
+  cursor: pointer;
+}
+
+.authorName:hover{
+  font-weight: bold;
+}
+

@@ -84,4 +84,14 @@ export class UserService {
   getUserLanguages(userId: number): Observable<Language[]> {
     return this.http.get<Language[]>(this.userApiUrl + `${userId}/languages`);
   }
+
+  unfollow(userId:number): Observable<{}>{
+    return this.http.delete(this.userApiUrl + 'following/' + userId)
+  }
+
+  follow(userId: number): Observable<{}>{
+    return this.http.post(this.userApiUrl + 'following/' + userId, {});
+  }
+
+
 }

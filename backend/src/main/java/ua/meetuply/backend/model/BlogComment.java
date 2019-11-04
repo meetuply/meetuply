@@ -14,14 +14,6 @@ public class BlogComment {
     private Integer blogCommentId;
     private String blogCommentContent;
     private LocalDateTime time;
-    private BlogPost post;
-    private AppUser author;
-
-    public BlogComment(String blogCommentContent, LocalDateTime time, BlogPost post, AppUser author) {
-        super();
-        this.blogCommentContent=blogCommentContent;
-        this.time = time;
-        this.post=post;
-        this.author = author;
-    }
+    private Integer postId;
+    private Integer authorId;
 }

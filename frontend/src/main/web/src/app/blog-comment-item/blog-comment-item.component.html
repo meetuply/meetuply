@@ -1,0 +1,24 @@
+<div class='item'>
+  <div class = 'main'>
+    <div class='author' [routerLink]="['/speakers/',blog_comment_item.authorId]">
+      <div class='avatar'>
+        <img *ngIf="blog_comment_item.authorPhoto" src={{this.blog_comment_item.authorPhoto}}>
+        <img *ngIf="!blog_comment_item.authorPhoto" src="assets/img/download.png">
+      </div>
+        <div class='info'>
+          <div class='name'>
+            {{this.blog_comment_item.author}}
+          </div>
+        </div>
+    </div>
+
+    <div class='comment'>
+      <div class='comment-content'>
+        <span>{{this.blog_comment_item.content}}</span>
+      </div>
+      <div class="comment-time">
+        {{this.blog_comment_item.date.toString().replace("T"," ")}}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,6 @@
 package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +32,10 @@ public class AppUserService implements UserDetailsService {
     @Autowired
     SessionService sessionService;
 
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();;
+    @Autowired
+    StateService stateService;
+
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void createAppUser(AppUser appUser) {
         String encrytedPassword = this.passwordEncoder.encode(appUser.getPassword());
@@ -56,13 +58,15 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getAppUsers();
     }
 
-    public List<AppUser> getUsersChunk(Integer startRow,Integer endRow) {
-        return appUserDAO.getUsersChunk(startRow,endRow);
+    public List<AppUser> getUsersChunk(Integer startRow, Integer endRow) {
+        return appUserDAO.getUsersChunk(startRow, endRow);
     }
 
-    public List<AppUser> getMeetupAttendees(Integer meetupId) {return appUserDAO.getMeetupAttendees(meetupId);}
+    public List<AppUser> getMeetupAttendees(Integer meetupId) {
+        return appUserDAO.getMeetupAttendees(meetupId);
+    }
 
-    public Integer getUserIdByEmail(String email){
+    public Integer getUserIdByEmail(String email) {
         return appUserDAO.getUserIdByEmail(email);
     }
 
@@ -70,12 +74,16 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getUserSubscribers(id);
     }
 
-    public AppUser getUser(Integer id){
+    public List<Integer> getUserSubscriptions(Integer id) {
+        return appUserDAO.getUserSubscriptions(id);
+    }
+
+    public AppUser getUser(Integer id) {
         return appUserDAO.get(id);
     }
 
-    public String getUserFullName(Integer id){
-        AppUser user =  appUserDAO.get(id);
+    public String getUserFullName(Integer id) {
+        AppUser user = appUserDAO.get(id);
         return user.getFirstName() + " " + user.getLastName();
     }
 
@@ -101,11 +109,11 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getUserByEmail(email);
     }
 
-    public AppUser getUserByEmail(String email){
+    public AppUser getUserByEmail(String email) {
         return appUserDAO.getUserByEmail(email);
     }
 
-    public Integer getUserIdByName(String name){
+    public Integer getUserIdByName(String name) {
         return appUserDAO.getUserIdByName(name);
     }
 
@@ -118,13 +126,31 @@ public class AppUserService implements UserDetailsService {
         user.setDeactivated(true);
         appUserDAO.update(user);
         sessionService.expireUserSessions(user.getEmail());
-
+        stateService.terminateCurrentMeetupsOf(user);
+        stateService.cancelFutureMeetupsOf(user);
     }
 
     public void activateDeactivatedUser(AppUser user) {
         user.setDeactivated(false);
         appUserDAO.update(user);
     }
+
+    public boolean isAdmin() {
+        return getCurrentUser().getRole().equals(roleDAO.getRoleByName("admin"));
+    }
+
+    public void follow(Integer userId) {
+        appUserDAO.follow(getCurrentUserID(), userId);
+    }
+
+    public void unfollow(Integer userId) {
+        appUserDAO.unfollow(getCurrentUserID(), userId);
+    }
+
+    public Integer getFollowersNumber(Integer userId) {
+        return appUserDAO.getFollowersNumber(userId);
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String email) {
@@ -134,10 +160,12 @@ public class AppUserService implements UserDetailsService {
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         User user;
 
-        if(appUser.getRole().getRoleName().equals("admin")) {
+        System.out.println(appUser);
+        if (appUser.getRole().getRoleName().equals("admin")) {
             user = new User(appUser.getEmail(), appUser.getPassword(), grantedAuthorities);
-        }
-        else user = new User(appUser.getEmail(), appUser.getPassword(), new HashSet<>());
+        } else user = new User(appUser.getEmail(), appUser.getPassword(), new HashSet<>());
         return user;
     }
+
+
 }

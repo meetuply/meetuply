@@ -33,19 +33,13 @@ public class RoleDAO implements IDAO<Role>, RowMapper<Role> {
     }
 
     @Override
-    public void save(Role role) {
-
-    }
+    public void save(Role role) { }
 
     @Override
-    public void update(Role role) {
-
-    }
+    public void update(Role role) { }
 
     @Override
-    public void delete(Integer id) {
-
-    }
+    public void delete(Integer id) { }
 
     public Role mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return new Role(

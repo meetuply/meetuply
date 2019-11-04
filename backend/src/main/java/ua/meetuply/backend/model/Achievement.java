@@ -14,7 +14,8 @@ public class Achievement {
     private String title;
     private String description;
     private String icon;
-    private Integer followersNumber;
-    private Integer postsNumber;
+    private Integer followers;
+    private Integer posts;
     private Float rating;
+    private Integer meetups;
 }

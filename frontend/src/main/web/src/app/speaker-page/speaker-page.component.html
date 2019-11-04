@@ -2,110 +2,125 @@
 <div class='content'>
 
 
-	<div class='main'>
-		<div class='back' (click)="goBack()">
+  <div class='main'>
+    <div class='back' (click)="goBack()">
 
-		</div>
-		<div class='profile'>
+    </div>
+    <div class='profile'>
 
-			<div class='avatar'>
-				<img src="assets/img/download.png">
-				<app-rating size='24' rating="{{this.rate}}"></app-rating>
-			</div>
+      <div class='avatar'>
+        <img src="assets/img/download.png">
+        <app-rating size='24' rating="{{this.user}}"></app-rating>
+      </div>
 
-			<div class='other'>
-				<div class='info'>
-					<div class='name' *ngIf="user">
-						{{this.user.firstName + " " + this.user.lastName}}
-					</div>
-					<div class='location' *ngIf="user && this.user.location">
-						<div class='icon'></div>
-						<div>{{this.user.location}}</div>
-					</div>
+      <div class='other'>
+        <div class='info'>
+          <div class='name' *ngIf="user">
+            {{this.user.firstName + " " + this.user.lastName}}
+            <span *ngIf="currentUser==this.id">(you)</span>
+          </div>
+          <div class='location' *ngIf="user && this.user.location">
+            <div class='icon'></div>
+            <div>{{this.user.location}}</div>
+          </div>
 
-				</div>
-				<div class='additional'>
-					<app-button text='Follow' type='1' (click)="follow()" fontSize='20'></app-button>
-					<app-button text='Message speaker' type='1' (click)="message()" fontSize='20'></app-button>
-				</div>
-				<div class='additional_info'>
-					<span>{{this.followers}} followers</span>
-				</div>
+        </div>
+        <div class='additional' *ngIf="currentUser!=this.id">
+          <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
+          </app-button>
+          <app-button text='Message speaker' type='1' (click)="message()" fontSize='20'></app-button>
+        </div>
+        <div class='additional_info' *ngIf="user && this.followers">
+          <span>{{this.followers.length}} followers</span>
+        </div>
 
-			</div>
-
-
-		</div>
-
-		<div class='about' *ngIf="user && this.user.description">
-			About me
-		</div>
-		<div class='description' *ngIf="user && this.user.description">
-			{{this.user.description}}
-		</div>
+      </div>
 
 
-		<div class='about'>
-			History
-		</div>
-		<div class='histories'>
+    </div>
 
-			<div *ngFor="let history of this.histories;let i = index">
-				<div *ngIf="i < 4" class='history'>
-					<span class='title'>{{history.title}}</span>
-					<span class='contents'>{{history.contents}}</span>
-				</div>
-			</div>
+    <div class='about' *ngIf="user && this.user.description">
+      About me
+    </div>
+    <div class='description' *ngIf="user && this.user.description">
+      {{this.user.description}}
+    </div>
 
 
+    <div *ngIf="achievementList.length != 0" class='about'>
+      Achievements
+    </div>
+    <div class="achievement-wrapper">
+      <div class='achievements'>
+        <div *ngFor="let achievement of this.achievementList">
+          <app-achievement-panel [title]='achievement.title' [icon]='achievement.icon'
+            [description]='achievement.description'>
+          </app-achievement-panel>
+        </div>
+      </div>
+    </div>
 
-		</div>
+    <div class='about'>
+      History
+    </div>
+    <div class='histories'>
 
-		<div class='about'>
-			Feedbacks
-		</div>
-		<div class='feedbacks'>
 
-			<div *ngFor="let feedback of this.feedbacks;let i = index">
-				<div *ngIf="i < 4" class='feedback'>
+      <div *ngFor="let history of this.histories;let i = index">
+        <div *ngIf="i < 4" class='history'>
+          <span class='title'>{{history.title}}</span>
+          <span class='contents'>{{history.contents}}</span>
+        </div>
+      </div>
 
-					<div class='author'>
-						<img src="assets/img/download.png">
-						<span>{{feedback.name + " " + feedback.surname}}</span>
 
-					</div>
+    </div>
 
-					<span class='contents'>{{feedback.contents}}</span>
+    <div class='about'>
+      Feedbacks
+    </div>
+    <div class='feedbacks'>
 
-					<div class='rating'>
-						<app-rating size='20' rating='{{feedback.rating}}'></app-rating>
-					</div>
+      <div *ngFor="let feedback of this.feedbacks;let i = index">
+        <div *ngIf="i < 4" class='feedback'>
 
-				</div>
-			</div>
-		</div>
+          <div class='author'>
+            <img src="assets/img/download.png">
+            <span>{{feedback.name + " " + feedback.surname}}</span>
 
-	</div>
-	<div class='extra'>
-		<div class='languages'>
+          </div>
 
-			<div class='icon'>
+          <span class='contents'>{{feedback.contents}}</span>
 
-			</div>
-			<div class='overall'>
-				<div>
-					Languages
-				</div>
-				<div class='language_list'>
-					<div *ngFor="let language of languages">{{language}}</div>
-				</div>
-			</div>
+          <div class='rating'>
+            <app-rating size='20' rating='{{feedback.rating}}'></app-rating>
+          </div>
 
-		</div>
-		<div class='achievements'>
-			<div class='icon'>
+        </div>
+      </div>
+    </div>
 
-			</div>
-		</div>
-	</div>
+  </div>
+  <div class='extra'>
+    <div class='languages'>
+
+      <div class='icon'>
+
+      </div>
+      <div class='overall'>
+        <div>
+          Languages
+        </div>
+        <div class='language_list'>
+          <div *ngFor="let language of languages">{{language}}</div>
+        </div>
+      </div>
+
+    </div>
+    <div class='achievements'>
+      <div class='icon'>
+
+      </div>
+    </div>
+  </div>
 </div>

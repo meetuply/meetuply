@@ -1,0 +1,81 @@
+.content {
+  margin-left: 17%;
+  margin-right: 17%;
+  padding: 15px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.content * {
+  margin: 10px;
+}
+
+.back {
+  width: 24px;
+  height: 24px;
+  background-size: cover;
+  background-image: url(/assets/icons/arrow-left.png);
+  cursor: pointer;
+}
+
+.main {
+  width: 80%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.title {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.form input,
+.form button,
+.form textarea,
+.form a {
+  margin: 7px 10px;
+}
+
+.form input,
+.form textarea {
+  width: 70%;
+  font-size: 15px;
+  border: 2px solid #c4c4c4;
+  box-sizing: border-box;
+
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.form textarea {
+  resize: none;
+}
+
+.form input::placeholder {
+  color: #c7c7c7;
+}
+
+.form_line {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.form_line span {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0px;
+}
