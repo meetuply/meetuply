@@ -38,8 +38,8 @@ const routes: Routes = [
   { path: 'blog/:id', component: BlogPageComponent, canActivate: [AuthGuard] },
   { path: 'confirm', component: RegConfirmationComponent},
   { path: 'deactivation', component: UserDeactivationComponent, canActivate: [AdminGuard] },
-  { path: 'achievement/create', component: AchievementCreatePageComponent},
-  { path: 'achievements', component: AchievementsPageComponent},
+  { path: 'achievement/create', component: AchievementCreatePageComponent/*, canActivate: [AdminGuard] */},
+  { path: 'achievements', component: AchievementsPageComponent/*, canActivate: [AdminGuard] */},
   { path: 'topics', component: TopicsPageComponent/*, canActivate: [AdminGuard] */},
   { path: 'topics/:id', component: TopicPageComponent/*, canActivate: [AdminGuard] */},
 

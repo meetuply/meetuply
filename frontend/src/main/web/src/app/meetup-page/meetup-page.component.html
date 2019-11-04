@@ -11,7 +11,8 @@
       <div class='detail'>
         <img *ngIf="authorPhoto" src={{this.authorPhoto}}>
         <img *ngIf="!authorPhoto" src="assets/img/download.png">
-        <div>by {{this.author}}</div>
+        <div [routerLink]="['/speakers/', meetupListItem.speakerId]">by
+          <span class="authorName">{{this.author}}</span></div>
         <app-rating size='16' rating="{{this.rate}}"></app-rating>
       </div>
     </div>

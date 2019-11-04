@@ -15,7 +15,7 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
   loading = false;
   lastRow = 0;
   maxMeetupsOnPage: number;
-  step = 4;
+  meetupsChunkSize = 10;
   scrollDistance = 2;
   meetupsList: MeetupListItem[] = [];
   private sub: Subscription;
@@ -50,7 +50,7 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
   loadMeetupsChunk() {
     if (this.lastRow < this.maxMeetupsOnPage) {
       this.loading = true;
-      this.meetupService.getMeetupsChunkWithUsernameAndRating(this.lastRow, this.step).toPromise().then(
+      this.meetupService.getMeetupsChunkWithUsernameAndRating(this.lastRow, this.meetupsChunkSize).toPromise().then(
         data => {
           this.loading = false;
           if (data) {
