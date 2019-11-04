@@ -3,17 +3,17 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Achievement} from "../_models/achievement";
-import {Meetup} from "../_models/meetup";
 
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AchievementService {
 
   private achievementApiUrl = `${environment.apiUrl}/api/achievements/`;
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient) {
+  }
 
-  getAll(): Observable<Achievement[]>{
+  getAll(): Observable<Achievement[]> {
     return this.http.get<Achievement[]>(this.achievementApiUrl);
   }
 
@@ -21,19 +21,19 @@ export class AchievementService {
   //   return this.http.get<Achievement[]>(this.achievementApiUrl + `${startRow}` + "/" + `${endRow}`)
   // }
 
-  create(achievement: Achievement){
-    return this.http.post<number>(this.achievementApiUrl + 'create', achievement);
+  create(achievement: Achievement) {
+    return this.http.post<number>(this.achievementApiUrl, achievement);
   }
 
-  createForMeetupsSameQuantity(formData: FormData){
-    return this.http.post<any>(this.achievementApiUrl + 'meetups-topic/same', formData);
+  createForMeetupsSameQuantity(formData: FormData) {
+    return this.http.post<any>(this.achievementApiUrl + 'meetupsTopic/same', formData);
   }
 
-  getUserAchievements(id:number): Observable<Achievement[]>{
-    return this.http.get<Achievement[]>(this.achievementApiUrl + "user/"+ id);
+  getUserAchievements(id: number): Observable<Achievement[]> {
+    return this.http.get<Achievement[]>(this.achievementApiUrl + "user/" + id);
   }
 
-  deleteFromAchievement(id: number){
+  deleteFromAchievement(id: number) {
     return this.http.delete(this.achievementApiUrl + id);
   }
 }

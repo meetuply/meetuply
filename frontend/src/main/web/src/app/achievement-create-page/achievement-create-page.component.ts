@@ -1,8 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
 import {TopicService} from "../_services";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-achievement-create-page',
@@ -11,7 +12,7 @@ import {TopicService} from "../_services";
 })
 export class AchievementCreatePageComponent implements OnInit {
 
-  //todo update validation, allowCount
+  //todo update validation
 
   achievementForm: FormGroup;
   topics: any;
@@ -20,7 +21,7 @@ export class AchievementCreatePageComponent implements OnInit {
   selectedTopics = new Set();
 
   constructor(private fb: FormBuilder, private achievementService: AchievementService,
-              private topicService: TopicService) {
+              private topicService: TopicService, private location: Location) {
   }
 
   ngOnInit() {
@@ -45,10 +46,10 @@ export class AchievementCreatePageComponent implements OnInit {
     achievement.title = this.achievementForm.get('title').value;
     achievement.description = this.achievementForm.get('description').value;
     achievement.icon = this.achievementForm.get('icon').value;
-    if (this.selectedOption == 'followers') {
-      achievement.followers_number = this.achievementForm.get('followers').value;
+    if (this.selectedOption == 'followers'){
+      achievement.followers = this.achievementForm.get('followers').value;
     } else if (this.selectedOption == 'posts') {
-      achievement.posts_number = this.achievementForm.get('posts').value;
+      achievement.posts = this.achievementForm.get('posts').value;
     } else if (this.selectedOption == 'rating') {
       achievement.rating = this.achievementForm.get('rating').value;
     } else if (!this.selectedTopics) {
@@ -57,7 +58,7 @@ export class AchievementCreatePageComponent implements OnInit {
     this.achievementService.create(achievement).subscribe(
       achievementId => {
         if (this.selectedTopics) {
-          console.log("New ach Id " + achievementId);
+          console.log("New achievement Id " + achievementId);
           this.createForMeetupsSameQuantity(achievementId, Array.from(this.selectedTopics.values()));
         }
       }, error => {
@@ -112,6 +113,6 @@ export class AchievementCreatePageComponent implements OnInit {
   }
 
   goBack() {
-
+    this.location.back();
   }
 }

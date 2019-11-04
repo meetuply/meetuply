@@ -1,13 +1,13 @@
 .item {
   margin-top: 12px;
-
   display: flex;
   flex-direction: row;
-
+  flex-flow: nowrap;
+  flex: 1 50%;
   max-width: 600px;
-  max-height: 230px;
+  max-height: 600px;
   box-shadow: 10px 6px 25px rgba(112, 124, 151, 0.1),
-    4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);
+  4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);
 }
 
 .item * {
@@ -18,19 +18,16 @@
   margin: 15px;
   margin-right: 0px;
   width: 70%;
-
-  display: flex;
-  flex-direction: column;
 }
 
 .item .additional {
   margin: 15px;
   margin-right: 0px;
-
+  min-width: 30%;
+  max-width: 35%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-
   justify-content: flex-start;
   padding: 10px;
 }
@@ -47,7 +44,6 @@
 }
 
 .avatar img {
-  max-width: 60px;
   max-width: 60px;
   border-radius: 50%;
 }
@@ -67,14 +63,14 @@
 }
 
 .location .icon {
-  width: 18px;
+  min-width: 18px;
   height: 18px;
   background-image: url(/assets/icons/pin.png);
   background-size: cover;
 }
 
 .location .text {
-  padding-left: 10px;
+  //padding-left: 10px;
 }
 
 .languages {
@@ -85,7 +81,7 @@
 
 .languages .icon {
   margin-top: 10px;
-  width: 16px;
+  min-width: 16px;
   height: 16px;
   background-image: url(/assets/icons/presentation.png);
   background-size: 16px;
@@ -101,7 +97,7 @@
 
 
 .time .icon {
-  width: 18px;
+  min-width: 18px;
   height: 18px;
   background-image: url(/assets/icons/calendar.png);
   background-size: cover;
@@ -130,6 +126,14 @@
 
 .app-button {
   position: -ms-device-fixed;
+}
+
+.location {
+  max-width: 120px;
+  max-height: 45px;
+  overflow:hidden;
+  word-wrap: break-spaces;
+  flex-direction: row;
 }
 
 .title {

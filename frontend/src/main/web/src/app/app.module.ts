@@ -42,6 +42,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AchievementCreatePageComponent } from './achievement-create-page/achievement-create-page.component';
 import { AchievementPanelComponent } from './achievement-panel/achievement-panel.component';
 import { AchievementsPageComponent } from './achievements-page/achievements-page.component';
+import {MatDialogModule} from "@angular/material/dialog";
 import { TopicsPageComponent } from './topics-page/topics-page.component';
 import { TopicPageComponent } from './topic-page/topic-page.component';
 import { TopicSearchComponent } from './topic-search/topic-search.component';
@@ -95,7 +96,8 @@ import { TopicSearchComponent } from './topic-search/topic-search.component';
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
     InfiniteScrollModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

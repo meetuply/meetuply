@@ -14,19 +14,13 @@
 
 			<div *ngFor="let speaker_item of this.speaker_list;let i = index">
 
-				<app-speaker-list-item *ngIf="isOdd(i)" name="{{speaker_item.name}}" surname="{{speaker_item.surname}}"
-					description="{{speaker_item.description}}" [languages]="speaker_item.languages"
-					awards="{{speaker_item.awards}}" [following]="speaker_item.following" rate="{{speaker_item.rate}}"
-					location="{{speaker_item.location}}" id='{{speaker_item.id}}'>
+				<app-speaker-list-item *ngIf="isOdd(i)" [speaker_list_item]="speaker_item">
 				</app-speaker-list-item>
 			</div>
 		</div>
 		<div class='right_column'>
 			<div *ngFor="let speaker_item of this.speaker_list;let i = index">
-				<app-speaker-list-item *ngIf="!isOdd(i)" name="{{speaker_item.name}}" surname="{{speaker_item.surname}}"
-					description="{{speaker_item.description}}" [languages]="speaker_item.languages"
-					awards="{{speaker_item.awards}}" [following]="speaker_item.following" rate="{{speaker_item.rate}}"
-					location="{{speaker_item.location}}" id='{{speaker_item.id}}'>
+				<app-speaker-list-item *ngIf="!isOdd(i)" [speaker_list_item]="speaker_item">
 				</app-speaker-list-item>
 			</div>
 		</div>

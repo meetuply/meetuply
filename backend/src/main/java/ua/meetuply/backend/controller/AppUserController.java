@@ -7,14 +7,11 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.ConfirmationToken;
-
 import ua.meetuply.backend.model.Language;
+import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.ConfirmationService;
 import ua.meetuply.backend.service.EmailService;
-import ua.meetuply.backend.model.AppUser;
-import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.LanguageService;
-
 import ua.meetuply.backend.validator.AppUserValidator;
 
 import javax.annotation.Resource;
@@ -44,18 +41,6 @@ public class AppUserController {
     @Resource(name = "emailServiceImpl")
     private EmailService emailService;
 
-    @InitBinder
-    protected void initBinder(WebDataBinder dataBinder) {
-        Object target = dataBinder.getTarget();
-        if (target == null) {
-            return;
-        }
-        System.out.println("Target=" + target);
-        if (target.getClass() == AppUser.class) {
-            dataBinder.setValidator(appUserValidator);
-        }
-    }
-
     @RequestMapping("/")
     public AppUser user() {
         return appUserService.getCurrentUser();
@@ -70,8 +55,8 @@ public class AppUserController {
 
     @GetMapping("/members/{startRow}/{endRow}")
     public @ResponseBody
-    Iterable<AppUser> getUsersChunk(@PathVariable("startRow") Integer startRow,@PathVariable("endRow") Integer endRow) {
-        return appUserService.getUsersChunk(startRow,endRow);
+    Iterable<AppUser> getUsersChunk(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
+        return appUserService.getUsersChunk(startRow, endRow);
     }
 
     @GetMapping("/{id}")
@@ -91,9 +76,8 @@ public class AppUserController {
     }
 
     @GetMapping("/{id}/fullName")
-    public String getFullName(@PathVariable("id") Integer userId){
+    public String getFullName(@PathVariable("id") Integer userId) {
         return appUserService.getUserFullName(userId);
-
     }
 
     @RequestMapping("/registerSuccessful")
@@ -105,8 +89,6 @@ public class AppUserController {
     public String viewLogin(Model model) {
         return "registration/loginPage";
     }
-
-
 
 
     @GetMapping("/register")
@@ -153,6 +135,26 @@ public class AppUserController {
     public ResponseEntity<AppUser> activateUser(@PathVariable("id") Integer userId) {
         AppUser user = appUserService.getUser(userId);
         appUserService.activateDeactivatedUser(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/following/{id}")
+    public ResponseEntity follow(@PathVariable Integer id) {
+        if (appUserService.getUserSubscriptions(appUserService.getCurrentUserID()).indexOf(id) != -1 ||
+            appUserService.getCurrentUserID()==id) {
+            return ResponseEntity.badRequest().build();
+        }
+        appUserService.follow(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/following/{id}")
+    public ResponseEntity unfollow(@PathVariable("id") Integer id) {
+        if (appUserService.getUserSubscriptions(appUserService.getCurrentUserID()).indexOf(id) == -1 ||
+                appUserService.getCurrentUserID()==id) {
+            return ResponseEntity.badRequest().build();
+        }
+        appUserService.unfollow(id);
         return ResponseEntity.ok().build();
     }
 }

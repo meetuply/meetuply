@@ -37,7 +37,7 @@ public class BlogPostService {
 
     public BlogPost getBlogPostById(Integer id) {return blogPostDAO.get(id);}
 
-    public List<BlogPost> getBlogPostsChunk(Integer startRow,Integer endRow) {
-        return blogPostDAO.getBlogPostsChunk(startRow,endRow);
+    public List<BlogPost> getBlogPostsChunk(Integer startRow,Integer endRow,String filter) {
+        return blogPostDAO.getBlogPostsChunk(startRow,endRow,filter);
     }
 }

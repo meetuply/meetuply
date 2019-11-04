@@ -10,13 +10,14 @@
 
       <div class='avatar'>
         <img src="assets/img/download.png">
-        <app-rating size='24' rating="{{this.rate}}"></app-rating>
+        <app-rating size='24' rating="{{this.user}}"></app-rating>
       </div>
 
       <div class='other'>
         <div class='info'>
           <div class='name' *ngIf="user">
             {{this.user.firstName + " " + this.user.lastName}}
+            <span *ngIf="currentUser==this.id">(you)</span>
           </div>
           <div class='location' *ngIf="user && this.user.location">
             <div class='icon'></div>
@@ -24,12 +25,12 @@
           </div>
 
         </div>
-        <div class='additional'>
-          <app-button text='Follow' type='1' href='ok' fontSize='20'></app-button>
+        <div class='additional' *ngIf="currentUser!=this.id">
+          <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)"  fontSize='20'></app-button>
           <app-button text='Message speaker' type='1' href='ok' fontSize='20'></app-button>
         </div>
-        <div class='additional_info'>
-          <span>{{this.followers}} followers</span>
+        <div class='additional_info' *ngIf="user && this.followers">
+          <span>{{this.followers.length}} followers</span>
         </div>
 
       </div>
@@ -45,7 +46,7 @@
     </div>
 
 
-      <div class='about'>
+      <div *ngIf="achievementList.length != 0" class='about'>
         Achievements
       </div>
     <div class="achievement-wrapper">
