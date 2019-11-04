@@ -28,8 +28,7 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
               public userService: UserService,
               private meetupService: MeetupService,
-              public stateService: StateService,
-              private ratingService: RatingService) {
+              public stateService: StateService) {
     this.userID = this.userService.currentUser.userId;
   }
 
