@@ -3,6 +3,8 @@ import {MeetupListItem} from "../_models/meetupListItem"
 import {MeetupService} from "../_services/meetup.service";
 import {Subscription} from "rxjs";
 import {UserService} from "../_services";
+import {StateService} from "../_services/state.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-meetups-list-page',
@@ -22,8 +24,10 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
   filter_shown = false;
   author: string;
 
-  constructor(private userService: UserService,
-              private meetupService: MeetupService) {
+  constructor(private router: Router,
+              public userService: UserService,
+              private meetupService: MeetupService,
+              public stateService: StateService) {
   }
 
   ngOnInit() {
@@ -61,6 +65,10 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
           console.log(error1);
         })
     }
+  }
+
+  addButtonClicked(event) {
+    this.router.navigate(["/create/meetup"]);
   }
 
   ngOnDestroy(): void {
