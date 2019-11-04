@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MeetupService} from "../_services/meetup.service";
 import {UserService} from "../_services";
+import {State} from "../_models/state";
 
 @Component({
   selector: 'app-meetup-list-item',
@@ -12,8 +13,10 @@ import {UserService} from "../_services";
 export class MeetupListItemComponent implements OnInit {
   @Input() meetupListItem;
   @Input() isMy: boolean;
+  @Input() state: string;
   error;
   isAttendeLoaded = false;
+
 
   constructor(private meetupService: MeetupService,
               private userService: UserService

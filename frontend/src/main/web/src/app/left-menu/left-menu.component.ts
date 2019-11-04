@@ -1,7 +1,7 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { Menu_item } from '../_models/menu_item';
 import { HttpClient } from "@angular/common/http";
-import { Router,ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { AuthenticationService, UserService } from "../_services";
 
 
@@ -20,7 +20,7 @@ export class LeftMenuComponent implements OnInit {
     { icon: "apps.png", text: 'dashboard', redirectTo: "dashboard" },
     { icon: "globe.png", text: 'meetups', redirectTo: "meetups" },
     { icon: "user.png", text: 'speakers', redirectTo: "speakers" },
-    { icon: "comment.png", text: 'chat', redirectTo: "chat" },
+    { icon: "comment.png", text: 'chat', redirectTo: "chats" },
     { icon: "calendar.png", text: 'blog', redirectTo: "blog" },
     { icon: "bell.png", text: 'notifications', redirectTo: "notifications" },
     { icon: "achievement.svg", text: 'achievements', redirectTo: "achievements" }
@@ -53,15 +53,19 @@ export class LeftMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.pathFromRoot[1].url.subscribe(val =>  {
 
-        if(val[0].toString() == 'create' && val[1].toString() == 'meetup') {
-          this.selectedItem = 'meetups';
-        } else {
-          this.selectedItem = val[0].toString()
-        }
+    this.route.pathFromRoot[1].url.subscribe(val => {
 
-      });
+      if (val[0].toString() == 'create' && val[1].toString() == 'meetup') {
+        this.selectedItem = 'meetups';
+      } else if (val[0].toString() == 'chats') {
+        this.selectedItem = 'chat'
+      }
+      else {
+        this.selectedItem = val[0].toString()
+      }
+
+    });
 
   }
 }
