@@ -11,6 +11,7 @@ import { Location } from '@angular/common';
 export class AchievementsPageComponent implements OnInit {
 
   achievements: Achievement[];
+  showForm: boolean;
 
   constructor(private achievementService: AchievementService, private location: Location) { }
 
@@ -44,6 +45,10 @@ export class AchievementsPageComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  changeShowForm($event){
+    this.showForm = !this.showForm;
   }
 
   public goBack(){

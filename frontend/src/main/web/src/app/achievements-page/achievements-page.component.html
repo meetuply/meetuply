@@ -1,6 +1,12 @@
 <app-left-menu></app-left-menu>
 <div class='back' (click)="goBack()"></div>
 <div class="container">
+  <div class="show-add-form">
+    <app-button  text="add" (onClick)="changeShowForm($event)"></app-button>
+  </div>
+  <div class="create-form">
+  <app-achievement-create-page *ngIf="this.showForm"></app-achievement-create-page>
+  </div>
 <table class="js-serial">
   <caption>Achievements list</caption>
   <thead>

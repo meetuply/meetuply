@@ -1,10 +1,10 @@
 <app-left-menu></app-left-menu>
 <div class="container">
-  <div class='back' (click)="goBack()"></div>
+  <!--<div class='back' (click)="goBack()"></div>-->
 
-  <div class="page-title">
-    Create achievement
-  </div>
+  <!--<div class="page-title">-->
+    <!--Create achievement-->
+  <!--</div>-->
   <form [formGroup]="this.achievementForm" >
     <div class="achievement-form">
       <div class="input-wrapper">
@@ -140,7 +140,7 @@
       </div>
 
     <div class='create-button'>
-      <app-button  text='add' (onClick)="onSubmit($event)" type="submit" fontSize='24' type='1'></app-button>
+      <app-button  text='Submit' (onClick)="onSubmit($event)" type="submit" fontSize='24' type='1'></app-button>
     </div>
     </div>
   </form>
