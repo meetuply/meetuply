@@ -43,6 +43,9 @@ import { AchievementCreatePageComponent } from './achievement-create-page/achiev
 import { AchievementPanelComponent } from './achievement-panel/achievement-panel.component';
 import { AchievementsPageComponent } from './achievements-page/achievements-page.component';
 import {MatDialogModule} from "@angular/material/dialog";
+import { TopicsPageComponent } from './topics-page/topics-page.component';
+import { TopicPageComponent } from './topic-page/topic-page.component';
+import { TopicSearchComponent } from './topic-search/topic-search.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +83,10 @@ import {MatDialogModule} from "@angular/material/dialog";
     UserDeactivationComponent,
     AchievementCreatePageComponent,
     AchievementPanelComponent,
-    AchievementsPageComponent
+    AchievementsPageComponent,
+    TopicsPageComponent,
+    TopicPageComponent,
+    TopicSearchComponent
   ],
   imports: [
     BrowserModule,
