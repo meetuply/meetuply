@@ -26,7 +26,7 @@ export class BlogListItemComponent implements OnInit {
   }
 
   deletePost(){
-    this.blogService.deleteBlogPost(this.blog_list_item.id);
+    this.blogService.deleteBlogPost(this.blog_list_item.id).subscribe();
   }
 
 }

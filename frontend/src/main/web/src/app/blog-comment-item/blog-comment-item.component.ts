@@ -25,7 +25,7 @@ export class BlogCommentItemComponent implements OnInit {
   }
 
   delete(){
-    this.blogService.deleteBlogPost(this.blog_comment_item.id)
+    this.blogService.deleteBlogComment(this.blog_comment_item.comment.blogCommentId).subscribe();
   }
 
 }

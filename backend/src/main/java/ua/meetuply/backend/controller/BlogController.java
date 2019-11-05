@@ -60,7 +60,7 @@ public class BlogController {
     @PutMapping("/{post-id}")
     public ResponseEntity updateBlogPost(@PathVariable("post-id") Integer blogPostId,
                                                    @RequestBody BlogPost blogPost) {
-        if (!(appUserService.getCurrentUser().getRole().getRoleName()=="admin"))
+        if (!(appUserService.getCurrentUser().getRole().getRoleName().equals("admin")))
             return ResponseEntity.badRequest().build();
         if (blogPostService.getBlogPostById(blogPostId) == null) {
             return ResponseEntity.badRequest().build();
@@ -72,7 +72,7 @@ public class BlogController {
 
     @DeleteMapping("/{post-id}")
     public ResponseEntity deleteBlogPost(@PathVariable("post-id") Integer blogPostId){
-        if (!(appUserService.getCurrentUser().getRole().getRoleName()=="admin"))
+        if (!(appUserService.getCurrentUser().getRole().getRoleName().equals("admin")))
             return ResponseEntity.badRequest().build();
         if (blogPostService.getBlogPostById(blogPostId) == null) {
             return ResponseEntity.badRequest().build();
@@ -114,7 +114,7 @@ public class BlogController {
     @PutMapping("/comments/{comment-id}")
     public ResponseEntity updateBlogComment(@PathVariable("comment-id") Integer blogCommentId,
                                                       @RequestBody BlogComment blogComment) {
-        if (!(appUserService.getCurrentUser().getRole().getRoleName()=="admin"))
+        if (!(appUserService.getCurrentUser().getRole().getRoleName().equals("admin")))
             return ResponseEntity.badRequest().build();
         if (blogCommentService.getBlogCommentById(blogCommentId) == null) {
             return ResponseEntity.badRequest().build();
@@ -126,7 +126,7 @@ public class BlogController {
 
     @DeleteMapping("/comments/{comment-id}")
     public ResponseEntity deleteBlogComment(@PathVariable("comment-id") Integer blogCommentId){
-        if (!(appUserService.getCurrentUser().getRole().getRoleName()=="admin"))
+        if (!(appUserService.getCurrentUser().getRole().getRoleName().equals("admin")))
             return ResponseEntity.badRequest().build();
         if (blogCommentService.getBlogCommentById(blogCommentId) == null) {
             return ResponseEntity.badRequest().build();
