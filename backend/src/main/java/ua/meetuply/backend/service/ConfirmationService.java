@@ -42,4 +42,8 @@ public class ConfirmationService {
         if (hostName == null) hostName = "localhost:4200";
         return "http://" + hostName + "/#/password?token=" + ct.getConfirmationToken();
     }
+
+    public boolean exists(String token){
+        return confirmationTokenDAO.getByToken(token) != null;
+    }
 }

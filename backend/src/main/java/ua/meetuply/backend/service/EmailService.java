@@ -9,4 +9,5 @@ public interface EmailService {
     void sendDeactivatinEmail(AppUser receiver);
 
     void sendRecoverEmail(AppUser user, String recoveryMail);
+    void sendSuccessRecoverEmail(AppUser user);
 }

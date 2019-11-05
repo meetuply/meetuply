@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.controller.exception.PermissionException;
 import ua.meetuply.backend.dao.AppUserDAO;
 import ua.meetuply.backend.dao.ConfirmationTokenDAO;
@@ -157,19 +158,22 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getFollowersNumber(userId);
     }
 
-    public void update(AppUser appUser, String token) throws Exception {
+    public void update(AppUser appUser) throws Exception {
+        if (getCurrentUserID() == appUser.getUserId()) {
+            appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
+            appUserDAO.update(appUser);
+        } else throw PermissionException.createWith("You don't have permission to change personal data");
+    }
+
+    public AppUser update(AppUser appUser, String token) throws Exception {
         if (token != null) {
             ConfirmationToken ct = confirmationTokenDAO.getByToken(token);
             appUser.setUserId(ct.getUser().getUserId());
             appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
             appUserDAO.changePassword(appUser);
             confirmationTokenDAO.delete(ct.getTokenid());
-        } else {
-            if (getCurrentUserID() == appUser.getUserId()) {
-                appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
-                appUserDAO.update(appUser);
-            } else throw PermissionException.createWith("You don't have permission to change personal data");
-        }
+            return getUser(appUser.getUserId());
+        } else throw NotFoundException.createWith("Token can't be null");
     }
 
     @Override

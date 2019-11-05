@@ -48,14 +48,14 @@ public class AppUserController {
 
     @PutMapping
     public ResponseEntity update(@RequestBody AppUser newUser) throws Exception {
-        appUserService.update(newUser, null);
+        appUserService.update(newUser);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/recover")
     public ResponseEntity changePassword(@RequestBody AppUser newUser, @RequestParam("token") String confirmationToken) throws Exception {
-        appUserService.update(newUser, confirmationToken);
-        // todo emailService "you data was successfully changes"
+        AppUser user = appUserService.update(newUser, confirmationToken);
+        emailService.sendSuccessRecoverEmail(user);
         return ResponseEntity.ok().build();
     }
 
@@ -66,6 +66,11 @@ public class AppUserController {
         ConfirmationToken ct = confirmationService.generateToken(user);
         emailService.sendRecoverEmail(user, confirmationService.getRecoveryLink(ct));
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/token/{token}")
+    public boolean tokenExists(@PathVariable("token") String token) {
+        return confirmationService.exists(token);
     }
 
 

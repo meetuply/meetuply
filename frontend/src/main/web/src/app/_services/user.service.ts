@@ -104,4 +104,7 @@ export class UserService {
     return this.http.put(this.userApiUrl, user);
   }
 
+  tokenExsists(token: string) {
+    return this.http.get(this.userApiUrl + "token/" + token);
+  }
 }

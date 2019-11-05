@@ -34,6 +34,7 @@ public class EmailServiceImpl implements EmailService {
 
     private static final String DEACTIVATION_TEMPLATE_NAME = "diactivation-email.ftl";
     private static final String RECOVER_TEMPLATE_NAME = "recover-email.ftl";
+    private static final String SUCCESS_RECOVER_TEMPLATE_NAME = "success-recover-email.ftl";
 
     @Value("${spring.mail.username}")
     private String sender;
@@ -123,6 +124,25 @@ public class EmailServiceImpl implements EmailService {
         }
 
     }
+
+    @Override
+    public void sendSuccessRecoverEmail(AppUser receiver) {
+        Mail recoveryMail = new Mail();
+        recoveryMail.setMailFrom(sender);
+        recoveryMail.setMailTo(receiver.getEmail());
+        recoveryMail.setMailSubject("Recovery email");
+        Map<String, Object> model = new HashMap<>();
+        model.put("name", receiver.getFirstName());
+        recoveryMail.setModel(model);
+        MimeMessagePreparator messagePreparator = mimeMessage -> prepareMimeMessage(SUCCESS_RECOVER_TEMPLATE_NAME, recoveryMail, mimeMessage);
+
+        try {
+            javaMailSender.send(messagePreparator);
+        } catch (MailException e) {
+            throw new MailSendException(e.getMessage());
+        }
+    }
+
 
     private void prepareMimeMessage(String templateName, Mail mail, MimeMessage mimeMessage)
             throws IOException, TemplateException, MessagingException {

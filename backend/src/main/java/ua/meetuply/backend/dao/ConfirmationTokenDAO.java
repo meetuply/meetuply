@@ -1,6 +1,7 @@
 package ua.meetuply.backend.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -21,12 +22,19 @@ public class ConfirmationTokenDAO implements IDAO<ConfirmationToken>, RowMapper<
 
     @Override
     public ConfirmationToken get(Integer id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM confirmation_token WHERE uid = ?", new Object[]{id}, this);
-
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM confirmation_token WHERE uid = ?", new Object[]{id}, this);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public ConfirmationToken getByToken(String token) {
-        return jdbcTemplate.queryForObject("SELECT * FROM confirmation_token WHERE token = ?", new Object[]{token}, this);
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM confirmation_token WHERE token = ?", new Object[]{token}, this);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
@@ -50,7 +58,9 @@ public class ConfirmationTokenDAO implements IDAO<ConfirmationToken>, RowMapper<
     }
 
     @Override
-    public void delete(Integer id) { jdbcTemplate.update("DELETE FROM confirmation_token WHERE uid = ?", id); }
+    public void delete(Integer id) {
+        jdbcTemplate.update("DELETE FROM confirmation_token WHERE uid = ?", id);
+    }
 
     @Override
     public ConfirmationToken mapRow(ResultSet resultSet, int i) throws SQLException {
