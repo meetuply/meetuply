@@ -76,6 +76,14 @@ public class MeetupService {
         return meetupDao.getMeetupsChunkWithUsernameAndRating(startRow, endRow);
     }
 
+    public Iterable<Meetup> getMeetupsChunkActive(Integer startRow, Integer endRow) {
+        return meetupDao.getMeetupsChunkActive(startRow, endRow);
+    }
+
+    public Iterable<Meetup> getUserMeetupsChunk(Integer startRow, Integer endRow) {
+        return meetupDao.getUserMeetupsChunk(appUserService.getCurrentUserID(), startRow, endRow);
+    }
+
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void leave(Integer meetupID) throws Exception {
         AppUser user = appUserService.getCurrentUser();
@@ -150,4 +158,5 @@ public class MeetupService {
         filterDto.setDateTo(dateTo);
         return meetupDao.findMeetupsByFilter(filterDto);
     }
+
 }
