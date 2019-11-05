@@ -4,6 +4,7 @@ import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
 import {TopicService} from "../_services";
 import { Location } from '@angular/common';
+import set = Reflect.set;
 
 @Component({
   selector: 'app-achievement-create-page',
@@ -58,6 +59,7 @@ export class AchievementCreatePageComponent implements OnInit {
         if (this.selectedTopics.size > 0) {
           this.createForMeetupsSameQuantity(achievement.achievementId, Array.from(this.selectedTopics.values()));
         }
+        this.location.back();
       }, error => {
         console.log(error)
       }
@@ -77,7 +79,7 @@ export class AchievementCreatePageComponent implements OnInit {
       }, error => {
         console.log(error);
       }
-    );
+    )
   }
 
   onChange(selectedValue) {

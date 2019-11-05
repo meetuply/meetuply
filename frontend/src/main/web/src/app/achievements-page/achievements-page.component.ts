@@ -22,7 +22,6 @@ export class AchievementsPageComponent implements OnInit {
     this.achievementService.deleteFromAchievement(uid).subscribe(
       data=>{
         if (!data){
-          console.log("success");
           this.achievements.splice(this.achievements.findIndex(function(i){
             return i.achievementId === uid;
           }), 1);
@@ -36,7 +35,6 @@ export class AchievementsPageComponent implements OnInit {
   loadAchievements(){
     this.achievementService.getAll().toPromise().then(
       data => {
-        console.log(data[0]);
         this.achievements = data;
       }, error => {
         console.log(error);

@@ -63,9 +63,8 @@ public class MeetupController {
         return appUserService.getMeetupAttendees(meetupId);
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity createMeetup(@Valid @RequestBody Meetup meetup){
-
         meetupService.createMeetup(meetup);
         return ResponseEntity.ok().build();
     }

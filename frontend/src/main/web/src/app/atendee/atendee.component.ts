@@ -11,6 +11,7 @@ export class AtendeeComponent implements OnInit {
   @Input() surname: string;
   @Input() rating: number;
   @Input() photo: string;
+  @Input() id: number;
 
   constructor() { }
 

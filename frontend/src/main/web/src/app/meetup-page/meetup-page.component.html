@@ -32,7 +32,7 @@
     <div class='atendees'>
       <app-atendee *ngFor="let attendee of attendees" [name]='attendee.name'
                    [photo]='attendee.photo' [surname]=attendee.surname
-                   [rating]='attendee.rating'>
+                   [rating]='attendee.rating' [id]='attendee.id'>
       </app-atendee>
     </div>
   </div>

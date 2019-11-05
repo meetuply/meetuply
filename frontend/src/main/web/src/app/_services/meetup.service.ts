@@ -63,7 +63,7 @@ export class MeetupService {
   }
 
   create(meetup: Meetup): Observable<{}> {
-    return this.http.post(this.meetupApiUrl + 'create', meetup);
+    return this.http.post(this.meetupApiUrl, meetup);
   }
 
   terminate(meetupID: number): Observable<{}> {
