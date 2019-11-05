@@ -22,7 +22,8 @@ export class LeftMenuComponent implements OnInit {
     { icon: "user.png", text: 'speakers', redirectTo: "speakers" },
     { icon: "comment.png", text: 'chat', redirectTo: "chats" },
     { icon: "calendar.png", text: 'blog', redirectTo: "blog" },
-    { icon: "bell.png", text: 'notifications', redirectTo: "notifications" }
+    { icon: "bell.png", text: 'notifications', redirectTo: "notifications" },
+    { icon: "star.png", text: 'achievements', redirectTo: "achievements" }
   ];
 
 

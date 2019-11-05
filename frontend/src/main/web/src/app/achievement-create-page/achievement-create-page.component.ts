@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
@@ -26,7 +26,6 @@ export class AchievementCreatePageComponent implements OnInit {
 
   ngOnInit() {
     this.loadTopics();
-    this.selectedOption = 'followers';
     this.achievementForm = this.fb.group({
         title: ['', Validators.required],
         description: ['', Validators.required],
@@ -40,8 +39,7 @@ export class AchievementCreatePageComponent implements OnInit {
   }
 
   onSubmit(event) {
-    // const topicsFormArray: FormArray = this.achievementForm.get('topics') as FormArray;
-    // const topicsValues = topicsFormArray.value;
+    console.log("clicked");
     let achievement: Achievement = new Achievement();
     achievement.title = this.achievementForm.get('title').value;
     achievement.description = this.achievementForm.get('description').value;
@@ -56,10 +54,9 @@ export class AchievementCreatePageComponent implements OnInit {
       achievement.meetups = this.achievementForm.get('meetups').value;
     }
     this.achievementService.create(achievement).subscribe(
-      achievementId => {
-        if (this.selectedTopics) {
-          console.log("New achievement Id " + achievementId);
-          this.createForMeetupsSameQuantity(achievementId, Array.from(this.selectedTopics.values()));
+      achievement => {
+        if (this.selectedTopics.size > 0) {
+          this.createForMeetupsSameQuantity(achievement.achievementId, Array.from(this.selectedTopics.values()));
         }
       }, error => {
         console.log(error)
@@ -112,7 +109,8 @@ export class AchievementCreatePageComponent implements OnInit {
     console.log(this.selectedTopics)
   }
 
-  goBack() {
+
+  public goBack(){
     this.location.back();
   }
 }

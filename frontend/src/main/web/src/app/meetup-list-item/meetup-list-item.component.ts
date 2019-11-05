@@ -14,6 +14,7 @@ export class MeetupListItemComponent implements OnInit {
   @Input() meetupListItem;
   @Input() isMy: boolean;
   @Input() state: string;
+  @Input() showAuthorInfo = true;
   error;
   isAttendeLoaded = false;
 

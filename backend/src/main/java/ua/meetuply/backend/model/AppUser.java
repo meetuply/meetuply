@@ -118,43 +118,4 @@ public class AppUser {
     public String getFullName() {
         return getFirstName() + " " + getLastName();
     }
-
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AppUser)) return false;
-        AppUser appUser = (AppUser) o;
-        return getUserId().equals(appUser.getUserId());
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getUserId());
-    }
-
 }

@@ -28,7 +28,7 @@
         <div class='additional' *ngIf="currentUser!=this.id">
           <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
           </app-button>
-          <app-button text='Message speaker' type='1' (click)="message()" fontSize='20'></app-button>
+          <app-button text='message' type='1' (click)="message()" fontSize='20'></app-button>
         </div>
         <div class='additional_info' *ngIf="user && this.followers">
           <span>{{this.followers.length}} followers</span>
@@ -60,23 +60,25 @@
       </div>
     </div>
 
-    <div class='about'>
-      History
+    <div *ngIf="futureMeetups.length > 0" class='about'>
+      Next Meetup <span class="view-all-future" (click)="changeViewAllFuture()">
+      view all</span>
     </div>
-    <div class='histories'>
-
-
-      <div *ngFor="let history of this.histories;let i = index">
-        <div *ngIf="i < 4" class='history'>
-          <span class='title'>{{history.title}}</span>
-          <span class='contents'>{{history.contents}}</span>
+    <div class='future-meetups'>
+      <div *ngFor="let meetup of (viewAllFuture ?
+              (futureMeetups) : (futureMeetups | slice:0:1))">
+        <div class="one-future-meetup">
+        <app-meetup-list-item
+                              [meetupListItem]="meetup"
+                              [isMy]="userService.currentUser.userId == meetup.speakerId"
+                              [state]="stateService.states[meetup.stateId]"
+                              [showAuthorInfo]=false>
+        </app-meetup-list-item>
         </div>
-      </div>
-
-
+    </div>
     </div>
 
-    <div class='about'>
+    <div *ngIf="feedback.length>0" class='about'>
       Feedbacks
     </div>
     <div class='feedbacks'>
