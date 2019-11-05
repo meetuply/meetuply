@@ -15,18 +15,7 @@ import { ChatThumbnail } from '../_models/chatThumbnail'
 export class UserService {
 
   private userApiUrl = `${environment.apiUrl}/api/user/`;
-  //private userApiUrl = `http://localhost:8080/api/user/`;
-  public currentUser: User;/* = {
-    firstName: "sasha",
-    lastName: "faryna",
-    password: "k",
-    confirmedPassword: "k",
-    description: "esc",
-    email: "email",
-    location: "kyiv",
-    photo: "assets/img/download.png",
-    userId: 2
-  }*/
+  public currentUser: User;
 
   constructor(private http: HttpClient, private authenticationService: AuthenticationService) {
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
@@ -91,6 +80,10 @@ export class UserService {
 
   follow(userId: number): Observable<{}>{
     return this.http.post(this.userApiUrl + 'following/' + userId, {});
+  }
+
+  getCurrentUserRole(): Observable<{}>{
+    return this.http.get(this.userApiUrl + 'role');
   }
 
 

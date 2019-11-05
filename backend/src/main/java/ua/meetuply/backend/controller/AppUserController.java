@@ -2,7 +2,6 @@ package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.*;
 
@@ -74,7 +73,6 @@ public class AppUserController {
         return appUserService.getUser(userId);
     }
 
-
     @GetMapping("/{id}/languages")
     public Iterable<Language> getLanguages(@PathVariable("id") Integer userId) {
         return languageService.getUserLanguages(userId);
@@ -88,22 +86,6 @@ public class AppUserController {
     @GetMapping("/{id}/fullName")
     public String getFullName(@PathVariable("id") Integer userId) {
         return appUserService.getUserFullName(userId);
-    }
-
-    @RequestMapping("/registerSuccessful")
-    public String viewRegisterSuccessful(Model model) {
-        return "registration/registerSuccessfulPage";
-    }
-
-    @RequestMapping("/login")
-    public String viewLogin(Model model) {
-        return "registration/loginPage";
-    }
-
-
-    @GetMapping("/register")
-    public String viewRegister() {
-        return "registration/registerPage";
     }
 
     @GetMapping("/address")

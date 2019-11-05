@@ -28,11 +28,7 @@
     </div>
     <div class='posts_column'>
       <div *ngFor="let post_item of this.postsList;let i = index">
-
-        <app-blog-list-item
-          [blog_list_item]='post_item'>
-
-        </app-blog-list-item>
+        <app-blog-list-item [blog_list_item]='post_item'></app-blog-list-item>
       </div>
     </div>
   </div>

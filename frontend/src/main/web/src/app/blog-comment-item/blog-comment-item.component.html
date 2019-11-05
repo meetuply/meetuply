@@ -20,5 +20,6 @@
         {{this.blog_comment_item.date.toString().replace("T"," ")}}
       </div>
     </div>
+    <app-button [text]="'X'" fontSize='50' *ngIf="isAdmin()" (onClick)="delete()" type='2'></app-button>
   </div>
 </div>

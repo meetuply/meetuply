@@ -99,7 +99,6 @@ export class BlogPageComponent implements OnInit {
         this.loadBlogCommentsChunk();
       },
       error => {
-        // this.alertService.error(error);
         this.loading = false;
       }
     );
@@ -122,6 +121,7 @@ export class BlogPageComponent implements OnInit {
       let datetime = new Date(Date.now());
 
       let comment: BlogComment = {
+        blogCommentId: 0,
         blogCommentContent: this.new_comment,
         authorId: this.userService.currentUser.userId,
         postId: this.id,

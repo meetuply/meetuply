@@ -34,6 +34,10 @@ export class BlogService {
     return this.http.post(this.blogApiUrl, blogPost);
   }
 
+  deleteBlogPost(id: number): Observable<{}>{
+    return this.http.delete(this.blogApiUrl + `${id}`);
+  }
+
   getBlogComment(id: number): Observable<BlogComment> {
     return this.http.get<BlogComment>(this.blogApiUrl + "comments" + `${id}`);
   }
@@ -52,6 +56,10 @@ export class BlogService {
 
   createBlogComment(blogComment: BlogComment): Observable<{}> {
     return this.http.post(this.blogApiUrl + `${blogComment.postId}` + "/comments/", blogComment);
+  }
+
+  deleteBlogComment(id: number): Observable<{}>{
+    return this.http.delete(this.blogApiUrl + "comments/"+`${id}`);
   }
 
   private handleError(error: HttpErrorResponse) {

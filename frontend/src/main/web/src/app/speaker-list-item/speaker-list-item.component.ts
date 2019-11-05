@@ -10,7 +10,6 @@ import {Speaker_list_item} from "../_models/speaker_list_item";
 export class SpeakerListItemComponent implements OnInit {
 
   @Input() speaker_list_item: Speaker_list_item;
-  currentUser: number;
   error;
 
   followText(): string {
@@ -32,7 +31,6 @@ export class SpeakerListItemComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentUser = this.userService.currentUser.userId;
   }
 
   link(): string {
@@ -58,6 +56,10 @@ export class SpeakerListItemComponent implements OnInit {
           this.error = error;
         }
       );
+  }
+
+  isCurrentUser(){
+    return this.userService.currentUser.userId===this.speaker_list_item.id
   }
 
 }

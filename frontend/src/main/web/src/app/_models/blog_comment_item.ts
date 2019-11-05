@@ -7,7 +7,7 @@ export class Blog_comment_item {
   authorId: number;
   get date() {return this.comment.time}
   get content(){ return this.comment.blogCommentContent}
-  // get id() {return this.comment.blogCommentId}
+  get id() {return this.comment.blogCommentId}
 
   constructor(comment: BlogComment, author: string, authorPhoto: string, authorId: number){
     this.comment = comment;

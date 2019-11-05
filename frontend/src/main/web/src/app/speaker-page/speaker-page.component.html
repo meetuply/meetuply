@@ -17,7 +17,7 @@
         <div class='info'>
           <div class='name' *ngIf="user">
             {{this.user.firstName + " " + this.user.lastName}}
-            <span *ngIf="currentUser==this.id">(you)</span>
+            <span *ngIf="isCurrentUser()">(you)</span>
           </div>
           <div class='location' *ngIf="user && this.user.location">
             <div class='icon'></div>
@@ -25,7 +25,7 @@
           </div>
 
         </div>
-        <div class='additional' *ngIf="currentUser!=this.id">
+        <div class='additional' *ngIf="!isCurrentUser()">
           <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
           </app-button>
           <app-button text='Message speaker' type='1' (click)="message()" fontSize='20'></app-button>
@@ -60,12 +60,14 @@
       </div>
     </div>
 
-    <div class='about' *ngIf="lastPost && user">
-      Last blog post
-      <a class="view-all-link" routerLink="/blog/user/{{this.id}}">view all</a>
-    </div>
-    <div class='blogpost'>
-      <app-blog-list-item *ngIf="lastPost && user" [blog_list_item]='lastPost'></app-blog-list-item>
+    <div id="blogpost"*ngIf="this.lastPost">
+      <div class='about' >
+        Last blog post
+        <a class="view-all-link" routerLink="/blog/user/{{this.id}}">view all</a>
+      </div>
+      <div class='blogpost' *ngIf="this.lastPost">
+        <app-blog-list-item *ngIf="this.lastPost" [blog_list_item]='this.lastPost'></app-blog-list-item>
+      </div>
     </div>
 
     <div class='about'>

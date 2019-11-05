@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {BlogService} from "../_services/blog.service";
 import {Blog_comment_item} from "../_models/blog_comment_item";
+import {UserService} from "../_services";
+import {BlogService} from "../_services/blog.service";
 
 @Component({
   selector: 'app-blog-comment-item',
@@ -13,9 +14,18 @@ export class BlogCommentItemComponent implements OnInit {
   @Input() blog_comment_item: Blog_comment_item;
   error;
 
-  constructor(private blogService: BlogService) { }
+  constructor(private userService: UserService,
+              private blogService: BlogService) { }
 
   ngOnInit() {
+  }
+
+  isAdmin(){
+    return this.userService.currentUser.role.roleName==="admin";
+  }
+
+  delete(){
+    this.blogService.deleteBlogPost(this.blog_comment_item.id)
   }
 
 }

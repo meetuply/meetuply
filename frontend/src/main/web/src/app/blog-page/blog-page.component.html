@@ -2,15 +2,13 @@
 <div class='content'>
 
 	<div class='main'>
-    <div class='back' (click)="goBack()">
+    <div class='back' (click)="goBack()"></div>
 
-  </div>
     <div class = 'post-title'>
       <h1>{{this.blogpost.blogPostTitle}}</h1>
     </div>
 
-
-		<div class='author-container'>
+    <div class='author-container'>
       <div class='author' [routerLink]="['/speakers/',this.authorId]">
         <div class='avatar'>
           <img *ngIf="authorPhoto" src={{this.authorPhoto}}>
@@ -23,16 +21,16 @@
           </div>
         </div>
       </div>
-		</div>
+    </div>
 
-		<div class='post-content'>
+    <div class='post-content'>
       <p [innerHTML]="this.blogpost.blogPostContent"></p>
-		</div>
+    </div>
 
     <div class="comments">
       <div class="comments-header">
         <h2>Comments</h2>
-<!--        <a class="view-all-link" href="">view all</a>-->
+  <!--        <a class="view-all-link" href="">view all</a>-->
       </div>
 
       <div class="new-comment-container">
@@ -53,19 +51,13 @@
             </form>
             <p id="form-error">Comment can't be empty</p>
           </div>
-
-
         </div>
       </div>
 
       <div class="comments-container" infinite-scroll [infiniteScrollDistance]="scrollDistance" (scrolled)='this.onScrollDown()'>
         <div class='comments_column'>
           <div *ngFor="let comment_item of this.commentsList;let i = index">
-
-            <app-blog-comment-item
-              [blog_comment_item]='comment_item'>
-
-            </app-blog-comment-item>
+            <app-blog-comment-item [blog_comment_item]='comment_item'></app-blog-comment-item>
           </div>
         </div>
       </div>

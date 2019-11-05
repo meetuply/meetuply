@@ -4,7 +4,7 @@ import { Feedback } from "../feedback"
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from "@angular/router";
 
-import {BlogPost, User} from '../_models'
+import { User} from '../_models'
 import { UserService } from '../_services/user.service'
 
 import { ChatService } from '../_services/chat.service'
@@ -36,8 +36,6 @@ export class SpeakerPageComponent implements OnInit {
   private sub: Subscription;
 
   lastPost: Blog_list_item;
-
-  currentUser: number;
 
   commonRoomId: number;
 
@@ -95,7 +93,6 @@ export class SpeakerPageComponent implements OnInit {
               private blogService:BlogService) {}
 
   ngOnInit() {
-    this.currentUser = this.userService.currentUser.userId;
     this.id = this.route.snapshot.params['id'];
     this.loadCommonRoom(this.id, this.userService.currentUser.userId);
     this.loadUser(this.id);
@@ -210,7 +207,10 @@ export class SpeakerPageComponent implements OnInit {
           this.error = error;
         }
       );
+  }
 
+  isCurrentUser(){
+    return this.userService.currentUser.userId===this.id
   }
 
 }
