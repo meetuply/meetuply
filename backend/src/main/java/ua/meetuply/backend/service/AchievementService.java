@@ -32,8 +32,8 @@ public class AchievementService {
         achievementDAO.save(achievement);
     }
 
-    public Integer saveReturnId(Achievement achievement) {
-        return achievementDAO.saveReturnId(achievement);
+    public Achievement saveReturn(Achievement achievement) {
+        return achievementDAO.get(achievementDAO.saveReturnId(achievement));
     }
 
     public void createForMeetupsSameQuantity(Integer achievementId, String[] topics, Integer quantity) {
@@ -81,7 +81,7 @@ public class AchievementService {
         }
     }
 
-    public void checkMultiple(AchievementType type){
+    public void checkMultiple(){
         Integer currentUserId = appUserService.getCurrentUserID();
         List<Integer> achievementIdList = achievementDAO.getMeetupTopicAchievementId(currentUserId);
         for (Integer achievementId: achievementIdList){
@@ -91,5 +91,9 @@ public class AchievementService {
 
     public void awardOne(Integer achievementId, Integer userId) {
         achievementDAO.updateAchievementUser(achievementId, userId);
+    }
+
+    public Integer getUserAchievementsSum(Integer userId) {
+        return achievementDAO.getUserAchievementsSum(userId);
     }
 }

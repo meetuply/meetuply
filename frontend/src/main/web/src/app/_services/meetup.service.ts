@@ -24,6 +24,10 @@ export class MeetupService {
     return this.http.get<MeetupListItem[]>(this.meetupApiUrl + `${startRow}` + "/" + `${endRow}`)
   }
 
+  getFutureMeetups(userId: number): Observable<Meetup[]> {
+    return this.http.get<Meetup[]>(this.meetupApiUrl + "future/"+userId)
+  }
+
   get(id: number): Observable<Meetup> {
     console.log("loading meetup in service");
     return this.http.get<Meetup>(this.meetupApiUrl + `${id}`);

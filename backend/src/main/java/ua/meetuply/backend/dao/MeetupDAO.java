@@ -49,6 +49,14 @@ public class MeetupDAO implements IDAO<Meetup> {
             "title = ?, description = ? ,registered_attendees = ?, min_attendees = ?," +
             "max_attendees = ?, start_date_time = ?, finish_date_time = ?," +
             "state_id = ?, speaker_id = ? WHERE uid = ?";
+    private static final String GET_USER_FUTURE_MEETUPS = "SELECT *\n" +
+            "FROM meetup\n" +
+            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) = LOWER('scheduled'))" +
+            "order by start_date_time asc;";
+    private static final String GET_USER_PAST_MEETUPS = "SELECT *\n" +
+            "FROM meetup\n" +
+            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) = LOWER('passed'))" +
+            "order by start_date_time desc";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -64,8 +72,7 @@ public class MeetupDAO implements IDAO<Meetup> {
 
     @Override
     public List<Meetup> getAll() {
-        List<Meetup> meetupList = jdbcTemplate.query(GET_ALL_QUERY, new MeetupRowMapper());
-        return meetupList;
+        return jdbcTemplate.query(GET_ALL_QUERY, new MeetupRowMapper());
     }
 
     @Override
@@ -97,6 +104,16 @@ public class MeetupDAO implements IDAO<Meetup> {
         return meetupList;
     }
 
+    public List<Meetup> getUserFutureMeetups(Integer userId){
+        return jdbcTemplate.query(GET_USER_FUTURE_MEETUPS, new Object[]{userId},
+                new MeetupRowMapper());
+    }
+
+    public List<Meetup> getUserPastMeetups(Integer userId){
+        return jdbcTemplate.query(GET_USER_PAST_MEETUPS, new Object[]{userId},
+                new MeetupRowMapper());
+    }
+
     public Integer getUserMeetupsNumber(Integer userId) {
         Integer meetupsNumber = jdbcTemplate.queryForObject(GET_USER_MEETUPS_NUMBER_QUERY,
                 new Object[]{userId}, Integer.class);
@@ -119,7 +136,6 @@ public class MeetupDAO implements IDAO<Meetup> {
         return jdbcTemplate.query(IS_ATTENDEE_QUERY,
                 new Object[]{meetupID, userID},
                 new BeanPropertyRowMapper<>(Object.class)).size() > 0;
-
     }
 
     public List<Meetup> findMeetupsByFilter(Filter filter) {

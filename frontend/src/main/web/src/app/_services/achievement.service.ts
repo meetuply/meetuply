@@ -21,8 +21,8 @@ export class AchievementService {
   //   return this.http.get<Achievement[]>(this.achievementApiUrl + `${startRow}` + "/" + `${endRow}`)
   // }
 
-  create(achievement: Achievement) {
-    return this.http.post<number>(this.achievementApiUrl, achievement);
+  create(achievement: Achievement): Observable<Achievement> {
+    return this.http.post<Achievement>(this.achievementApiUrl, achievement);
   }
 
   createForMeetupsSameQuantity(formData: FormData) {
@@ -31,6 +31,10 @@ export class AchievementService {
 
   getUserAchievements(id: number): Observable<Achievement[]> {
     return this.http.get<Achievement[]>(this.achievementApiUrl + "user/" + id);
+  }
+
+  getUserAchievementsNumber(id: number) {
+    return this.http.get<number>(this.achievementApiUrl + 'sum/' + id);
   }
 
   deleteFromAchievement(id: number) {

@@ -4,7 +4,7 @@ import * as SockJS from 'sockjs-client'
 import { ActivatedRoute, Router } from "@angular/router";
 import { ChatService } from '../_services/chat.service'
 import { UserService } from '../_services'
-import { Message, User } from '../_models'
+import {Message, User} from '../_models'
 import { Location } from '@angular/common'
 
 @Component({

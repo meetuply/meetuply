@@ -80,6 +80,7 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
                     "where a.quantity = b.user_quantity)\n" +
                     "group by achievement_id\n" +
                     "having sum(quantity) <= (select count(uid) from meetup where speaker_id = ?)";
+    private static final String GET_USER_ACHIEVEMENTS_SUM_QUERY = "SELECT COUNT(*) FROM user_achievement WHERE user_id = ?";
 
     @Autowired
     public JdbcTemplate jdbcTemplate;
@@ -170,6 +171,10 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
                 achievementId, userId);
     }
 
+    public Integer getUserAchievementsSum(Integer userId) {
+        return jdbcTemplate.queryForObject(GET_USER_ACHIEVEMENTS_SUM_QUERY, new Object[]{userId}, Integer.class);
+    }
+
     @Override
     public Achievement mapRow(ResultSet resultSet, int i) throws SQLException {
         return new Achievement(
@@ -183,4 +188,5 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
                 resultSet.getInt("meetups")
         );
     }
+
 }

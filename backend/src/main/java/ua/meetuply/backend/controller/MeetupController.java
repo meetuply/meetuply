@@ -34,16 +34,10 @@ public class MeetupController {
             return meetupService.getAllMeetups();
     }
 
-//    @GetMapping("/{startRow}/{endRow}")
-//    public @ResponseBody Iterable<Meetup> getMeetupsChunk(@PathVariable("startRow") Integer startRow,
-//                                                          @PathVariable("endRow") Integer endRow)
-//    {
-//        return meetupService.getMeetupsChunk(startRow, endRow);
-//    }
-
     @GetMapping("/{startRow}/{endRow}")
-    public @ResponseBody Iterable<Meetup> getMeetupsChunkWithUsernameAndRating(@PathVariable("startRow") Integer startRow,
-                                                          @PathVariable("endRow") Integer endRow)
+    public @ResponseBody Iterable<Meetup> getMeetupsChunkWithUsernameAndRating(
+            @PathVariable("startRow") Integer startRow,
+            @PathVariable("endRow") Integer endRow)
     {
         return meetupService.getMeetupsChunkWithUsernameAndRating(startRow, endRow);
     }
@@ -73,6 +67,18 @@ public class MeetupController {
         meetup.setMeetupId(meetupId);
         meetupService.updateMeetup(meetup);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/future/{userId}")
+    @ResponseBody
+    public Iterable<Meetup> getUserFutureMeetups(@PathVariable("userId") Integer userId){
+        return meetupService.getUserFutureMeetups(userId);
+    }
+
+    @GetMapping("/past/{userId}")
+    @ResponseBody
+    public Iterable<Meetup> getUserPastMeetups(@PathVariable("userId") Integer userId){
+        return meetupService.getUserPastMeetups(userId);
     }
 
     @DeleteMapping("/{meetupId}")

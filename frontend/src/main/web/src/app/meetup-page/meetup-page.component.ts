@@ -7,6 +7,7 @@ import {UserService} from "../_services";
 import {RatingService} from "../_services/rating.service";
 import {Atendee} from "../_models/atendee";
 import {StateService} from "../_services/state.service";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-meetup-page',
@@ -33,7 +34,8 @@ export class MeetupPageComponent implements OnInit {
     private userService: UserService,
     private ratingService: RatingService,
     private route: ActivatedRoute,
-    private stateService: StateService) {
+    private stateService: StateService,
+    private location: Location) {
   }
 
   ngOnInit() {
@@ -174,5 +176,9 @@ export class MeetupPageComponent implements OnInit {
 
   ngOnDestroy(){
     if (this.sub) this.sub.unsubscribe();
+  }
+
+  goBack(){
+  this.location.back();
   }
 }

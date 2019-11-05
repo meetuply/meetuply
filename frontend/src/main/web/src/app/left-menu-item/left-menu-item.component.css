@@ -1,6 +1,6 @@
 .left_menu_item {
   text-transform: uppercase;
-
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;

@@ -10,24 +10,12 @@ import { Location } from '@angular/common';
 })
 export class AchievementsPageComponent implements OnInit {
 
-  achievements: Achievement[];
-  showForm: boolean;
+  @Input() achievements: Achievement[];
 
   constructor(private achievementService: AchievementService, private location: Location) { }
 
   ngOnInit() {
     this.loadAchievements();
-  }
-
-  loadAchievements(){
-    this.achievementService.getAll().toPromise().then(
-      data => {
-        console.log(data[0]);
-        this.achievements = data;
-      }, error => {
-        console.log(error);
-      }
-    );
   }
 
   achievementToggled(uid) {
@@ -47,8 +35,15 @@ export class AchievementsPageComponent implements OnInit {
     );
   }
 
-  changeShowForm($event){
-    this.showForm = !this.showForm;
+  loadAchievements(){
+    this.achievementService.getAll().toPromise().then(
+      data => {
+        console.log(data[0]);
+        this.achievements = data;
+      }, error => {
+        console.log(error);
+      }
+    );
   }
 
   public goBack(){
