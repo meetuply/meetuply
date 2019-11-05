@@ -104,7 +104,6 @@ public class AppUserController {
         return appUserService.getUser(userId);
     }
 
-
     @GetMapping("/{id}/languages")
     public Iterable<Language> getLanguages(@PathVariable("id") Integer userId) {
         return languageService.getUserLanguages(userId);

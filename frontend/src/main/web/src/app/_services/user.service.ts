@@ -35,8 +35,6 @@ export class UserService {
     return this.http.get<User[]>(this.userApiUrl + 'members')
   }
 
-
-
   getChunk(start: number, size: number): Observable<User[]> {
     return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size)
   }

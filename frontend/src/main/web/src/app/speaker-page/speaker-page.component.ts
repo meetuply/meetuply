@@ -1,6 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {History} from '../history'
-import {Feedback} from "../feedback"
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from "@angular/router";
 
@@ -10,9 +8,10 @@ import {UserService} from '../_services/user.service'
 import {ChatService} from '../_services/chat.service'
 import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
-import {MeetupListItem} from "../_models/meetupListItem";
-import {Subscription} from "rxjs";
 import {RatingService} from "../_services/rating.service";
+import {BlogService} from "../_services/blog.service";
+import {Blog_list_item} from "../_models/blog_list_item";
+import {Subscription} from "rxjs";
 import {Meetup} from "../_models/meetup";
 import {StateService} from "../_services/state.service";
 import {MeetupService} from "../_services/meetup.service";
@@ -34,19 +33,24 @@ export class SpeakerPageComponent implements OnInit {
   achievementList: Achievement[] = [];
   futureMeetups: Meetup[] = [];
   pastMeetups: Meetup[] = [];
-  feedback= [];
+  feedback = [];
   error;
+  loading: boolean;
+  lastPost: Blog_list_item;
+  lastPostDefined: boolean = false;
   viewAllFuture = false;
   currentUser: number;
   commonRoomId: number;
   meetup: Meetup;
+  private sub: Subscription;
 
   constructor(private _location: Location, private router: Router,
               public userService: UserService, private route: ActivatedRoute,
               private achievementService: AchievementService,
               private ratingService: RatingService, private chatService: ChatService,
               public stateService: StateService,
-              private meetupService: MeetupService) {
+              private meetupService: MeetupService,
+              private blogService: BlogService) {
   }
 
   ngOnInit() {
@@ -63,13 +67,23 @@ export class SpeakerPageComponent implements OnInit {
 
   goBack() {
     this._location.back();
-
   }
 
   loadUser(id: number) {
+    this.loading = true;
     this.userService.get(id).subscribe(user =>
       this.user = user
     );
+
+    this.loading = true;
+    this.sub = this.userService.get(id).subscribe(
+      async user => {
+        this.loading = false;
+        if (user) {
+          this.user = user;
+          await this.loadLastPost(id);
+        }
+      });
   }
 
   loadFollowers(id: number) {
@@ -83,6 +97,17 @@ export class SpeakerPageComponent implements OnInit {
     this.userService.getUserLanguages(id).subscribe(res =>
       this.languages = res.map(l => l.name)
     );
+  }
+
+  loadLastPost(id: number) {
+    this.blogService.getBlogPostsByUserId(0, 1, id).subscribe(posts => {
+      if (posts.length > 0) {
+        this.lastPost = new Blog_list_item(posts.pop(),
+          this.user.firstName + " " + this.user.lastName,
+          this.user.photo, this.id);
+        this.lastPostDefined = true;
+      }
+    })
   }
 
   loadCommonRoom(id1: number, id2: number) {
@@ -103,13 +128,13 @@ export class SpeakerPageComponent implements OnInit {
     }
   }
 
-  loadMeetups(){
+  loadMeetups() {
     this.meetupService.getFutureMeetups(this.id).toPromise().then(
-    data => this.futureMeetups = data
+      data => this.futureMeetups = data
     )
   }
 
-  changeViewAllFuture($event){
+  changeViewAllFuture(event){
     this.viewAllFuture = !this.viewAllFuture;
   }
 
@@ -160,5 +185,13 @@ export class SpeakerPageComponent implements OnInit {
           this.error = error;
         }
       );
+  }
+
+  isCurrentUser() {
+    return this.userService.currentUser.userId == this.id
+  }
+
+  ngOnDestroy() {
+    if (this.sub) this.sub.unsubscribe();
   }
 }

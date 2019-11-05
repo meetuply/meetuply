@@ -19,15 +19,23 @@ export class BlogService {
   }
 
   getAllBlogPosts(): Observable<BlogPost[]> {
-    return this.http.get<BlogPost[]>(this.blogApiUrl)
+    return this.http.get<BlogPost[]>(this.blogApiUrl);
+  }
+
+  getBlogPostsByUserId(start: number, size: number, id:number): Observable<BlogPost[]>{
+    return this.http.get<BlogPost[]>(this.blogApiUrl + "user/"+`${id}` +"/"+ start + "/" + size);
   }
 
   getBlogPostsChunk(start: number, size: number, filter:string): Observable<BlogPost[]> {
-    return this.http.get<BlogPost[]>(this.blogApiUrl + filter + "/" + start + "/" + size)
+    return this.http.get<BlogPost[]>(this.blogApiUrl + filter + "/" + start + "/" + size);
   }
 
   createBlogPost(blogPost: BlogPost): Observable<{}> {
     return this.http.post(this.blogApiUrl, blogPost);
+  }
+
+  deleteBlogPost(id: number): Observable<{}>{
+    return this.http.delete(this.blogApiUrl + `${id}`);
   }
 
   getBlogComment(id: number): Observable<BlogComment> {
@@ -35,19 +43,23 @@ export class BlogService {
   }
 
   getAllBlogComments(): Observable<BlogComment[]> {
-    return this.http.get<BlogComment[]>(this.blogApiUrl + "comments")
+    return this.http.get<BlogComment[]>(this.blogApiUrl + "comments");
   }
 
   getBlogPostComments(id: number): Observable<BlogComment[]> {
-    return this.http.get<BlogComment[]>(this.blogApiUrl + `${id}` + "/comments")
+    return this.http.get<BlogComment[]>(this.blogApiUrl + `${id}` + "/comments");
   }
 
   getBlogCommentsChunk(id: number, start: number, size: number): Observable<BlogComment[]> {
-    return this.http.get<BlogComment[]>(this.blogApiUrl + `${id}` + "/comments/" + start + "/" + size)
+    return this.http.get<BlogComment[]>(this.blogApiUrl + `${id}` + "/comments/" + start + "/" + size);
   }
 
   createBlogComment(blogComment: BlogComment): Observable<{}> {
     return this.http.post(this.blogApiUrl + `${blogComment.postId}` + "/comments/", blogComment);
+  }
+
+  deleteBlogComment(id: number): Observable<{}>{
+    return this.http.delete(this.blogApiUrl + "comments/"+`${id}`);
   }
 
   private handleError(error: HttpErrorResponse) {

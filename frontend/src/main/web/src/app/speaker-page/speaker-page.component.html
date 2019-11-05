@@ -17,7 +17,7 @@
         <div class='info'>
           <div class='name' *ngIf="user">
             {{this.user.firstName + " " + this.user.lastName}}
-            <span *ngIf="currentUser==this.id">(you)</span>
+            <span *ngIf="isCurrentUser()">(you)</span>
           </div>
           <div class='location' *ngIf="user && this.user.location">
             <div class='icon'></div>
@@ -25,7 +25,7 @@
           </div>
 
         </div>
-        <div class='additional' *ngIf="currentUser!=this.id">
+        <div class='additional' *ngIf="!isCurrentUser()">
           <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
           </app-button>
           <app-button text='message' type='1' (click)="message()" fontSize='20'></app-button>
@@ -46,7 +46,6 @@
       {{this.user.description}}
     </div>
 
-
     <div *ngIf="achievementList.length != 0" class='about'>
       Achievements
     </div>
@@ -54,28 +53,38 @@
       <div class='achievements'>
         <div *ngFor="let achievement of this.achievementList">
           <app-achievement-panel [title]='achievement.title' [icon]='achievement.icon'
-            [description]='achievement.description'>
+                                 [description]='achievement.description'>
           </app-achievement-panel>
         </div>
       </div>
     </div>
 
+    <div id="blogpost"*ngIf="lastPost">
+      <div class='about' >
+        Blog
+        <a class="view-all-link" routerLink="/blog/user/{{this.id}}">view all</a>
+      </div>
+      <div class='blogpost'>
+        <app-blog-list-item *ngIf="this.lastPost" [blog_list_item]='this.lastPost'></app-blog-list-item>
+      </div>
+    </div>
+
     <div *ngIf="futureMeetups.length > 0" class='about'>
-      Next Meetup <span class="view-all-future" (click)="changeViewAllFuture()">
+      Next Meetup <span class="view-all-future" (click)="changeViewAllFuture($event)">
       view all</span>
     </div>
     <div class='future-meetups'>
       <div *ngFor="let meetup of (viewAllFuture ?
               (futureMeetups) : (futureMeetups | slice:0:1))">
         <div class="one-future-meetup">
-        <app-meetup-list-item
-                              [meetupListItem]="meetup"
-                              [isMy]="userService.currentUser.userId == meetup.speakerId"
-                              [state]="stateService.states[meetup.stateId]"
-                              [showAuthorInfo]=false>
-        </app-meetup-list-item>
+          <app-meetup-list-item
+            [meetupListItem]="meetup"
+            [isMy]="userService.currentUser.userId == meetup.speakerId"
+            [state]="stateService.states[meetup.stateId]"
+            [showAuthorInfo]=false>
+          </app-meetup-list-item>
         </div>
-    </div>
+      </div>
     </div>
 
     <div *ngIf="feedback.length>0" class='about'>
@@ -83,7 +92,7 @@
     </div>
     <div class='feedbacks'>
 
-      <div *ngFor="let feedback of this.feedbacks;let i = index">
+      <div *ngFor="let feedback of this.feedback;let i = index">
         <div *ngIf="i < 4" class='feedback'>
 
           <div class='author'>
