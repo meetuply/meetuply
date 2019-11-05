@@ -157,11 +157,11 @@ public class MeetupController {
         return meetups;
     }
 
-    @PatchMapping("/{meetupID}/{action}")
+    @PatchMapping("/{meetupID}/action={action}")
     public ResponseEntity changeState
             (@PathVariable("meetupID") Integer meetupID,
              @PathVariable("action") String action,
-             @RequestBody Meetup meetup) throws Exception {
+             @RequestBody(required=false) Meetup meetup) throws Exception {
         switch (action) {
             case "cancel":
                 meetupService.cancelMeetup(meetupID);

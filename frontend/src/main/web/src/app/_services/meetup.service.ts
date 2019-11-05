@@ -67,14 +67,14 @@ export class MeetupService {
   }
 
   terminate(meetupID: number): Observable<{}> {
-    return this.http.patch(this.meetupApiUrl + `${meetupID}` + '/terminate', null);
+    return this.http.patch(this.meetupApiUrl + `${meetupID}` + '/action=terminate', null);
   }
 
   cancell(meetupID: number): Observable<{}> {
-    return this.http.patch(this.meetupApiUrl + `${meetupID}` + '/cancel', null);
+    return this.http.patch(this.meetupApiUrl + `${meetupID}` + '/action=cancel', null);
   }
 
   reschedule(meetup: Meetup): Observable<{}> {
-    return this.http.patch(this.meetupApiUrl + `${meetup.meetupId}` + '/reschedule', meetup);
+    return this.http.patch(this.meetupApiUrl + `${meetup.meetupId}` + '/action=reschedule', meetup);
   }
 }

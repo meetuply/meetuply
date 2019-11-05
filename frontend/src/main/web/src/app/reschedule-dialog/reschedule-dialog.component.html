@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>{{title}}</h2>
+<p>{{description}}</p>
+
+<form name="form" (ngSubmit)="f.form.valid && confirm($event)" #f="ngForm" novalidate>
+  <p *ngIf="error" class='error'>{{error}}</p>
+  <div class='form_line'><span>Start date:</span><input type="date" name="start_date" placeholder="start_date"
+                                                        [(ngModel)]="this.meetup_start_date" required/></div>
+  <div class='form_line'><span>Start time:</span><input type="time" name="start_time" placeholder="start_time"
+                                                        [(ngModel)]="this.meetup_start_time" required/></div>
+  <div class='form_line'><span>End date:</span><input type="date" name="end_date" placeholder="end_date"
+                                                      [(ngModel)]="this.meetup_end_date" required/></div>
+  <div class='form_line'><span>End time:</span><input type="time" name="end_time" placeholder="end_time"
+                                                      [(ngModel)]="this.meetup_end_time" required/></div>
+</form>
+
+<div class="row">
+  <app-button [text]='"Close"' [type]='"3"' fontSize='16' (onClick)="close($event)"></app-button>
+  <app-button [text]='"Confirm"' [type]='"2"' fontSize='16' (onClick)="confirm($event)"></app-button>
+</div>

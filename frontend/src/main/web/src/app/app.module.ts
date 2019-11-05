@@ -46,6 +46,12 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { TopicsPageComponent } from './topics-page/topics-page.component';
 import { TopicPageComponent } from './topic-page/topic-page.component';
 import { TopicSearchComponent } from './topic-search/topic-search.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { RescheduleDialogComponent } from './reschedule-dialog/reschedule-dialog.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatInputModule} from "@angular/material/input";
+import {MatMomentDateModule} from "@angular/material-moment-adapter";
 
 
 @NgModule({
@@ -87,7 +93,10 @@ import { TopicSearchComponent } from './topic-search/topic-search.component';
     AchievementsPageComponent,
     TopicsPageComponent,
     TopicPageComponent,
-    TopicSearchComponent
+    TopicSearchComponent,
+    AchievementsPageComponent,
+    ConfirmDialogComponent,
+    RescheduleDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -98,12 +107,17 @@ import { TopicSearchComponent } from './topic-search/topic-search.component';
     MatProgressSpinnerModule,
     InfiniteScrollModule,
     ReactiveFormsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatMomentDateModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ConfirmDialogComponent, RescheduleDialogComponent]
 })
 export class AppModule { }
