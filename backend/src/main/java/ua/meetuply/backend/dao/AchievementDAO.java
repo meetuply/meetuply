@@ -172,7 +172,7 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
     }
 
     public Integer getUserAchievementsSum(Integer userId) {
-        List<Integer> integerList = jdbcTemplate.queryForList(GET_USER_ACHIEVEMENTS_SUM_QUERY, new Object[]{userId, userId}, Integer.class);
+        List<Integer> integerList = jdbcTemplate.queryForList(GET_USER_ACHIEVEMENTS_SUM_QUERY, new Object[]{userId}, Integer.class);
         return integerList.size() == 0 ? null : integerList.get(0);
     }
 
