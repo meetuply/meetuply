@@ -2,13 +2,17 @@ package ua.meetuply.backend.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.meetuply.backend.model.BlogPost;
 import ua.meetuply.backend.service.AppUserService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +28,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
 
     private static final String FIND_POSTS_BY_FILTER_ALL = "SELECT * FROM post order by uid desc LIMIT ?, ?";
     private static final String FIND_POSTS_BY_FILTER_MY = "SELECT * FROM post WHERE author_id = ? order by uid desc LIMIT ?, ? ";
-    private static final String FIND_POSTS_BY_FILTER_SUBS = "SELECT * FROM post WHERE author_id IN ? order by uid desc LIMIT ?, ? ";
-    private static final String FIND_POSTS_BY_FILTER_SUBS_ONE = "SELECT * FROM post WHERE author_id = ? order by uid desc LIMIT ?, ? ";
+    private static final String FIND_POSTS_BY_FILTER_SUBS = "SELECT * FROM post WHERE author_id IN (:subs) order by uid desc LIMIT :startRow, :endRow";
     private static final String FIND_POSTS_BY_USER_ID = "SELECT * FROM post WHERE author_id=? order by uid desc LIMIT ?, ?";
 
     @Autowired
@@ -33,6 +36,9 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
 
     @Autowired
     private AppUserService appUserService;
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
     public BlogPost get(Integer id) {
@@ -53,16 +59,20 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
         switch (filter){
             case "subs":
                 List<Integer> subs = appUserService.getUserSubscriptions(appUserService.getCurrentUserID());
-                if (subs.size()>1){
-                    List<String> subsstring = new ArrayList<>(subs.size());
-                    for (Integer i : subs) {
-                        subsstring.add(String.valueOf(i));
-                    }
-                    String str="("+String.join(",", subsstring)+")";
-                    return jdbcTemplate.query(FIND_POSTS_BY_FILTER_SUBS, new Object[]{str, startRow, endRow}, this);
-                }
-                else if (subs.size()==1){
-                    return jdbcTemplate.query(FIND_POSTS_BY_FILTER_SUBS_ONE, new Object[]{subs.get(0), startRow, endRow}, this);
+                if (subs.size()>=1){
+//                    List<String> subsstring = new ArrayList<>(subs.size());
+//                    for (Integer i : subs) {
+//                        subsstring.add(String.valueOf(i));
+//                    }
+//                    String str=String.join(", ", subsstring);
+//                    System.out.println(str);
+
+                    MapSqlParameterSource parameters = new MapSqlParameterSource();
+                    parameters.addValue("subs", subs);
+                    parameters.addValue("startRow", startRow);
+                    parameters.addValue("endRow", endRow);
+
+                    return namedParameterJdbcTemplate.query(FIND_POSTS_BY_FILTER_SUBS, parameters, this);
                 }
                 else return new ArrayList<BlogPost>();
             case "my":
