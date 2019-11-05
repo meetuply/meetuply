@@ -65,7 +65,7 @@
         Blog
         <a class="view-all-link" routerLink="/blog/user/{{this.id}}">view all</a>
       </div>
-      <div class='blogpost' *ngIf="this.lastPost">
+      <div class='blogpost'>
         <app-blog-list-item *ngIf="this.lastPost" [blog_list_item]='this.lastPost'></app-blog-list-item>
       </div>
     </div>

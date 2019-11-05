@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {Blog_comment_item} from "../_models/blog_comment_item";
 import {UserService} from "../_services";
 import {BlogService} from "../_services/blog.service";
@@ -12,6 +12,8 @@ import {BlogService} from "../_services/blog.service";
 export class BlogCommentItemComponent implements OnInit {
 
   @Input() blog_comment_item: Blog_comment_item;
+
+  @Output() itemDeleted: EventEmitter<Blog_comment_item> = new EventEmitter();
   error;
 
   constructor(private userService: UserService,
@@ -24,8 +26,9 @@ export class BlogCommentItemComponent implements OnInit {
     return this.userService.currentUser.role.roleName==="admin";
   }
 
-  delete(){
+  deleteComment(){
     this.blogService.deleteBlogComment(this.blog_comment_item.comment.blogCommentId).subscribe();
+    this.itemDeleted.emit(this.blog_comment_item);
   }
 
 }

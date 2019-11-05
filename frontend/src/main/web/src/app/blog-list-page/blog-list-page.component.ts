@@ -112,11 +112,15 @@ export class BlogListPageComponent implements OnInit {
 
   filterBy(event, item) {
     if (item==="subs" || item==="all" || item==="my") {
-      this.postsList = [];
-      this.lastRow = 0;
       this.changeFilter(item);
-      this.loadBlogPostsChunk();
+      this.reloadList();
     }
+  }
+
+  reloadList(){
+    this.postsList = [];
+    this.lastRow = 0;
+    this.loadBlogPostsChunk();
   }
 
   changeFilter(filter:string){
@@ -138,6 +142,14 @@ export class BlogListPageComponent implements OnInit {
         this.id = this.router.snapshot.params['id'];
         break;
     }
+  }
+
+  itemDeletedHandler(deleted: Blog_list_item) {
+    const index = this.postsList.indexOf(deleted, 0);
+    if (index > -1) {
+      this.postsList.splice(index, 1);
+    }
+    this.lastRow--;
   }
 
   hideMessage(){

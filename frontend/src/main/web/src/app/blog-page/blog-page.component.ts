@@ -75,8 +75,9 @@ export class BlogPageComponent implements OnInit {
             this.commentsList.push(...this.newChunk);
           }
         },
-        error1 => {
+        error => {
           this.loading = false;
+          console.log(error);
         }
       )
     }
@@ -87,7 +88,6 @@ export class BlogPageComponent implements OnInit {
     this.lastRow=0;
     this.loadBlogCommentsChunk();
   }
-
 
   loadBlogPost(id: number) {
     this.loading = true;
@@ -103,6 +103,7 @@ export class BlogPageComponent implements OnInit {
       },
       error => {
         this.loading = false;
+        console.log(error);
       }
     );
   }
@@ -114,6 +115,8 @@ export class BlogPageComponent implements OnInit {
         this.loading = false;
         this.author = data['firstName'] + " " + data['lastName'];
         this.authorPhoto = data['photo']
+      }, error => {
+        console.log(error)
       }
     );
   }
@@ -131,14 +134,14 @@ export class BlogPageComponent implements OnInit {
         time: datetime
       };
 
-      this.blogService.createBlogComment(comment).subscribe(data => {
+      this.blogService.createBlogComment(comment).subscribe(async data => {
         if (data == null) {
           //refresh
           this.reloadComments();
           this.new_comment="";
         }
       }, error => {
-        alert(error)
+        console.log(error)
       });
 
       window.document.getElementById("form-error").setAttribute("style","display:none;");
@@ -146,6 +149,14 @@ export class BlogPageComponent implements OnInit {
     else{
       window.document.getElementById("form-error").setAttribute("style","display:block;");
     }
+  }
+
+  itemDeletedHandler(deleted: Blog_comment_item) {
+    const index = this.commentsList.indexOf(deleted, 0);
+    if (index > -1) {
+      this.commentsList.splice(index, 1);
+    }
+    this.lastRow--;
   }
 
   ngOnDestroy() {

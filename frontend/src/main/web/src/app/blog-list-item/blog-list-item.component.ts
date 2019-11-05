@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {BlogService} from "../_services/blog.service";
 import {Blog_list_item} from "../_models/blog_list_item";
 import {UserService} from "../_services";
@@ -13,6 +13,9 @@ import {UserService} from "../_services";
 export class BlogListItemComponent implements OnInit {
 
   @Input() blog_list_item: Blog_list_item;
+
+  @Output() itemDeleted: EventEmitter<Blog_list_item> = new EventEmitter();
+
   error;
 
   constructor(private userService: UserService,
@@ -27,6 +30,7 @@ export class BlogListItemComponent implements OnInit {
 
   deletePost(){
     this.blogService.deleteBlogPost(this.blog_list_item.id).subscribe();
+    this.itemDeleted.emit(this.blog_list_item);
   }
 
 }

@@ -217,4 +217,8 @@ export class SpeakerPageComponent implements OnInit {
     return this.userService.currentUser.userId==this.id
   }
 
+  ngOnDestroy() {
+    if (this.sub) this.sub.unsubscribe();
+  }
+
 }
