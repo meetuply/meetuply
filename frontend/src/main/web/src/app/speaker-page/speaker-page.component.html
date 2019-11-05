@@ -61,7 +61,7 @@
     </div>
 
     <div *ngIf="futureMeetups.length > 0" class='about'>
-      Next Meetup <span class="view-all-future" (click)="changeViewAllFuture()">
+      Next Meetup <span class="view-all-future" (click)="changeViewAllFuture($event)">
       view all</span>
     </div>
     <div class='future-meetups'>
