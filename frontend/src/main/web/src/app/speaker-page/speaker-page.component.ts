@@ -36,6 +36,7 @@ export class SpeakerPageComponent implements OnInit {
   private sub: Subscription;
 
   lastPost: Blog_list_item;
+  lastPostDefined:boolean=false;
 
   commonRoomId: number;
 
@@ -133,10 +134,13 @@ export class SpeakerPageComponent implements OnInit {
   }
 
   loadLastPost(id: number){
-    this.blogService.getBlogPostsByUserId(0,1, id).subscribe(posts =>
-      this.lastPost=new Blog_list_item(posts.pop(),
-        this.user.firstName+" "+this.user.lastName,
-        this.user.photo, this.id))
+    this.blogService.getBlogPostsByUserId(0,1, id).subscribe(posts =>{  if (posts.length>0) {
+      this.lastPost = new Blog_list_item(posts.pop(),
+        this.user.firstName + " " + this.user.lastName,
+        this.user.photo, this.id);
+      this.lastPostDefined = true;
+    }
+    })
   }
 
   loadCommonRoom(id1: number, id2: number) {
