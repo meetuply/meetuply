@@ -1,0 +1,47 @@
+<app-left-menu></app-left-menu>
+<div class='content'>
+
+    <div class="title">Good Morning, {{this.userService.currentUser.firstName}}!</div>
+
+    <div class='dashboard'>
+
+      <div class='section-one'>
+        <span class="section-title">Last Notifications</span>
+        <div class="last-notifications">
+
+        </div>
+      </div>
+
+      <div class='section-two'>
+        <div class="left-col">
+          <span class="section-title">My Meetups</span>
+          <div class="my-meetups">
+
+          </div>
+        </div>
+
+        <div class="right-col">
+          <span class="section-title">Coming Soon <a class="view-all-link" routerLink="/meetups">view all</a></span>
+          <div class="coming-soon">
+
+          </div>
+        </div>
+      </div>
+
+      <div class='section-one'>
+        <span class="section-title">New Articles <a class="view-all-link" routerLink="/blog">view all</a></span>
+        <div class="new-articles">
+          <div class="message" *ngIf="blogPosts.length==0">
+            It seems there are no posts here.
+            <a routerLink="/speakers">Follow some speakers</a>
+             to see more articles at your feed!
+          </div>
+          <div class="blogposts" *ngIf="blogPosts.length>0">
+            <div *ngFor="let post_item of this.blogPosts;let i = index">
+              <app-blog-list-item [blog_list_item]='post_item'></app-blog-list-item>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

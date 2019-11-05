@@ -39,7 +39,6 @@ export class SpeakerPageComponent implements OnInit {
   lastPost: Blog_list_item;
   lastPostDefined: boolean = false;
   viewAllFuture = false;
-  currentUser: number;
   commonRoomId: number;
   meetup: Meetup;
   private sub: Subscription;
@@ -54,7 +53,6 @@ export class SpeakerPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentUser = this.userService.currentUser.userId;
     this.id = this.route.snapshot.params['id'];
     this.loadCommonRoom(this.id, this.userService.currentUser.userId);
     this.loadUser(this.id);

@@ -54,6 +54,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatMomentDateModule} from "@angular/material-moment-adapter";
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { SettingsComponent } from './settings/settings.component';
+import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
 
 
 @NgModule({
@@ -65,6 +66,7 @@ import { SettingsComponent } from './settings/settings.component';
     ButtonComponent,
     LeftMenuComponent,
     LeftMenuItemComponent,
+    DashboardPageComponent,
     SpeakerPageComponent,
     SpeakerListPageComponent,
     SpeakerListItemComponent,
