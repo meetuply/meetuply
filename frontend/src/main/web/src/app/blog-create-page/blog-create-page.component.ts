@@ -46,8 +46,6 @@ export class BlogCreatePageComponent implements OnInit {
       }, error => {
         console.log(error);
       });
-
-
     }
   }
 

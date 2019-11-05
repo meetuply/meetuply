@@ -46,7 +46,6 @@
       {{this.user.description}}
     </div>
 
-
     <div *ngIf="achievementList.length != 0" class='about'>
       Achievements
     </div>
@@ -54,7 +53,7 @@
       <div class='achievements'>
         <div *ngFor="let achievement of this.achievementList">
           <app-achievement-panel [title]='achievement.title' [icon]='achievement.icon'
-            [description]='achievement.description'>
+                                 [description]='achievement.description'>
           </app-achievement-panel>
         </div>
       </div>
@@ -70,16 +69,6 @@
       </div>
     </div>
 
-    <div class='about'>
-      History
-    </div>
-    <div class='histories'>
-      <div *ngFor="let history of this.histories;let i = index">
-        <div *ngIf="i < 4" class='history'>
-          <span class='title'>{{history.title}}</span>
-          <span class='contents'>{{history.contents}}</span>
-        </div>
-      </div>
     <div *ngIf="futureMeetups.length > 0" class='about'>
       Next Meetup <span class="view-all-future" (click)="changeViewAllFuture()">
       view all</span>
@@ -88,14 +77,14 @@
       <div *ngFor="let meetup of (viewAllFuture ?
               (futureMeetups) : (futureMeetups | slice:0:1))">
         <div class="one-future-meetup">
-        <app-meetup-list-item
-                              [meetupListItem]="meetup"
-                              [isMy]="userService.currentUser.userId == meetup.speakerId"
-                              [state]="stateService.states[meetup.stateId]"
-                              [showAuthorInfo]=false>
-        </app-meetup-list-item>
+          <app-meetup-list-item
+            [meetupListItem]="meetup"
+            [isMy]="userService.currentUser.userId == meetup.speakerId"
+            [state]="stateService.states[meetup.stateId]"
+            [showAuthorInfo]=false>
+          </app-meetup-list-item>
         </div>
-    </div>
+      </div>
     </div>
 
     <div *ngIf="feedback.length>0" class='about'>
@@ -103,7 +92,7 @@
     </div>
     <div class='feedbacks'>
 
-      <div *ngFor="let feedback of this.feedbacks;let i = index">
+      <div *ngFor="let feedback of this.feedback;let i = index">
         <div *ngIf="i < 4" class='feedback'>
 
           <div class='author'>
