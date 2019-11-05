@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {AuthenticationService} from "../_services";
+import {AuthenticationService, UserService} from "../_services";
 import {first} from "rxjs/operators";
 
 @Component({
@@ -15,10 +15,15 @@ export class LoginComponent {
   returnUrl: string;
 
   credentials = {username: '', password: ''};
+  recovering = false;
+  requestEmail: string;
+  successful = false;
+  errorRecover = null;
 
   constructor( private router: Router,
                private route: ActivatedRoute,
-               private authenticationService: AuthenticationService) {
+               private authenticationService: AuthenticationService,
+               private userService: UserService) {
   }
 
   ngOnInit() {
@@ -45,5 +50,19 @@ export class LoginComponent {
           this.loading = false;
           console.log("ERROR " + error)
         });
+  }
+
+  recover() {
+    this.loading = true;
+    this.userService.requestRecover(this.requestEmail).subscribe(
+      data => {
+        this.successful = true;
+        this.loading = false;
+      },
+      error => {
+        this.errorRecover = error;
+        this.loading = false;
+      }
+    );
   }
 }

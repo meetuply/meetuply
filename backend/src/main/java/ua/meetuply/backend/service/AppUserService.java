@@ -11,10 +11,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import ua.meetuply.backend.controller.exception.NotFoundException;
+import ua.meetuply.backend.controller.exception.PermissionException;
 import ua.meetuply.backend.dao.AppUserDAO;
+import ua.meetuply.backend.dao.ConfirmationTokenDAO;
 import ua.meetuply.backend.dao.RoleDAO;
 import ua.meetuply.backend.model.AchievementType;
 import ua.meetuply.backend.model.AppUser;
+import ua.meetuply.backend.model.ConfirmationToken;
 import ua.meetuply.backend.model.Role;
 
 import java.util.HashSet;
@@ -36,6 +40,9 @@ public class AppUserService implements UserDetailsService {
     @Autowired
     StateService stateService;
 
+    @Autowired
+    ConfirmationTokenDAO confirmationTokenDAO;
+   
     @Autowired
     AchievementService achievementService;
 
@@ -156,6 +163,23 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getFollowersNumber(userId);
     }
 
+    public void update(AppUser appUser) throws Exception {
+        if (getCurrentUserID() == appUser.getUserId()) {
+            appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
+            appUserDAO.update(appUser);
+        } else throw PermissionException.createWith("You don't have permission to change personal data");
+    }
+
+    public AppUser update(AppUser appUser, String token) throws Exception {
+        if (token != null) {
+            ConfirmationToken ct = confirmationTokenDAO.getByToken(token);
+            appUser.setUserId(ct.getUser().getUserId());
+            appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
+            appUserDAO.changePassword(appUser);
+            confirmationTokenDAO.delete(ct.getTokenid());
+            return getUser(appUser.getUserId());
+        } else throw NotFoundException.createWith("Token can't be null");
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) {

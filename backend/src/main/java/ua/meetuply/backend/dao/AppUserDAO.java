@@ -3,7 +3,6 @@ package ua.meetuply.backend.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import ua.meetuply.backend.model.AppUser;
 
@@ -112,6 +111,12 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
                 appUser.getLastName(), appUser.isRegistration_confirmed(),
                 appUser.isDeactivated(), appUser.isAllow_notifications(), appUser.getRole().getRoleId(),
                 appUser.getDescription(), appUser.getLocation(),appUser.getPhoto(),appUser.getUserId());
+
+    }
+
+    public void changePassword(AppUser appUser) {
+        jdbcTemplate.update("UPDATE user SET password = ? WHERE uid = ?",
+                appUser.getPassword(), appUser.getUserId());
 
     }
 
