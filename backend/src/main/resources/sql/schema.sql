@@ -1,13 +1,14 @@
 -- ************************************** `achievement`
 CREATE TABLE `achievement`
 (
-    `uid`              integer unsigned NOT NULL AUTO_INCREMENT,
-    `title`            varchar(100)     NOT NULL,
-    `description`      varchar(400)     NOT NULL,
-    `icon`             varchar(500)     NOT NULL,
-    `followers_number` integer          NULL,
-    `posts_number`     integer          NULL,
-    `rating`           float            NULL,
+    `uid`         integer unsigned NOT NULL AUTO_INCREMENT,
+    `title`       varchar(100)     NOT NULL,
+    `description` varchar(400)     NOT NULL,
+    `icon`        varchar(500)     NOT NULL,
+    `followers`   integer          NULL,
+    `posts`       integer          NULL,
+    `rating`      float            NULL,
+    `meetups`     integer          NULL,
 
     PRIMARY KEY (`uid`)
 );

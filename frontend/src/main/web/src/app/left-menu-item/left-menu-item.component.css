@@ -1,6 +1,6 @@
 .left_menu_item {
   text-transform: uppercase;
-
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -36,9 +36,20 @@
 
 .left_menu_item #icon {
   min-width: 24px;
+  max-width: 24px;
   height: 24px;
   background-image: url(/assets/icons/apps.png);
 }
+
+/*.icon{*/
+  /*min-width: 24px;*/
+  /*max-width: 24px;*/
+/*}*/
+
+/*.icon img{*/
+  /*max-width:100%;*/
+  /*height:auto;*/
+/*}*/
 
 /*
 if less than 900 then vertical

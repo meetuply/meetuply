@@ -238,6 +238,7 @@
                                     <div style="line-height: 24px">
 
                                         Thank you for signing up for our platform. Now you can explore the whole world of meetings. Try it for yourself
+                                    </div>
                                 </td>
                             </tr>
                         </table>

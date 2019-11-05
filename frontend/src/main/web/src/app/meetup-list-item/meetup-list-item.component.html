@@ -2,16 +2,20 @@
 <div class='item'>
 	<div class='main'>
 		<div class='profile'>
-			<div class='avatar'>
+
+			<div *ngIf="showAuthorInfo" class='avatar'>
 				<img *ngIf="meetupListItem.speakerPhoto" src={{meetupListItem.speakerPhoto}}>
         <img *ngIf="!meetupListItem.speakerPhoto" src="assets/img/download.png">
         <app-rating size='12' rating="{{this.meetupListItem.rating}}"></app-rating>
 			</div>
+
 			<div class='info'>
-				<div class='title' routerLink="{{this.meetupListItem.meetupId}}">
+
+				<div class='title' [routerLink]="['/meetups/', this.meetupListItem.meetupId]">
           {{this.meetupListItem.meetupTitle}}
 				</div>
-				<div class='place'>
+
+				<div *ngIf="showAuthorInfo" class='place'>
 					<div [routerLink]="['/speakers/', meetupListItem.speakerId]">
           by
             <span class="authorName">{{this.meetupListItem.speakerFirstName}} {{this.meetupListItem.speakerLastName}}

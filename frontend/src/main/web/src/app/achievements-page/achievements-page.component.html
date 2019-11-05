@@ -1,6 +1,9 @@
 <app-left-menu></app-left-menu>
-<div class='back' (click)="goBack()"></div>
 <div class="container">
+  <div class='back' (click)="goBack()"></div>
+  <div class="show-add-form">
+  <app-button  text="new" [routerLink]="['/achievements/create']" ></app-button>
+  </div>
 <table class="js-serial">
   <caption>Achievements list</caption>
   <thead>
@@ -14,7 +17,6 @@
     <th scope="col">Rating</th>
     <th scope="col">Meetups</th>
     <th scope="col">Topics</th>
-    <!--<th scope="col">Edit</th>-->
     <th scope="col">Delete</th>
   </tr>
   </thead>
@@ -28,7 +30,6 @@
     <td>{{achievement.posts}}</td>
     <td>{{achievement.rating}}</td>
     <td>{{achievement.meetups}}</td>
-    <!--<td></td>-->
     <td></td>
     <td class="delete-button-td"><button class="delete-button" (click)="achievementToggled(achievement.achievementId)"
                 name="{{achievement.name}}"  id='{{achievement.uid}}'>x</button></td>
