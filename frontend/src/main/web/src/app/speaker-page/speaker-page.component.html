@@ -29,6 +29,9 @@
           <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
           </app-button>
           <app-button text='Message speaker' type='1' (click)="message()" fontSize='20'></app-button>
+          <div class='additional' *ngIf="this.userService.currentUser.role.roleName === 'admin'">
+            <app-button [text]="deactivationText()" [type]='deactivationType()' (onClick)="deactivationButtonClicked($event)" fontSize='20'></app-button>
+          </div>
         </div>
         <div class='additional_info' *ngIf="user && this.followers">
           <span>{{this.followers.length}} followers</span>

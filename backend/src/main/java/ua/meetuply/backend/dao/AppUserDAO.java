@@ -3,7 +3,6 @@ package ua.meetuply.backend.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import ua.meetuply.backend.model.AppUser;
 
@@ -37,6 +36,10 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
     public List<AppUser> getUsersChunk(Integer startRow, Integer endRow) {
         return jdbcTemplate.query("SELECT * FROM user WHERE is_deactivated=0 AND registration_confirmed=1 order by uid asc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
+    }
+
+    public List<AppUser> getUsersChunkForAdmin(Integer startRow, Integer endRow) {
+        return jdbcTemplate.query("SELECT * FROM user WHERE registration_confirmed=1 order by uid asc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
     }
 
     @Override

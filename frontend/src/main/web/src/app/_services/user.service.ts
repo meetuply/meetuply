@@ -52,6 +52,10 @@ export class UserService {
     return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size)
   }
 
+  getChunkForAdmin(start: number, size: number): Observable<User[]> {
+    return this.http.get<User[]>(this.userApiUrl + 'members/all/' + start + "/" + size)
+  }
+
   getUserFollowers(userId: number): Observable<number[]> {
     return this.http.get<number[]>(this.userApiUrl + `${userId}/subscribers`);
   }
@@ -93,5 +97,12 @@ export class UserService {
     return this.http.post(this.userApiUrl + 'following/' + userId, {});
   }
 
+  deactivate(userId: number): Observable<{}>{
+    return this.http.put(this.userApiUrl + 'deactivate/' + userId, {});
+  }
+
+  reactivate(userId: number): Observable<{}>{
+    return this.http.put(this.userApiUrl + 'activate/' + userId, {});
+  }
 
 }
