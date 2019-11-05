@@ -26,6 +26,8 @@ import { AchievementPanelComponent } from "./achievement-panel/achievement-panel
 import { AchievementsPageComponent } from "./achievements-page/achievements-page.component";
 import { TopicsPageComponent } from "./topics-page/topics-page.component";
 import { TopicPageComponent } from "./topic-page/topic-page.component";
+import {ChangePasswordComponent} from "./change-password/change-password.component";
+import {SettingsComponent} from "./settings/settings.component";
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -48,6 +50,8 @@ const routes: Routes = [
   { path: 'achievements', component: AchievementsPageComponent/*, canActivate: [AdminGuard] */},
   { path: 'topics', component: TopicsPageComponent/*, canActivate: [AdminGuard] */},
   { path: 'topics/:id', component: TopicPageComponent/*, canActivate: [AdminGuard] */},
+  { path: 'password', component: ChangePasswordComponent},
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
 
 ];
 

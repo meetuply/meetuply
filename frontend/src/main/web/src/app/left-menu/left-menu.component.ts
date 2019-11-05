@@ -27,7 +27,7 @@ export class LeftMenuComponent implements OnInit {
 
 
   bottom_menu_items: Menu_item[] = [
-    { icon: "settings.svg", text: 'settings', redirectTo: null },
+    { icon: "settings.svg", text: 'settings', redirectTo: "settings" },
     { icon: "turn-off.svg", text: 'log out', redirectTo: null }
   ];
 

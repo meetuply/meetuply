@@ -58,6 +58,8 @@ import { RescheduleDialogComponent } from './reschedule-dialog/reschedule-dialog
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatInputModule} from "@angular/material/input";
 import {MatMomentDateModule} from "@angular/material-moment-adapter";
+import { ChangePasswordComponent } from './change-password/change-password.component';
+import { SettingsComponent } from './settings/settings.component';
 
 
 @NgModule({
@@ -106,6 +108,8 @@ import {MatMomentDateModule} from "@angular/material-moment-adapter";
     AchievementsPageComponent,
     ConfirmDialogComponent,
     RescheduleDialogComponent,
+    ChangePasswordComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,

@@ -21,13 +21,12 @@ public class ConfirmationTokenDAO implements IDAO<ConfirmationToken>, RowMapper<
 
     @Override
     public ConfirmationToken get(Integer id) {
-        List<ConfirmationToken> ctList = jdbcTemplate.query("SELECT * FROM confirmation_token WHERE uid = ?", new Object[]{id}, this);
-        return ctList.size() == 0 ? null : ctList.get(0);
+        return jdbcTemplate.queryForObject("SELECT * FROM confirmation_token WHERE uid = ?", new Object[]{id}, this);
+
     }
 
     public ConfirmationToken getByToken(String token) {
-        List<ConfirmationToken> ctList = jdbcTemplate.query("SELECT * FROM confirmation_token WHERE token = ?", new Object[]{token}, this);
-        return ctList.size() == 0 ? null : ctList.get(0);
+        return jdbcTemplate.queryForObject("SELECT * FROM confirmation_token WHERE token = ?", new Object[]{token}, this);
     }
 
     @Override

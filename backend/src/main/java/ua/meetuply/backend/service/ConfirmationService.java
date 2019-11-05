@@ -1,13 +1,10 @@
 package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.ConfirmationTokenDAO;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.ConfirmationToken;
-
-import java.net.InetAddress;
 
 @Component
 public class ConfirmationService {
@@ -38,5 +35,11 @@ public class ConfirmationService {
         String hostName = System.getenv("HOST_NAME");
         if (hostName == null) hostName = "localhost:4200";
         return "http://" + hostName + "/#/confirm?token=" + ct.getConfirmationToken();
+    }
+
+    public String getRecoveryLink(ConfirmationToken ct) {
+        String hostName = System.getenv("HOST_NAME");
+        if (hostName == null) hostName = "localhost:4200";
+        return "http://" + hostName + "/#/password?token=" + ct.getConfirmationToken();
     }
 }
