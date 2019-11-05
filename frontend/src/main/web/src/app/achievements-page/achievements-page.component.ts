@@ -23,11 +23,9 @@ export class AchievementsPageComponent implements OnInit {
       data=>{
         if (!data){
           console.log("success");
-          const index = this.achievements.indexOf(this.achievements.find(
-            x => x.achievementId), 0);
-          if (index > -1) {
-            this.achievements.splice(index, 1);
-          }
+          this.achievements.splice(this.achievements.findIndex(function(i){
+            return i.achievementId === uid;
+          }), 1);
         }
       }, error => {
         console.log(error);

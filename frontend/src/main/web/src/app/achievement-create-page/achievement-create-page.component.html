@@ -2,7 +2,7 @@
 <div class="container">
   <div class='back' (click)="goBack()"></div>
 
-  <form *ngIf="this.showForm" [formGroup]="this.achievementForm" >
+  <form [formGroup]="this.achievementForm" >
     <div class="achievement-form">
       <div class="input-wrapper">
         <div class="input-title">
@@ -134,10 +134,10 @@
       </div>
 
     <div class='create-button'>
-      <app-button  text='Submit' (onClick)="onSubmit($event)" type="submit" fontSize='24' type='1'></app-button>
+      <app-button  text='Submit' (onClick)="onSubmit($event)" type="submit" fontSize='24' type='1'
+      [routerLink]="['../']" ></app-button>
     </div>
     </div>
   </form>
 
-  <!--<app-achievements-page *ngIf="newAchievement" [achievements]="this.achievementList"></app-achievements-page>-->
 </div>
