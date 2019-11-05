@@ -134,7 +134,7 @@ export class SpeakerPageComponent implements OnInit {
     )
   }
 
-  changeViewAllFuture($event) {
+  changeViewAllFuture(event){
     this.viewAllFuture = !this.viewAllFuture;
   }
 
