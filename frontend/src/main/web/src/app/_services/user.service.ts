@@ -35,8 +35,6 @@ export class UserService {
     return this.http.get<User[]>(this.userApiUrl + 'members')
   }
 
-
-
   getChunk(start: number, size: number): Observable<User[]> {
     return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size)
   }
@@ -81,10 +79,5 @@ export class UserService {
   follow(userId: number): Observable<{}>{
     return this.http.post(this.userApiUrl + 'following/' + userId, {});
   }
-
-  getCurrentUserRole(): Observable<{}>{
-    return this.http.get(this.userApiUrl + 'role');
-  }
-
 
 }
