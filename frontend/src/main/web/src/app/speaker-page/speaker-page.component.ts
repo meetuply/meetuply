@@ -15,6 +15,24 @@ import { RatingService } from "../_services/rating.service";
 import {BlogService} from "../_services/blog.service";
 import {Blog_list_item} from "../_models/blog_list_item";
 import {Subscription} from "rxjs";
+import {Component, OnInit} from '@angular/core';
+import {History} from '../history'
+import {Feedback} from "../feedback"
+import {Location} from '@angular/common';
+import {ActivatedRoute, Router} from "@angular/router";
+
+import {User} from '../_models'
+import {UserService} from '../_services/user.service'
+
+import {ChatService} from '../_services/chat.service'
+import {Achievement} from "../_models/achievement";
+import {AchievementService} from "../_services/achievement.service";
+import {MeetupListItem} from "../_models/meetupListItem";
+import {Subscription} from "rxjs";
+import {RatingService} from "../_services/rating.service";
+import {Meetup} from "../_models/meetup";
+import {StateService} from "../_services/state.service";
+import {MeetupService} from "../_services/meetup.service";
 
 
 @Component({
@@ -31,6 +49,9 @@ export class SpeakerPageComponent implements OnInit {
   rate: number;
   following: boolean;
   achievementList: Achievement[] = [];
+  futureMeetups: Meetup[] = [];
+  pastMeetups: Meetup[] = [];
+  feedback= [];
   error;
   loading: boolean;
   private sub: Subscription;
@@ -38,49 +59,30 @@ export class SpeakerPageComponent implements OnInit {
   lastPost: Blog_list_item;
   lastPostDefined:boolean=false;
 
+  viewAllFuture = false;
+  currentUser: number;
   commonRoomId: number;
+  meetup: Meetup;
 
-  histories: History[] = [
-    {
-      title: "History 1",
-      contents: "Contetns of history 1 sdiuheuifsheusemperfaucibus. Mauris tincidunt lobortis nulla, a blandit nulla laoreet vitae. Maecenas eget orci laoreet, suscsemper faucibus. Mauris tincidunt lobortis nulla, a blandit nulla laoreet vitae. Maecenas eget orci laoreet, suschduisheduh"
-    },
-    {
-      title: "History 2",
-      contents: "Contetns of history 1 sdiuheuifsheuhdrrrrrrrrrrrrrrsemper faucibus. Mauris tincidunt lobortis nulla, a blandit nulla laoreet vitae. Maecenas eget orci laoreet, suscrrrrrrrrrrrrrrrrrruisheduh"
-    },
-    {
-      title: "History 3",
-      contents: "Contetns of history 1 sdiuheuifsheuhdrrrrrrrrrrrrrrsemper faucibus. Mauris tincidunt lobortis nulla, a blandit nulla laoreet vitae. Maecenas eget orci laoreet, suscrrrrrrrrrrrrrrrrrruisheduh"
-    },
-    {
-      title: "History 4",
-      contents: "Contetns of history 1 sdiuheuifsheuhdrrrrrrrrrrrrrrsemper faucibus. Mauris tincidunt lobortis nulla, a blandit nulla laoreet vitae. Maecenas eget orci laoreet, suscrrrrrrrrrrrrrrrrrruisheduh"
-    },
-    {
-      title: "History 5",
-      contents: "Contetns of history 1 sdiuheuifsheuhdrrrrrrrrrrrrrrsemper faucibus. Mauris tincidunt lobortis nulla, a blandit nulla laoreet vitae. Maecenas eget orci laoreet, suscrrrrrrrrrrrrrrrrrruisheduh"
-    }
-  ];
+  constructor(private _location: Location, private router: Router,
+              public userService: UserService, private route: ActivatedRoute,
+              private achievementService: AchievementService,
+              private ratingService: RatingService, private chatService: ChatService,
+              public stateService: StateService,
+              private meetupService: MeetupService) {
+  }
 
-
-  feedbacks: Feedback[] = [
-    {
-      name: "john",
-      surname: "dee",
-      contents: "ontetns of history 1 sdiuheuifsheusemperfaucibus. Mauris tincidunt lobortis nulla, a blandit nulla laoreet vitae. Maecenas eget orci laoreet, suscse",
-      rating: 4.5
-    },
-    {
-      name: "joker",
-      surname: "ll",
-      contents: "ontetns of history 1 sdiuheuifsheusemperfaucibus. Mauris tincidunt lobortis nulla, a blandit nulla laoreet vitae. Maecenas eget orci laoreet, suscse",
-      rating: 3
-    }
-  ];
-
-
-  description = "Aenean rhoncus semper faucibus. Mauris tincidunt lobortis nulla, a blandit nulla laoreet vitae. Maecenas eget orci laoreet, suscipit elit ut, aliquam turpis. Aenean ornare varius augue nec scelerisque. Phasellus turpis leo, venenatis sit amet imperdiet sit amet, aliquam sit amet est. Ut finibus elit a libero semper, ac faucibus lectus luctus. Cras vestibulum nulla quis arcu faucibus, sed molestie ex iaculis. Phasellus facilisis ipsum magna, quis pellentesque erat auctor sit amet. Aenean blandit magna quis est elementum elementum. Aenean tincidunt justo eu erat maximus aliquet. Etiam laoreet velit nec turpis vulputate elementum. Nunc convallis, tortor quis ultricies fringilla, magna tellus fringilla enim, ut gravida justo purus et lacus."
+  ngOnInit() {
+    this.currentUser = this.userService.currentUser.userId;
+    this.id = this.route.snapshot.params['id'];
+    this.loadCommonRoom(this.id, this.userService.currentUser.userId);
+    this.loadUser(this.id);
+    this.loadFollowers(this.id);
+    this.loadLanguages(this.id);
+    this.loadAchievements(this.id);
+    this.loadRating(this.id);
+    this.loadMeetups();
+  }
 
   goBack() {
     this._location.back();
@@ -119,7 +121,6 @@ export class SpeakerPageComponent implements OnInit {
         }});
   }
 
-
   loadFollowers(id: number) {
     this.userService.getUserFollowers(id).subscribe( res => {
       this.followers = res;
@@ -149,12 +150,9 @@ export class SpeakerPageComponent implements OnInit {
     )
   }
 
-
   message() {
-
     if (this.id != this.userService.currentUser.userId) {
       if (this.commonRoomId == -1) {
-
         this.chatService.createCommmonRoom(this.id, this.userService.currentUser.userId).subscribe(
           room => this.router.navigateByUrl("/chats/" + room)
         )
@@ -162,6 +160,16 @@ export class SpeakerPageComponent implements OnInit {
         this.router.navigateByUrl("/chats/" + this.commonRoomId)
       }
     }
+  }
+
+  loadMeetups(){
+    this.meetupService.getFutureMeetups(this.id).toPromise().then(
+    data => this.futureMeetups = data
+    )
+  }
+
+  changeViewAllFuture($event){
+    this.viewAllFuture = !this.viewAllFuture;
   }
 
   loadAchievements(id: number) {
@@ -178,9 +186,9 @@ export class SpeakerPageComponent implements OnInit {
 
   followText(): string {
     if (this.following === true) {
-      return "Unfollow";
+      return "unfollow";
     }
-    return "Follow";
+    return "follow";
   }
 
   followType(): number {
@@ -220,5 +228,4 @@ export class SpeakerPageComponent implements OnInit {
   ngOnDestroy() {
     if (this.sub) this.sub.unsubscribe();
   }
-
 }

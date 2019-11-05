@@ -25,11 +25,9 @@ export class RegisterComponent implements OnInit {
 
   register() {
     this.loading = true;
-    console.log("here");
     this.userService.register(this.user).subscribe(
       data => {
           this.registered = true;
-          //this.router.navigate(["/speakers"]);
           this.loading = false;
           console.log(data);
       }, error => {

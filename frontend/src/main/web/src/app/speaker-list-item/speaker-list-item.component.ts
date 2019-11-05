@@ -2,6 +2,7 @@ import {Component, OnInit, Input} from '@angular/core';
 import {UserService} from "../_services";
 import {Speaker_list_item} from "../_models/speaker_list_item";
 
+
 @Component({
   selector: 'app-speaker-list-item',
   templateUrl: './speaker-list-item.component.html',

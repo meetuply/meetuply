@@ -80,4 +80,18 @@ export class UserService {
     return this.http.post(this.userApiUrl + 'following/' + userId, {});
   }
 
+  recover(user: User, token: string): Observable<{}> {
+    return this.http.patch(this.userApiUrl + (token ? "recover?token=" + token : ""), user);
+  }
+
+  requestRecover(email: string) {
+    return this.http.get(this.userApiUrl + "recover?email=" + email);
+  }
+  update(user: User): Observable<{}> {
+    return this.http.put(this.userApiUrl, user);
+  }
+
+  tokenExsists(token: string) {
+    return this.http.get(this.userApiUrl + "token/" + token);
+  }
 }
