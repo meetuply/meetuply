@@ -16,6 +16,7 @@ import ua.meetuply.backend.controller.exception.PermissionException;
 import ua.meetuply.backend.dao.AppUserDAO;
 import ua.meetuply.backend.dao.ConfirmationTokenDAO;
 import ua.meetuply.backend.dao.RoleDAO;
+import ua.meetuply.backend.model.AchievementType;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.ConfirmationToken;
 import ua.meetuply.backend.model.Role;
@@ -41,6 +42,9 @@ public class AppUserService implements UserDetailsService {
 
     @Autowired
     ConfirmationTokenDAO confirmationTokenDAO;
+   
+    @Autowired
+    AchievementService achievementService;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -148,6 +152,7 @@ public class AppUserService implements UserDetailsService {
 
     public void follow(Integer userId) {
         appUserDAO.follow(getCurrentUserID(), userId);
+        achievementService.checkOne(AchievementType.FOLLOWERS);
     }
 
     public void unfollow(Integer userId) {
@@ -190,6 +195,4 @@ public class AppUserService implements UserDetailsService {
         } else user = new User(appUser.getEmail(), appUser.getPassword(), new HashSet<>());
         return user;
     }
-
-
 }

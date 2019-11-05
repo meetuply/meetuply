@@ -7,6 +7,7 @@ import {UserService} from "../_services";
 import {RatingService} from "../_services/rating.service";
 import {Atendee} from "../_models/atendee";
 import {StateService} from "../_services/state.service";
+import { Location } from '@angular/common';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
 import {RescheduleDialogComponent} from "../reschedule-dialog/reschedule-dialog.component";
@@ -38,6 +39,7 @@ export class MeetupPageComponent implements OnInit {
     private ratingService: RatingService,
     private route: ActivatedRoute,
     private stateService: StateService,
+    private location: Location,
     private dialog: MatDialog) {
   }
 
@@ -228,5 +230,9 @@ export class MeetupPageComponent implements OnInit {
 
   ngOnDestroy() {
     if (this.sub) this.sub.unsubscribe();
+  }
+
+  goBack(){
+  this.location.back();
   }
 }

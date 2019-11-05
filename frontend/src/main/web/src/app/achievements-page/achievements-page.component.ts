@@ -10,7 +10,7 @@ import { Location } from '@angular/common';
 })
 export class AchievementsPageComponent implements OnInit {
 
-  achievements: Achievement[];
+  @Input() achievements: Achievement[];
 
   constructor(private achievementService: AchievementService, private location: Location) { }
 
@@ -18,28 +18,24 @@ export class AchievementsPageComponent implements OnInit {
     this.loadAchievements();
   }
 
-  loadAchievements(){
-    this.achievementService.getAll().toPromise().then(
-      data => {
-        console.log(data[0]);
-        this.achievements = data;
+  achievementToggled(uid) {
+    this.achievementService.deleteFromAchievement(uid).subscribe(
+      data=>{
+        if (!data){
+          this.achievements.splice(this.achievements.findIndex(function(i){
+            return i.achievementId === uid;
+          }), 1);
+        }
       }, error => {
         console.log(error);
       }
     );
   }
 
-  achievementToggled(uid) {
-    this.achievementService.deleteFromAchievement(uid).subscribe(
-      data=>{
-        if (!data){
-          console.log("success");
-          const index = this.achievements.indexOf(this.achievements.find(
-            x => x.achievementId), 0);
-          if (index > -1) {
-            this.achievements.splice(index, 1);
-          }
-        }
+  loadAchievements(){
+    this.achievementService.getAll().toPromise().then(
+      data => {
+        this.achievements = data;
       }, error => {
         console.log(error);
       }

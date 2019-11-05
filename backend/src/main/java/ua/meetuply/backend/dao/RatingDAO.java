@@ -69,7 +69,6 @@ public class RatingDAO implements IDAO<Rating>, RowMapper<Rating> {
     @Override
     public Rating mapRow(ResultSet resultSet, int i) throws SQLException {
         Rating rating = new Rating();
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         rating.setValue(resultSet.getInt("value"));
         rating.setDate(resultSet.getTimestamp("date_time").toLocalDateTime());
         rating.setRatedUser(appUserService.getUser(resultSet.getInt("rated_user_id")));
