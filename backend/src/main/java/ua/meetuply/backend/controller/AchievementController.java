@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ua.meetuply.backend.dao.AchievementDAO;
 import ua.meetuply.backend.model.Achievement;
 import ua.meetuply.backend.service.AchievementService;
+
+import java.util.List;
 
 @RequestMapping("api/achievements")
 @Transactional
@@ -14,6 +17,9 @@ public class AchievementController {
 
     @Autowired
     private AchievementService achievementService;
+
+    @Autowired
+    private AchievementDAO achievementDAO;
 
     @GetMapping()
     public @ResponseBody
