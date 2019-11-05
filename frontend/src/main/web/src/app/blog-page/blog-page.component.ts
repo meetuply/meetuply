@@ -20,6 +20,7 @@ export class BlogPageComponent implements OnInit {
   author: string;
   authorPhoto: string;
   authorId: number;
+  time: string;
 
   lastRow = 0;
   maxCommentsOnPage: number;
@@ -94,6 +95,8 @@ export class BlogPageComponent implements OnInit {
       data => {
         this.blogpost = data;
         this.blogpost.blogPostContent=this.blogpost.blogPostContent.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+        this.time=this.blogpost.time.toString().replace("T"," ");
+        this.authorId=this.blogpost.authorId;
         this.loading = false;
         this.getAuthorInfo(data['authorId']);
         this.loadBlogCommentsChunk();

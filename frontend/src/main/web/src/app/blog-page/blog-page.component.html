@@ -7,6 +7,9 @@
     <div class = 'post-title'>
       <h1>{{this.blogpost.blogPostTitle}}</h1>
     </div>
+    <div class="post-time">
+      <p>{{this.time}}</p>
+    </div>
 
     <div class='author-container'>
       <div class='author' [routerLink]="['/speakers/',this.authorId]">

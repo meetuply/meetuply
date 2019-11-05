@@ -15,6 +15,11 @@
   white-space: initial;
 }
 
+.post-time{
+  color: #7f7f7f;
+  font-size: 14px;
+}
+
 .author-container {
   display: flex;
   flex-direction: column;

@@ -210,7 +210,7 @@ export class SpeakerPageComponent implements OnInit {
   }
 
   isCurrentUser(){
-    return this.userService.currentUser.userId===this.id
+    return this.userService.currentUser.userId==this.id
   }
 
 }
