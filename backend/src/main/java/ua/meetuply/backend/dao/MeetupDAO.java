@@ -62,14 +62,13 @@ public class MeetupDAO implements IDAO<Meetup> {
             "meetup.speaker_id = u.uid\n"+
             "inner join (select rated_user_id, avg(value) from rating\n"+
             "group by rated_user_id) as r on u.uid = r.rated_user_id\n"+
-            "where state_id IN (SELECT uid FROM state WHERE LOWER(name) = LOWER('scheduled'))\n"+
+            "where state_id IN (SELECT uid FROM state WHERE LOWER(name) in (LOWER('scheduled'),lower('booked')))\n"+
             "order by start_date_time asc limit ?, ?;";
     private static final String GET_USER_MEETUPS_CHUNK = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on\n" +
             "meetup.speaker_id = u.uid\n" +
             "inner join (select rated_user_id, avg(value) from rating\n" +
             "group by rated_user_id) as r on u.uid = r.rated_user_id\n" +
-            "where state_id IN (SELECT uid FROM state WHERE LOWER(name) = LOWER('scheduled'))\n" +
             "and speaker_id = ?\n" +
             "order by start_date_time desc limit ?, ?;";
 
