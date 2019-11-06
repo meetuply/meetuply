@@ -103,7 +103,7 @@ import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component"
     TopicSearchComponent,
     BanReasonsPageComponent,
     BanReasonPageComponent,
-    BanReasonSearchComponent
+    BanReasonSearchComponent,
     AchievementsPageComponent,
     ConfirmDialogComponent,
     RescheduleDialogComponent,
