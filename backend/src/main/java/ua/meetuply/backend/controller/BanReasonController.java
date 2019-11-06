@@ -26,6 +26,11 @@ public class BanReasonController {
 	public BanReason getOneBanReason(@PathVariable("banReasonId") Integer banReasonId) {
 	    return banReasonService.get(banReasonId);
 	}
+
+	@GetMapping("banReasonName/{banReasonName}")
+	public Iterable<BanReason> getBanReasonByName(@PathVariable("banReasonName") String banReasonName) {
+		return banReasonService.getByName(banReasonName);
+	}
 	
 	@PostMapping()
     public ResponseEntity createNewBanReason(@Valid @RequestBody BanReason banReason){

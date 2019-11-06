@@ -38,6 +38,10 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
         return jdbcTemplate.query("SELECT * FROM user WHERE is_deactivated=0 AND registration_confirmed=1 order by uid asc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
     }
 
+    public List<AppUser> getUsersChunkForAdmin(Integer startRow, Integer endRow) {
+        return jdbcTemplate.query("SELECT * FROM user WHERE registration_confirmed=1 order by uid asc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
+    }
+
     @Override
     public AppUser get(Integer id) {
         List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE uid = ?", new Object[]{id}, this);

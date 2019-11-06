@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Speaker_list_item} from "../_models/speaker_list_item";
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "../_services";
+import {RatingService} from "../_services/rating.service";
 
 @Component({
   selector: 'app-user-deactivation',
@@ -27,18 +28,23 @@ export class UserDeactivationComponent implements OnInit {
     this.loadUsersChunk();
   }
 
-  constructor(private http: HttpClient, private userService: UserService) { }
+  constructor(private http: HttpClient, private userService: UserService, private ratingService: RatingService) { }
 
   loadUsersChunk() {
-    this.userService.getChunk(this.speaker_list.length,this.chunkSize).subscribe(
+    this.userService.getChunkForAdmin(this.speaker_list.length, this.chunkSize).subscribe(
       async users => {
         this.speaker_chunk = await Promise.all(users.map(async user => {
-
-          var user_languages: string[];
-
-          var list_item: Speaker_list_item;
+          let user_languages: string[];
+          let list_item: Speaker_list_item;
           await this.userService.getUserLanguages(user.userId).toPromise().then(languages =>
             user_languages = languages.map(language => language.name)
+          );
+
+          let rating = this.ratingService.getUserRatingAvg(user.userId).toPromise().then(r => rating = r);
+
+          let followers: number[];
+          await this.userService.getUserFollowers(user.userId).toPromise().then(f =>
+            followers = f
           );
 
           list_item = {
@@ -46,10 +52,10 @@ export class UserDeactivationComponent implements OnInit {
             name: user.firstName,
             surname: user.lastName,
             location: user.location,
-            rate: 4,
+            rate: rating,
             description: user.description,
             languages: user_languages,
-            following: false,
+            following: (followers.indexOf(this.userService.currentUser.userId) != -1),
             awards: 3
           };
 

@@ -46,6 +46,9 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { TopicsPageComponent } from './topics-page/topics-page.component';
 import { TopicPageComponent } from './topic-page/topic-page.component';
 import { TopicSearchComponent } from './topic-search/topic-search.component';
+import { BanReasonsPageComponent } from './ban-reasons-page/ban-reasons-page.component';
+import { BanReasonPageComponent } from './ban-reason-page/ban-reason-page.component';
+import { BanReasonSearchComponent } from './ban-reason-search/ban-reason-search.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { RescheduleDialogComponent } from './reschedule-dialog/reschedule-dialog.component';
@@ -98,6 +101,9 @@ import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component"
     TopicsPageComponent,
     TopicPageComponent,
     TopicSearchComponent,
+    BanReasonsPageComponent,
+    BanReasonPageComponent,
+    BanReasonSearchComponent
     AchievementsPageComponent,
     ConfirmDialogComponent,
     RescheduleDialogComponent,
