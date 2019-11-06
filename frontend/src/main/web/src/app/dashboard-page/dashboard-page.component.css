@@ -22,21 +22,6 @@
   margin-top: 20px;
 }
 
-.section-one{
-  margin-top: 20px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  font-size: 18px;
-}
-
-.section-two{
-  margin-top: 20px;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-}
-
 .section-title{
   font-size: 2em;
   display: flex;
@@ -54,14 +39,14 @@
   font-size: 17px;
   font-style: italic;
   cursor: pointer;
+  margin: 8px;
 }
 
 .view-all-link:hover{
   text-decoration: underline;
 }
 
-.about{
-  font-size: 30px;
+.section{
   margin-top: 15px;
   margin-bottom: 15px
 }
