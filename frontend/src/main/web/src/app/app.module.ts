@@ -58,6 +58,7 @@ import {MatMomentDateModule} from "@angular/material-moment-adapter";
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { SettingsComponent } from './settings/settings.component';
 import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
+import { BanPageComponent } from './ban-page/ban-page.component';
 
 
 @NgModule({
@@ -103,12 +104,13 @@ import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component"
     TopicSearchComponent,
     BanReasonsPageComponent,
     BanReasonPageComponent,
-    BanReasonSearchComponent
+    BanReasonSearchComponent,
     AchievementsPageComponent,
     ConfirmDialogComponent,
     RescheduleDialogComponent,
     ChangePasswordComponent,
     SettingsComponent,
+    BanPageComponent,
   ],
   imports: [
     BrowserModule,
