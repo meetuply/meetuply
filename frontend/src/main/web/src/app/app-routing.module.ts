@@ -31,6 +31,8 @@ import {BanReasonPageComponent} from "./ban-reason-page/ban-reason-page.componen
 import {ChangePasswordComponent} from "./change-password/change-password.component";
 import {SettingsComponent} from "./settings/settings.component";
 import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
+import {BanPageComponent} from "./ban-page/ban-page.component";
+import {BansPageComponent} from "./bans-page/bans-page.component";
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -55,6 +57,8 @@ const routes: Routes = [
   { path: 'topics/:id', component: TopicPageComponent, canActivate: [AdminGuard] },
   { path: 'ban_reasons', component: BanReasonsPageComponent, canActivate: [AdminGuard] },
   { path: 'ban_reasons/:id', component: BanReasonPageComponent, canActivate: [AdminGuard] },
+  { path: 'speakers/:id/ban', component: BanPageComponent, canActivate: [AuthGuard] },
+  { path: 'speakers/:id/view_bans', component: BansPageComponent, canActivate: [AdminGuard] },
   { path: 'achievements/create', component: AchievementCreatePageComponent/*, canActivate: [AdminGuard] */},
   { path: 'password', component: ChangePasswordComponent},
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},

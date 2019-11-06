@@ -3,6 +3,7 @@ import {Speaker_list_item} from "../_models/speaker_list_item";
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "../_services";
 import {RatingService} from "../_services/rating.service";
+import {AchievementService} from "../_services/achievement.service";
 
 @Component({
   selector: 'app-user-deactivation',
@@ -28,7 +29,9 @@ export class UserDeactivationComponent implements OnInit {
     this.loadUsersChunk();
   }
 
-  constructor(private http: HttpClient, private userService: UserService, private ratingService: RatingService) { }
+  constructor(private http: HttpClient, private userService: UserService,
+              private ratingService: RatingService,
+              private achievementService: AchievementService) { }
 
   loadUsersChunk() {
     this.userService.getChunkForAdmin(this.speaker_list.length, this.chunkSize).subscribe(
@@ -39,9 +42,10 @@ export class UserDeactivationComponent implements OnInit {
           await this.userService.getUserLanguages(user.userId).toPromise().then(languages =>
             user_languages = languages.map(language => language.name)
           );
-
           let rating = this.ratingService.getUserRatingAvg(user.userId).toPromise().then(r => rating = r);
-
+          let awards;
+          await this.achievementService.getUserAchievementsNumber(user.userId).toPromise().then(
+            a => awards = a);
           let followers: number[];
           await this.userService.getUserFollowers(user.userId).toPromise().then(f =>
             followers = f
@@ -56,15 +60,11 @@ export class UserDeactivationComponent implements OnInit {
             description: user.description,
             languages: user_languages,
             following: (followers.indexOf(this.userService.currentUser.userId) != -1),
-            awards: 3
+            awards: awards
           };
-
-
           return list_item;
-
-        }))
+        }));
         this.speaker_list.push(...this.speaker_chunk);
-
       }
     )
   }
