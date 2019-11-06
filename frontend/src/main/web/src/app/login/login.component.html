@@ -1,4 +1,4 @@
-<div class='dialog'>
+<div class='dialog' *ngIf="!recovering">
   <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
     <p class='title'>Sign in</p>
     <p *ngIf="error" class='error'>{{error}}</p>
@@ -15,9 +15,31 @@
       <div *ngIf="password.errors.minlength">Password must be at least 6 characters</div>
     </div>
 
-    <a class='link'>Forgot password?</a>
+    <a class='link' (click)="recovering = true">Forgot password?</a>
     <a class='link' routerLink='/registration'>Don't have an account? Click here</a>
     <button class="button btn1">Enter</button>
+  </form>
+</div>
+
+<div *ngIf="recovering" class='dialog'>
+  <form *ngIf="!successful" name="form" (ngSubmit)="f.form.valid && recover()" #f="ngForm" novalidate>
+    <p class='title'>Request recover</p>
+    <p *ngIf="errorRecover" class='error'>{{errorRecover}}</p>
+
+    <input type="text" name="email" placeholder="email" [(ngModel)]="requestEmail" #email="ngModel" [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required email />
+    <div *ngIf="f.submitted && email.invalid" class="invalid-feedback">
+      <div *ngIf="email.errors.required">Email is required</div>
+      <div *ngIf="email.errors.email">Email must be a valid email address</div>
+    </div>
+
+    <button class="button btn3" (click)="recovering=false">Cancel</button>
+    <button class="button btn1">Enter</button>
+
+  </form>
+
+  <form *ngIf="successful">
+    <p>Please, check you email address.</p>
+    <a class='link' routerLink='/'>Back to home</a>
   </form>
 </div>
 

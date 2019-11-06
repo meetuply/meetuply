@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@CacheConfig(cacheNames={"states"})
+@CacheConfig(cacheNames = {"states"})
 public class StateService {
 
     @Autowired
@@ -42,7 +42,7 @@ public class StateService {
     }
 
     public void updateState(List<Meetup> meetups, State state) {
-        for (Meetup m: meetups) updateState(m, state);
+        for (Meetup m : meetups) updateState(m, state);
     }
 
     public void updateState(Meetup meetups, State state) {
@@ -50,11 +50,11 @@ public class StateService {
         meetupDAO.update(meetups);
     }
 
-    public void cancelFutureMeetupsOf(AppUser user){
+    public void cancelFutureMeetupsOf(AppUser user) {
         updateState(meetupDAO.futureScheduledAndBookedMeetupsOf(user), get(StateNames.CANCELED.name));
     }
 
-    public void terminateCurrentMeetupsOf(AppUser user){
+    public void terminateCurrentMeetupsOf(AppUser user) {
         updateState(meetupDAO.currentMeetupsOf(user), get(StateNames.TERMINATED.name));
     }
 

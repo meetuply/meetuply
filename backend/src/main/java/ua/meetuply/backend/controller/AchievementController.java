@@ -1,15 +1,14 @@
 package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ua.meetuply.backend.dao.AchievementDAO;
 import ua.meetuply.backend.model.Achievement;
 import ua.meetuply.backend.service.AchievementService;
 
 import java.util.List;
-import java.util.Map;
 
 @RequestMapping("api/achievements")
 @Transactional
@@ -18,6 +17,9 @@ public class AchievementController {
 
     @Autowired
     private AchievementService achievementService;
+
+    @Autowired
+    private AchievementDAO achievementDAO;
 
     @GetMapping()
     public @ResponseBody
@@ -37,8 +39,13 @@ public class AchievementController {
     }
 
     @PostMapping()
-    public Integer create(@RequestBody Achievement achievement){
-        return achievementService.saveReturnId(achievement);
+    public Achievement create(@RequestBody Achievement achievement){
+        return achievementService.saveReturn(achievement);
+    }
+
+    @GetMapping("/sum/{userId}")
+    public Integer getUserAchievementsSum(@PathVariable("userId") Integer userId){
+        return achievementService.getUserAchievementsSum(userId);
     }
 
     @PostMapping("/meetupsTopic/same")

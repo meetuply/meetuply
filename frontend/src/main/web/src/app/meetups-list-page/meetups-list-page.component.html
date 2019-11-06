@@ -17,12 +17,18 @@
 
   <app-meetup-filter *ngIf="this.filter_shown"></app-meetup-filter>
 
+  <div class="additional-filters" >
+      <span [ngClass]="showActiveFlag ? 'active-choice': 'flag'" (click)="showActive()">active </span>|
+    <span [ngClass]="showAllFlag ? 'active-choice': 'flag'" (click)="showAll()">all </span>|
+    <span [ngClass]="showMyFlag ? 'active-choice': 'flag'" (click)="showMy()">my</span>
+  </div>
+
   <div class="main"
        infinite-scroll
        [infiniteScrollDistance]="scrollDistance"
        (scrolled)='this.onScrollDown()'>
-    <div class='left_column'>
 
+    <div class='left_column'>
       <div *ngFor="let meetupItem of this.meetupsList;let i = index">
         <app-meetup-list-item
           *ngIf="isOdd(i)"
@@ -32,8 +38,6 @@
         </app-meetup-list-item>
       </div>
     </div>
-
-
     <div class='right_column'>
     <div *ngFor="let meetupItem of this.meetupsList;let i = index">
     <app-meetup-list-item *ngIf="!isOdd(i)"
@@ -43,8 +47,9 @@
     </app-meetup-list-item>
     </div>
     </div>
-
   </div>
+
+
 </div>
 
 

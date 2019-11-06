@@ -15,18 +15,7 @@ import { ChatThumbnail } from '../_models/chatThumbnail'
 export class UserService {
 
   private userApiUrl = `${environment.apiUrl}/api/user/`;
-  //private userApiUrl = `http://localhost:8080/api/user/`;
-  public currentUser: User;/* = {
-    firstName: "sasha",
-    lastName: "faryna",
-    password: "k",
-    confirmedPassword: "k",
-    description: "esc",
-    email: "email",
-    location: "kyiv",
-    photo: "assets/img/download.png",
-    userId: 2
-  }*/
+  public currentUser: User;
 
   constructor(private http: HttpClient, private authenticationService: AuthenticationService) {
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
@@ -45,8 +34,6 @@ export class UserService {
   getAll(): Observable<User[]> {
     return this.http.get<User[]>(this.userApiUrl + 'members')
   }
-
-
 
   getChunk(start: number, size: number): Observable<User[]> {
     return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size)
@@ -104,5 +91,19 @@ export class UserService {
   reactivate(userId: number): Observable<{}>{
     return this.http.put(this.userApiUrl + 'activate/' + userId, {});
   }
+  
+  recover(user: User, token: string): Observable<{}> {
+    return this.http.patch(this.userApiUrl + (token ? "recover?token=" + token : ""), user);
+  }
 
+  requestRecover(email: string) {
+    return this.http.get(this.userApiUrl + "recover?email=" + email);
+  }
+  update(user: User): Observable<{}> {
+    return this.http.put(this.userApiUrl, user);
+  }
+
+  tokenExsists(token: string) {
+    return this.http.get(this.userApiUrl + "token/" + token);
+  }
 }

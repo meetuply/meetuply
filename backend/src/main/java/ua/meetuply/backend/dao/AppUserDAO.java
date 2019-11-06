@@ -118,6 +118,12 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
     }
 
+    public void changePassword(AppUser appUser) {
+        jdbcTemplate.update("UPDATE user SET password = ? WHERE uid = ?",
+                appUser.getPassword(), appUser.getUserId());
+
+    }
+
     @Override
     public void delete(Integer id) {
         jdbcTemplate.update("DELETE FROM user WHERE uid = ?", id);

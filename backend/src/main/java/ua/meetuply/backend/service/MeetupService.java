@@ -8,6 +8,7 @@ import ua.meetuply.backend.controller.exception.MeetupStateException;
 import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.controller.exception.PermissionException;
 import ua.meetuply.backend.dao.MeetupDAO;
+import ua.meetuply.backend.model.AchievementType;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Filter;
 import ua.meetuply.backend.model.Meetup;
@@ -28,27 +29,36 @@ public class MeetupService {
     @Autowired
     private StateService stateService;
 
+    @Autowired
+    private AchievementService achievementService;
+
     public void createMeetup(Meetup meetup) {
         meetup.setStateId(stateService.get(StateNames.SCHEDULED.name).getStateId());
         meetup.setSpeakerId(appUserService.getCurrentUserID());
         meetupDao.save(meetup);
+        achievementService.checkOne(AchievementType.MEETUPS);
+        achievementService.checkMultiple();
     }
 
     public List<Meetup> getAllMeetups() {
         return meetupDao.getAll();
     }
 
-    public Meetup getMeetupById(Integer id) {
-        return meetupDao.get(id);
+    public Meetup getMeetupById(Integer meetupId) {
+        return meetupDao.get(meetupId);
     }
 
     public void updateMeetup(Meetup meetup) {
         meetupDao.update(meetup);
     }
 
-    public void deleteMeetup(Integer id) {
-        meetupDao.delete(id);
+    public void deleteMeetup(Integer meetupId) {
+        meetupDao.delete(meetupId);
     }
+
+    public List<Meetup> getUserFutureMeetups(Integer userId){return meetupDao.getUserFutureMeetups(userId);}
+
+    public List<Meetup> getUserPastMeetups(Integer userId){return meetupDao.getUserPastMeetups(userId);}
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void join(Integer meetupID) throws Exception {
@@ -66,6 +76,14 @@ public class MeetupService {
         return meetupDao.getMeetupsChunkWithUsernameAndRating(startRow, endRow);
     }
 
+    public Iterable<Meetup> getMeetupsChunkActive(Integer startRow, Integer endRow) {
+        return meetupDao.getMeetupsChunkActive(startRow, endRow);
+    }
+
+    public Iterable<Meetup> getUserMeetupsChunk(Integer startRow, Integer endRow) {
+        return meetupDao.getUserMeetupsChunk(appUserService.getCurrentUserID(), startRow, endRow);
+    }
+
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void leave(Integer meetupID) throws Exception {
         AppUser user = appUserService.getCurrentUser();
@@ -77,7 +95,6 @@ public class MeetupService {
             stateService.updateState(meetup, stateService.get(StateNames.SCHEDULED.name));
     }
 
-
     public boolean isAttendee(Integer meetupID, Integer userID) {
         return meetupDao.isAttendee(meetupID, userID);
     }
@@ -85,7 +102,6 @@ public class MeetupService {
     public List<Meetup> findMeetupsByFilter(Filter filter) {
         return meetupDao.findMeetupsByFilter(filter);
     }
-
 
     public Integer getUserMeetupsNumber(Integer userId) {
         return meetupDao.getUserMeetupsNumber(userId);
@@ -142,4 +158,5 @@ public class MeetupService {
         filterDto.setDateTo(dateTo);
         return meetupDao.findMeetupsByFilter(filterDto);
     }
+
 }

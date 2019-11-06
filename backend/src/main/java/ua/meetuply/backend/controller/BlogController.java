@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.BlogComment;
 import ua.meetuply.backend.model.BlogPost;
+import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.BlogCommentService;
 import ua.meetuply.backend.service.BlogPostService;
 
@@ -21,6 +22,9 @@ public class BlogController {
     @Autowired
     BlogPostService blogPostService;
 
+    @Autowired
+    AppUserService appUserService;
+
     @GetMapping()
     public @ResponseBody Iterable<BlogPost> getAllBlogPosts() {
         return blogPostService.getBlogPosts();
@@ -31,16 +35,24 @@ public class BlogController {
         return blogPostService.getBlogPostById(blogPostId);
     }
 
-    @GetMapping("/{filter}/{startRow}/{endRow}")
-    public @ResponseBody
-    Iterable<BlogPost> getBlogPostsChunk(@PathVariable("startRow") Integer startRow,
-                                         @PathVariable("endRow") Integer endRow,
-                                         @PathVariable("filter") String filter) {
+    @GetMapping("/user/{user-id}/{start-row}/{end-row}")
+    public @ResponseBody Iterable<BlogPost> getBlogPostsByUserId(@PathVariable("user-id") Integer userId,
+                                                                 @PathVariable("start-row") Integer startRow,
+                                                                 @PathVariable("end-row") Integer endRow) {
+        return blogPostService.getBlogPostByUserId(startRow,endRow,userId);
+    }
+
+    @GetMapping("/{filter}/{start-row}/{end-row}")
+    public @ResponseBody Iterable<BlogPost> getBlogPostsChunk(@PathVariable("start-row") Integer startRow,
+                                                              @PathVariable("end-row") Integer endRow,
+                                                              @PathVariable("filter") String filter) {
         return blogPostService.getBlogPostsChunk(startRow,endRow,filter);
     }
 
     @PostMapping()
     public ResponseEntity createBlogPost(@Valid @RequestBody BlogPost blogPost){
+        if (blogPost.getBlogPostContent().length()<=0 || blogPost.getBlogPostTitle().length()<=0)
+            return ResponseEntity.noContent().build();
         blogPostService.createBlogPost(blogPost);
         return ResponseEntity.ok().build();
     }
@@ -48,6 +60,8 @@ public class BlogController {
     @PutMapping("/{post-id}")
     public ResponseEntity updateBlogPost(@PathVariable("post-id") Integer blogPostId,
                                                    @RequestBody BlogPost blogPost) {
+        if (!(appUserService.getCurrentUser().getRole().getRoleName().equals("admin")))
+            return ResponseEntity.badRequest().build();
         if (blogPostService.getBlogPostById(blogPostId) == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -58,6 +72,8 @@ public class BlogController {
 
     @DeleteMapping("/{post-id}")
     public ResponseEntity deleteBlogPost(@PathVariable("post-id") Integer blogPostId){
+        if (!(appUserService.getCurrentUser().getRole().getRoleName().equals("admin")))
+            return ResponseEntity.badRequest().build();
         if (blogPostService.getBlogPostById(blogPostId) == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -89,6 +105,8 @@ public class BlogController {
     @PostMapping("/{post-id}/comments")
     public ResponseEntity createBlogComment(@PathVariable("post-id") Integer blogPostId,
                                                             @Valid @RequestBody BlogComment blogComment){
+        if (blogComment.getBlogCommentContent().length()<=0)
+            return ResponseEntity.noContent().build();
         blogCommentService.createBlogComment(blogComment, blogPostId);
         return ResponseEntity.ok().build();
     }
@@ -96,6 +114,8 @@ public class BlogController {
     @PutMapping("/comments/{comment-id}")
     public ResponseEntity updateBlogComment(@PathVariable("comment-id") Integer blogCommentId,
                                                       @RequestBody BlogComment blogComment) {
+        if (!(appUserService.getCurrentUser().getRole().getRoleName().equals("admin")))
+            return ResponseEntity.badRequest().build();
         if (blogCommentService.getBlogCommentById(blogCommentId) == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -106,8 +126,10 @@ public class BlogController {
 
     @DeleteMapping("/comments/{comment-id}")
     public ResponseEntity deleteBlogComment(@PathVariable("comment-id") Integer blogCommentId){
+        if (!(appUserService.getCurrentUser().getRole().getRoleName().equals("admin")))
+            return ResponseEntity.badRequest().build();
         if (blogCommentService.getBlogCommentById(blogCommentId) == null) {
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build();
         }
         blogCommentService.deleteBlogComment(blogCommentId);
         return ResponseEntity.ok().build();

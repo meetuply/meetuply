@@ -12,7 +12,7 @@ public class MeetupJoinedWithUserRowMapper extends  MeetupRowMapper{
         Meetup meetup = super.mapRow(rs, rowNum);
         meetup.setSpeakerFirstName(rs.getString("firstName"));
         meetup.setSpeakerLastName(rs.getString("surname"));
-        meetup.setRating(rs.getFloat("avg(value)"));
+        meetup.setRating(rs.getFloat("rating"));
         meetup.setSpeakerPhoto(rs.getString("photo"));
         return meetup;
     }
