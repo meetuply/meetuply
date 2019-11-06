@@ -93,6 +93,10 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getUserSubscriptions(id);
     }
 
+    public List<AppUser> getUserSubscriptionsUsers(Integer id) {
+        return appUserDAO.getUserSubscriptionsUsers(id);
+    }
+
     public AppUser getUser(Integer id) {
         return appUserDAO.get(id);
     }

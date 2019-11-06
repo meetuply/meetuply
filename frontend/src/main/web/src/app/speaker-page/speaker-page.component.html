@@ -6,10 +6,11 @@
     <div class='back' (click)="goBack()">
 
     </div>
-    <div class='profile'>
+    <div class='profile' *ngIf="user">
 
       <div class='avatar'>
-        <img src="assets/img/download.png">
+        <img *ngIf="user.photo" src={{user.photo}}>
+        <img *ngIf="!user.photo" src="assets/img/download.png">
         <app-rating size='24' rating="{{this.user}}"></app-rating>
       </div>
 
@@ -83,6 +84,24 @@
     <div class='future-meetups'>
       <div *ngFor="let meetup of (viewAllFuture ?
               (futureMeetups) : (futureMeetups | slice:0:1))">
+        <div class="one-future-meetup">
+          <app-meetup-list-item
+            [meetupListItem]="meetup"
+            [isMy]="userService.currentUser.userId == meetup.speakerId"
+            [state]="stateService.states[meetup.stateId]"
+            [showAuthorInfo]=false>
+          </app-meetup-list-item>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="pastMeetups.length > 0" class='about'>
+      Past Meetup <span class="view-all-past" (click)="changeViewAllPast($event)">
+      view all</span>
+    </div>
+    <div class='future-meetups'>
+      <div *ngFor="let meetup of (viewAllPast ?
+              (pastMeetups) : (pastMeetups | slice:0:1))">
         <div class="one-future-meetup">
           <app-meetup-list-item
             [meetupListItem]="meetup"

@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import ua.meetuply.backend.dao.SQLPredicate.Operation;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Filter;
 import ua.meetuply.backend.model.Meetup;
@@ -14,6 +15,7 @@ import ua.meetuply.backend.service.StateService;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -33,7 +35,7 @@ public class MeetupDAO implements IDAO<Meetup> {
     private static final String GET_MEETUP_CHUNK_WITH_USERNAME_AND_RATING = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on meetup.speaker_id = u.uid\n" +
             "inner join (select uid, coalesce((select avg(value) from rating where rated_user_id = uid), 0.0) as rating\n" +
-            "from user) as r on meetup.speaker_id = r.uid\n" +
+            "from user where is_deactivated = 0) as r on meetup.speaker_id = r.uid\n" +
             "order by start_date_time desc limit ?, ?;";
     private static final String IS_ATTENDEE_QUERY = "SELECT 1 FROM `meetup_attendees` WHERE `meetup_id` = ? AND `user_id` = ?";
     private static final String LEAVE_MEETUP_QUERY = "DELETE FROM `meetup_attendees` WHERE `meetup_id` = ? AND `user_id` = ?";
@@ -50,19 +52,16 @@ public class MeetupDAO implements IDAO<Meetup> {
             "state_id = ?, speaker_id = ? WHERE uid = ?";
     private static final String GET_USER_FUTURE_MEETUPS = "SELECT *\n" +
             "FROM meetup\n" +
-            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) in (LOWER('scheduled'),lower('booked')))" +
+            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) in ('scheduled','booked'))" +
             "order by start_date_time asc;";
-    private static final String GET_USER_PAST_MEETUPS = "SELECT *\n" +
-            "FROM meetup\n" +
-            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) = LOWER('passed'))" +
-            "order by start_date_time desc";
+    private static final String GET_USER_PAST_MEETUPS = "SELECT * FROM meetup WHERE speaker_id = ? AND finish_date_time < now() order by start_date_time desc";
     private static final String GET_ACTIVE_MEETUPS_CHUNK_WITH_RATING = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on meetup.speaker_id = u.uid\n" +
             "inner join (select uid, coalesce((select avg(value) from rating where rated_user_id = uid), 0.0) as rating\n" +
             "from user) as r\n" +
             "on r.uid = speaker_id\n" +
             "where state_id IN (SELECT uid FROM state WHERE LOWER(name) in ('scheduled','booked'))\n" +
-            "order by start_date_time desc limit ?, ?;";
+            "order by start_date_time asc limit ?, ?;";
     private static final String GET_USER_MEETUPS_CHUNK_WITH_RATING = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on\n" +
             "meetup.speaker_id = u.uid\n" +
@@ -70,6 +69,9 @@ public class MeetupDAO implements IDAO<Meetup> {
             "where rated_user_id = ?) as r on u.uid = r.rated_user_id\n" +
             "and speaker_id = ?\n" +
             "order by start_date_time desc limit ?, ?;";
+    private static final String GET_USER_MEETUPS_BEFORE_DAY = "SELECT * FROM meetup \n" +
+            "\twhere uid in (select meetup_id from meetup_attendees where user_id = ?) and\n" +
+            "    start_date_time > now() and start_date_time < (now() + interval ? day)";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -109,6 +111,10 @@ public class MeetupDAO implements IDAO<Meetup> {
     @Override
     public void delete(Integer id) {
         jdbcTemplate.update(DELETE_QUERY, id);
+    }
+
+    public List<Meetup> getUserMeetupsBeforeDay(Integer userId, int day) {
+        return jdbcTemplate.query(GET_USER_MEETUPS_BEFORE_DAY, new MeetupRowMapper(), userId, day);
     }
 
     public List<Meetup> getMeetupsChunkWithUsernameAndRating(Integer startRow, Integer endRow) {
@@ -164,7 +170,7 @@ public class MeetupDAO implements IDAO<Meetup> {
     }
 
     public List<Meetup> findMeetupsByFilter(Filter filter) {
-        Double rating = filter.getRating();
+        Double rating = filter.getRatingFrom();
         Timestamp dateFrom = filter.getDateFrom();
         Timestamp dateTo = filter.getDateTo();
         if (rating != null) {
@@ -183,54 +189,54 @@ public class MeetupDAO implements IDAO<Meetup> {
 
     public List<Meetup> futureScheduledAndBookedMeetupsOf(AppUser user) {
         List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("state_id", SQLPredicate.Operation.IN,
+                new SQLPredicate("state_id", Operation.IN,
                         Arrays.asList(stateService.get(StateNames.SCHEDULED.name).getStateId(),
                                       stateService.get(StateNames.BOOKED.name).getStateId())),
-                new SQLPredicate("speaker_id", SQLPredicate.Operation.EQUALS, user.getUserId())
+                new SQLPredicate("speaker_id", Operation.EQUALS, user.getUserId())
         );
-        SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
+        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
         return find(where);
     }
 
     public List<Meetup> currentMeetupsOf(AppUser user) {
         List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS,
+                new SQLPredicate("state_id", Operation.EQUALS,
                         stateService.get(StateNames.IN_PROGRESS.name).getStateId()),
-                new SQLPredicate("speaker_id", SQLPredicate.Operation.EQUALS, user.getUserId())
+                new SQLPredicate("speaker_id", Operation.EQUALS, user.getUserId())
         );
-        SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
+        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
         return find(where);
     }
 
     public List<Meetup> notEnoughAttendees1Hour() {
         List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("start_date_time", SQLPredicate.Operation.LESS, "NOW() + INTERVAL 1 HOUR"),
-                new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS,
+                new SQLPredicate("start_date_time", Operation.LESS, "NOW() + INTERVAL 1 HOUR"),
+                new SQLPredicate("state_id", Operation.EQUALS,
                         stateService.get(StateNames.SCHEDULED.name).getStateId()),
-                new SQLPredicate("min_attendees", SQLPredicate.Operation.GREATER, "registered_attendees")
+                new SQLPredicate("min_attendees", Operation.GREATER, "registered_attendees")
         );
-        SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
+        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
         return find(where);
     }
 
     public List<Meetup> goingToStart() {
         List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("state_id", SQLPredicate.Operation.IN,
+                new SQLPredicate("state_id", Operation.IN,
                         Arrays.asList(stateService.get(StateNames.SCHEDULED.name).getStateId(),
                                       stateService.get(StateNames.BOOKED.name).getStateId())),
-                new SQLPredicate("start_date_time", SQLPredicate.Operation.LESS, "NOW()")
+                new SQLPredicate("start_date_time", Operation.LESS, "NOW()")
         );
-        SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
+        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
         return find(where);
     }
 
     public List<Meetup> goingToFinish() {
         List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("finish_date_time", SQLPredicate.Operation.LESS, "NOW()"),
-                new SQLPredicate("state_id", SQLPredicate.Operation.EQUALS,
+                new SQLPredicate("finish_date_time", Operation.LESS, "NOW()"),
+                new SQLPredicate("state_id", Operation.EQUALS,
                         stateService.get(StateNames.IN_PROGRESS.name).getStateId())
         );
-        SQLPredicate where = new SQLPredicate(SQLPredicate.Operation.AND, andList);
+        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
         return find(where);
     }
 
@@ -261,5 +267,38 @@ public class MeetupDAO implements IDAO<Meetup> {
             return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_RATING_QUERY,
                     new Object[]{rating}, new MeetupRowMapper());
         }
+    }
+
+    public List<Meetup> findBy(Filter filter) {
+        List<SQLPredicate> andList = new LinkedList<>();
+
+        if (filter.getDateFrom() != null)
+            andList.add(new SQLPredicate("start_date_time", Operation.GREATER_EQUALS, filter.getDateFrom()));
+        if (filter.getDateTo() != null)
+            andList.add(new SQLPredicate("finish_date_time", Operation.LESS_EQUALS, filter.getDateTo()));
+
+        if (filter.getRatingFrom() != null)
+            andList.add(new SQLPredicate("speaker_id", Operation.IN,
+                        new SQLSelect("avg_rating", "user_id",
+                                new SQLPredicate("value", Operation.GREATER_EQUALS, filter.getRatingFrom()))));
+        if (filter.getRatingTo() != null)
+            andList.add(new SQLPredicate("speaker_id", Operation.IN,
+                        new SQLSelect("avg_rating", "user_id",
+                                new SQLPredicate("value", Operation.LESS_EQUALS, filter.getRatingTo()))));
+
+        System.out.println(new SQLPredicate(Operation.AND, Arrays.asList(
+                new SQLPredicate("meetup_id", Operation.EQUALS, "uid"),
+                new SQLPredicate("topic_id", Operation.IN, filter.getTopicIds()))));
+
+        if (filter.getTopicIds() != null && !filter.getTopicIds().isEmpty())
+            andList.add(new SQLPredicate(Operation.EXISTS,
+                                new SQLSelect("meetup_topic", "topic_id",
+                                        new SQLPredicate(Operation.AND, Arrays.asList(
+                                                new SQLPredicate("meetup_id", Operation.EQUALS, "uid"),
+                                                new SQLPredicate("topic_id", Operation.IN, filter.getTopicIds())
+                                                )))));
+
+        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
+        return find(where);
     }
 }

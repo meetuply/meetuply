@@ -1,14 +1,10 @@
 package ua.meetuply.backend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,11 +16,13 @@ public class Filter {
 
     private Integer id;
     private String name;
-    private Double rating;
-    @DateTimeFormat
+    private Double ratingFrom;
+    private Double ratingTo;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Timestamp dateFrom;
-    @DateTimeFormat
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Timestamp dateTo;
     private Integer userId;
+    private List<Integer> topicIds;
 
 }

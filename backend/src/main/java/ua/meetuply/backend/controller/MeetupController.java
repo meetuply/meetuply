@@ -63,6 +63,12 @@ public class MeetupController {
         return appUserService.getMeetupAttendees(meetupId);
     }
 
+    @GetMapping("/soon/{userId}/{day}")
+    public @ResponseBody Iterable<Meetup> getAttendees(@PathVariable("userId") Integer userId,
+                                                       @PathVariable("day") int day){
+        return meetupService.getUserMeetupsBeforeDay(userId, day);
+    }
+
     @PostMapping()
     public ResponseEntity createMeetup(@Valid @RequestBody Meetup meetup){
         meetupService.createMeetup(meetup);
@@ -123,6 +129,17 @@ public class MeetupController {
             @PathVariable("meetupID") Integer meetupID,
             @RequestParam("id") Integer userID) {
         return meetupService.isAttendee(meetupID, userID);
+    }
+
+
+    @GetMapping("/filter")
+    public List<Meetup> filter(@RequestBody Filter filter) {
+        return meetupService.findBy(filter);
+    }
+
+    @GetMapping("/filters")
+    public List<Filter> filters() {
+        return meetupService.getAllFilters();
     }
 
     @PostMapping("/filters")

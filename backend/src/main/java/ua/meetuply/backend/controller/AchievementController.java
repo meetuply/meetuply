@@ -18,8 +18,8 @@ public class AchievementController {
     @Autowired
     private AchievementService achievementService;
 
-    @Autowired
-    private AchievementDAO achievementDAO;
+//    @Autowired
+//    private AchievementDAO achievementDAO;
 
     @GetMapping()
     public @ResponseBody

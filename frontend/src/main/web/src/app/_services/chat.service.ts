@@ -10,8 +10,8 @@ import { environment } from "../../environments/environment";
 export class ChatService {
 
 
-	//private languageApiUrl = `${environment.apiUrl}/api/languages/`;
-	private chatApiUrl = 'http://localhost:8080/api/chat';
+	private chatApiUrl = `${environment.apiUrl}/api/chat`;
+	//private chatApiUrl = 'http://localhost:8080/api/chat';
 
 	constructor(private http: HttpClient) { }
 
