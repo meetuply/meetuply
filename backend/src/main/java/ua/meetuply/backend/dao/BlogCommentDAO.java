@@ -16,6 +16,17 @@ import java.util.List;
 @Repository
 public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment> {
 
+    private static final String GET_ALL_QUERY = "SELECT * FROM comment";
+    private static final String GET_BY_ID_QUERY = "SELECT * FROM comment WHERE uid = ?";
+    private static final String SAVE_QUERY = "INSERT INTO `comment` (`date_time`, `content`, `post_id`, `author`) VALUES (?, ?, ?, ?)";
+    private static final String DELETE_QUERY = "DELETE FROM comment WHERE uid = ?";
+    private static final String UPDATE_QUERY = "UPDATE comment SET content = ? WHERE uid = ?";
+
+    private static final String GET_CHUNK_QUERY ="SELECT * FROM comment WHERE post_id = ? order by uid desc LIMIT ?, ?";
+
+    private static final String FIND_BY_POST_ID_QUERY = "SELECT * FROM comment WHERE post_id = ?";
+
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -27,30 +38,28 @@ public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment>
 
     @Override
     public BlogComment get(Integer id) {
-        List<BlogComment> blogComments = jdbcTemplate.query("SELECT * FROM comment WHERE uid = ?", new Object[] { id }, this);
+        List<BlogComment> blogComments = jdbcTemplate.query(GET_BY_ID_QUERY, new Object[] { id }, this);
         return blogComments.size() == 0 ? null : blogComments.get(0);
     }
 
     public List<BlogComment> getByPostId(Integer id) {
-        List<BlogComment> blogComments = jdbcTemplate.query("SELECT * FROM comment WHERE post_id = ?", new Object[] { id }, this);
+        List<BlogComment> blogComments = jdbcTemplate.query(FIND_BY_POST_ID_QUERY, new Object[] { id }, this);
         return blogComments;
     }
 
     @Override
     public List<BlogComment> getAll() {
-        List<BlogComment> blogComments = jdbcTemplate.query("SELECT * FROM comment", this);
+        List<BlogComment> blogComments = jdbcTemplate.query(GET_ALL_QUERY, this);
         return blogComments;
     }
 
     public List<BlogComment> getBlogCommentsChunk(Integer postId, Integer startRow, Integer endRow) {
-        return jdbcTemplate.query("SELECT * FROM comment WHERE post_id = ? order by uid desc LIMIT ?, ?", new Object[]{postId, startRow, endRow}, this);
+        return jdbcTemplate.query(GET_CHUNK_QUERY, new Object[]{postId, startRow, endRow}, this);
     }
 
     @Override
     public void save(BlogComment blogComment) {
-        jdbcTemplate.update(
-                "INSERT INTO `comment` (`date_time`, `content`, `post_id`, `author`) " +
-                        "VALUES (?, ?, ?, ?)",
+        jdbcTemplate.update(SAVE_QUERY,
                 blogComment.getTime(),
                 blogComment.getBlogCommentContent(),
                 blogComment.getPostId(),
@@ -59,12 +68,12 @@ public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment>
 
     @Override
     public void update(BlogComment blogComment) {
-        jdbcTemplate.update("UPDATE comment SET content = ? WHERE uid = ?", blogComment.getBlogCommentContent(), blogComment.getBlogCommentId());
+        jdbcTemplate.update(UPDATE_QUERY, blogComment.getBlogCommentContent(), blogComment.getBlogCommentId());
     }
 
     @Override
     public void delete(Integer id) {
-        jdbcTemplate.update("DELETE FROM comment WHERE uid = ?", id);
+        jdbcTemplate.update(DELETE_QUERY, id);
     }
 
     @Override
