@@ -3,12 +3,18 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Observable, throwError, of} from "rxjs";
 import {environment} from "../../environments/environment";
 import {Ban} from "../_models/ban";
+import {BanForView} from "../_models/banForView";
 
 @Injectable({providedIn: 'root'})
 export class BanService {
   private banApiUrl = `${environment.apiUrl}/api/bans/`;
 
   constructor(private http: HttpClient) {
+  }
+
+  /** GET bans with same reported from the server */
+  get(reportedId: number):Observable<BanForView[]> {
+    return this.http.get<BanForView[]>(this.banApiUrl + `reported=${reportedId}`);
   }
 
   /** POST: add a new ban to the server */

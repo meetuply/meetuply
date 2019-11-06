@@ -5,6 +5,7 @@ import {BanService} from "../_services/ban.service";
 import {Ban} from "../_models/ban";
 import {ActivatedRoute } from "@angular/router";
 import {UserService} from "../_services";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-ban-page',
@@ -33,11 +34,16 @@ export class BanPageComponent implements OnInit {
     this.banReasonId = banReason.banReasonId;
   }
 
-  constructor(private banService: BanService, private banReasonService: BanReasonService, private route: ActivatedRoute) { }
+  constructor(private banService: BanService, private banReasonService: BanReasonService,
+              private route: ActivatedRoute, private location: Location) { }
 
   ngOnInit() {
     this.reportedId = this.route.snapshot.params['id'];
     this.getBanReasons();
+  }
+
+  public goBack(){
+    this.location.back();
   }
 
 }

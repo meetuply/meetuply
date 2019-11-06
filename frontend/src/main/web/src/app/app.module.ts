@@ -59,6 +59,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { SettingsComponent } from './settings/settings.component';
 import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
 import { BanPageComponent } from './ban-page/ban-page.component';
+import { BansPageComponent } from './bans-page/bans-page.component';
 
 
 @NgModule({
@@ -111,6 +112,7 @@ import { BanPageComponent } from './ban-page/ban-page.component';
     ChangePasswordComponent,
     SettingsComponent,
     BanPageComponent,
+    BansPageComponent,
   ],
   imports: [
     BrowserModule,

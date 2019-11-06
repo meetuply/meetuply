@@ -1,6 +1,7 @@
 <app-left-menu></app-left-menu>
 <div class='content'>
   <p class='title'>Ban user</p>
+  <div class='back' (click)="goBack()"></div>
 
   <div *ngIf="this.banReasonId">
     <label>Ban description:
