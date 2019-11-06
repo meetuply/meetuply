@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.BlogPost;
 import ua.meetuply.backend.service.AppUserService;
 
@@ -16,6 +17,7 @@ import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
@@ -26,7 +28,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
     private static final String DELETE_QUERY = "DELETE FROM post WHERE uid = ?";
     private static final String UPDATE_QUERY = "UPDATE post SET content = ? AND title = ? WHERE uid = ?";
 
-    private static final String FIND_POSTS_BY_FILTER_ALL = "SELECT * FROM post order by uid desc LIMIT ?, ?";
+    private static final String FIND_POSTS_BY_FILTER_ALL = "SELECT * FROM post WHERE author_id IN (SELECT uid FROM user WHERE is_deactivated=0) order by uid desc LIMIT ?, ?";
     private static final String FIND_POSTS_BY_FILTER_MY = "SELECT * FROM post WHERE author_id = ? order by uid desc LIMIT ?, ? ";
     private static final String FIND_POSTS_BY_FILTER_SUBS = "SELECT * FROM post WHERE author_id IN (:subs) order by uid desc LIMIT :startRow, :endRow";
     private static final String FIND_POSTS_BY_USER_ID = "SELECT * FROM post WHERE author_id=? order by uid desc LIMIT ?, ?";
@@ -58,17 +60,12 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
     public List<BlogPost> getBlogPostsChunk(Integer startRow, Integer endRow,String filter) {
         switch (filter){
             case "subs":
-                List<Integer> subs = appUserService.getUserSubscriptions(appUserService.getCurrentUserID());
+                List<AppUser> subs = appUserService.getUserSubscriptionsUsers(appUserService.getCurrentUserID());
+                subs.removeIf(u -> u.isDeactivated());
+                List<Integer> subsids = subs.stream().map(s -> s.getUserId()).collect(Collectors.toList());
                 if (subs.size()>=1){
-//                    List<String> subsstring = new ArrayList<>(subs.size());
-//                    for (Integer i : subs) {
-//                        subsstring.add(String.valueOf(i));
-//                    }
-//                    String str=String.join(", ", subsstring);
-//                    System.out.println(str);
-
                     MapSqlParameterSource parameters = new MapSqlParameterSource();
-                    parameters.addValue("subs", subs);
+                    parameters.addValue("subs", subsids);
                     parameters.addValue("startRow", startRow);
                     parameters.addValue("endRow", endRow);
 
