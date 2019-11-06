@@ -224,14 +224,14 @@
   min-width: 100px;
 }
 
-.view-all-future{
+.view-all-future, .view-all-past{
   color: blue;
   font-size: 13px;
   font-style: italic;
   cursor: pointer;
 }
 
-.view-all-future:hover {
+.view-all-future:hover, .view-all-past:hover {
   text-decoration: underline;
 }
 
