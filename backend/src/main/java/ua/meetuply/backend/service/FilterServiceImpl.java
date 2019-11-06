@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class FilterServiceImpl implements FilterService {
 
-    @Resource(name="filterDao")
+    @Resource(name= "filterDAO")
     private IDAO<Filter> filterDao;
 
     @Override
