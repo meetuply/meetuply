@@ -9,7 +9,8 @@
     <div class='profile'>
 
       <div class='avatar'>
-        <img src="assets/img/download.png">
+        <img *ngIf="user.photo" src={{user.photo}}>
+        <img *ngIf="!user.photo" src="assets/img/download.png">
         <app-rating size='24' rating="{{this.user}}"></app-rating>
       </div>
 

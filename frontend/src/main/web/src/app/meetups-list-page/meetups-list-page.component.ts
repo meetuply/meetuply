@@ -22,7 +22,7 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
   filter_shown = false;
   author: string;
 
-  constructor(private userService: UserService,
+  constructor(public userService: UserService,
               private meetupService: MeetupService) {
   }
 

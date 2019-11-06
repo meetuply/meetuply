@@ -52,6 +52,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { TopicsPageComponent } from './topics-page/topics-page.component';
 import { TopicPageComponent } from './topic-page/topic-page.component';
 import { TopicSearchComponent } from './topic-search/topic-search.component';
+import { ChatSubListItemComponent } from './chat-sub-list-item/chat-sub-list-item.component';
 
 
 @NgModule({
@@ -99,7 +100,8 @@ import { TopicSearchComponent } from './topic-search/topic-search.component';
     AchievementsPageComponent,
     TopicsPageComponent,
     TopicPageComponent,
-    TopicSearchComponent
+    TopicSearchComponent,
+    ChatSubListItemComponent
   ],
   imports: [
     BrowserModule,

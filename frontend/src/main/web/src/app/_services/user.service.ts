@@ -56,6 +56,14 @@ export class UserService {
     return this.http.get<number[]>(this.userApiUrl + `${userId}/subscribers`);
   }
 
+  getUserFollowings(userId: number): Observable<number[]> {
+    return this.http.get<number[]>(this.userApiUrl + `${userId}/subscribtions`);
+  }
+
+  getUserFollowingsList(userId: number): Observable<User[]> {
+    return this.http.get<User[]>(this.userApiUrl + `${userId}/subscribtions/users`);
+  }
+
   getRooms(userId: number): Observable<number[]> {
     return this.http.get<number[]>(this.userApiUrl + userId + "/rooms");
   }
