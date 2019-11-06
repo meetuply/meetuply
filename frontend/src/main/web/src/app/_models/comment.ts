@@ -1,5 +1,5 @@
 export class BlogComment {
-  // blogCommentId: number;
+  blogCommentId: number;
   blogCommentContent: string;
   time: Date;
   postId: number;

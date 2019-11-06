@@ -19,28 +19,39 @@ export class BlogCreatePageComponent implements OnInit {
   post_content: string;
 
   submit($event) {
-    let datetime = new Date(Date.now());
-
-    let blogpost: BlogPost = {
-      blogPostId: 0,
-      blogPostTitle: this.post_title,
-      blogPostContent: this.post_content,
-      authorId: this.userService.currentUser.userId,
-      time: datetime
+    window.document.getElementById("title-error").setAttribute("style","display:none;");
+    window.document.getElementById("content-error").setAttribute("style","display:none;");
+    if (this.post_title.length<=0){
+      window.document.getElementById("title-error").setAttribute("style","display:block;");
     }
+    if (this.post_content.length<=0){
+      window.document.getElementById("content-error").setAttribute("style","display:block");
+    }
+    if (this.post_title.length>0 && this.post_content.length>0) {
+      let datetime = new Date(Date.now());
 
-    this.blogService.createBlogPost(blogpost).subscribe(data => {
-      if (data == null) {
-        //supposed to redirect somewhere
-        this.goBack();
+      let blogpost: BlogPost = {
+        blogPostId: 0,
+        blogPostTitle: this.post_title,
+        blogPostContent: this.post_content,
+        authorId: this.userService.currentUser.userId,
+        time: datetime
       }
-    }, error => {
-      alert(error)
-    });
+
+      this.blogService.createBlogPost(blogpost).subscribe(data => {
+        if (data == null) {
+          //supposed to redirect somewhere
+          this.goBack();
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
   }
 
   ngOnInit() {
-
+    this.post_content="";
+    this.post_title="";
   }
 
   goBack() {

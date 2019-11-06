@@ -99,11 +99,16 @@ public class AppUserController {
         return appUserService.getUsersChunk(startRow, endRow);
     }
 
+    @GetMapping("/members/all/{startRow}/{endRow}")
+    public @ResponseBody
+    Iterable<AppUser> getUsersChunkForAdmin(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
+        return appUserService.getUsersChunkForAdmin(startRow, endRow);
+    }
+
     @GetMapping("/{id}")
     public AppUser get(@PathVariable("id") Integer userId) {
         return appUserService.getUser(userId);
     }
-
 
     @GetMapping("/{id}/languages")
     public Iterable<Language> getLanguages(@PathVariable("id") Integer userId) {

@@ -54,7 +54,7 @@ public class RatingDAO implements IDAO<Rating>, RowMapper<Rating> {
 
     @Override
     public void update(Rating rating) {
-        jdbcTemplate.update("UPDATE rating SET value = ? AND date = ? WHERE rated_user_id = ? AND rated_by = ?",
+        jdbcTemplate.update("UPDATE rating SET value = ? AND date_time = ? WHERE rated_user_id = ? AND rated_by = ?",
                 rating.getValue(), rating.getDate(), rating.getRatedUser().getUserId(), rating.getRatedUser().getUserId());
     }
 

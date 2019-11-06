@@ -29,8 +29,10 @@ export class LoginComponent {
   ngOnInit() {
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
-    if (this.authenticationService.currentUser)
+    if (this.authenticationService.currentUserValue) {
+      console.log("already authed");
       this.router.navigate([this.returnUrl ? this.returnUrl : "/meetups"]);
+    }
   }
 
   login() {

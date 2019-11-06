@@ -16,20 +16,24 @@ import {BlogComment} from "../_models/comment";
 export class BlogPageComponent implements OnInit {
 
   blogpost: BlogPost = new BlogPost();
-  loading = false;
   id: number;
   author: string;
   authorPhoto: string;
   authorId: number;
-  error = null;
+  time: string;
+
   lastRow = 0;
   maxCommentsOnPage: number;
-  step = 4;
+  step = 10;
   scrollDistance = 2;
+
   commentsList: Blog_comment_item[] = [];
   newChunk: Blog_comment_item[];
   new_comment: string;
+
   private sub: Subscription;
+  loading = false;
+  error = null;
 
   constructor(private userService: UserService, private blogService: BlogService,
               private _location: Location, private route: ActivatedRoute) {
@@ -39,6 +43,7 @@ export class BlogPageComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
     this.loadBlogPost(this.id);
     this.maxCommentsOnPage = 50;
+    this.new_comment="";
   }
 
   onScrollDown() {
@@ -70,8 +75,9 @@ export class BlogPageComponent implements OnInit {
             this.commentsList.push(...this.newChunk);
           }
         },
-        error1 => {
+        error => {
           this.loading = false;
+          console.log(error);
         }
       )
     }
@@ -83,20 +89,21 @@ export class BlogPageComponent implements OnInit {
     this.loadBlogCommentsChunk();
   }
 
-
   loadBlogPost(id: number) {
     this.loading = true;
     this.sub = this.blogService.getBlogPost(id).subscribe(
       data => {
         this.blogpost = data;
         this.blogpost.blogPostContent=this.blogpost.blogPostContent.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+        this.time=this.blogpost.time.toString().replace("T"," ");
+        this.authorId=this.blogpost.authorId;
         this.loading = false;
         this.getAuthorInfo(data['authorId']);
         this.loadBlogCommentsChunk();
       },
       error => {
-        // this.alertService.error(error);
         this.loading = false;
+        console.log(error);
       }
     );
   }
@@ -108,29 +115,48 @@ export class BlogPageComponent implements OnInit {
         this.loading = false;
         this.author = data['firstName'] + " " + data['lastName'];
         this.authorPhoto = data['photo']
+      }, error => {
+        console.log(error)
       }
     );
   }
 
   submitComment($event) {
-    let datetime = new Date(Date.now());
+    if (this.new_comment.length>0)
+    {
+      let datetime = new Date(Date.now());
 
-    let comment: BlogComment = {
-      blogCommentContent: this.new_comment,
-      authorId: this.userService.currentUser.userId,
-      postId: this.id,
-      time: datetime
-    };
+      let comment: BlogComment = {
+        blogCommentId: 0,
+        blogCommentContent: this.new_comment,
+        authorId: this.userService.currentUser.userId,
+        postId: this.id,
+        time: datetime
+      };
 
-    this.blogService.createBlogComment(comment).subscribe(data => {
-      if (data == null) {
-        //refresh
-        this.reloadComments();
-        this.new_comment="";
-      }
-    }, error => {
-      alert(error)
-    });
+      this.blogService.createBlogComment(comment).subscribe(async data => {
+        if (data == null) {
+          //refresh
+          this.reloadComments();
+          this.new_comment="";
+        }
+      }, error => {
+        console.log(error)
+      });
+
+      window.document.getElementById("form-error").setAttribute("style","display:none;");
+    }
+    else{
+      window.document.getElementById("form-error").setAttribute("style","display:block;");
+    }
+  }
+
+  itemDeletedHandler(deleted: Blog_comment_item) {
+    const index = this.commentsList.indexOf(deleted, 0);
+    if (index > -1) {
+      this.commentsList.splice(index, 1);
+    }
+    this.lastRow--;
   }
 
   ngOnDestroy() {

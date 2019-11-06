@@ -44,11 +44,11 @@
 			<div class='icon'></div>
 			<div>{{this.meetupListItem.meetupRegisteredAttendees}}/{{this.meetupListItem.meetupMaxAttendees}}</div>
 		</div>
-		<app-button *ngIf="(state == 'Booked' || state == 'Scheduled') && isAttendeLoaded && !isMy"
+		<app-button *ngIf="(state == 'Booked' || state == 'Scheduled') && isAttendeLoaded && !isMy && !isAdmin"
                 [text]="joinText()"
                 [type]='joinType()'
                 (onClick)="joinButtonClicked($event)"
                 fontSize='20'></app-button>
-    <div *ngIf="state != 'Booked' && state != 'Scheduled'" class="state">{{this.state}}</div>
+    <div *ngIf="(state != 'Booked' && state != 'Scheduled') || isAdmin" class="state">{{this.state}}</div>
 	</div>
 </div>
