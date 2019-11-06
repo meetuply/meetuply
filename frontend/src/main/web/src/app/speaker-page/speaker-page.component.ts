@@ -170,9 +170,9 @@ export class SpeakerPageComponent implements OnInit {
 
   followText(): string {
     if (this.following === true) {
-      return "unfollow";
+      return "Unfollow";
     }
-    return "follow";
+    return "Follow";
   }
 
   followType(): number {
