@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.controller.exception.MeetupStateException;
 import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.controller.exception.PermissionException;
+import ua.meetuply.backend.dao.FilterDAO;
 import ua.meetuply.backend.dao.MeetupDAO;
 import ua.meetuply.backend.model.AchievementType;
 import ua.meetuply.backend.model.AppUser;
@@ -31,6 +32,9 @@ public class MeetupService {
 
     @Autowired
     private AchievementService achievementService;
+
+    @Autowired
+    private FilterDAO filterDAO;
 
     @Transactional
     public void createMeetup(Meetup meetup) {
@@ -154,10 +158,18 @@ public class MeetupService {
 
     public List<Meetup> findMeetupsByCriteria(Double rating, Timestamp dateFrom, Timestamp dateTo) {
         Filter filterDto = new Filter();
-        filterDto.setRating(rating);
+        //filterDto.setRating(rating);
         filterDto.setDateFrom(dateFrom);
         filterDto.setDateTo(dateTo);
         return meetupDao.findMeetupsByFilter(filterDto);
+    }
+
+    public List<Meetup> findBy(Filter filter) {
+        return meetupDao.findBy(filter);
+    }
+
+    public List<Filter> getAllFilters() {
+        return filterDAO.getAll();
     }
 
 }

@@ -13,15 +13,15 @@
     </div>
 
     <div class="create-new">
-      <app-button fontSize='20' [routerLink]="['create']" type='1' text='New post'></app-button>
+      <app-button fontSize='20' [routerLink]="['/blog/create']" type='1' text='New post'></app-button>
     </div>
   </div>
 
   <div class="main" infinite-scroll [infiniteScrollDistance]="scrollDistance" (scrolled)='this.onScrollDown()'>
-    <div id="message">
+    <div id="message" *ngIf="postsList.length==0">
       No posts here!
     </div>
-    <div class='posts_column'>
+    <div class='posts_column' *ngIf="postsList.length>0">
       <div *ngFor="let post_item of this.postsList;let i = index">
         <app-blog-list-item (itemDeleted)="itemDeletedHandler($event)" [blog_list_item]='post_item'></app-blog-list-item>
       </div>

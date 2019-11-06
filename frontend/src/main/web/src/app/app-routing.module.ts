@@ -26,13 +26,17 @@ import { AchievementPanelComponent } from "./achievement-panel/achievement-panel
 import { AchievementsPageComponent } from "./achievements-page/achievements-page.component";
 import { TopicsPageComponent } from "./topics-page/topics-page.component";
 import { TopicPageComponent } from "./topic-page/topic-page.component";
+import {BanReasonsPageComponent} from "./ban-reasons-page/ban-reasons-page.component";
+import {BanReasonPageComponent} from "./ban-reason-page/ban-reason-page.component";
 import {ChangePasswordComponent} from "./change-password/change-password.component";
 import {SettingsComponent} from "./settings/settings.component";
+import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegisterComponent },
+  { path: 'dashboard', component: DashboardPageComponent, canActivate: [AuthGuard] },
   { path: 'speakers/:id', component: SpeakerPageComponent, canActivate: [AuthGuard] },
   { path: 'speakers', component: SpeakerListPageComponent, canActivate: [AuthGuard] },
   { path: 'create/meetup', component: CreateMeetupPageComponent, canActivate: [AuthGuard] },
@@ -47,9 +51,11 @@ const routes: Routes = [
   { path: 'confirm', component: RegConfirmationComponent},
   { path: 'deactivation', component: UserDeactivationComponent, canActivate: [AdminGuard] },
   { path: 'achievements', component: AchievementsPageComponent/*, canActivate: [AdminGuard] */},
+  { path: 'topics', component: TopicsPageComponent, canActivate: [AdminGuard] },
+  { path: 'topics/:id', component: TopicPageComponent, canActivate: [AdminGuard] },
+  { path: 'ban_reasons', component: BanReasonsPageComponent, canActivate: [AdminGuard] },
+  { path: 'ban_reasons/:id', component: BanReasonPageComponent, canActivate: [AdminGuard] },
   { path: 'achievements/create', component: AchievementCreatePageComponent/*, canActivate: [AdminGuard] */},
-  { path: 'topics', component: TopicsPageComponent/*, canActivate: [AdminGuard] */},
-  { path: 'topics/:id', component: TopicPageComponent/*, canActivate: [AdminGuard] */},
   { path: 'password', component: ChangePasswordComponent},
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
 

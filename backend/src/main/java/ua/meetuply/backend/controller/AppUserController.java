@@ -83,13 +83,13 @@ public class AppUserController {
 
     @GetMapping("/{userId}/rooms")
     public @ResponseBody
-    Iterable<Integer> getRoomsByUserID(@PathVariable("userId") Integer userId){
+    Iterable<Integer> getRoomsByUserID(@PathVariable("userId") Integer userId) {
         return chatService.getChatRoomsByUser(userId);
     }
 
     @GetMapping("/{userId}/roomsList")
     public @ResponseBody
-    Iterable<ChatroomThumbnail> getRoomsThumbnail(@PathVariable("userId") Integer userId){
+    Iterable<ChatroomThumbnail> getRoomsThumbnail(@PathVariable("userId") Integer userId) {
         return chatService.getChatRoomsThumbnails(userId);
     }
 
@@ -97,6 +97,12 @@ public class AppUserController {
     public @ResponseBody
     Iterable<AppUser> getUsersChunk(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
         return appUserService.getUsersChunk(startRow, endRow);
+    }
+
+    @GetMapping("/members/all/{startRow}/{endRow}")
+    public @ResponseBody
+    Iterable<AppUser> getUsersChunkForAdmin(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
+        return appUserService.getUsersChunkForAdmin(startRow, endRow);
     }
 
     @GetMapping("/{id}")
@@ -112,6 +118,17 @@ public class AppUserController {
     @GetMapping("/{id}/subscribers")
     public Iterable<Integer> getSubscribers(@PathVariable("id") Integer userId) {
         return appUserService.getUserSubscribers(userId);
+    }
+
+    @GetMapping("/{id}/subscribtions")
+    public Iterable<Integer> getSubscribtions(@PathVariable("id") Integer userId) {
+        return appUserService.getUserSubscriptions(userId);
+    }
+
+
+    @GetMapping("/{id}/subscribtions/users")
+    public Iterable<AppUser> getSubscribtionsUsers(@PathVariable("id") Integer userId) {
+        return appUserService.getUserSubscriptionsUsers(userId);
     }
 
     @GetMapping("/{id}/fullName")
@@ -148,7 +165,7 @@ public class AppUserController {
     @PutMapping("/deactivate/{id}")
     public ResponseEntity deactivateUser(@PathVariable("id") Integer userId) {
         AppUser user = appUserService.getUser(userId);
-        if(user == null) return ResponseEntity.notFound().build();
+        if (user == null) return ResponseEntity.notFound().build();
         appUserService.deactivateUser(user);
         emailService.sendDeactivatinEmail(user);
         return ResponseEntity.ok().build();
@@ -157,7 +174,7 @@ public class AppUserController {
     @PutMapping("/activate/{id}")
     public ResponseEntity activateUser(@PathVariable("id") Integer userId) {
         AppUser user = appUserService.getUser(userId);
-        if(user == null) return ResponseEntity.notFound().build();
+        if (user == null) return ResponseEntity.notFound().build();
         appUserService.activateDeactivatedUser(user);
         return ResponseEntity.ok().build();
     }
@@ -165,7 +182,7 @@ public class AppUserController {
     @PostMapping("/following/{id}")
     public ResponseEntity follow(@PathVariable Integer id) {
         if (appUserService.getUserSubscriptions(appUserService.getCurrentUserID()).indexOf(id) != -1 ||
-            appUserService.getCurrentUserID()==id) {
+                appUserService.getCurrentUserID() == id) {
             return ResponseEntity.badRequest().build();
         }
         appUserService.follow(id);
@@ -175,7 +192,7 @@ public class AppUserController {
     @DeleteMapping("/following/{id}")
     public ResponseEntity unfollow(@PathVariable("id") Integer id) {
         if (appUserService.getUserSubscriptions(appUserService.getCurrentUserID()).indexOf(id) == -1 ||
-                appUserService.getCurrentUserID()==id) {
+                appUserService.getCurrentUserID() == id) {
             return ResponseEntity.badRequest().build();
         }
         appUserService.unfollow(id);

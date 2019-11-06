@@ -6,6 +6,7 @@ import { ChatService } from '../_services/chat.service'
 import { UserService } from '../_services'
 import {Message, User} from '../_models'
 import { Location } from '@angular/common'
+import { environment } from "../../environments/environment";
 
 @Component({
   selector: 'app-chat-page',
@@ -73,7 +74,7 @@ export class ChatPageComponent implements OnInit {
   connect() {
 
 
-    var socket = new SockJS('http://localhost:8080/meetuply');
+    var socket = new SockJS(`${environment.apiUrl}/meetuply`);
 
 
     this.stompClient = Stomp.over(socket);

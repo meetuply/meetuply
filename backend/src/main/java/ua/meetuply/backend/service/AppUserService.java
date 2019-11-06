@@ -73,6 +73,10 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getUsersChunk(startRow, endRow);
     }
 
+    public List<AppUser> getUsersChunkForAdmin(Integer startRow, Integer endRow) {
+        return appUserDAO.getUsersChunkForAdmin(startRow, endRow);
+    }
+
     public List<AppUser> getMeetupAttendees(Integer meetupId) {
         return appUserDAO.getMeetupAttendees(meetupId);
     }
@@ -87,6 +91,10 @@ public class AppUserService implements UserDetailsService {
 
     public List<Integer> getUserSubscriptions(Integer id) {
         return appUserDAO.getUserSubscriptions(id);
+    }
+
+    public List<AppUser> getUserSubscriptionsUsers(Integer id) {
+        return appUserDAO.getUserSubscriptionsUsers(id);
     }
 
     public AppUser getUser(Integer id) {

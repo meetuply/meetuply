@@ -55,7 +55,6 @@ export class SpeakerPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentUser = this.userService.currentUser.userId;
     this.id = this.route.snapshot.params['id'];
     this.loadCommonRoom(this.id, this.userService.currentUser.userId);
     this.loadUser(this.id);
@@ -179,6 +178,43 @@ export class SpeakerPageComponent implements OnInit {
       return 2;
     }
     return 1;
+  }
+
+  deactivationText(): string {
+    if (this.user.deactivated === true) {
+      return "Activate";
+    }
+    return "Deactivate";
+  }
+
+  deactivationType(): number {
+    if (this.user.deactivated === true) {
+      return 1;
+    }
+    return 2;
+  }
+
+  deactivationButtonClicked(event) {
+    if(!this.user.deactivated) {
+      this.userService.deactivate(this.id).subscribe(
+        data => {
+          this.loadUser(this.id);
+        },
+        error => {
+          this.error = error;
+        }
+      );
+    }
+    else {
+      this.userService.reactivate(this.id).subscribe(
+        data => {
+          this.loadUser(this.id);
+        },
+        error => {
+          this.error = error;
+        }
+      );
+    }
   }
 
   followButtonClicked(event) {

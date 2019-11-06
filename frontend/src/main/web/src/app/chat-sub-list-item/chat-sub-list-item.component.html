@@ -1,0 +1,7 @@
+<div class='sub' (click)="message()">
+	<img *ngIf="user.photo" src={{user.photo}}>
+	<img *ngIf="!user.photo" src="assets/img/download.png">
+	<div>
+		{{user.firstName}} {{user.lastName}}
+	</div>
+</div>

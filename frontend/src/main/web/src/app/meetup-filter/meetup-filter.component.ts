@@ -33,12 +33,9 @@ export class MeetupFilterComponent implements OnInit {
   }
 
   toggled($event) {
-
     if ($event[0] == 1) {
       this.text1 = "" + (Math.random() * 5);
     }
-
-
   }
 
 }

@@ -125,6 +125,17 @@ public class MeetupController {
         return meetupService.isAttendee(meetupID, userID);
     }
 
+
+    @GetMapping("/filter")
+    public List<Meetup> filter(@RequestBody Filter filter) {
+        return meetupService.findBy(filter);
+    }
+
+    @GetMapping("/filters")
+    public List<Filter> filters() {
+        return meetupService.getAllFilters();
+    }
+
     @PostMapping("/filters")
     public ResponseEntity<Meetup> createFilter (@Valid @RequestBody Filter filter){
         filter.setUserId(appUserService.getCurrentUserID());

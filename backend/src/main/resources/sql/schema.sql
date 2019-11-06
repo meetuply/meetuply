@@ -447,3 +447,10 @@ CREATE TABLE `confirmation_token`
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+
+CREATE VIEW avg_rating
+    AS (SELECT uid AS user_id, (select COALESCE(avg(value), 0.0)
+                     from rating
+                     where rated_user_id = uid) AS value
+        FROM user);
