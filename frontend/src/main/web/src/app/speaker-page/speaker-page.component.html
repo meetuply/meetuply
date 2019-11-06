@@ -6,7 +6,7 @@
     <div class='back' (click)="goBack()">
 
     </div>
-    <div class='profile'>
+    <div class='profile' *ngIf="user">
 
       <div class='avatar'>
         <img *ngIf="user.photo" src={{user.photo}}>
