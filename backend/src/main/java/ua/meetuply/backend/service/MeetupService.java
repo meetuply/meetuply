@@ -67,7 +67,7 @@ public class MeetupService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void join(Integer meetupID) throws Exception {
         AppUser user = appUserService.getCurrentUser();
-        if (user == null) throw NotFoundException.createWith("current");
+        if (user == null) throw NotFoundException.createWith("Please, sign in");
         if (meetupDao.get(meetupID) == null) throw NotFoundException.createWith("There is no meetup #" + meetupID);
         meetupDao.join(meetupID, user.getUserId());
         Meetup meetup = meetupDao.get(meetupID);
