@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Speaker_list_item} from '../_models/speaker_list_item';
+import {SpeakerListItem} from '../_models/speaker-list-item';
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "../_services"
 import {RatingService} from "../_services/rating.service";
@@ -16,8 +16,8 @@ export class SpeakerListPageComponent implements OnInit {
   chunkSize = 10;
   scrollDistance = 2;
 
-  speaker_list: Speaker_list_item[] = [];
-  speaker_chunk: Speaker_list_item[];
+  speaker_list: SpeakerListItem[] = [];
+  speaker_chunk: SpeakerListItem[];
 
   constructor(private http: HttpClient, private userService: UserService,
               private ratingService: RatingService,
@@ -38,7 +38,7 @@ export class SpeakerListPageComponent implements OnInit {
       async users => {
         this.speaker_chunk = await Promise.all(users.map(async user => {
           let user_languages: string[];
-          let list_item: Speaker_list_item;
+          let list_item: SpeakerListItem;
           await this.userService.getUserLanguages(user.userId).toPromise().then(languages =>
             user_languages = languages.map(language => language.name)
           );

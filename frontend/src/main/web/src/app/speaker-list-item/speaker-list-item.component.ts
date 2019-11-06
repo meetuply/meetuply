@@ -1,6 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {UserService} from "../_services";
-import {Speaker_list_item} from "../_models/speaker_list_item";
+import {SpeakerListItem} from "../_models/speaker-list-item";
 
 
 @Component({
@@ -10,7 +10,7 @@ import {Speaker_list_item} from "../_models/speaker_list_item";
 })
 export class SpeakerListItemComponent implements OnInit {
 
-  @Input() speaker_list_item: Speaker_list_item;
+  @Input() speaker_list_item: SpeakerListItem;
   error;
 
   followText(): string {
