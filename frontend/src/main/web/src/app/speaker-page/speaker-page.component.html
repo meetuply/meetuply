@@ -27,10 +27,14 @@
 
         </div>
         <div class='additional' *ngIf="!isCurrentUser()">
-          <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
-          </app-button>
-          <app-button text='Message' type='1' (click)="message()" fontSize='20'></app-button>
+          <div class='additional' *ngIf="this.userService.currentUser.role.roleName !== 'admin'">
+            <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
+            </app-button>
+            <app-button text='Message' type='1' (click)="message()" fontSize='20'></app-button>
+            <app-button text="Ban" type='2' fontSize='20' routerLink="/speakers/{{this.user.userId}}/ban"></app-button>
+          </div>
           <div class='additional' *ngIf="this.userService.currentUser.role.roleName === 'admin'">
+            <app-button text="View bans" type='1' fontSize='20' routerLink="/speakers/{{this.user.userId}}/view_bans"></app-button>
             <app-button [text]="deactivationText()" [type]='deactivationType()' (onClick)="deactivationButtonClicked($event)" fontSize='20'></app-button>
           </div>
         </div>

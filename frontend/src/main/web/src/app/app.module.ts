@@ -62,6 +62,8 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { SettingsComponent } from './settings/settings.component';
 import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
 import {FeedbackCreatePageComponent} from "./feedback-create-page/feedback-create-page.component";
+import { BanPageComponent } from './ban-page/ban-page.component';
+import { BansPageComponent } from './bans-page/bans-page.component';
 
 
 
@@ -118,7 +120,8 @@ import {FeedbackCreatePageComponent} from "./feedback-create-page/feedback-creat
     RescheduleDialogComponent,
     ChangePasswordComponent,
     SettingsComponent,
-
+    BanPageComponent,
+    BansPageComponent,
   ],
   imports: [
     BrowserModule,

@@ -22,7 +22,7 @@ public class BlogCommentDAO implements IDAO<BlogComment>, RowMapper<BlogComment>
     private static final String DELETE_QUERY = "DELETE FROM comment WHERE uid = ?";
     private static final String UPDATE_QUERY = "UPDATE comment SET content = ? WHERE uid = ?";
 
-    private static final String GET_CHUNK_QUERY ="SELECT * FROM comment WHERE post_id = ? order by uid desc LIMIT ?, ?";
+    private static final String GET_CHUNK_QUERY ="SELECT * FROM comment WHERE post_id = ? AND author NOT IN (SELECT uid FROM user WHERE is_deactivated=1) order by uid desc LIMIT ?, ?";
 
     private static final String FIND_BY_POST_ID_QUERY = "SELECT * FROM comment WHERE post_id = ?";
 
