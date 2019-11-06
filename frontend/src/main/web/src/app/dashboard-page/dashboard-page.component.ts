@@ -4,7 +4,7 @@ import {UserService} from '../_services/user.service'
 import {Subscription} from "rxjs";
 import {Meetup} from "../_models/meetup";
 import {MeetupService} from "../_services/meetup.service";
-import {Blog_list_item} from "../_models/blog_list_item";
+import {BlogListItem} from "../_models/blog-list-item";
 import {BlogService} from "../_services/blog.service";
 import {StateService} from "../_services/state.service";
 
@@ -21,7 +21,7 @@ export class DashboardPageComponent implements OnInit {
   soonMeetups: Meetup[] = [];
   userMeetups: Meetup[] = [];
   lastNotifications = [];
-  blogPosts: Blog_list_item[] = [];
+  blogPosts: BlogListItem[] = [];
   viewAllSoon = false;
   viewAllUser = false;
   error;
@@ -73,7 +73,7 @@ export class DashboardPageComponent implements OnInit {
                   authorid = author.userId;
                 }
               );
-              return new Blog_list_item(item, username, photo, authorid)
+              return new BlogListItem(item, username, photo, authorid)
             }
           ));
           console.log(this.blogPosts);

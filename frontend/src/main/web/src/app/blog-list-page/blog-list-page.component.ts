@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Blog_list_item} from '../_models/blog_list_item';
+import {BlogListItem} from '../_models/blog-list-item';
 import {BlogService} from "../_services/blog.service"
 import {Subscription} from "rxjs";
 import {UserService} from "../_services";
@@ -22,8 +22,8 @@ export class BlogListPageComponent implements OnInit {
   scrollDistance = 2;
   author: string;
   filter: string;
-  postsList: Blog_list_item[] = [];
-  newChunk: Blog_list_item[];
+  postsList: BlogListItem[] = [];
+  newChunk: BlogListItem[];
   private sub: Subscription;
 
   constructor(private blogService: BlogService, private userService: UserService, private router: ActivatedRoute,) {
@@ -63,7 +63,7 @@ export class BlogListPageComponent implements OnInit {
                       authorid = author.userId;
                     }
                   );
-                  return new Blog_list_item(item, username, photo, authorid)
+                  return new BlogListItem(item, username, photo, authorid)
                 }
               ));
               this.postsList.push(...this.newChunk);
@@ -91,7 +91,7 @@ export class BlogListPageComponent implements OnInit {
                       authorid = author.userId;
                     }
                   );
-                  return new Blog_list_item(item, username, photo, authorid)
+                  return new BlogListItem(item, username, photo, authorid)
                 }
               ));
               this.postsList.push(...this.newChunk);
@@ -139,7 +139,7 @@ export class BlogListPageComponent implements OnInit {
     }
   }
 
-  itemDeletedHandler(deleted: Blog_list_item) {
+  itemDeletedHandler(deleted: BlogListItem) {
     const index = this.postsList.indexOf(deleted, 0);
     if (index > -1) {
       this.postsList.splice(index, 1);

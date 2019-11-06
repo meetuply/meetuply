@@ -31,6 +31,7 @@ import {BanReasonPageComponent} from "./ban-reason-page/ban-reason-page.componen
 import {ChangePasswordComponent} from "./change-password/change-password.component";
 import {SettingsComponent} from "./settings/settings.component";
 import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
+import {FeedbackCreatePageComponent} from "./feedback-create-page/feedback-create-page.component";
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -39,6 +40,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardPageComponent, canActivate: [AuthGuard] },
   { path: 'speakers/:id', component: SpeakerPageComponent, canActivate: [AuthGuard] },
   { path: 'speakers', component: SpeakerListPageComponent, canActivate: [AuthGuard] },
+  { path: 'feedback/:id', component: FeedbackCreatePageComponent, canActivate: [AuthGuard] },
   { path: 'create/meetup', component: CreateMeetupPageComponent, canActivate: [AuthGuard] },
   { path: 'meetups/:id', component: MeetupPageComponent, canActivate: [AuthGuard] },
   { path: 'meetups', component: MeetupsListPageComponent, canActivate: [AuthGuard] },

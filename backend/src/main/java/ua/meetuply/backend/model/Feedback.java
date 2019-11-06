@@ -10,9 +10,10 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Rating {
-    private int value;
+public class Feedback {
+    private Integer feedbackId;
+    private String feedbackContent;
     private LocalDateTime date;
-    private Integer ratedUser;
-    private Integer ratedBy;
+    private Integer feedbackBy;
+    private Integer feedbackTo;
 }

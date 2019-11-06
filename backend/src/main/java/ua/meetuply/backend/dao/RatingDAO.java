@@ -46,8 +46,8 @@ public class RatingDAO implements IDAO<Rating>, RowMapper<Rating> {
         jdbcTemplate.update(
                 "INSERT INTO `rating` (`rated_user_id`, `rated_by`, `value`, `date_time`) " +
                         "VALUES (?, ?, ?, ?)",
-                rating.getRatedUser().getUserId(),
-                rating.getRatedBy().getUserId(),
+                rating.getRatedUser(),
+                rating.getRatedBy(),
                 rating.getValue(),
                 rating.getDate());
     }
@@ -55,7 +55,7 @@ public class RatingDAO implements IDAO<Rating>, RowMapper<Rating> {
     @Override
     public void update(Rating rating) {
         jdbcTemplate.update("UPDATE rating SET value = ? AND date_time = ? WHERE rated_user_id = ? AND rated_by = ?",
-                rating.getValue(), rating.getDate(), rating.getRatedUser().getUserId(), rating.getRatedUser().getUserId());
+                rating.getValue(), rating.getDate(), rating.getRatedUser(), rating.getRatedUser());
     }
 
     @Override
@@ -71,8 +71,8 @@ public class RatingDAO implements IDAO<Rating>, RowMapper<Rating> {
         Rating rating = new Rating();
         rating.setValue(resultSet.getInt("value"));
         rating.setDate(resultSet.getTimestamp("date_time").toLocalDateTime());
-        rating.setRatedUser(appUserService.getUser(resultSet.getInt("rated_user_id")));
-        rating.setRatedBy(appUserService.getUser(resultSet.getInt("rated_by")));
+        rating.setRatedUser(resultSet.getInt("rated_user_id"));
+        rating.setRatedBy(resultSet.getInt("rated_by"));
         return rating;
     }
 }
