@@ -76,6 +76,9 @@ public class MeetupService {
             stateService.updateState(meetup, stateService.get(StateNames.BOOKED.name));
     }
 
+    public Iterable<Meetup> getUserMeetupsBeforeDay(Integer userId, int day) {
+        return meetupDao.getUserMeetupsBeforeDay(userId, day);
+    }
 
     public Iterable<Meetup> getMeetupsChunkWithUsernameAndRating(Integer startRow, Integer endRow) {
         return meetupDao.getMeetupsChunkWithUsernameAndRating(startRow, endRow);

@@ -35,7 +35,7 @@ public class MeetupDAO implements IDAO<Meetup> {
     private static final String GET_MEETUP_CHUNK_WITH_USERNAME_AND_RATING = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on meetup.speaker_id = u.uid\n" +
             "inner join (select uid, coalesce((select avg(value) from rating where rated_user_id = uid), 0.0) as rating\n" +
-            "from user) as r on meetup.speaker_id = r.uid\n" +
+            "from user where is_deactivated = 0) as r on meetup.speaker_id = r.uid\n" +
             "order by start_date_time desc limit ?, ?;";
     private static final String IS_ATTENDEE_QUERY = "SELECT 1 FROM `meetup_attendees` WHERE `meetup_id` = ? AND `user_id` = ?";
     private static final String LEAVE_MEETUP_QUERY = "DELETE FROM `meetup_attendees` WHERE `meetup_id` = ? AND `user_id` = ?";
@@ -52,16 +52,16 @@ public class MeetupDAO implements IDAO<Meetup> {
             "state_id = ?, speaker_id = ? WHERE uid = ?";
     private static final String GET_USER_FUTURE_MEETUPS = "SELECT *\n" +
             "FROM meetup\n" +
-            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) in (LOWER('scheduled'),lower('booked')))" +
+            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) in ('scheduled','booked'))" +
             "order by start_date_time asc;";
     private static final String GET_USER_PAST_MEETUPS = "SELECT * FROM meetup WHERE speaker_id = ? AND finish_date_time < now() order by start_date_time desc";
     private static final String GET_ACTIVE_MEETUPS_CHUNK_WITH_RATING = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on meetup.speaker_id = u.uid\n" +
             "inner join (select uid, coalesce((select avg(value) from rating where rated_user_id = uid), 0.0) as rating\n" +
-            "from user where is_deactivated = 0) as r\n" +
+            "from user) as r\n" +
             "on r.uid = speaker_id\n" +
             "where state_id IN (SELECT uid FROM state WHERE LOWER(name) in ('scheduled','booked'))\n" +
-            "order by start_date_time desc limit ?, ?;";
+            "order by start_date_time asc limit ?, ?;";
     private static final String GET_USER_MEETUPS_CHUNK_WITH_RATING = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on\n" +
             "meetup.speaker_id = u.uid\n" +
@@ -69,6 +69,9 @@ public class MeetupDAO implements IDAO<Meetup> {
             "where rated_user_id = ?) as r on u.uid = r.rated_user_id\n" +
             "and speaker_id = ?\n" +
             "order by start_date_time desc limit ?, ?;";
+    private static final String GET_USER_MEETUPS_BEFORE_DAY = "SELECT * FROM meetup \n" +
+            "\twhere uid in (select meetup_id from meetup_attendees where user_id = ?) and\n" +
+            "    start_date_time > now() and start_date_time < (now() + interval ? day)";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -108,6 +111,10 @@ public class MeetupDAO implements IDAO<Meetup> {
     @Override
     public void delete(Integer id) {
         jdbcTemplate.update(DELETE_QUERY, id);
+    }
+
+    public List<Meetup> getUserMeetupsBeforeDay(Integer userId, int day) {
+        return jdbcTemplate.query(GET_USER_MEETUPS_BEFORE_DAY, new MeetupRowMapper(), userId, day);
     }
 
     public List<Meetup> getMeetupsChunkWithUsernameAndRating(Integer startRow, Integer endRow) {
@@ -294,14 +301,4 @@ public class MeetupDAO implements IDAO<Meetup> {
         SQLPredicate where = new SQLPredicate(Operation.AND, andList);
         return find(where);
     }
-    // EXAMPLE SELECT * FROM meetup
-    // WHERE start_date_time >= '2000-11-09T14:49:21'
-    //   AND finish_date_time <= '2010-11-12T14:49:28'
-    //   AND speaker_id IN (SELECT user_id FROM avg_rating
-    //                      WHERE value >= 3.0)
-    //   AND speaker_id IN (SELECT user_id FROM avg_rating
-    //                      WHERE value <= 5.0)
-    //   AND  EXISTS (SELECT topic_id FROM meetup_topic
-    //                WHERE meetup_id = uid
-    //                  AND topic_id IN (9, 10) )
 }

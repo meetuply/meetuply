@@ -63,6 +63,12 @@ public class MeetupController {
         return appUserService.getMeetupAttendees(meetupId);
     }
 
+    @GetMapping("/soon/{userId}/{day}")
+    public @ResponseBody Iterable<Meetup> getAttendees(@PathVariable("userId") Integer userId,
+                                                       @PathVariable("day") int day){
+        return meetupService.getUserMeetupsBeforeDay(userId, day);
+    }
+
     @PostMapping()
     public ResponseEntity createMeetup(@Valid @RequestBody Meetup meetup){
         meetupService.createMeetup(meetup);
