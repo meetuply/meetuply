@@ -11,7 +11,7 @@
       <div class='avatar'>
         <img *ngIf="user.photo" src={{user.photo}}>
         <img *ngIf="!user.photo" src="assets/img/download.png">
-        <app-rating size='24' rating="{{this.user}}"></app-rating>
+        <app-rating *ngIf="rate" size='16' rating="{{this.rate}}"></app-rating>
       </div>
 
       <div class='other'>
