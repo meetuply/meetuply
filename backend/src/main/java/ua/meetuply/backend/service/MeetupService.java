@@ -36,12 +36,13 @@ public class MeetupService {
     @Autowired
     private FilterDAO filterDAO;
 
+    @Transactional
     public void createMeetup(Meetup meetup) {
         meetup.setStateId(stateService.get(StateNames.SCHEDULED.name).getStateId());
         meetup.setSpeakerId(appUserService.getCurrentUserID());
         meetupDao.save(meetup);
         achievementService.checkOne(AchievementType.MEETUPS);
-        achievementService.checkMultiple();
+        achievementService.checkOne(AchievementType.MEETUPS_TOPIC);
     }
 
     public List<Meetup> getAllMeetups() {

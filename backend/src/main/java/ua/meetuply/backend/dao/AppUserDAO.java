@@ -55,14 +55,14 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     }
 
 
-    public Integer getUserIdByName(String firstname){
-        Integer userId = jdbcTemplate.queryForObject("SELECT uid FROM user WHERE firstname = ?", new Object[] { firstname }, Integer.class);
+    public Integer getUserIdByName(String firstname) {
+        Integer userId = jdbcTemplate.queryForObject("SELECT uid FROM user WHERE firstname = ?", new Object[]{firstname}, Integer.class);
         return userId == null ? -1 : userId;
     }
 
 
-    public AppUser getUserByEmail(String email){
-        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE email = ?", new Object[] { email }, this);
+    public AppUser getUserByEmail(String email) {
+        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE email = ?", new Object[]{email}, this);
         return users.size() == 0 ? null : users.get(0);
     }
 
@@ -74,12 +74,17 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
         return jdbcTemplate.queryForList("SELECT followed_user_id FROM followers WHERE follower_id = ?", new Object[]{id}, Integer.class);
     }
 
-    public void follow(Integer currentUserID, Integer userId){
+    public List<AppUser> getUserSubscriptionsUsers(Integer id) {
+        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE uid IN (SELECT followed_user_id FROM followers WHERE follower_id = ?)", new Object[]{id}, this);
+        return users;
+    }
+
+    public void follow(Integer currentUserID, Integer userId) {
         jdbcTemplate.update("INSERT INTO followers (`follower_id`, `followed_user_id`) VALUES (?, ?)", currentUserID, userId);
     }
 
     public void unfollow(int currentUserID, Integer userId) {
-        jdbcTemplate.update("DELETE FROM followers WHERE follower_id = ? AND followed_user_id = ?", currentUserID,userId);
+        jdbcTemplate.update("DELETE FROM followers WHERE follower_id = ? AND followed_user_id = ?", currentUserID, userId);
     }
 
     @Override
@@ -114,7 +119,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
                 appUser.getEmail(), appUser.getPassword(), appUser.getFirstName(),
                 appUser.getLastName(), appUser.isRegistration_confirmed(),
                 appUser.isDeactivated(), appUser.isAllow_notifications(), appUser.getRole().getRoleId(),
-                appUser.getDescription(), appUser.getLocation(),appUser.getPhoto(),appUser.getUserId());
+                appUser.getDescription(), appUser.getLocation(), appUser.getPhoto(), appUser.getUserId());
 
     }
 
@@ -129,9 +134,9 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
         jdbcTemplate.update("DELETE FROM user WHERE uid = ?", id);
     }
 
-    public Integer getFollowersNumber(Integer id){
+    public Integer getFollowersNumber(Integer id) {
         Integer followersNumber = jdbcTemplate.queryForObject("select count(*) from followers where followed_user_id = ?;",
-                new Object []{id}, Integer.class);
+                new Object[]{id}, Integer.class);
         return followersNumber != null ? followersNumber : 0;
     }
 
