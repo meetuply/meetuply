@@ -1,0 +1,13 @@
+<div id="search-component">
+  <h4><label for="search-box">Ban Reason Search</label></h4>
+
+  <input #searchBox id="search-box" (input)="search(searchBox.value)" />
+
+  <ul class="search-result">
+    <li *ngFor="let banReason of banReasons$ | async" >
+      <a routerLink="/ban_reasons/{{banReason.banReasonId}}">
+        {{banReason.name}}
+      </a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,15 @@
+<app-left-menu></app-left-menu>
+<div class='content'>
+  <p class='title'>Ban Reasons</p>
+  <div *ngIf="banReason">
+    <h2>{{banReason.name}}</h2>
+    <div>
+      <label>name:
+        <input [(ngModel)]="banReason.name" placeholder="name"/>
+      </label>
+    </div>
+  </div>
+
+  <button (click)="goBack()">go back</button>
+  <button (click)="save()">save</button>
+</div>
