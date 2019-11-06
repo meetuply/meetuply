@@ -39,6 +39,7 @@ export class SpeakerPageComponent implements OnInit {
   lastPost: Blog_list_item;
   lastPostDefined: boolean = false;
   viewAllFuture = false;
+  viewAllPast = false;
   currentUser: number;
   commonRoomId: number;
   meetup: Meetup;
@@ -130,12 +131,28 @@ export class SpeakerPageComponent implements OnInit {
 
   loadMeetups() {
     this.meetupService.getFutureMeetups(this.id).toPromise().then(
-      data => this.futureMeetups = data
-    )
+      data => {
+        this.futureMeetups = data
+      },
+      error => {
+        console.log(error)
+      }
+    );
+    this.meetupService.getPastMeetups(this.id).toPromise().then(
+      data => {
+        this.pastMeetups = data
+      },
+      error => {
+        console.log(error)
+      })
   }
 
-  changeViewAllFuture(event){
+  changeViewAllFuture(event) {
     this.viewAllFuture = !this.viewAllFuture;
+  }
+
+  changeViewAllPast(event) {
+    this.viewAllPast = !this.viewAllPast;
   }
 
   loadAchievements(id: number) {

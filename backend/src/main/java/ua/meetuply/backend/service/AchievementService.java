@@ -6,6 +6,7 @@ import ua.meetuply.backend.dao.AchievementDAO;
 import ua.meetuply.backend.model.Achievement;
 import ua.meetuply.backend.model.AchievementType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,35 +62,32 @@ public class AchievementService {
 
     public void checkOne(AchievementType type){
         Integer currentUserId = appUserService.getCurrentUserID();
-        Integer achievementId = null;
+        List<Integer> achievementsIdlist = new ArrayList<>();
         switch (type) {
             case FOLLOWERS:
-                achievementId = achievementDAO.getFollowersAchievementId(currentUserId);
+                achievementsIdlist = achievementDAO.getFollowersAchievementId(currentUserId);
                 break;
             case POSTS:
-                achievementId = achievementDAO.getPostsAchievementId(currentUserId);
+                achievementsIdlist = achievementDAO.getPostsAchievementId(currentUserId);
                 break;
             case RATING:
-                achievementId = achievementDAO.getRatingAchievementId(currentUserId);
+                achievementsIdlist = achievementDAO.getRatingAchievementId(currentUserId);
                 break;
             case MEETUPS:
-                achievementId = achievementDAO.getMeetupAchievementId(currentUserId);
+                achievementsIdlist = achievementDAO.getMeetupAchievementId(currentUserId);
+                break;
+            case MEETUPS_TOPIC:
+                achievementsIdlist = achievementDAO.getMeetupTopicAchievementId(currentUserId);
                 break;
         }
-        if (achievementId != null){
-            awardOne(currentUserId, achievementId);
+        if (achievementsIdlist.size() != 0){
+            for (Integer achievementId: achievementsIdlist){
+                awardOne(achievementId, currentUserId);
+            }
         }
     }
 
-    public void checkMultiple(){
-        Integer currentUserId = appUserService.getCurrentUserID();
-        List<Integer> achievementIdList = achievementDAO.getMeetupTopicAchievementId(currentUserId);
-        for (Integer achievementId: achievementIdList){
-            awardOne(achievementId, currentUserId);
-        }
-    }
-
-    public void awardOne(Integer achievementId, Integer userId) {
+    private void awardOne(Integer achievementId, Integer userId) {
         achievementDAO.updateAchievementUser(achievementId, userId);
     }
 

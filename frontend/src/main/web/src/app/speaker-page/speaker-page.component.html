@@ -87,6 +87,24 @@
       </div>
     </div>
 
+    <div *ngIf="pastMeetups.length > 0" class='about'>
+      Past Meetup <span class="view-all-past" (click)="changeViewAllPast($event)">
+      view all</span>
+    </div>
+    <div class='future-meetups'>
+      <div *ngFor="let meetup of (viewAllPast ?
+              (pastMeetups) : (pastMeetups | slice:0:1))">
+        <div class="one-future-meetup">
+          <app-meetup-list-item
+            [meetupListItem]="meetup"
+            [isMy]="userService.currentUser.userId == meetup.speakerId"
+            [state]="stateService.states[meetup.stateId]"
+            [showAuthorInfo]=false>
+          </app-meetup-list-item>
+        </div>
+      </div>
+    </div>
+
     <div *ngIf="feedback.length>0" class='about'>
       Feedbacks
     </div>

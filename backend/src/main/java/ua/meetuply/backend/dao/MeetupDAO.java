@@ -52,14 +52,11 @@ public class MeetupDAO implements IDAO<Meetup> {
             "FROM meetup\n" +
             "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) in (LOWER('scheduled'),lower('booked')))" +
             "order by start_date_time asc;";
-    private static final String GET_USER_PAST_MEETUPS = "SELECT *\n" +
-            "FROM meetup\n" +
-            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) = LOWER('passed'))" +
-            "order by start_date_time desc";
+    private static final String GET_USER_PAST_MEETUPS = "SELECT * FROM meetup WHERE speaker_id = ? AND finish_date_time < now() order by start_date_time desc";
     private static final String GET_ACTIVE_MEETUPS_CHUNK_WITH_RATING = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on meetup.speaker_id = u.uid\n" +
             "inner join (select uid, coalesce((select avg(value) from rating where rated_user_id = uid), 0.0) as rating\n" +
-            "from user) as r\n" +
+            "from user where is_deactivated = 0) as r\n" +
             "on r.uid = speaker_id\n" +
             "where state_id IN (SELECT uid FROM state WHERE LOWER(name) in ('scheduled','booked'))\n" +
             "order by start_date_time desc limit ?, ?;";
