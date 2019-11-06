@@ -1,6 +1,6 @@
 <app-left-menu></app-left-menu>
 <div class='content'>
-  <div class='back' routerLink="/meetups" >
+  <div class='back' (click)="goBack()" >
 
   </div>
 
@@ -17,6 +17,7 @@
       </div>
     </div>
 
+
     <div class='about'>
       About
     </div>
@@ -31,18 +32,20 @@
     <div class='atendees'>
       <app-atendee *ngFor="let attendee of attendees" [name]='attendee.name'
                    [photo]='attendee.photo' [surname]=attendee.surname
-                   [rating]='attendee.rating'>
+                   [rating]='attendee.rating' [id]='attendee.id'>
       </app-atendee>
     </div>
   </div>
 
   <div class='additional'>
-    <app-button *ngIf="!isMy" [text]='joinText()' [type]='joinType()' fontSize='24' (onClick)="joinButtonClicked($event)"></app-button>
-    <app-button *ngIf="isMy && canCancell()" [text]='"Cancel"' [type]='2' fontSize='24' (onClick)="cancellMeetup($event)"></app-button>
-    <app-button *ngIf="isMy && canTerminate()" [text]='"Terminate"' [type]='2' fontSize='24' (onClick)="terminateMeetup($event)"></app-button>
-    <app-button *ngIf="isMy && canReschedule()" [text]='"Reschedule"' [type]='1' fontSize='24' (onClick)="reschedule($event)"></app-button>
+    <app-button *ngIf="(state == 'Booked' || state == 'Scheduled') && !hasAccess" [text]='joinText()' [type]='joinType()' fontSize='24' (onClick)="joinButtonClicked($event)"></app-button>
+    <app-button *ngIf="hasAccess && canCancell()" [text]='"Cancel"' [type]='2' fontSize='24' (onClick)="cancellMeetup($event)"></app-button>
+    <app-button *ngIf="hasAccess && canTerminate()" [text]='"Terminate"' [type]='2' fontSize='24' (onClick)="terminateMeetup($event)"></app-button>
+    <app-button *ngIf="hasAccess && canReschedule()" [text]='"Reschedule"' [type]='1' fontSize='24' (onClick)="reschedule($event)"></app-button>
 
 
+    <div class="error" *ngIf="error">{{error}}</div>
+    <div class="status">{{state}}</div>
     <div class='time'>
       <div class='icon'>
       </div>

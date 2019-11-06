@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {AuthenticationService} from "../_services";
+import {AuthenticationService, UserService} from "../_services";
 import {first} from "rxjs/operators";
 
 @Component({
@@ -15,15 +15,24 @@ export class LoginComponent {
   returnUrl: string;
 
   credentials = {username: '', password: ''};
+  recovering = false;
+  requestEmail: string;
+  successful = false;
+  errorRecover = null;
 
   constructor( private router: Router,
                private route: ActivatedRoute,
-               private authenticationService: AuthenticationService) {
+               private authenticationService: AuthenticationService,
+               private userService: UserService) {
   }
 
   ngOnInit() {
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
+    if (this.authenticationService.currentUserValue) {
+      console.log("already authed");
+      this.router.navigate([this.returnUrl ? this.returnUrl : "/meetups"]);
+    }
   }
 
   login() {
@@ -36,12 +45,26 @@ export class LoginComponent {
         data => {
           console.log("navigate");
           this.loading = false;
-          this.router.navigate([this.returnUrl ? this.returnUrl : "/speakers"]);
+          this.router.navigate([this.returnUrl ? this.returnUrl : "/meetups"]);
         },
         error => {
           this.error = error;
           this.loading = false;
           console.log("ERROR " + error)
         });
+  }
+
+  recover() {
+    this.loading = true;
+    this.userService.requestRecover(this.requestEmail).subscribe(
+      data => {
+        this.successful = true;
+        this.loading = false;
+      },
+      error => {
+        this.errorRecover = error;
+        this.loading = false;
+      }
+    );
   }
 }

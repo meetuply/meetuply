@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common'
-import { Router } from '@angular/router'
+import {Component, OnInit} from '@angular/core';
+import {Location} from '@angular/common'
+import {Router} from '@angular/router'
 
-import { LanguageService } from '../_services/language.service'
-import { Language } from '../_models'
-import { TopicService } from '../_services/topic.service'
-import { Topic } from '../_models'
-import { MeetupService } from '../_services/meetup.service';
-import { Meetup } from '../_models/meetup'
+import {LanguageService} from '../_services/language.service'
+import {Topic} from '../_models'
+import {TopicService} from '../_services/topic.service'
+import {MeetupService} from '../_services/meetup.service';
+import {Meetup} from '../_models/meetup'
 
 @Component({
   selector: 'app-create-meetup-page',
@@ -22,19 +21,13 @@ export class CreateMeetupPageComponent implements OnInit {
   meetup_description: string;
   meetup_location: string;
   meetup_max_atendees: number;
-
   meetup_start_date: string;
   meetup_start_time: string;
-
   meetup_end_date: string;
   meetup_end_time: string;
-
   languages: String[];
-
   topics: Topic[];
-
   selectedTopics = new Set();
-
 
   topicToggled($event) {
     if ($event[1] == true) {
@@ -52,11 +45,9 @@ export class CreateMeetupPageComponent implements OnInit {
     )
   }
 
-
   submit($event) {
     var start_date = new Date(this.meetup_start_date + 'T' + this.meetup_start_time);
     var end_date = new Date(this.meetup_end_date + 'T' + this.meetup_end_time);
-
     var meetup: Meetup = {
       meetupId: 0,
       speakerId: 0,
@@ -69,8 +60,7 @@ export class CreateMeetupPageComponent implements OnInit {
       meetupRegisteredAttendees: 0,
       meetupStartDateTime: start_date,
       meetupFinishDateTime: end_date
-    }
-
+    };
     this.meetupService.create(meetup).subscribe(data => {
       if (data == null) {
         alert("meetup created!")

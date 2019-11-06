@@ -34,18 +34,28 @@ public class MeetupController {
             return meetupService.getAllMeetups();
     }
 
-//    @GetMapping("/{startRow}/{endRow}")
-//    public @ResponseBody Iterable<Meetup> getMeetupsChunk(@PathVariable("startRow") Integer startRow,
-//                                                          @PathVariable("endRow") Integer endRow)
-//    {
-//        return meetupService.getMeetupsChunk(startRow, endRow);
-//    }
-
     @GetMapping("/{startRow}/{endRow}")
-    public @ResponseBody Iterable<Meetup> getMeetupsChunkWithUsernameAndRating(@PathVariable("startRow") Integer startRow,
-                                                          @PathVariable("endRow") Integer endRow)
+    public @ResponseBody Iterable<Meetup> getMeetupsChunkWithUsernameAndRating(
+            @PathVariable("startRow") Integer startRow,
+            @PathVariable("endRow") Integer endRow)
     {
         return meetupService.getMeetupsChunkWithUsernameAndRating(startRow, endRow);
+    }
+
+    @GetMapping("/active/{startRow}/{endRow}")
+    public @ResponseBody Iterable<Meetup> getMeetupsChunkActive(
+            @PathVariable("startRow") Integer startRow,
+            @PathVariable("endRow") Integer endRow)
+    {
+        return meetupService.getMeetupsChunkActive(startRow, endRow);
+    }
+
+    @GetMapping("user/{startRow}/{endRow}")
+    public @ResponseBody Iterable<Meetup> getUserMeetupsChunk(
+            @PathVariable("startRow") Integer startRow,
+            @PathVariable("endRow") Integer endRow)
+    {
+        return meetupService.getUserMeetupsChunk(startRow, endRow);
     }
 
     @GetMapping("/{meetupId}/attendees")
@@ -53,9 +63,8 @@ public class MeetupController {
         return appUserService.getMeetupAttendees(meetupId);
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity createMeetup(@Valid @RequestBody Meetup meetup){
-
         meetupService.createMeetup(meetup);
         return ResponseEntity.ok().build();
     }
@@ -73,6 +82,18 @@ public class MeetupController {
         meetup.setMeetupId(meetupId);
         meetupService.updateMeetup(meetup);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/future/{userId}")
+    @ResponseBody
+    public Iterable<Meetup> getUserFutureMeetups(@PathVariable("userId") Integer userId){
+        return meetupService.getUserFutureMeetups(userId);
+    }
+
+    @GetMapping("/past/{userId}")
+    @ResponseBody
+    public Iterable<Meetup> getUserPastMeetups(@PathVariable("userId") Integer userId){
+        return meetupService.getUserPastMeetups(userId);
     }
 
     @DeleteMapping("/{meetupId}")
@@ -102,6 +123,17 @@ public class MeetupController {
             @PathVariable("meetupID") Integer meetupID,
             @RequestParam("id") Integer userID) {
         return meetupService.isAttendee(meetupID, userID);
+    }
+
+
+    @GetMapping("/filter")
+    public List<Meetup> filter(@RequestBody Filter filter) {
+        return meetupService.findBy(filter);
+    }
+
+    @GetMapping("/filters")
+    public List<Filter> filters() {
+        return meetupService.getAllFilters();
     }
 
     @PostMapping("/filters")
@@ -135,22 +167,22 @@ public class MeetupController {
         return meetups;
     }
 
-    @GetMapping("/{meetupID}/cancel")
-    public ResponseEntity cancel(@PathVariable("meetupID") Integer meetupID) throws Exception {
-        meetupService.cancelMeetup(meetupID);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/{meetupID}/terminate")
-    public ResponseEntity terminate(@PathVariable("meetupID") Integer meetupID) throws Exception {
-        meetupService.terminateMeetup(meetupID);
-        System.out.println("terminated");
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/reschedule")
-    public ResponseEntity reschedule(@RequestBody Meetup meetup) throws Exception {
-        meetupService.rescheduleTerminatedMeetup(meetup);
+    @PatchMapping("/{meetupID}/action={action}")
+    public ResponseEntity changeState
+            (@PathVariable("meetupID") Integer meetupID,
+             @PathVariable("action") String action,
+             @RequestBody(required=false) Meetup meetup) throws Exception {
+        switch (action) {
+            case "cancel":
+                meetupService.cancelMeetup(meetupID);
+                break;
+            case "terminate":
+                meetupService.terminateMeetup(meetupID);
+                break;
+            case "reschedule":
+                meetupService.rescheduleTerminatedMeetup(meetup);
+                break;
+        }
         return ResponseEntity.ok().build();
     }
 }

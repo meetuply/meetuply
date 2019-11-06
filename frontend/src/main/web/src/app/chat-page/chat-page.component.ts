@@ -4,7 +4,7 @@ import * as SockJS from 'sockjs-client'
 import { ActivatedRoute, Router } from "@angular/router";
 import { ChatService } from '../_services/chat.service'
 import { UserService } from '../_services'
-import { Message, User } from '../_models'
+import {Message, User} from '../_models'
 import { Location } from '@angular/common'
 import { environment } from "../../environments/environment";
 
@@ -17,7 +17,7 @@ export class ChatPageComponent implements OnInit {
 
   roomId: number;
   stompClient: Stomp.stompClient;
-  messages: Message[] = []
+  messages: Message[] = [];
   message: string = "";
 
   other: User;
@@ -93,8 +93,8 @@ export class ChatPageComponent implements OnInit {
 
   subscribe() {
     this.stompClient.subscribe('/chat/session_messages/' + this.roomId, greeting => {
-      var msg: Message = JSON.parse(greeting.body)
-      this.messages.unshift(msg)
+      var msg: Message = JSON.parse(greeting.body);
+      this.messages.unshift(msg);
     });
   }
 
@@ -146,7 +146,7 @@ export class ChatPageComponent implements OnInit {
       from: this.userService.currentUser.userId,
       to_user_id: 1,
       to_room_id: this.roomId
-    }
+    };
 
     this.stompClient.send("/app/in", {}, JSON.stringify(msg));
     this.message = "";

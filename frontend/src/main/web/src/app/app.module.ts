@@ -5,20 +5,16 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ButtonComponent } from './button/button.component';
-
 import { LeftMenuComponent } from './left-menu/left-menu.component';
 import { LeftMenuItemComponent } from './left-menu-item/left-menu-item.component';
-
 import { SpeakerPageComponent } from './speaker-page/speaker-page.component';
 import { SpeakerListPageComponent } from './speaker-list-page/speaker-list-page.component';
 import { SpeakerListItemComponent } from './speaker-list-item/speaker-list-item.component';
-
 import { BlogPageComponent } from './blog-page/blog-page.component';
 import { BlogListPageComponent } from './blog-list-page/blog-list-page.component';
 import { BlogListItemComponent } from './blog-list-item/blog-list-item.component';
 import { BlogCreatePageComponent } from "./blog-create-page/blog-create-page.component";
 import { BlogCommentItemComponent } from "./blog-comment-item/blog-comment-item.component";
-
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from "@angular/forms";
 import { RatingComponent } from "./rating/rating.component";
@@ -38,12 +34,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { CreateMeetupPageComponent } from './create-meetup-page/create-meetup-page.component';
 import { UserDeactivationComponent } from './user-deactivation/user-deactivation.component';
-
 import { ChatPageComponent } from './chat-page/chat-page.component';
 import { ChatsListPageComponent } from './chats-list-page/chats-list-page.component';
 import { ChatsListItemComponent } from './chats-list-item/chats-list-item.component';
 import { ChatMessageComponent } from './chat-message/chat-message.component';
-
 import { ReactiveFormsModule } from '@angular/forms';
 import { AchievementCreatePageComponent } from './achievement-create-page/achievement-create-page.component';
 import { AchievementPanelComponent } from './achievement-panel/achievement-panel.component';
@@ -52,7 +46,22 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { TopicsPageComponent } from './topics-page/topics-page.component';
 import { TopicPageComponent } from './topic-page/topic-page.component';
 import { TopicSearchComponent } from './topic-search/topic-search.component';
+
 import { ChatSubListItemComponent } from './chat-sub-list-item/chat-sub-list-item.component';
+
+import { BanReasonsPageComponent } from './ban-reasons-page/ban-reasons-page.component';
+import { BanReasonPageComponent } from './ban-reason-page/ban-reason-page.component';
+import { BanReasonSearchComponent } from './ban-reason-search/ban-reason-search.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { RescheduleDialogComponent } from './reschedule-dialog/reschedule-dialog.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatInputModule} from "@angular/material/input";
+import {MatMomentDateModule} from "@angular/material-moment-adapter";
+import { ChangePasswordComponent } from './change-password/change-password.component';
+import { SettingsComponent } from './settings/settings.component';
+import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
+
 
 
 @NgModule({
@@ -62,14 +71,12 @@ import { ChatSubListItemComponent } from './chat-sub-list-item/chat-sub-list-ite
     RegisterComponent,
     LandingPageComponent,
     ButtonComponent,
-
     LeftMenuComponent,
     LeftMenuItemComponent,
-
+    DashboardPageComponent,
     SpeakerPageComponent,
     SpeakerListPageComponent,
     SpeakerListItemComponent,
-
     RatingComponent,
     LogoutMenuItemComponent,
     MustMatchDirective,
@@ -79,9 +86,7 @@ import { ChatSubListItemComponent } from './chat-sub-list-item/chat-sub-list-ite
     MeetupListItemComponent,
     MeetupsListPageComponent,
     MeetupPageComponent,
-
     UserDeactivationComponent,
-
     ChatPageComponent,
     ChatsListPageComponent,
     ChatsListItemComponent,
@@ -91,7 +96,6 @@ import { ChatSubListItemComponent } from './chat-sub-list-item/chat-sub-list-ite
     BlogListPageComponent,
     BlogCreatePageComponent,
     BlogCommentItemComponent,
-
     RegConfirmationComponent,
     CreateMeetupPageComponent,
     UserDeactivationComponent,
@@ -101,7 +105,18 @@ import { ChatSubListItemComponent } from './chat-sub-list-item/chat-sub-list-ite
     TopicsPageComponent,
     TopicPageComponent,
     TopicSearchComponent,
-    ChatSubListItemComponent
+
+    ChatSubListItemComponent,
+
+    BanReasonsPageComponent,
+    BanReasonPageComponent,
+    BanReasonSearchComponent,
+    AchievementsPageComponent,
+    ConfirmDialogComponent,
+    RescheduleDialogComponent,
+    ChangePasswordComponent,
+    SettingsComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -112,12 +127,17 @@ import { ChatSubListItemComponent } from './chat-sub-list-item/chat-sub-list-ite
     MatProgressSpinnerModule,
     InfiniteScrollModule,
     ReactiveFormsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatMomentDateModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ConfirmDialogComponent, RescheduleDialogComponent]
 })
 export class AppModule { }

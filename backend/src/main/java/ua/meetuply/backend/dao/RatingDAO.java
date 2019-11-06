@@ -54,7 +54,7 @@ public class RatingDAO implements IDAO<Rating>, RowMapper<Rating> {
 
     @Override
     public void update(Rating rating) {
-        jdbcTemplate.update("UPDATE rating SET value = ? AND date = ? WHERE rated_user_id = ? AND rated_by = ?",
+        jdbcTemplate.update("UPDATE rating SET value = ? AND date_time = ? WHERE rated_user_id = ? AND rated_by = ?",
                 rating.getValue(), rating.getDate(), rating.getRatedUser().getUserId(), rating.getRatedUser().getUserId());
     }
 
@@ -69,7 +69,6 @@ public class RatingDAO implements IDAO<Rating>, RowMapper<Rating> {
     @Override
     public Rating mapRow(ResultSet resultSet, int i) throws SQLException {
         Rating rating = new Rating();
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         rating.setValue(resultSet.getInt("value"));
         rating.setDate(resultSet.getTimestamp("date_time").toLocalDateTime());
         rating.setRatedUser(appUserService.getUser(resultSet.getInt("rated_user_id")));

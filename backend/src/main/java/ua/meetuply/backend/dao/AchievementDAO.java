@@ -39,8 +39,7 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
             "and posts is null\n" +
             "and followers is null\n" +
             "and rating is null\n" +
-            "order by followers asc\n" +
-            "limit 1;";
+            "order by followers asc";
     private static final String GET_FOLLOWERS_ACHIEVEMENT_ID_QUERY = "select uid from achievement\n" +
             "where uid not in\n" +
             "(select achievement_id from user_achievement where user_id = ?)\n" +
@@ -48,8 +47,7 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
             "and meetups is null\n" +
             "and posts is null\n" +
             "and rating is null\n" +
-            "order by followers asc\n" +
-            "limit 1;";
+            "order by followers asc";
     private static final String GET_POSTS_ACHIEVEMENT_ID_QUERY = "select uid from achievement " +
             "where uid not in " +
             "(select achievement_id from user_achievement where user_id = ?)\n" +
@@ -57,8 +55,7 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
             "and meetups is null\n" +
             "and followers is null\n" +
             "and rating is null\n" +
-            "order by posts asc\n" +
-            "limit 1;";
+            "order by posts asc";
     private static final String GET_RATING_ACHIEVEMENT_ID_QUERY = "select uid from achievement\n" +
             "where uid not in\n" +
             "(select achievement_id from user_achievement where user_id = ?)\n" +
@@ -66,12 +63,11 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
             "and posts is null\n" +
             "and followers is null\n" +
             "and meetups is null\n" +
-            "order by rating asc\n" +
-            "limit 1;";
+            "order by rating asc";
     private static final String UPDATE_ACHIEVEMENT_USER_QUERY = "insert into user_achievement (`achievement_id`, `user_id`) values (?, ?)";
     private static final String GET_ACHIEVEMENTS_ID_FOR_MEETUP_TOPIC_QUERY =
             "select achievement_id from achievement_topic\n" +
-                    "where achievement_id not in (select achievement_id from user_achievement where user_id = 1)\n" +
+                    "where achievement_id not in (select achievement_id from user_achievement where user_id = ?)\n" +
                     "and achievement_id in (select achievement_id from achievement_topic as a\n" +
                     "inner join (select topic_id, count(meetup_id) as user_quantity from meetup_topic\n" +
                     "inner join meetup on meetup.uid = meetup_topic.meetup_id\n" +
@@ -80,6 +76,7 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
                     "where a.quantity = b.user_quantity)\n" +
                     "group by achievement_id\n" +
                     "having sum(quantity) <= (select count(uid) from meetup where speaker_id = ?)";
+    private static final String GET_USER_ACHIEVEMENTS_SUM_QUERY = "SELECT COUNT(*) FROM user_achievement WHERE user_id = ?";
 
     @Autowired
     public JdbcTemplate jdbcTemplate;
@@ -146,28 +143,37 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
 
     public List<Integer> getMeetupTopicAchievementId(Integer userId) {
         return jdbcTemplate.queryForList(GET_ACHIEVEMENTS_ID_FOR_MEETUP_TOPIC_QUERY,
-                new Object[]{userId}, Integer.class);
+                new Object[]{userId, userId, userId}, Integer.class);
     }
 
     public Integer getMeetupAchievementId(Integer userId) {
-        return jdbcTemplate.queryForObject(GET_MEETUP_ACHIEVEMENT_ID_QUERY, new Object[]{userId}, Integer.class);
+        List<Integer> integerList = jdbcTemplate.queryForList(GET_MEETUP_ACHIEVEMENT_ID_QUERY, new Object[]{userId, userId}, Integer.class);
+        return integerList.size() == 0 ? null : integerList.get(0);
     }
 
     public Integer getFollowersAchievementId(Integer userId) {
-        return jdbcTemplate.queryForObject(GET_FOLLOWERS_ACHIEVEMENT_ID_QUERY, new Object[]{userId}, Integer.class);
+        List<Integer> integerList = jdbcTemplate.queryForList(GET_FOLLOWERS_ACHIEVEMENT_ID_QUERY, new Object[]{userId, userId}, Integer.class);
+        return integerList.size() == 0 ? null : integerList.get(0);
     }
 
     public Integer getPostsAchievementId(Integer userId) {
-        return jdbcTemplate.queryForObject(GET_POSTS_ACHIEVEMENT_ID_QUERY, new Object[]{userId}, Integer.class);
+        List<Integer> integerList = jdbcTemplate.queryForList(GET_POSTS_ACHIEVEMENT_ID_QUERY, new Object[]{userId, userId}, Integer.class);
+        return integerList.size() == 0 ? null : integerList.get(0);
     }
 
     public Integer getRatingAchievementId(Integer userId) {
-        return jdbcTemplate.queryForObject(GET_RATING_ACHIEVEMENT_ID_QUERY, new Object[]{userId}, Integer.class);
+        List<Integer> integerList = jdbcTemplate.queryForList(GET_RATING_ACHIEVEMENT_ID_QUERY, new Object[]{userId, userId}, Integer.class);
+        return integerList.size() == 0 ? null : integerList.get(0);
     }
 
     public void updateAchievementUser(Integer achievementId, Integer userId) {
         jdbcTemplate.update(UPDATE_ACHIEVEMENT_USER_QUERY,
                 achievementId, userId);
+    }
+
+    public Integer getUserAchievementsSum(Integer userId) {
+        List<Integer> integerList = jdbcTemplate.queryForList(GET_USER_ACHIEVEMENTS_SUM_QUERY, new Object[]{userId}, Integer.class);
+        return integerList.size() == 0 ? null : integerList.get(0);
     }
 
     @Override
@@ -183,4 +189,5 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
                 resultSet.getInt("meetups")
         );
     }
+
 }

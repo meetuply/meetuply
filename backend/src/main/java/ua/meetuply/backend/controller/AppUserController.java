@@ -2,10 +2,12 @@ package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.meetuply.backend.model.*;
-
+import ua.meetuply.backend.controller.exception.NotFoundException;
+import ua.meetuply.backend.model.AppUser;
+import ua.meetuply.backend.model.ChatroomThumbnail;
+import ua.meetuply.backend.model.ConfirmationToken;
+import ua.meetuply.backend.model.Language;
 import ua.meetuply.backend.service.*;
 import ua.meetuply.backend.validator.AppUserValidator;
 
@@ -39,10 +41,38 @@ public class AppUserController {
     @Resource(name = "emailServiceImpl")
     private EmailService emailService;
 
-    @RequestMapping("/")
+    @GetMapping
     public AppUser user() {
         return appUserService.getCurrentUser();
     }
+
+    @PutMapping
+    public ResponseEntity update(@RequestBody AppUser newUser) throws Exception {
+        appUserService.update(newUser);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/recover")
+    public ResponseEntity changePassword(@RequestBody AppUser newUser, @RequestParam("token") String confirmationToken) throws Exception {
+        AppUser user = appUserService.update(newUser, confirmationToken);
+        emailService.sendSuccessRecoverEmail(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/recover")
+    public ResponseEntity requestRecover(@RequestParam("email") String email) throws NotFoundException {
+        AppUser user = appUserService.getUserByEmail(email);
+        if(user == null) throw NotFoundException.createWith("Cannot find user with email " + email);
+        ConfirmationToken ct = confirmationService.generateToken(user);
+        emailService.sendRecoverEmail(user, confirmationService.getRecoveryLink(ct));
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/token/{token}")
+    public boolean tokenExists(@PathVariable("token") String token) {
+        return confirmationService.exists(token);
+    }
+
 
     @RequestMapping("/members")
     @GetMapping()
@@ -69,11 +99,16 @@ public class AppUserController {
         return appUserService.getUsersChunk(startRow, endRow);
     }
 
+    @GetMapping("/members/all/{startRow}/{endRow}")
+    public @ResponseBody
+    Iterable<AppUser> getUsersChunkForAdmin(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
+        return appUserService.getUsersChunkForAdmin(startRow, endRow);
+    }
+
     @GetMapping("/{id}")
     public AppUser get(@PathVariable("id") Integer userId) {
         return appUserService.getUser(userId);
     }
-
 
     @GetMapping("/{id}/languages")
     public Iterable<Language> getLanguages(@PathVariable("id") Integer userId) {
@@ -101,22 +136,6 @@ public class AppUserController {
         return appUserService.getUserFullName(userId);
     }
 
-    @RequestMapping("/registerSuccessful")
-    public String viewRegisterSuccessful(Model model) {
-        return "registration/registerSuccessfulPage";
-    }
-
-    @RequestMapping("/login")
-    public String viewLogin(Model model) {
-        return "registration/loginPage";
-    }
-
-
-    @GetMapping("/register")
-    public String viewRegister() {
-        return "registration/registerPage";
-    }
-
     @GetMapping("/address")
     public String adress() {
         return System.getenv("HOST_NAME");
@@ -134,7 +153,6 @@ public class AppUserController {
 
     @GetMapping("/confirm")
     public ResponseEntity<AppUser> confirmUser(@RequestParam("token") String confirmationToken) {
-
         AppUser user = confirmationService.confirmUser(confirmationToken);
         if (user != null) {
             emailService.sendGreetingEmail(user, GREETING_TEMPLATE_NAME, GREETING_SUBJECT);

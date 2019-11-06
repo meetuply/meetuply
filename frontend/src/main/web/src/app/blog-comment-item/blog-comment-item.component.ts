@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import {BlogService} from "../_services/blog.service";
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {Blog_comment_item} from "../_models/blog_comment_item";
+import {UserService} from "../_services";
+import {BlogService} from "../_services/blog.service";
 
 @Component({
   selector: 'app-blog-comment-item',
@@ -11,11 +12,23 @@ import {Blog_comment_item} from "../_models/blog_comment_item";
 export class BlogCommentItemComponent implements OnInit {
 
   @Input() blog_comment_item: Blog_comment_item;
+
+  @Output() itemDeleted: EventEmitter<Blog_comment_item> = new EventEmitter();
   error;
 
-  constructor(private blogService: BlogService) { }
+  constructor(private userService: UserService,
+              private blogService: BlogService) { }
 
   ngOnInit() {
+  }
+
+  isAdmin(){
+    return this.userService.currentUser.role.roleName==="admin";
+  }
+
+  deleteComment(){
+    this.blogService.deleteBlogComment(this.blog_comment_item.comment.blogCommentId).subscribe();
+    this.itemDeleted.emit(this.blog_comment_item);
   }
 
 }

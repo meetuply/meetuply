@@ -15,9 +15,10 @@ public class StateController {
     @Autowired
     private StateService stateService;
 
-    @GetMapping()
-    public @ResponseBody Iterable<State> getAllRatings() {
-        return stateService.getAll();
+    @GetMapping
+    public @ResponseBody
+    Iterable<State> getStates() {
+        return stateService.getAll().values();
     }
 
 }

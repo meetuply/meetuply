@@ -3,6 +3,7 @@ package ua.meetuply.backend.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.BlogPostDAO;
+import ua.meetuply.backend.model.AchievementType;
 import ua.meetuply.backend.model.BlogPost;
 
 import java.time.LocalDateTime;
@@ -17,10 +18,14 @@ public class BlogPostService {
     @Autowired
     AppUserService appUserService;
 
+    @Autowired
+    AchievementService achievementService;
+
     public void createBlogPost(BlogPost blogPost) {
         blogPost.setTime(LocalDateTime.now());
         blogPost.setAuthorId(appUserService.getCurrentUserID());
         blogPostDAO.save(blogPost);
+        achievementService.checkOne(AchievementType.POSTS);
     }
 
     public void updateBlogPost(BlogPost blogPost){
@@ -39,5 +44,9 @@ public class BlogPostService {
 
     public List<BlogPost> getBlogPostsChunk(Integer startRow,Integer endRow,String filter) {
         return blogPostDAO.getBlogPostsChunk(startRow,endRow,filter);
+    }
+
+    public Iterable<BlogPost> getBlogPostByUserId(Integer startRow,Integer endRow,Integer userId) {
+        return blogPostDAO.getBlogPostByUserId(startRow,endRow,userId);
     }
 }

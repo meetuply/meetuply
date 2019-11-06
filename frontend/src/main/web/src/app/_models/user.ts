@@ -4,6 +4,7 @@
     firstName: string;
     location: string;
     lastName: string;
+    deactivated: boolean;
     password: string;
     confirmedPassword: string;
     description: string;

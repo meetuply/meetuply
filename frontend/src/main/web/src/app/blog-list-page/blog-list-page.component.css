@@ -23,9 +23,9 @@
 #message{
   text-align: center;
   width:100%;
-  font-size: 4em;
+  font-size: 2em;
   font-weight: bold;
-  display: none;
+  display: flex;
 }
 
 .header{

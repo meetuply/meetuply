@@ -1,0 +1,7 @@
+<h2 mat-dialog-title class="title">{{title}}</h2>
+
+<p>{{description}}</p>
+<div class="row">
+<app-button [text]='"Close"' [type]='"3"' fontSize='16' (onClick)="close($event)"></app-button>
+<app-button [text]='"Confirm"' [type]='"2"' fontSize='16' (onClick)="confirm($event)"></app-button>
+</div>

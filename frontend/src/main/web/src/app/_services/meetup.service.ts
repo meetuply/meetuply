@@ -24,6 +24,18 @@ export class MeetupService {
     return this.http.get<MeetupListItem[]>(this.meetupApiUrl + `${startRow}` + "/" + `${endRow}`)
   }
 
+  getMeetupsChunkActive(startRow: number, endRow: number): Observable<MeetupListItem[]> {
+    return this.http.get<MeetupListItem[]>(this.meetupApiUrl + "active/" + `${startRow}` + "/" + `${endRow}`)
+  }
+
+  getUserMeetupsChunk(startRow: number, endRow: number): Observable<MeetupListItem[]> {
+    return this.http.get<MeetupListItem[]>(this.meetupApiUrl + "user/" + `${startRow}` + "/" + `${endRow}`)
+  }
+
+  getFutureMeetups(userId: number): Observable<Meetup[]> {
+    return this.http.get<Meetup[]>(this.meetupApiUrl + "future/"+userId)
+  }
+
   get(id: number): Observable<Meetup> {
     console.log("loading meetup in service");
     return this.http.get<Meetup>(this.meetupApiUrl + `${id}`);
@@ -51,18 +63,18 @@ export class MeetupService {
   }
 
   create(meetup: Meetup): Observable<{}> {
-    return this.http.post(this.meetupApiUrl + 'create', meetup);
+    return this.http.post(this.meetupApiUrl, meetup);
   }
 
   terminate(meetupID: number): Observable<{}> {
-    return this.http.get<boolean>(this.meetupApiUrl + + `${meetupID}` + '/terminate');
+    return this.http.patch(this.meetupApiUrl + `${meetupID}` + '/action=terminate', null);
   }
 
   cancell(meetupID: number): Observable<{}> {
-    return this.http.get<boolean>(this.meetupApiUrl + + `${meetupID}` + '/cancel');
+    return this.http.patch(this.meetupApiUrl + `${meetupID}` + '/action=cancel', null);
   }
 
   reschedule(meetup: Meetup): Observable<{}> {
-    return this.http.post(this.meetupApiUrl + 'reschedule', meetup);
+    return this.http.patch(this.meetupApiUrl + `${meetup.meetupId}` + '/action=reschedule', meetup);
   }
 }

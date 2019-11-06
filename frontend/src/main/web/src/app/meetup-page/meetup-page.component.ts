@@ -7,6 +7,11 @@ import {UserService} from "../_services";
 import {RatingService} from "../_services/rating.service";
 import {Atendee} from "../_models/atendee";
 import {StateService} from "../_services/state.service";
+import { Location } from '@angular/common';
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
+import {RescheduleDialogComponent} from "../reschedule-dialog/reschedule-dialog.component";
+import {log} from "util";
 
 @Component({
   selector: 'app-meetup-page',
@@ -25,7 +30,7 @@ export class MeetupPageComponent implements OnInit {
   joined = false;
   error = null;
   attendees: Atendee[] = [];
-  isMy = false;
+  hasAccess = false;
   state: string;
 
   constructor(
@@ -33,7 +38,9 @@ export class MeetupPageComponent implements OnInit {
     private userService: UserService,
     private ratingService: RatingService,
     private route: ActivatedRoute,
-    private stateService: StateService) {
+    private stateService: StateService,
+    private location: Location,
+    private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -41,7 +48,7 @@ export class MeetupPageComponent implements OnInit {
     this.loadMeetup(this.id);
   }
 
-  loadMeetup(id:number) {
+  loadMeetup(id: number) {
     this.loading = true;
     this.sub = this.meetupService.get(id).subscribe(
       data => {
@@ -50,8 +57,9 @@ export class MeetupPageComponent implements OnInit {
         this.meetup = data;
         this.getAuthorInfo(data['speakerId']);
         this.getAttendees();
-        this.isMy = this.meetup.speakerId == this.userService.currentUser.userId;
+        this.hasAccess = this.meetup.speakerId == this.userService.currentUser.userId || this.userService.currentUser.role.roleName == 'admin';
         this.state = this.stateService.states[this.meetup.stateId];
+        console.log(this.state);
       },
       error => {
         // this.alertService.error(error);
@@ -60,34 +68,37 @@ export class MeetupPageComponent implements OnInit {
     );
   }
 
-  getAttendees(){
+  getAttendees() {
     this.loading = true;
     this.meetupService.getAttendees(this.id).subscribe(
       async data => {
         this.loading = false;
-        this.attendees = await Promise.all(data.map(async user =>{
+        this.attendees = await Promise.all(data.map(async user => {
           let rating = 0;
           await this.ratingService.getUserRatingAvg(user.userId).toPromise(
-          ).then(data => {rating = data});
+          ).then(data => {
+            rating = data
+          });
           return new Atendee(user.userId, user.firstName,
-          user.lastName, user.photo, rating)}));
+            user.lastName, user.photo, rating)
+        }));
         data.forEach(a => {
-          if (a.userId == this.userService.currentUser.userId) {
-            this.joined = true;
-            return;
+            if (a.userId == this.userService.currentUser.userId) {
+              this.joined = true;
+              return;
+            }
           }
-        }
-      )
+        )
       }
     )
   }
 
-  getAuthorInfo(id: number){
+  getAuthorInfo(id: number) {
     this.loading = true;
     this.meetupService.getSpeaker(this.meetup.speakerId).subscribe(
       data => {
         this.loading = false;
-        this.author = data['firstName']+ " " + data['lastName'];
+        this.author = data['firstName'] + " " + data['lastName'];
         this.authorPhoto = data['photo']
       }
     );
@@ -98,7 +109,7 @@ export class MeetupPageComponent implements OnInit {
     )
   }
 
-  joinButtonClicked(event){
+  joinButtonClicked(event) {
     if (this.joined)
       this.meetupService.leaveMeetup(this.meetup.meetupId).subscribe(
         data => {
@@ -118,7 +129,9 @@ export class MeetupPageComponent implements OnInit {
           let currentUser = this.userService.currentUser;
           let rating = 0;
           await this.ratingService.getUserRatingAvg(currentUser.userId).toPromise(
-          ).then(data => {rating = data});
+          ).then(data => {
+            rating = data
+          });
           let addAttendee = new Atendee(currentUser.userId, currentUser.firstName,
             currentUser.lastName, currentUser.photo, rating);
           this.attendees.unshift(addAttendee);
@@ -135,12 +148,15 @@ export class MeetupPageComponent implements OnInit {
   }
 
   cancellMeetup(event) {
-    if(confirm("Are you sure that you want to cancel meetup?")) {
-      this.meetupService.cancell(this.id).subscribe(
-        data => this.loadMeetup(this.id),
-        error => this.error = error
-      )
-    }
+    this.openConfirmDialog("Cancel meetup", "Are you sure that you want to cancel meetup?")
+      .subscribe(data => {
+        if (data) {
+          this.meetupService.cancell(this.id).subscribe(
+            data => this.loadMeetup(this.id),
+            error => this.error = error
+          )
+        }
+      })
   }
 
   canTerminate() {
@@ -148,12 +164,16 @@ export class MeetupPageComponent implements OnInit {
   }
 
   terminateMeetup(event) {
-    if(confirm("Are you sure that you want to terminate meetup?")) {
-      this.meetupService.terminate(this.id).subscribe(
-        data => this.loadMeetup(this.id),
-        error => this.error = error
-      )
-    }
+    this.openConfirmDialog("Terminate meetup", "Are you sure that you want to terminate meetup?")
+      .subscribe(data => {
+        if (data) {
+          this.meetupService.terminate(this.id).subscribe(
+            data => this.loadMeetup(this.id),
+            error => this.error = error
+          )
+        }
+      })
+
   }
 
   canReschedule() {
@@ -161,7 +181,43 @@ export class MeetupPageComponent implements OnInit {
   }
 
   reschedule(event) {
+    this.openRescheduleDialog('Reschedule meetup', 'Choose new date for meetup')
+      .subscribe(data => {
+          data.meetupId = this.id;
+          this.meetupService.reschedule(data).subscribe(
+            data => this.loadMeetup(this.id),
+            error => this.error = error)
+        },
+        error => this.error = error
+      )
+  }
 
+  openConfirmDialog(title, description) {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '500px';
+    dialogConfig.data = {
+      title: title,
+      description: description
+    };
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    return dialogRef.afterClosed();
+  }
+
+  openRescheduleDialog(title, description) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '500px';
+    dialogConfig.data = {
+      title: title,
+      description: description
+    };
+    const dialogRef = this.dialog.open(RescheduleDialogComponent, dialogConfig);
+    return dialogRef.afterClosed();
   }
 
   joinType() {
@@ -172,7 +228,11 @@ export class MeetupPageComponent implements OnInit {
     return (this.joined ? 'Leave' : (this.meetup.meetupMaxAttendees == this.attendees.length ? "Full" : "Join"));
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     if (this.sub) this.sub.unsubscribe();
+  }
+
+  goBack(){
+  this.location.back();
   }
 }
