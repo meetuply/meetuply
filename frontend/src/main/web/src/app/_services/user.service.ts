@@ -67,6 +67,17 @@ export class UserService {
     return this.http.get<ChatThumbnail[]>(this.userApiUrl + userId + "/roomsList");
   }
 
+  getNotifications(userId: number): Observable<Notification[]> {
+    return this.http.get<Notification[]>(this.userApiUrl + userId + "/notifications");
+  }
+
+  getUnreadNotifications(userId: number): Observable<Notification[]> {
+    return this.http.get<Notification[]>(this.userApiUrl + userId + "/notifications/unread");
+  }
+
+  getReadNotifications(userId: number): Observable<Notification[]> {
+    return this.http.get<Notification[]>(this.userApiUrl + userId + "/notifications/read");
+  }
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
@@ -88,19 +99,19 @@ export class UserService {
     return this.http.get<Language[]>(this.userApiUrl + `${userId}/languages`);
   }
 
-  unfollow(userId:number): Observable<{}>{
+  unfollow(userId: number): Observable<{}> {
     return this.http.delete(this.userApiUrl + 'following/' + userId)
   }
 
-  follow(userId: number): Observable<{}>{
+  follow(userId: number): Observable<{}> {
     return this.http.post(this.userApiUrl + 'following/' + userId, {});
   }
 
-  deactivate(userId: number): Observable<{}>{
+  deactivate(userId: number): Observable<{}> {
     return this.http.put(this.userApiUrl + 'deactivate/' + userId, {});
   }
 
-  reactivate(userId: number): Observable<{}>{
+  reactivate(userId: number): Observable<{}> {
     return this.http.put(this.userApiUrl + 'activate/' + userId, {});
   }
 
