@@ -3,6 +3,7 @@ package ua.meetuply.backend.model;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,4 +28,7 @@ public class Meetup {
     private String speakerLastName;
     private Float rating;
     private String speakerPhoto;
+
+    private String language;
+    private List<Integer> topics;
 }

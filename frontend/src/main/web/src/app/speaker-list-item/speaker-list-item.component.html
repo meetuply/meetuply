@@ -2,22 +2,23 @@
 	<div class='main'>
 		<div class='profile'>
 			<div class='avatar' [routerLink]="link()">
-				<img src="assets/img/download.png">
-				<app-rating size='16' rating="{{this.speaker_list_item.rate}}"></app-rating>
+        <img *ngIf="this.speakerListItem.photo" src={{speakerListItem.photo}}>
+        <img *ngIf="!this.speakerListItem.photo" src="assets/img/download.png">
+				<app-rating size='16' rating="{{this.speakerListItem.rate}}"></app-rating>
 			</div>
 			<div class='info'>
 				<div class='name' [routerLink]="link()">
-					<a>{{this.speaker_list_item.name + " " + this.speaker_list_item.surname}}</a>
+					<a>{{this.speakerListItem.name + " " + this.speakerListItem.surname}}</a>
           <span *ngIf="isCurrentUser()">(you)</span>
 				</div>
 				<div class='location'>
 					<div class='icon'></div>
-					<div>{{this.speaker_list_item.location}}</div>
+					<div>{{this.speakerListItem.location}}</div>
 				</div>
 			</div>
 		</div>
 		<div class='description'>
-			{{this.speaker_list_item.description}}
+			{{this.speakerListItem.description}}
 		</div>
 	</div>
 	<div class='additional'>
@@ -25,13 +26,15 @@
 			<div class='icon'>
 			</div>
 			<div>
-				<div *ngFor="let language of this.speaker_list_item.languages">{{language}}</div>
+				<div *ngFor="let language of this.speakerListItem.languages">{{language}}</div>
 			</div>
 		</div>
 		<div class='awards'>
 			<div class='icon'></div>
-			<div> {{this.speaker_list_item.awards}}</div>
+			<div> {{this.speakerListItem.awards}}</div>
 		</div>
+    <div class='additional' *ngIf="this.userService.currentUser.role.roleName !== 'admin'">
 		<app-button *ngIf="!isCurrentUser()" [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)"  fontSize='20'></app-button>
-	</div>
+    </div>
+  </div>
 </div>

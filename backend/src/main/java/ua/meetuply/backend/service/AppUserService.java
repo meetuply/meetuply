@@ -42,7 +42,7 @@ public class AppUserService implements UserDetailsService {
 
     @Autowired
     ConfirmationTokenDAO confirmationTokenDAO;
-   
+
     @Autowired
     AchievementService achievementService;
 
@@ -91,6 +91,10 @@ public class AppUserService implements UserDetailsService {
 
     public List<Integer> getUserSubscriptions(Integer id) {
         return appUserDAO.getUserSubscriptions(id);
+    }
+
+    public List<AppUser> getUserSubscriptionsUsers(Integer id) {
+        return appUserDAO.getUserSubscriptionsUsers(id);
     }
 
     public AppUser getUser(Integer id) {
@@ -169,7 +173,7 @@ public class AppUserService implements UserDetailsService {
 
     public void update(AppUser appUser) throws Exception {
         if (getCurrentUserID() == appUser.getUserId()) {
-            appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
+            appUser.setPassword(appUser.getPassword() == null ? getCurrentUser().getPassword() : appUser.getPassword());
             appUserDAO.update(appUser);
         } else throw PermissionException.createWith("You don't have permission to change personal data");
     }

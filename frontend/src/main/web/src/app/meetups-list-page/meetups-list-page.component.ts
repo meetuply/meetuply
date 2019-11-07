@@ -1,10 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MeetupListItem} from "../_models/meetupListItem"
-import {MeetupService} from "../_services/meetup.service";
-import {Subscription} from "rxjs";
-import {UserService} from "../_services";
-import {StateService} from "../_services/state.service";
-import {Router} from "@angular/router";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MeetupListItem } from "../_models/meetupListItem"
+import { MeetupService } from "../_services/meetup.service";
+import { Subscription } from "rxjs";
+import { UserService } from "../_services";
+import { StateService } from "../_services/state.service";
+import { Router } from "@angular/router";
+import {User} from "../_models";
 
 @Component({
   selector: 'app-meetups-list-page',
@@ -27,13 +28,16 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
   showActiveFlag = true;
   showAllFlag = false;
   showMyFlag = false;
+  user: User;
 
 
   constructor(private router: Router,
-              public userService: UserService,
-              private meetupService: MeetupService,
-              public stateService: StateService) {
-    this.userID = this.userService.currentUser.userId;
+    public userService: UserService,
+    private meetupService: MeetupService,
+    public stateService: StateService) {
+    this.user = this.userService.currentUser;
+    this.userID = this.user.userId;
+
   }
 
   ngOnInit() {
@@ -73,7 +77,7 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
           }, error1 => {
             console.log(error1);
           })
-      } else if (this.showActiveFlag){
+      } else if (this.showActiveFlag) {
         this.meetupService.getMeetupsChunkActive(this.lastRow, this.meetupsChunkSize).toPromise().then(
           data => {
             this.loading = false;
@@ -87,7 +91,7 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
           }, error1 => {
             console.log(error1);
           })
-      } else if (this.showMyFlag){
+      } else if (this.showMyFlag) {
         this.meetupService.getUserMeetupsChunk(this.lastRow, this.meetupsChunkSize).toPromise().then(
           data => {
             this.loading = false;
@@ -105,7 +109,7 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  showActive(){
+  showActive() {
     this.showActiveFlag = true;
     this.showAllFlag = false;
     this.showMyFlag = false;
@@ -114,7 +118,7 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
     this.loadMeetupsChunk();
   }
 
-  showAll(){
+  showAll() {
     this.showActiveFlag = false;
     this.showAllFlag = true;
     this.showMyFlag = false;
@@ -123,7 +127,7 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
     this.loadMeetupsChunk();
   }
 
-  showMy(){
+  showMy() {
     this.showActiveFlag = false;
     this.showAllFlag = false;
     this.showMyFlag = true;

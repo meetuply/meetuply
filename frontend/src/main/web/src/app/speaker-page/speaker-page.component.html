@@ -6,18 +6,19 @@
     <div class='back' (click)="goBack()">
 
     </div>
-    <div class='profile'>
+    <div class='profile' *ngIf="user">
 
       <div class='avatar'>
-        <img src="assets/img/download.png">
-        <app-rating size='24' rating="{{this.user}}"></app-rating>
+        <img *ngIf="user.photo" src={{user.photo}}>
+        <img *ngIf="!user.photo" src="assets/img/download.png">
+        <app-rating *ngIf="rate" size='16' rating="{{this.rate}}"></app-rating>
       </div>
 
       <div class='other'>
         <div class='info'>
           <div class='name' *ngIf="user">
             {{this.user.firstName + " " + this.user.lastName}}
-            <span *ngIf="isCurrentUser()">(you)</span>
+            <span *ngIf="isCurrentUser()">(you) <a class='view-all-link' routerLink="../../settings">edit</a></span>
           </div>
           <div class='location' *ngIf="user && this.user.location">
             <div class='icon'></div>
@@ -26,10 +27,14 @@
 
         </div>
         <div class='additional' *ngIf="!isCurrentUser()">
-          <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
-          </app-button>
-          <app-button text='message' type='1' (click)="message()" fontSize='20'></app-button>
+          <div class='additional' *ngIf="this.userService.currentUser.role.roleName !== 'admin'">
+            <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
+            </app-button>
+            <app-button text='Message' type='1' (click)="message()" fontSize='20'></app-button>
+            <app-button text="Ban" type='2' fontSize='20' routerLink="/speakers/{{this.user.userId}}/ban"></app-button>
+          </div>
           <div class='additional' *ngIf="this.userService.currentUser.role.roleName === 'admin'">
+            <app-button text="View bans" type='1' fontSize='20' routerLink="/speakers/{{this.user.userId}}/view_bans"></app-button>
             <app-button [text]="deactivationText()" [type]='deactivationType()' (onClick)="deactivationButtonClicked($event)" fontSize='20'></app-button>
           </div>
         </div>
@@ -79,6 +84,24 @@
     <div class='future-meetups'>
       <div *ngFor="let meetup of (viewAllFuture ?
               (futureMeetups) : (futureMeetups | slice:0:1))">
+        <div class="one-future-meetup">
+          <app-meetup-list-item
+            [meetupListItem]="meetup"
+            [isMy]="userService.currentUser.userId == meetup.speakerId"
+            [state]="stateService.states[meetup.stateId]"
+            [showAuthorInfo]=false>
+          </app-meetup-list-item>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="pastMeetups.length > 0" class='about'>
+      Past Meetup <span class="view-all-past" (click)="changeViewAllPast($event)">
+      view all</span>
+    </div>
+    <div class='future-meetups'>
+      <div *ngFor="let meetup of (viewAllPast ?
+              (pastMeetups) : (pastMeetups | slice:0:1))">
         <div class="one-future-meetup">
           <app-meetup-list-item
             [meetupListItem]="meetup"

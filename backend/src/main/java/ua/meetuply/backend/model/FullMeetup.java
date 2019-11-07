@@ -3,6 +3,7 @@ package ua.meetuply.backend.model;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class MeetupItem {
+public class FullMeetup {
     private Integer meetupId;
     private String meetupPlace;
     private String meetupTitle;
@@ -22,7 +23,7 @@ public class MeetupItem {
     private LocalDateTime meetupFinishDateTime;
     private Integer stateId;
     private Integer speakerId;
-    private String speakerFirstName;
-    private String speakerLastName;
-    private Float rating;
+
+    private String language;
+    private List<Integer> topics;
 }

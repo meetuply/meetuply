@@ -1,6 +1,6 @@
 import {BlogPost} from "./post";
 
-export class Blog_list_item {
+export class BlogListItem {
   post: BlogPost;
   author: string;
   authorPhoto: string;

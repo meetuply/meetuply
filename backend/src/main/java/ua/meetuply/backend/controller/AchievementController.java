@@ -18,9 +18,6 @@ public class AchievementController {
     @Autowired
     private AchievementService achievementService;
 
-    @Autowired
-    private AchievementDAO achievementDAO;
-
     @GetMapping()
     public @ResponseBody
     Iterable<Achievement> getAll() {

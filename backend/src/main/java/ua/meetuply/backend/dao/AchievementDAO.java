@@ -35,7 +35,7 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
     private static final String GET_MEETUP_ACHIEVEMENT_ID_QUERY = "select uid from achievement\n" +
             "where uid not in\n" +
             "(select achievement_id from user_achievement where user_id = ?)\n" +
-            "and meetups in (select count(*) from meetup where speaker_id = ?)\n" +
+            "and meetups <= (select count(*) from meetup where speaker_id = ?)\n" +
             "and posts is null\n" +
             "and followers is null\n" +
             "and rating is null\n" +
@@ -43,7 +43,7 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
     private static final String GET_FOLLOWERS_ACHIEVEMENT_ID_QUERY = "select uid from achievement\n" +
             "where uid not in\n" +
             "(select achievement_id from user_achievement where user_id = ?)\n" +
-            "and followers in (select count(*) from followers where followed_user_id = ?)\n" +
+            "and followers <= (select count(*) from followers where followed_user_id = ?)\n" +
             "and meetups is null\n" +
             "and posts is null\n" +
             "and rating is null\n" +
@@ -51,7 +51,7 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
     private static final String GET_POSTS_ACHIEVEMENT_ID_QUERY = "select uid from achievement " +
             "where uid not in " +
             "(select achievement_id from user_achievement where user_id = ?)\n" +
-            "and posts in (select count(*) from post where author_id = ?)\n" +
+            "and posts <= (select count(*) from post where author_id = ?)\n" +
             "and meetups is null\n" +
             "and followers is null\n" +
             "and rating is null\n" +
@@ -59,7 +59,7 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
     private static final String GET_RATING_ACHIEVEMENT_ID_QUERY = "select uid from achievement\n" +
             "where uid not in\n" +
             "(select achievement_id from user_achievement where user_id = ?)\n" +
-            "and rating in (select avg(value) from rating where rated_user_id = ?)\n" +
+            "and rating <= (select avg(value) from rating where rated_user_id = ?)\n" +
             "and posts is null\n" +
             "and followers is null\n" +
             "and meetups is null\n" +
@@ -146,24 +146,20 @@ public class AchievementDAO implements IDAO<Achievement>, RowMapper<Achievement>
                 new Object[]{userId, userId, userId}, Integer.class);
     }
 
-    public Integer getMeetupAchievementId(Integer userId) {
-        List<Integer> integerList = jdbcTemplate.queryForList(GET_MEETUP_ACHIEVEMENT_ID_QUERY, new Object[]{userId, userId}, Integer.class);
-        return integerList.size() == 0 ? null : integerList.get(0);
+    public List<Integer> getMeetupAchievementId(Integer userId) {
+        return jdbcTemplate.queryForList(GET_MEETUP_ACHIEVEMENT_ID_QUERY, new Object[]{userId, userId}, Integer.class);
     }
 
-    public Integer getFollowersAchievementId(Integer userId) {
-        List<Integer> integerList = jdbcTemplate.queryForList(GET_FOLLOWERS_ACHIEVEMENT_ID_QUERY, new Object[]{userId, userId}, Integer.class);
-        return integerList.size() == 0 ? null : integerList.get(0);
+    public List<Integer> getFollowersAchievementId(Integer userId) {
+        return jdbcTemplate.queryForList(GET_FOLLOWERS_ACHIEVEMENT_ID_QUERY, new Object[]{userId, userId}, Integer.class);
     }
 
-    public Integer getPostsAchievementId(Integer userId) {
-        List<Integer> integerList = jdbcTemplate.queryForList(GET_POSTS_ACHIEVEMENT_ID_QUERY, new Object[]{userId, userId}, Integer.class);
-        return integerList.size() == 0 ? null : integerList.get(0);
+    public List<Integer> getPostsAchievementId(Integer userId) {
+        return jdbcTemplate.queryForList(GET_POSTS_ACHIEVEMENT_ID_QUERY, new Object[]{userId, userId}, Integer.class);
     }
 
-    public Integer getRatingAchievementId(Integer userId) {
-        List<Integer> integerList = jdbcTemplate.queryForList(GET_RATING_ACHIEVEMENT_ID_QUERY, new Object[]{userId, userId}, Integer.class);
-        return integerList.size() == 0 ? null : integerList.get(0);
+    public List<Integer> getRatingAchievementId(Integer userId) {
+        return jdbcTemplate.queryForList(GET_RATING_ACHIEVEMENT_ID_QUERY, new Object[]{userId, userId}, Integer.class);
     }
 
     public void updateAchievementUser(Integer achievementId, Integer userId) {

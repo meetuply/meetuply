@@ -46,6 +46,9 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { TopicsPageComponent } from './topics-page/topics-page.component';
 import { TopicPageComponent } from './topic-page/topic-page.component';
 import { TopicSearchComponent } from './topic-search/topic-search.component';
+
+import { ChatSubListItemComponent } from './chat-sub-list-item/chat-sub-list-item.component';
+
 import { BanReasonsPageComponent } from './ban-reasons-page/ban-reasons-page.component';
 import { BanReasonPageComponent } from './ban-reason-page/ban-reason-page.component';
 import { BanReasonSearchComponent } from './ban-reason-search/ban-reason-search.component';
@@ -58,6 +61,10 @@ import {MatMomentDateModule} from "@angular/material-moment-adapter";
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { SettingsComponent } from './settings/settings.component';
 import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
+import {FeedbackCreatePageComponent} from "./feedback-create-page/feedback-create-page.component";
+import { BanPageComponent } from './ban-page/ban-page.component';
+import { BansPageComponent } from './bans-page/bans-page.component';
+
 
 
 @NgModule({
@@ -69,6 +76,7 @@ import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component"
     ButtonComponent,
     LeftMenuComponent,
     LeftMenuItemComponent,
+    FeedbackCreatePageComponent,
     DashboardPageComponent,
     SpeakerPageComponent,
     SpeakerListPageComponent,
@@ -101,6 +109,9 @@ import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component"
     TopicsPageComponent,
     TopicPageComponent,
     TopicSearchComponent,
+
+    ChatSubListItemComponent,
+
     BanReasonsPageComponent,
     BanReasonPageComponent,
     BanReasonSearchComponent,
@@ -109,6 +120,8 @@ import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component"
     RescheduleDialogComponent,
     ChangePasswordComponent,
     SettingsComponent,
+    BanPageComponent,
+    BansPageComponent,
   ],
   imports: [
     BrowserModule,

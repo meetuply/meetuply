@@ -9,13 +9,14 @@ import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.controller.exception.PermissionException;
 import ua.meetuply.backend.dao.FilterDAO;
 import ua.meetuply.backend.dao.MeetupDAO;
-import ua.meetuply.backend.model.AchievementType;
-import ua.meetuply.backend.model.AppUser;
-import ua.meetuply.backend.model.Filter;
-import ua.meetuply.backend.model.Meetup;
+import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.model.State.StateNames;
+import ua.meetuply.backend.model.Topic;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -36,13 +37,22 @@ public class MeetupService {
     @Autowired
     private FilterDAO filterDAO;
 
-    public void createMeetup(Meetup meetup) {
+
+    @Transactional
+    public void createMeetup(FullMeetup meetup) {
+
         meetup.setStateId(stateService.get(StateNames.SCHEDULED.name).getStateId());
         meetup.setSpeakerId(appUserService.getCurrentUserID());
-        meetupDao.save(meetup);
+
+        meetupDao.saveFull(meetup);
         achievementService.checkOne(AchievementType.MEETUPS);
-        achievementService.checkMultiple();
+        achievementService.checkOne(AchievementType.MEETUPS_TOPIC);
     }
+
+    public List<Topic> getMeetupTopics(Integer i){
+        return meetupDao.getMeetupTopics(i);
+    }
+
 
     public List<Meetup> getAllMeetups() {
         return meetupDao.getAll();
@@ -67,7 +77,7 @@ public class MeetupService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void join(Integer meetupID) throws Exception {
         AppUser user = appUserService.getCurrentUser();
-        if (user == null) throw NotFoundException.createWith("current");
+        if (user == null) throw NotFoundException.createWith("Please, sign in");
         if (meetupDao.get(meetupID) == null) throw NotFoundException.createWith("There is no meetup #" + meetupID);
         meetupDao.join(meetupID, user.getUserId());
         Meetup meetup = meetupDao.get(meetupID);
@@ -75,6 +85,9 @@ public class MeetupService {
             stateService.updateState(meetup, stateService.get(StateNames.BOOKED.name));
     }
 
+    public Iterable<Meetup> getUserMeetupsBeforeDay(Integer userId, int day) {
+        return meetupDao.getUserMeetupsBeforeDay(userId, day);
+    }
 
     public Iterable<Meetup> getMeetupsChunkWithUsernameAndRating(Integer startRow, Integer endRow) {
         return meetupDao.getMeetupsChunkWithUsernameAndRating(startRow, endRow);
@@ -104,7 +117,7 @@ public class MeetupService {
     }
 
     public List<Meetup> findMeetupsByFilter(Filter filter) {
-        return meetupDao.findMeetupsByFilter(filter);
+        return meetupDao.findBy(filter);
     }
 
     public Integer getUserMeetupsNumber(Integer userId) {
@@ -155,12 +168,28 @@ public class MeetupService {
         } else throw PermissionException.createWith("you cannot modify not yours meetups");
     }
 
-    public List<Meetup> findMeetupsByCriteria(Double rating, Timestamp dateFrom, Timestamp dateTo) {
+    public List<Meetup> findMeetupsByCriteria(float ratingFrom, float ratingTo, Timestamp dateFrom, Timestamp dateTo,
+                                              List<Topic> topics, Integer userId) {
         Filter filterDto = new Filter();
-        //filterDto.setRating(rating);
         filterDto.setDateFrom(dateFrom);
         filterDto.setDateTo(dateTo);
-        return meetupDao.findMeetupsByFilter(filterDto);
+        filterDto.setRatingFrom(ratingFrom);
+        filterDto.setRatingTo(ratingTo);
+        filterDto.setTopics(topics);
+        filterDto.setUserId(userId);
+        return meetupDao.findBy(filterDto);
+    }
+
+    public Timestamp getTimestampFromString(String dateTime) {
+        Timestamp timestamp;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+            Date parseDate = dateFormat.parse(dateTime);
+            timestamp = new java.sql.Timestamp(parseDate.getTime());
+        } catch (ParseException e) {
+            return null;
+        }
+        return timestamp;
     }
 
     public List<Meetup> findBy(Filter filter) {

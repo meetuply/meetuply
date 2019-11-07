@@ -7,35 +7,29 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.dao.SQLPredicate.Operation;
-import ua.meetuply.backend.model.AppUser;
-import ua.meetuply.backend.model.Filter;
-import ua.meetuply.backend.model.Meetup;
+import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.model.State.StateNames;
+import ua.meetuply.backend.service.LanguageService;
+import ua.meetuply.backend.model.Topic;
 import ua.meetuply.backend.service.StateService;
 
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.*;
+import static org.apache.commons.collections.CollectionUtils.isEmpty;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 
 @Repository
 public class MeetupDAO implements IDAO<Meetup> {
 
-    private static final String FIND_MEETUPS_BY_FILTER_DATES_RATING_QUERY = "SELECT * from meetup where meetup.start_date_time >= ? AND meetup.finish_date_time <= ? AND meetup.speaker_id in (select rated_user_id from rating group by rated_user_id having avg(value) >= ?)";
-    private static final String FIND_MEETUPS_BY_FILTER_DATEFROM_RATING_QUERY = "SELECT * from meetup where meetup.start_date_time >= ? AND meetup.speaker_id in (select rated_user_id from rating group by rated_user_id having avg(value) >= ?)";
-    private static final String FIND_MEETUPS_BY_FILTER_DATETO_RATING_QUERY = "SELECT * from meetup where meetup.finish_date_time <= ? AND meetup.speaker_id in (select rated_user_id from rating group by rated_user_id having avg(value) >= ?)";
-    private static final String FIND_MEETUPS_BY_FILTER_DATES_QUERY = "SELECT * from meetup where meetup.start_date_time >= ? AND meetup.finish_date_time <= ?";
-    private static final String FIND_MEETUPS_BY_FILTER_DATEFROM_QUERY = "SELECT * from meetup where meetup.start_date_time >= ?";
-    private static final String FIND_MEETUPS_BY_FILTER_DATETO_QUERY = "SELECT * from meetup where meetup.finish_date_time <= ?";
-    private static final String FIND_MEETUPS_BY_FILTER_RATING_QUERY = "SELECT * from meetup where meetup.speaker_id in (select rated_user_id from rating group by rated_user_id having avg(value) >= ?)";
     private static final String GET_MEETUP_CHUNK_WITH_USERNAME_AND_RATING = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on meetup.speaker_id = u.uid\n" +
             "inner join (select uid, coalesce((select avg(value) from rating where rated_user_id = uid), 0.0) as rating\n" +
-            "from user) as r on meetup.speaker_id = r.uid\n" +
+            "from user where is_deactivated = 0) as r on meetup.speaker_id = r.uid\n" +
             "order by start_date_time desc limit ?, ?;";
     private static final String IS_ATTENDEE_QUERY = "SELECT 1 FROM `meetup_attendees` WHERE `meetup_id` = ? AND `user_id` = ?";
     private static final String LEAVE_MEETUP_QUERY = "DELETE FROM `meetup_attendees` WHERE `meetup_id` = ? AND `user_id` = ?";
@@ -43,8 +37,8 @@ public class MeetupDAO implements IDAO<Meetup> {
     private static final String GET_USER_MEETUPS_NUMBER_QUERY = "select count(*) from meetup where speaker_id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM meetup";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM meetup WHERE uid = ?";
-    private static final String SAVE_QUERY = "INSERT INTO meetup (`uid`,`place`, `title`, `description`,`registered_attendees`, `min_attendees`, `max_attendees`," +
-            "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SAVE_QUERY = "INSERT INTO `meetup` (`place`, `title`, `description`,`registered_attendees`, `min_attendees`, `max_attendees`," +
+            "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM meetup WHERE uid = ?";
     private static final String UPDATE_QUERY = "UPDATE meetup SET place = ?, " +
             "title = ?, description = ? ,registered_attendees = ?, min_attendees = ?," +
@@ -52,19 +46,17 @@ public class MeetupDAO implements IDAO<Meetup> {
             "state_id = ?, speaker_id = ? WHERE uid = ?";
     private static final String GET_USER_FUTURE_MEETUPS = "SELECT *\n" +
             "FROM meetup\n" +
-            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) in (LOWER('scheduled'),lower('booked')))" +
+            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) in ('scheduled','booked')) and " +
+            "start_date_time > now() " +
             "order by start_date_time asc;";
-    private static final String GET_USER_PAST_MEETUPS = "SELECT *\n" +
-            "FROM meetup\n" +
-            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) = LOWER('passed'))" +
-            "order by start_date_time desc";
+    private static final String GET_USER_PAST_MEETUPS = "SELECT * FROM meetup WHERE speaker_id = ? AND finish_date_time < now() order by start_date_time desc";
     private static final String GET_ACTIVE_MEETUPS_CHUNK_WITH_RATING = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on meetup.speaker_id = u.uid\n" +
             "inner join (select uid, coalesce((select avg(value) from rating where rated_user_id = uid), 0.0) as rating\n" +
             "from user) as r\n" +
             "on r.uid = speaker_id\n" +
-            "where state_id IN (SELECT uid FROM state WHERE LOWER(name) in ('scheduled','booked'))\n" +
-            "order by start_date_time desc limit ?, ?;";
+            "where start_date_time > now() and state_id in (select uid from state where lower(name) in ('scheduled', 'booked'))\n" +
+            "order by start_date_time asc limit ?, ?;";
     private static final String GET_USER_MEETUPS_CHUNK_WITH_RATING = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on\n" +
             "meetup.speaker_id = u.uid\n" +
@@ -72,12 +64,26 @@ public class MeetupDAO implements IDAO<Meetup> {
             "where rated_user_id = ?) as r on u.uid = r.rated_user_id\n" +
             "and speaker_id = ?\n" +
             "order by start_date_time desc limit ?, ?;";
+    private static final String GET_USER_MEETUPS_BEFORE_DAY = "SELECT * from meetup\n" +
+            "inner join (select uid, firstname, surname, photo from user) as u on meetup.speaker_id = u.uid\n" +
+            "inner join (select uid, coalesce((select avg(value) from rating where rated_user_id = uid), 0.0) as rating\n" +
+            "from user where is_deactivated = 0) as r on meetup.speaker_id = r.uid\n" +
+            "where meetup.uid in (select meetup_id from meetup_attendees where user_id = ?) and\n" +
+            "start_date_time > now() and start_date_time < (now() + interval ? day)\n" +
+            "order by start_date_time asc;";
+
+
+
+    private static final String GET_TOPICS_BY_MEETUP = "SELECT * from `topic` WHERE `uid` in (SELECT `topic_id` from `meetup_topic` WHERE `meetup_id` = ?)";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private StateService stateService;
+
+    @Autowired
+    private LanguageService languageService;
 
     @Override
     public Meetup get(Integer id) {
@@ -92,11 +98,86 @@ public class MeetupDAO implements IDAO<Meetup> {
 
     @Override
     public void save(Meetup meetup) {
-        jdbcTemplate.update(SAVE_QUERY, null,
+
+
+        //System.out.println(meetup);
+        //INSERT INTO `meetup_topic` (topic_id, meetup_id) VALUES ()
+        jdbcTemplate.update(SAVE_QUERY,
                 meetup.getMeetupPlace(), meetup.getMeetupTitle(), meetup.getMeetupDescription(),
                 meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
                 meetup.getMeetupStartDateTime(), meetup.getMeetupFinishDateTime(), meetup.getStateId(), meetup.getSpeakerId());
     }
+
+
+    public void saveFull(FullMeetup meetup) {
+
+        Connection con;
+        try {
+            con = jdbcTemplate.getDataSource().getConnection();
+
+            con.setAutoCommit(false);
+
+            Statement statement = con.createStatement();
+
+
+            String str1 = "INSERT INTO `meetup` (`place`, `title`, `description`,`registered_attendees`, `min_attendees`, `max_attendees`," +
+                    "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (" +
+                    "'" + meetup.getMeetupPlace() + "'," +
+                    "'" + meetup.getMeetupTitle() + "'," +
+                    "'" + meetup.getMeetupDescription() + "'," +
+                    meetup.getMeetupRegisteredAttendees() + "," +
+                    meetup.getMeetupMinAttendees() + "," +
+                    meetup.getMeetupMaxAttendees() + ",'" +
+                    meetup.getMeetupStartDateTime() + "','" +
+                    meetup.getMeetupFinishDateTime() + "'," +
+                    meetup.getStateId() + "," +
+                    meetup.getSpeakerId() + ")";
+
+
+            statement.executeUpdate(str1, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = statement.getGeneratedKeys();
+
+
+            con.commit();
+
+            rs.next();
+
+            Integer id = rs.getInt(1);
+
+
+            String str2 = "INSERT INTO `meetup_language` (`language_id`,`meetup_id`) VALUES (" +
+                    languageService.get(meetup.getLanguage()).getLanguageId() + "," +
+                    id + ")";
+
+
+            statement.executeUpdate(str2);
+
+
+            for (Integer topic : meetup.getTopics()) {
+                String query = "insert into `meetup_topic` (topic_id,meetup_id) values('"
+                        + topic + "','" + id + "')";
+                statement.addBatch(query);
+            }
+
+            statement.executeBatch();
+            con.commit();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+
+    }
+
+
+    public List<Topic> getMeetupTopics(Integer i) {
+        List<Topic> topicList = jdbcTemplate.query(GET_TOPICS_BY_MEETUP, new Object[]{i},
+                new TopicRowMapper());
+        return topicList;
+    }
+
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -113,30 +194,31 @@ public class MeetupDAO implements IDAO<Meetup> {
         jdbcTemplate.update(DELETE_QUERY, id);
     }
 
+    public List<Meetup> getUserMeetupsBeforeDay(Integer userId, int day) {
+        return jdbcTemplate.query(GET_USER_MEETUPS_BEFORE_DAY,  new Object[]{userId, day}, new MeetupJoinedWithUserRowMapper());
+    }
+
     public List<Meetup> getMeetupsChunkWithUsernameAndRating(Integer startRow, Integer endRow) {
-        List<Meetup> meetupList = jdbcTemplate.query(GET_MEETUP_CHUNK_WITH_USERNAME_AND_RATING, new Object[]{startRow, endRow},
+        return jdbcTemplate.query(GET_MEETUP_CHUNK_WITH_USERNAME_AND_RATING, new Object[]{startRow, endRow},
                 new MeetupJoinedWithUserRowMapper());
-        return meetupList;
     }
 
     public List<Meetup> getMeetupsChunkActive(Integer startRow, Integer endRow) {
-        List<Meetup> meetupList = jdbcTemplate.query(GET_ACTIVE_MEETUPS_CHUNK_WITH_RATING, new Object[]{startRow, endRow},
+        return jdbcTemplate.query(GET_ACTIVE_MEETUPS_CHUNK_WITH_RATING, new Object[]{startRow, endRow},
                 new MeetupJoinedWithUserRowMapper());
-        return meetupList;
     }
 
     public List<Meetup> getUserMeetupsChunk(Integer userId, Integer startRow, Integer endRow) {
-        List<Meetup> meetupList = jdbcTemplate.query(GET_USER_MEETUPS_CHUNK_WITH_RATING, new Object[]{userId, userId,userId,startRow, endRow},
+        return jdbcTemplate.query(GET_USER_MEETUPS_CHUNK_WITH_RATING, new Object[]{userId, userId,userId,startRow, endRow},
                 new MeetupJoinedWithUserRowMapper());
-        return meetupList;
     }
 
-    public List<Meetup> getUserFutureMeetups(Integer userId){
+    public List<Meetup> getUserFutureMeetups(Integer userId) {
         return jdbcTemplate.query(GET_USER_FUTURE_MEETUPS, new Object[]{userId},
                 new MeetupRowMapper());
     }
 
-    public List<Meetup> getUserPastMeetups(Integer userId){
+    public List<Meetup> getUserPastMeetups(Integer userId) {
         return jdbcTemplate.query(GET_USER_PAST_MEETUPS, new Object[]{userId},
                 new MeetupRowMapper());
     }
@@ -163,17 +245,6 @@ public class MeetupDAO implements IDAO<Meetup> {
         return jdbcTemplate.query(IS_ATTENDEE_QUERY,
                 new Object[]{meetupID, userID},
                 new BeanPropertyRowMapper<>(Object.class)).size() > 0;
-    }
-
-    public List<Meetup> findMeetupsByFilter(Filter filter) {
-        Double rating = filter.getRatingFrom();
-        Timestamp dateFrom = filter.getDateFrom();
-        Timestamp dateTo = filter.getDateTo();
-        if (rating != null) {
-            return performQueryWhenRatingIsNotNull(rating, dateFrom, dateTo);
-        } else {
-            return performQueryWhenRatingIsNull(dateFrom, dateTo);
-        }
     }
 
     public List<Meetup> find(SQLPredicate where) {
@@ -219,7 +290,7 @@ public class MeetupDAO implements IDAO<Meetup> {
         List<SQLPredicate> andList = Arrays.asList(
                 new SQLPredicate("state_id", Operation.IN,
                         Arrays.asList(stateService.get(StateNames.SCHEDULED.name).getStateId(),
-                                      stateService.get(StateNames.BOOKED.name).getStateId())),
+                                stateService.get(StateNames.BOOKED.name).getStateId())),
                 new SQLPredicate("start_date_time", Operation.LESS, "NOW()")
         );
         SQLPredicate where = new SQLPredicate(Operation.AND, andList);
@@ -236,37 +307,16 @@ public class MeetupDAO implements IDAO<Meetup> {
         return find(where);
     }
 
-    private List<Meetup> performQueryWhenRatingIsNull(Timestamp dateFrom, Timestamp dateTo) {
-        if (nonNull(dateFrom) && isNull(dateTo)) {
-            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATEFROM_QUERY,
-                    new Object[]{dateFrom}, new MeetupRowMapper());
-        } else if (isNull(dateFrom) && nonNull(dateTo)) {
-            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATETO_QUERY,
-                    new Object[]{dateTo}, new MeetupRowMapper());
-        } else {
-            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATES_QUERY,
-                    new Object[]{dateFrom, dateTo}, new MeetupRowMapper());
-        }
-    }
-
-    private List<Meetup> performQueryWhenRatingIsNotNull(Double rating, Timestamp dateFrom, Timestamp dateTo) {
-        if (nonNull(dateFrom) && nonNull(dateTo)) {
-            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATES_RATING_QUERY,
-                    new Object[]{dateFrom, dateTo, rating}, new MeetupRowMapper());
-        } else if (nonNull(dateFrom)) {
-            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATEFROM_RATING_QUERY,
-                    new Object[]{dateFrom, rating}, new MeetupRowMapper());
-        } else if (nonNull(dateTo)) {
-            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_DATETO_RATING_QUERY,
-                    new Object[]{dateTo, rating}, new MeetupRowMapper());
-        } else {
-            return jdbcTemplate.query(FIND_MEETUPS_BY_FILTER_RATING_QUERY,
-                    new Object[]{rating}, new MeetupRowMapper());
-        }
-    }
-
     public List<Meetup> findBy(Filter filter) {
         List<SQLPredicate> andList = new LinkedList<>();
+        List<Integer> topicIds = null;
+        if (isEmpty(filter.getTopics())){
+            topicIds = null;
+        }
+        else topicIds = filter.getTopics().stream()
+                .map(Topic::getTopicId)
+                .collect(toList());
+
 
         if (filter.getDateFrom() != null)
             andList.add(new SQLPredicate("start_date_time", Operation.GREATER_EQUALS, filter.getDateFrom()));
@@ -284,27 +334,21 @@ public class MeetupDAO implements IDAO<Meetup> {
 
         System.out.println(new SQLPredicate(Operation.AND, Arrays.asList(
                 new SQLPredicate("meetup_id", Operation.EQUALS, "uid"),
-                new SQLPredicate("topic_id", Operation.IN, filter.getTopicIds()))));
+                new SQLPredicate("topic_id", Operation.IN, topicIds))));
 
-        if (filter.getTopicIds() != null && !filter.getTopicIds().isEmpty())
+        if (isNotEmpty(topicIds))
             andList.add(new SQLPredicate(Operation.EXISTS,
-                                new SQLSelect("meetup_topic", "topic_id",
-                                        new SQLPredicate(Operation.AND, Arrays.asList(
+                        new SQLSelect("meetup_topic", "topic_id",
+                        new SQLPredicate(Operation.AND, Arrays.asList(
                                                 new SQLPredicate("meetup_id", Operation.EQUALS, "uid"),
-                                                new SQLPredicate("topic_id", Operation.IN, filter.getTopicIds())
+                                                new SQLPredicate("topic_id", Operation.IN, topicIds)
                                                 )))));
 
         SQLPredicate where = new SQLPredicate(Operation.AND, andList);
-        return find(where);
+        StringBuilder query = new StringBuilder(GET_ALL_QUERY + " ");
+        query.append("WHERE ").append(where.toString());
+        System.out.println(query);
+        return jdbcTemplate.query(query.toString(), new MeetupRowMapper());
     }
-    // EXAMPLE SELECT * FROM meetup
-    // WHERE start_date_time >= '2000-11-09T14:49:21'
-    //   AND finish_date_time <= '2010-11-12T14:49:28'
-    //   AND speaker_id IN (SELECT user_id FROM avg_rating
-    //                      WHERE value >= 3.0)
-    //   AND speaker_id IN (SELECT user_id FROM avg_rating
-    //                      WHERE value <= 5.0)
-    //   AND  EXISTS (SELECT topic_id FROM meetup_topic
-    //                WHERE meetup_id = uid
-    //                  AND topic_id IN (9, 10) )
+
 }

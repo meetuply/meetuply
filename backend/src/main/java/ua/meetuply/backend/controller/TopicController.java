@@ -32,9 +32,19 @@ public class TopicController {
 	    return topicService.getIdByName(topicName);
     }
 
+    @GetMapping("/quantity/{topicId}")
+    public Integer getTopicIdByName(@PathVariable("topicId") Integer topicId) {
+        return topicService.getTopicQuantity(topicId);
+    }
+
     @GetMapping("topicName/{topicName}")
     public Iterable<Topic> getTopicByName(@PathVariable("topicName") String topicName) {
         return topicService.getByName(topicName);
+    }
+
+    @GetMapping("achievement/{achievementId}")
+    public Iterable<Topic> getAchievementTopics(@PathVariable("achievementId") Integer achievementId) {
+        return topicService.getAchievementTopics(achievementId);
     }
 
     @PostMapping()
