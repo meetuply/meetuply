@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.meetuply.backend.model.AppUser;
-import ua.meetuply.backend.model.Filter;
-import ua.meetuply.backend.model.Meetup;
+import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.FilterService;
 import ua.meetuply.backend.service.MeetupService;
@@ -63,8 +61,15 @@ public class MeetupController {
         return appUserService.getMeetupAttendees(meetupId);
     }
 
+
+    @GetMapping("/{meetupId}/topics")
+    public @ResponseBody Iterable<Topic> getTopics(@PathVariable("meetupId") Integer meetupId){
+        return meetupService.getMeetupTopics(meetupId);
+    }
+
     @PostMapping()
-    public ResponseEntity createMeetup(@Valid @RequestBody Meetup meetup){
+    public ResponseEntity createMeetup(@RequestBody @Valid FullMeetup meetup){
+
         meetupService.createMeetup(meetup);
         return ResponseEntity.ok().build();
     }

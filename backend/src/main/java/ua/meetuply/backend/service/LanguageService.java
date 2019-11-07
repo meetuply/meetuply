@@ -17,6 +17,10 @@ public class LanguageService {
         return languageDAO.get(id);
     }
 
+    public Language get(String name) {
+        return languageDAO.getLanguageByName(name);
+    }
+
     public void create(Language topic) {
         languageDAO.save(topic);
     }
