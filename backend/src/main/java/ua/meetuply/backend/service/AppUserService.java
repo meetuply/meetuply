@@ -42,7 +42,7 @@ public class AppUserService implements UserDetailsService {
 
     @Autowired
     ConfirmationTokenDAO confirmationTokenDAO;
-   
+
     @Autowired
     AchievementService achievementService;
 

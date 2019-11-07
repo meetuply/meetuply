@@ -21,12 +21,12 @@ public class LanguageService {
         return languageDAO.getLanguageByName(name);
     }
 
-    public void create(Language topic) {
-        languageDAO.save(topic);
+    public void create(Language lang) {
+        languageDAO.save(lang);
     }
 
-    public void update(Language topic) {
-        languageDAO.update(topic);
+    public void update(Language lang) {
+        languageDAO.update(lang);
     }
 
     public void delete(Integer id) {
@@ -37,9 +37,23 @@ public class LanguageService {
         return languageDAO.getAll();
     }
 
-
     public List<Language> getUserLanguages(Integer id) {
         return languageDAO.getUserLanguages(id);
+    }
+
+    public void updateUserLanguages(Integer userId, Iterable<Integer> languagesIds) {
+        deleteUserLanguage(userId);
+        for (Integer id: languagesIds) {
+            addUserLanguage(userId, id);
+        }
+    }
+
+    public void deleteUserLanguage(Integer userId) {
+        languageDAO.deleteUserLanguages(userId);
+    }
+
+    public void addUserLanguage(Integer userId, Integer langId) {
+        languageDAO.addUserLanguages(userId, langId);
     }
 
 }

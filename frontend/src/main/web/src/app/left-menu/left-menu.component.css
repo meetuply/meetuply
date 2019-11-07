@@ -60,6 +60,11 @@ app-left-menu-item {
   margin: 10px;
 }
 
+img, span {
+  outline: none;
+  cursor: pointer;
+}
+
 /*
 
 if small screen then makeicons dissapear and border bottom light up

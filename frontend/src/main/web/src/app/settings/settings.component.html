@@ -1,6 +1,59 @@
 <app-left-menu></app-left-menu>
-
 <div class='content'>
-  <app-button [text]="'Change password'" [fontSize]="20" [type]="'1'" [href]="'../password'"></app-button>
+  <form class="form" (ngSubmit)="f.form.valid && apply()" #f="ngForm">
+    <app-button [text]="'Change password'" [fontSize]="20" [type]="'1'" [href]="'../password'"></app-button>
+
+    <p *ngIf="error" class='error'>{{error}}</p>
+
+    <div class='form_line'><span>Name:</span><input type="text" name="name" placeholder="name"
+                                                     #name="ngModel" [(ngModel)]="this.user.firstName" required autocomplete="off" />
+    </div>
+    <div *ngIf="f.submitted && name.invalid" class="invalid-feedback">
+      <div *ngIf="name.errors.required">Name is required</div>
+    </div>
+
+    <div class='form_line'><span>Surname:</span><input type="lastName" name="lastName" placeholder="surname"
+                                                    #lastName="ngModel" [(ngModel)]="this.user.lastName" required autocomplete="off" />
+    </div>
+    <div *ngIf="f.submitted && lastName.invalid" class="invalid-feedback">
+      <div *ngIf="lastName.errors.required">Surname is required</div>
+    </div>
+
+
+    <div class='form_line'><span>Email:</span><input class="form-control" type="text" name="email" placeholder="email" [(ngModel)]="this.user.email" #email="ngModel" [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required email />
+    </div>
+    <div *ngIf="f.submitted && email.invalid" class="invalid-feedback">
+      <div *ngIf="email.errors.required">Email is required</div>
+      <div *ngIf="email.errors.email">Email must be a valid email address</div>
+    </div>
+
+    <div class='form_line'><span>URL photo:</span><input class="form-control" type="text" name="photo" placeholder="photo" [(ngModel)]="this.user.photo" #photo="ngModel" [ngClass]="{ 'is-invalid': f.submitted && email.invalid }"/>
+    </div>
+
+    <div class='form_line'><span>Location:</span><input type="text" name="location" #location="ngModel"
+                                                        [(ngModel)]="this.user.location" placeholder="location"/></div>
+
+
+    <div class='form_line'>
+      <span>Languages:</span>
+      <div class='topics_list'>
+        <app-toggle-button *ngFor="let language of this.languages" id='{{language.languageId}}'
+                           text='{{language.name}}' (toggled)="langToggled($event)"
+                           [active]="this.selectedLanguages.has(language.languageId)"></app-toggle-button>
+      </div>
+    </div>
+    <div class='form_line'>
+      <span>About me:</span>
+      <textarea placeholder="Description" cols="30" rows="8" name="description"
+                [(ngModel)]="this.user.description" autocomplete="off"></textarea>
+    </div>
+
+    <button class="button btn1">Save</button>
+    <!--
+    <div class='extra'>
+      <app-button text='Create meetup' (onClick)="submit($event)" fontSize='24' type='1'></app-button>
+    </div>
+  -->
+  </form>
 </div>
 

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.Language;
 import ua.meetuply.backend.service.LanguageService;
 
-
 import javax.validation.Valid;
 
 @RequestMapping("api/languages")
@@ -51,6 +50,12 @@ public class LanguageController {
             ResponseEntity.badRequest().build();
         }
         languageService.delete(languageId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("user/{userId}")
+    public ResponseEntity updateUserLanguages(@PathVariable("userId") Integer userId, @RequestBody Iterable<Integer> languagesIds) {
+        languageService.updateUserLanguages(userId, languagesIds);
         return ResponseEntity.ok().build();
     }
 }
