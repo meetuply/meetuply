@@ -26,14 +26,15 @@ import { AchievementPanelComponent } from "./achievement-panel/achievement-panel
 import { AchievementsPageComponent } from "./achievements-page/achievements-page.component";
 import { TopicsPageComponent } from "./topics-page/topics-page.component";
 import { TopicPageComponent } from "./topic-page/topic-page.component";
-import {BanReasonsPageComponent} from "./ban-reasons-page/ban-reasons-page.component";
-import {BanReasonPageComponent} from "./ban-reason-page/ban-reason-page.component";
-import {ChangePasswordComponent} from "./change-password/change-password.component";
-import {SettingsComponent} from "./settings/settings.component";
-import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
-import {FeedbackCreatePageComponent} from "./feedback-create-page/feedback-create-page.component";
-import {BanPageComponent} from "./ban-page/ban-page.component";
-import {BansPageComponent} from "./bans-page/bans-page.component";
+import { BanReasonsPageComponent } from "./ban-reasons-page/ban-reasons-page.component";
+import { BanReasonPageComponent } from "./ban-reason-page/ban-reason-page.component";
+import { ChangePasswordComponent } from "./change-password/change-password.component";
+import { SettingsComponent } from "./settings/settings.component";
+import { DashboardPageComponent } from "./dashboard-page/dashboard-page.component";
+import { FeedbackCreatePageComponent } from "./feedback-create-page/feedback-create-page.component";
+import { BanPageComponent } from "./ban-page/ban-page.component";
+import { BansPageComponent } from "./bans-page/bans-page.component";
+import { NotificationsPageComponent } from './notifications-page/notifications-page.component'
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -52,7 +53,7 @@ const routes: Routes = [
   { path: 'blog/create', component: BlogCreatePageComponent, canActivate: [AuthGuard] },
   { path: 'blog/:id', component: BlogPageComponent, canActivate: [AuthGuard] },
   { path: 'blog/user/:id', component: BlogListPageComponent, canActivate: [AuthGuard] },
-  { path: 'confirm', component: RegConfirmationComponent},
+  { path: 'confirm', component: RegConfirmationComponent },
   { path: 'deactivation', component: UserDeactivationComponent, canActivate: [AdminGuard] },
   { path: 'achievements', component: AchievementsPageComponent, canActivate: [AdminGuard] },
   { path: 'topics', component: TopicsPageComponent, canActivate: [AdminGuard] },
@@ -62,9 +63,9 @@ const routes: Routes = [
   { path: 'speakers/:id/ban', component: BanPageComponent, canActivate: [AuthGuard] },
   { path: 'speakers/:id/view_bans', component: BansPageComponent, canActivate: [AdminGuard] },
   { path: 'achievements/create', component: AchievementCreatePageComponent, canActivate: [AdminGuard] },
-  { path: 'password', component: ChangePasswordComponent},
-  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
-
+  { path: 'password', component: ChangePasswordComponent },
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
+  { path: 'notifications', component: NotificationsPageComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

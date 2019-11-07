@@ -103,7 +103,7 @@ export class LeftMenuComponent implements OnInit {
   }
 
   notificationClick(val: any) {
-    //this.router.navigateByUrl("/notifications")
+    this.router.navigateByUrl("/notifications")
   }
 
 
