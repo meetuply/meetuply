@@ -69,37 +69,50 @@ export class LeftMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-   
+
     this.user = this.userService.currentUser;
     this.route.pathFromRoot[1].url.subscribe(val => {
 
       if (val[0].toString() == 'create' && val[1].toString() == 'meetup') {
         this.selectedItem = 'meetups';
+        this.notificationService.connect(this.userService.currentUser.userId, data => this.onMessage(data))
       } else if (val[0].toString() == 'chats') {
         this.selectedItem = 'chat'
+        this.notificationService.connect(this.userService.currentUser.userId, data => this.onMessage(data))
       }
       else {
         this.selectedItem = val[0].toString()
+
+
+
+        if (val[0].toString() == 'notifications') {
+          //do not init notification service
+        } else {
+
+          this.notificationService.connect(this.userService.currentUser.userId, data => this.onMessage(data))
+        }
+
       }
 
     });
 
 
-    this.notificationService.connect(this.userService.currentUser.userId, data => {
-      //alert("New notification!!Do what you want with it, I go to sleep");
 
-      let msg = JSON.parse(data.body);
-      this.tempNotifications.push(msg);
 
-      setTimeout(() => {
-        const index = this.tempNotifications.indexOf(msg, 0);
-        this.tempNotifications.splice(index, 1)
-      }, 3000)
+  }
 
-      console.log("new notification!")
-      console.log(data)
-    })
 
+  onMessage(data: any) {
+    let msg = JSON.parse(data.body);
+    this.tempNotifications.push(msg);
+
+    setTimeout(() => {
+      const index = this.tempNotifications.indexOf(msg, 0);
+      this.tempNotifications.splice(index, 1)
+    }, 3000)
+
+    console.log("new notification!")
+    console.log(data)
   }
 
   notificationClick(val: any) {

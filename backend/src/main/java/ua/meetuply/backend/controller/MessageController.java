@@ -40,9 +40,9 @@ public class MessageController {
         n.setUid(1);
         n.setDateTime(LocalDateTime.now());
         n.setIsRead(false);
-        n.setReceiverId(103);
+        n.setReceiverId(101);
         n.setHtmlText("<p>-</p>");
-        n.setPlainText("New message income!");
+        n.setPlainText("New message income: " + message.getContent());
 
         System.out.println(message.getFrom());
         System.out.println(n.getReceiverId());
@@ -52,7 +52,7 @@ public class MessageController {
         n2.setNotificationID(1);
         n2.setDate_time(LocalDateTime.now());
         n2.setIsRead(0);
-        n2.setReceiverID(103);
+        n2.setReceiverID(101);
         n2.setTemplateID(1);
         notififcationService.saveNotification(n2);
 
