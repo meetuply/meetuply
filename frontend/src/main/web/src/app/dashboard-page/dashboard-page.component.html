@@ -43,7 +43,7 @@
             [meetupListItem]="meetup"
             [isMy]="userService.currentUser.userId == meetup.speakerId"
             [state]="stateService.states[meetup.stateId]"
-            [showAuthorInfo]=false>
+            [showAuthorInfo]=true>
           </app-meetup-list-item>
         </div>
       </div>

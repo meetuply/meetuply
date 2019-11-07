@@ -64,8 +64,8 @@ public class MeetupController {
     }
 
     @GetMapping("/soon/{userId}/{day}")
-    public @ResponseBody Iterable<Meetup> getAttendees(@PathVariable("userId") Integer userId,
-                                                       @PathVariable("day") int day){
+    public @ResponseBody Iterable<Meetup> getMeetupsBeforeDay(@PathVariable("userId") Integer userId,
+                                                                  @PathVariable("day") int day){
         return meetupService.getUserMeetupsBeforeDay(userId, day);
     }
 

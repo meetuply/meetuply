@@ -1,11 +1,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <app-left-menu></app-left-menu>
 <div class='content'>
-  <p class='title'>Meetups<app-button *ngIf="userService.currentUser.role.roleName != 'admin'"
-                                      [text]="'Create meetup'"
-                                      [type]='1' fontSize='24' (onClick)="addButtonClicked($event)"></app-button>
-  </p>
-
+  <p class='title'>Meetups</p>
+  <div class="create-meetup" ><app-button *ngIf="userService.currentUser.role.roleName != 'admin'"
+              [text]="'Create meetup'"
+              [type]='1' fontSize='24' (onClick)="addButtonClicked($event)"></app-button>
+  </div>
   <div class='search_div'>
     <div class='search_icon'></div>
     <input type="text" name="search" placeholder="search"/>

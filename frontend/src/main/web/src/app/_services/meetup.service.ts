@@ -36,8 +36,8 @@ export class MeetupService {
     return this.http.get<Meetup[]>(this.meetupApiUrl + "future/"+userId)
   }
 
-  getSoonMeetups(userId: number, day: number): Observable<Meetup[]> {
-    return this.http.get<Meetup[]>(this.meetupApiUrl + "soon/"+userId+"/"+day)
+  getSoonMeetups(userId: number, day: number): Observable<MeetupListItem[]> {
+    return this.http.get<MeetupListItem[]>(this.meetupApiUrl + "soon/"+userId+"/"+day)
   }
 
   getPastMeetups(userId: number): Observable<Meetup[]> {

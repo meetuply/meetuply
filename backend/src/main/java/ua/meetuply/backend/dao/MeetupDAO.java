@@ -52,7 +52,8 @@ public class MeetupDAO implements IDAO<Meetup> {
             "state_id = ?, speaker_id = ? WHERE uid = ?";
     private static final String GET_USER_FUTURE_MEETUPS = "SELECT *\n" +
             "FROM meetup\n" +
-            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) in ('scheduled','booked'))" +
+            "WHERE speaker_id = ? AND state_id IN (SELECT uid FROM state WHERE LOWER(name) in ('scheduled','booked')) and " +
+            "start_date_time > now() " +
             "order by start_date_time asc;";
     private static final String GET_USER_PAST_MEETUPS = "SELECT * FROM meetup WHERE speaker_id = ? AND finish_date_time < now() order by start_date_time desc";
     private static final String GET_ACTIVE_MEETUPS_CHUNK_WITH_RATING = "SELECT * from meetup\n" +
@@ -60,7 +61,7 @@ public class MeetupDAO implements IDAO<Meetup> {
             "inner join (select uid, coalesce((select avg(value) from rating where rated_user_id = uid), 0.0) as rating\n" +
             "from user) as r\n" +
             "on r.uid = speaker_id\n" +
-            "where start_date_time > now() \n" +
+            "where start_date_time > now() and state_id in (select uid from state where lower(name) in ('scheduled', 'booked'))\n" +
             "order by start_date_time asc limit ?, ?;";
     private static final String GET_USER_MEETUPS_CHUNK_WITH_RATING = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on\n" +
@@ -69,9 +70,15 @@ public class MeetupDAO implements IDAO<Meetup> {
             "where rated_user_id = ?) as r on u.uid = r.rated_user_id\n" +
             "and speaker_id = ?\n" +
             "order by start_date_time desc limit ?, ?;";
-    private static final String GET_USER_MEETUPS_BEFORE_DAY = "SELECT * FROM meetup \n" +
-            "\twhere uid in (select meetup_id from meetup_attendees where user_id = ?) and\n" +
-            " start_date_time > now() and start_date_time < (now() + interval ? day) order by start_date_time asc";
+    private static final String GET_USER_MEETUPS_BEFORE_DAY = "SELECT * from meetup\n" +
+            "inner join (select uid, firstname, surname, photo from user) as u on meetup.speaker_id = u.uid\n" +
+            "inner join (select uid, coalesce((select avg(value) from rating where rated_user_id = uid), 0.0) as rating\n" +
+            "from user where is_deactivated = 0) as r on meetup.speaker_id = r.uid\n" +
+            "where meetup.uid in (select meetup_id from meetup_attendees where user_id = ?) and\n" +
+            "start_date_time > now() and start_date_time < (now() + interval ? day)\n" +
+            "order by start_date_time asc;";
+
+
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -114,25 +121,22 @@ public class MeetupDAO implements IDAO<Meetup> {
     }
 
     public List<Meetup> getUserMeetupsBeforeDay(Integer userId, int day) {
-        return jdbcTemplate.query(GET_USER_MEETUPS_BEFORE_DAY, new MeetupRowMapper(), userId, day);
+        return jdbcTemplate.query(GET_USER_MEETUPS_BEFORE_DAY,  new Object[]{userId, day}, new MeetupJoinedWithUserRowMapper());
     }
 
     public List<Meetup> getMeetupsChunkWithUsernameAndRating(Integer startRow, Integer endRow) {
-        List<Meetup> meetupList = jdbcTemplate.query(GET_MEETUP_CHUNK_WITH_USERNAME_AND_RATING, new Object[]{startRow, endRow},
+        return jdbcTemplate.query(GET_MEETUP_CHUNK_WITH_USERNAME_AND_RATING, new Object[]{startRow, endRow},
                 new MeetupJoinedWithUserRowMapper());
-        return meetupList;
     }
 
     public List<Meetup> getMeetupsChunkActive(Integer startRow, Integer endRow) {
-        List<Meetup> meetupList = jdbcTemplate.query(GET_ACTIVE_MEETUPS_CHUNK_WITH_RATING, new Object[]{startRow, endRow},
+        return jdbcTemplate.query(GET_ACTIVE_MEETUPS_CHUNK_WITH_RATING, new Object[]{startRow, endRow},
                 new MeetupJoinedWithUserRowMapper());
-        return meetupList;
     }
 
     public List<Meetup> getUserMeetupsChunk(Integer userId, Integer startRow, Integer endRow) {
-        List<Meetup> meetupList = jdbcTemplate.query(GET_USER_MEETUPS_CHUNK_WITH_RATING, new Object[]{userId, userId,userId,startRow, endRow},
+        return jdbcTemplate.query(GET_USER_MEETUPS_CHUNK_WITH_RATING, new Object[]{userId, userId,userId,startRow, endRow},
                 new MeetupJoinedWithUserRowMapper());
-        return meetupList;
     }
 
     public List<Meetup> getUserFutureMeetups(Integer userId){
