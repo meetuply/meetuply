@@ -7,6 +7,7 @@ import {MeetupService} from "../_services/meetup.service";
 import {BlogListItem} from "../_models/blogListItem";
 import {BlogService} from "../_services/blog.service";
 import {StateService} from "../_services/state.service";
+import {MeetupListItem} from "../_models/meetupListItem";
 
 
 @Component({
@@ -18,7 +19,7 @@ export class DashboardPageComponent implements OnInit {
 
   id: number;
   soonPeriodDaysFromNow = 3;
-  soonMeetups: Meetup[] = [];
+  soonMeetups: MeetupListItem[] = [];
   userMeetups: Meetup[] = [];
   lastNotifications = [];
   blogPosts: BlogListItem[] = [];
