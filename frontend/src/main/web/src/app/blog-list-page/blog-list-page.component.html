@@ -6,14 +6,12 @@
     <div class="filter">
       <p>Filter by:</p>
       <p class="filter-on" id="subs" (click)="filterBy($event, 'subs')">subscriptions</p>
-      <p>|</p>
-      <p class="filter-off" id="all" (click)="filterBy($event, 'all')">all</p>
-      <p>|</p>
-      <p class="filter-off" id="my" (click)="filterBy($event, 'my')">my posts</p>
+      <p class="filter-off" id="all" (click)="filterBy($event, 'all')">| all</p>
+      <p class="filter-off" id="my" (click)="filterBy($event, 'my')">| my posts</p>
     </div>
 
     <div class="create-new">
-      <app-button fontSize='20' [routerLink]="['/blog/create']" type='1' text='New post'></app-button>
+      <app-button *ngIf="user.role.roleName == 'user'" fontSize='20' [routerLink]="['/blog/create']" type='1' text='New post'></app-button>
     </div>
   </div>
 

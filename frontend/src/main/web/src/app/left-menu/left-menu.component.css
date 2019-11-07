@@ -60,6 +60,7 @@ app-left-menu-item {
   margin: 10px;
 }
 
+
 .notifications {
   position: fixed;
   bottom: 0;
@@ -75,4 +76,10 @@ app-left-menu-item {
   border-radius: 6px;
   padding: 8px;
 }
+
+img, span {
+  outline: none;
+  cursor: pointer;
+}
+
 

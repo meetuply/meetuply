@@ -4,6 +4,7 @@ import {BlogService} from "../_services/blog.service"
 import {Subscription} from "rxjs";
 import {UserService} from "../_services";
 import {ActivatedRoute} from "@angular/router";
+import {User} from "../_models";
 
 @Component({
   selector: 'app-blog-list-page',
@@ -14,7 +15,7 @@ import {ActivatedRoute} from "@angular/router";
 export class BlogListPageComponent implements OnInit {
 
   id: number;
-
+  user: User;
   loading = false;
   lastRow = 0;
   maxPostsOnPage: number;
@@ -30,6 +31,7 @@ export class BlogListPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.user = this.userService.currentUser;
     if (this.router.snapshot.url.join('/').includes("blog/user/"))
       this.changeFilter("user");
     else
@@ -137,6 +139,7 @@ export class BlogListPageComponent implements OnInit {
         this.id = this.router.snapshot.params['id'];
         break;
     }
+
   }
 
   itemDeletedHandler(deleted: BlogListItem) {

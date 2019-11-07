@@ -1,22 +1,15 @@
 package ua.meetuply.backend.config.authentication;
 
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.service.AppUserService;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 @Setter
 @Component

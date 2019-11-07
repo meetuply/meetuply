@@ -3,7 +3,8 @@ import { MenuItem } from '../_models/menuItem';
 import { HttpClient } from "@angular/common/http";
 import { Router, ActivatedRoute } from "@angular/router";
 import { AuthenticationService, UserService } from "../_services";
-import { NotificationService } from '../_services/notification.service'
+import {User} from "../_models";
+
 
 @Component({
   selector: 'app-left-menu',
@@ -15,21 +16,25 @@ import { NotificationService } from '../_services/notification.service'
 export class LeftMenuComponent implements OnInit {
 
   selectedItem: string;
+  user: User;
 
   menu_items: MenuItem[] = [
-    { icon: "apps.png", text: 'dashboard', redirectTo: "dashboard" },
-    { icon: "globe.png", text: 'meetups', redirectTo: "meetups" },
-    { icon: "user.png", text: 'speakers', redirectTo: "speakers" },
-    { icon: "comment.png", text: 'chat', redirectTo: "chats" },
-    { icon: "calendar.png", text: 'blog', redirectTo: "blog" },
-    { icon: "bell.png", text: 'notifications', redirectTo: "notifications" },
-    { icon: "star.png", text: 'achievements', redirectTo: "achievements" }
+    { icon: "apps.png", text: 'dashboard', redirectTo: "dashboard", userCanSee: true, adminCanSee: false},
+    { icon: "globe.png", text: 'meetups', redirectTo: "meetups", userCanSee: true, adminCanSee: true},
+    { icon: "user.png", text: 'speakers', redirectTo: "speakers", userCanSee: true, adminCanSee: false },
+    { icon: "user.png", text: 'users', redirectTo: "deactivation", userCanSee: false, adminCanSee: true },
+    { icon: "comment.png", text: 'chat', redirectTo: "chats", userCanSee: true, adminCanSee: false },
+    { icon: "calendar.png", text: 'blog', redirectTo: "blog", userCanSee: true, adminCanSee: true },
+    { icon: "bell.png", text: 'notifications', redirectTo: "notifications", userCanSee: true, adminCanSee: false },
+    { icon: "star.png", text: 'achievements', redirectTo: "achievements", userCanSee: false, adminCanSee: true },
+    { icon: "comment.png", text: 'bans', redirectTo: "ban_reasons", userCanSee: false, adminCanSee: true },
+    { icon: "apps.png", text: 'topics', redirectTo: "topics", userCanSee: false, adminCanSee: true },
   ];
 
 
   bottom_menu_items: MenuItem[] = [
-    { icon: "settings.svg", text: 'settings', redirectTo: "settings" },
-    { icon: "turn-off.svg", text: 'log out', redirectTo: null }
+    { icon: "settings.svg", text: 'settings', redirectTo: "settings", userCanSee: true, adminCanSee: true },
+    { icon: "turn-off.svg", text: 'log out', redirectTo: null, userCanSee: true, adminCanSee: true }
   ];
 
 
@@ -41,7 +46,6 @@ export class LeftMenuComponent implements OnInit {
   constructor(private http: HttpClient,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private notificationService: NotificationService,
     public userService: UserService,
     private route: ActivatedRoute
   ) {
@@ -62,6 +66,7 @@ export class LeftMenuComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userService.getCurrentUser().subscribe(user => this.user = user);
 
     this.route.pathFromRoot[1].url.subscribe(val => {
 

@@ -63,4 +63,10 @@ public class LanguageDAO implements IDAO<Language>, RowMapper<Language> {
     public void delete(Integer id) {
         jdbcTemplate.update("DELETE FROM language WHERE uid = ?", id);
     }
+
+    public void deleteUserLanguages(Integer userId) { jdbcTemplate.update("DELETE FROM user_language WHERE user_id = ?", userId); }
+
+    public void addUserLanguages(Integer userId, Integer langId) {
+        jdbcTemplate.update("INSERT INTO user_language (user_id, language_id) VALUES (?, ?)", userId, langId);
+    }
 }

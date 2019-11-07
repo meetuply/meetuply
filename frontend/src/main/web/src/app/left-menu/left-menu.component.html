@@ -2,9 +2,11 @@
 	<div id='avatar'>
 
 
-		<img *ngIf=userService.currentUser.photo src={{userService.currentUser.photo}}>
-		<img *ngIf=!userService.currentUser.photo src="assets/img/download.png">
-		<span>{{userService.currentUser.firstName + " " + userService.currentUser.lastName}}</span>
+
+    <img *ngIf='user && user.photo' src={{user.photo}} [routerLink]="['/speakers/',user.userId]">
+    <img *ngIf='user && !user.photo' src="assets/img/download.png" [routerLink]="['/speakers/',user.userId]">
+		<span *ngIf='user' [routerLink]="['/speakers/',user.userId]">{{user.firstName + " " +  user.lastName}}</span>
+
 
 
 	</div>
