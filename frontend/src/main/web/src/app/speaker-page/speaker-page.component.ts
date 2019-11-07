@@ -10,7 +10,7 @@ import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
 import {RatingService} from "../_services/rating.service";
 import {BlogService} from "../_services/blog.service";
-import {BlogListItem} from "../_models/blog-list-item";
+import {BlogListItem} from "../_models/blogListItem";
 import {Subscription} from "rxjs";
 import {Meetup} from "../_models/meetup";
 import {StateService} from "../_services/state.service";

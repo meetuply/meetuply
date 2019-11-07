@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {BlogCommentItem} from "../_models/blog-comment-item";
+import {BlogCommentItem} from "../_models/blogCommentItem";
 import {UserService} from "../_services";
 import {BlogService} from "../_services/blog.service";
 

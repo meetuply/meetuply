@@ -1,6 +1,6 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {BlogService} from "../_services/blog.service";
-import {BlogListItem} from "../_models/blog-list-item";
+import {BlogListItem} from "../_models/blogListItem";
 import {UserService} from "../_services";
 
 

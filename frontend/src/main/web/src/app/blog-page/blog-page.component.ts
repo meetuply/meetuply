@@ -5,7 +5,7 @@ import {Subscription} from "rxjs";
 import {UserService} from "../_services";
 import {BlogService} from "../_services/blog.service";
 import {BlogPost} from "../_models";
-import {BlogCommentItem} from "../_models/blog-comment-item";
+import {BlogCommentItem} from "../_models/blogCommentItem";
 import {BlogComment} from "../_models/comment";
 
 @Component({

@@ -62,10 +62,7 @@ export class CreateMeetupPageComponent implements OnInit {
       meetupFinishDateTime: end_date
     };
     this.meetupService.create(meetup).subscribe(data => {
-      if (data == null) {
-        alert("meetup created!")
-        //supposed to redirect somewhere
-      }
+      window.location.href ='/meetups';
     }, error => {
       alert(error)
     });

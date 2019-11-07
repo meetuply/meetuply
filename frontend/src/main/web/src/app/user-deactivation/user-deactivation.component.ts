@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {SpeakerListItem} from "../_models/speaker-list-item";
+import {SpeakerListItem} from "../_models/speakerListItem";
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "../_services";
 import {RatingService} from "../_services/rating.service";

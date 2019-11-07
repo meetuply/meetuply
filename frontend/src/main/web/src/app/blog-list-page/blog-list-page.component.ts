@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BlogListItem} from '../_models/blog-list-item';
+import {BlogListItem} from '../_models/blogListItem';
 import {BlogService} from "../_services/blog.service"
 import {Subscription} from "rxjs";
 import {UserService} from "../_services";

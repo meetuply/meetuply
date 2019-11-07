@@ -31,6 +31,14 @@ public class TopicService {
         return result;
     }
 
+    public Integer getTopicQuantity (Integer topicId){
+        return topicDAO.getTopicQuantity(topicId);
+    }
+
+    public List<Topic> getAchievementTopics(Integer achievementId){
+        return topicDAO.getAchievementTopics(achievementId);
+    }
+
     public void create(Topic topic){
         topicDAO.save(topic);
     }

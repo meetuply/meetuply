@@ -4,7 +4,7 @@ import {UserService} from '../_services/user.service'
 import {Subscription} from "rxjs";
 import {Meetup} from "../_models/meetup";
 import {MeetupService} from "../_services/meetup.service";
-import {BlogListItem} from "../_models/blog-list-item";
+import {BlogListItem} from "../_models/blogListItem";
 import {BlogService} from "../_services/blog.service";
 import {StateService} from "../_services/state.service";
 

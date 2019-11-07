@@ -48,6 +48,14 @@ export class TopicService {
     return this.http.get<Topic[]>(this.topicApiUrl + `topicName/${term}`);
   }
 
+  getAchievementTopics(id: number): Observable<Topic[]> {
+    return this.http.get<Topic[]>(this.topicApiUrl + "achievement/"+id);
+  }
+
+  getTopicQuantity(id: number) {
+    return this.http.get<number>(this.topicApiUrl+ "quantity/"+id);
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
