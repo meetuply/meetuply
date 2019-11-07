@@ -1,1 +1,21 @@
-<p>notifications-page works!</p>
+<app-left-menu></app-left-menu>
+<div class='content'>
+
+
+
+	<div class='title'>Notifications:</div>
+
+	<div class='filters'>
+		<span [ngClass]="getNewClass()" (click)="newClick()">New</span>
+		<span> | </span>
+		<span [ngClass]="getOldClass()" (click)="oldClick()">Old</span>
+		<span> | </span>
+		<span [ngClass]="getAllClass()" (click)="allClick()">All</span>
+	</div>
+	<div class='notifications' *ngIf='loadedNotifications.length > 0'>
+		<div class='notification' *ngFor="let notification of loadedNotifications">
+			{{notification.plain_text}}
+		</div>
+	</div>
+
+</div>

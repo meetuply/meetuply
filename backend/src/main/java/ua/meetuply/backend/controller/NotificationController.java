@@ -22,22 +22,7 @@ public class NotificationController {
     private AppUserService appUserService;
 
 
-    @GetMapping()
-    public @ResponseBody
-    List<Map<String, Object>> getAllUserNotifications() {
-        return notificationService.getAllUserNotifications(appUserService.getCurrentUserID());
-    }
 
-    @GetMapping("/read")
-    public @ResponseBody
-    List<Map<String, Object>> getAllUserReadNotifications() {
-        return notificationService.getReadedOrUnreadedNotifications(appUserService.getCurrentUserID(), 1);
-    }
-
-    @GetMapping("/unread")
-    public List<Map<String, Object>> getAllUserUnreadNotifications() {
-        return notificationService.getReadedOrUnreadedNotifications(appUserService.getCurrentUserID(), 0);
-    }
 
     @DeleteMapping("/{id}")
     public void deleteNotification(@PathVariable("id") Integer id) {
