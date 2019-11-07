@@ -116,7 +116,7 @@ export class CreateMeetupPageComponent implements OnInit {
 
     this.meetupService.create(meetup).subscribe(data => {
 
-      this.goBack();
+      this.router.navigate(['meetups']);
 
     }, error => {
 
