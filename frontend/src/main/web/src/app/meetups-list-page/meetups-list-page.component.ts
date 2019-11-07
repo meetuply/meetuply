@@ -5,6 +5,7 @@ import { Subscription } from "rxjs";
 import { UserService } from "../_services";
 import { StateService } from "../_services/state.service";
 import { Router } from "@angular/router";
+import {User} from "../_models";
 
 @Component({
   selector: 'app-meetups-list-page',
@@ -27,13 +28,15 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
   showActiveFlag = true;
   showAllFlag = false;
   showMyFlag = false;
+  user: User;
 
 
   constructor(private router: Router,
     public userService: UserService,
     private meetupService: MeetupService,
     public stateService: StateService) {
-    this.userID = this.userService.currentUser.userId;
+    this.user = this.userService.currentUser;
+    this.userID = this.user.userId;
 
   }
 

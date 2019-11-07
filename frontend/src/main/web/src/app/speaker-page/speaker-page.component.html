@@ -27,9 +27,9 @@
 
         </div>
         <div class='additional' *ngIf="!isCurrentUser()">
-          <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
+          <app-button *ngIf="userService.currentUser.role.roleName != 'admin'" [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
           </app-button>
-          <app-button text='message' type='1' (click)="message()" fontSize='20'></app-button>
+          <app-button *ngIf="userService.currentUser.role.roleName != 'admin'" text='message' type='1' (click)="message()" fontSize='20'></app-button>
           <div class='additional' *ngIf="this.userService.currentUser.role.roleName === 'admin'">
             <app-button [text]="deactivationText()" [type]='deactivationType()' (onClick)="deactivationButtonClicked($event)" fontSize='20'></app-button>
           </div>
