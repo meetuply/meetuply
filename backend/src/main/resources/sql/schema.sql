@@ -1,16 +1,17 @@
 -- ************************************** `achievement`
-CREATE TABLE `achievement`
+create table `achievement`
 (
-    `uid`         integer unsigned NOT NULL AUTO_INCREMENT,
-    `title`       varchar(100)     NOT NULL,
-    `description` varchar(400)     NOT NULL,
-    `icon`        varchar(500)     NOT NULL,
-    `followers`   integer          NULL,
-    `posts`       integer          NULL,
-    `rating`      float            NULL,
-    `meetups`     integer          NULL,
-
-    PRIMARY KEY (`uid`)
+    `uid`        int unsigned auto_increment
+        primary key,
+    `title`       varchar(100) not null,
+    `description` varchar(400) not null,
+    `icon`        varchar(500) not null,
+    `followers`   int          null,
+    `posts`       int          null,
+    `rating`    float        null,
+    `meetups`     int          null,
+    constraint `achievement_followers_number_posts_number_rating_meetups_uindex`
+        unique (followers, posts, rating, meetups)
 );
 
 -- ************************************** `ban_reason`
@@ -74,10 +75,11 @@ CREATE TABLE `state`
 -- ************************************** `topic`
 CREATE TABLE `topic`
 (
-    `name` varchar(100)     NOT NULL,
-    `uid`  integer unsigned NOT NULL AUTO_INCREMENT,
-
-    PRIMARY KEY (`uid`)
+    `name` varchar(100) not null,
+    `uid`  int unsigned auto_increment
+        primary key,
+    constraint `topic_name_uindex`
+        unique (name)
 );
 
 -- ************************************** `user`

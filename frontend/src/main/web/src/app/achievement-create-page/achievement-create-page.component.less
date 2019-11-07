@@ -88,3 +88,49 @@ select option{
   overflow: auto;
   max-width: 600px;
 }
+
+
+button {
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+
+  font-size: 20px;
+  border: transparent;
+  border-radius: 6px;
+  align-items: center;
+  outline:0;
+  background: linear-gradient(96.1deg, #7cb8f7 0%, #2a8bf2 100%);
+  box-shadow: 10px 6px 25px rgba(42, 139, 242, 0.15),
+  4px 4px 25px rgba(42, 139, 242, 0.05), 6px 6px 25px rgba(42, 139, 242, 0.15);
+}
+
+button a {
+  color: white;
+  text-decoration: none;
+
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+
+}
+
+button[disabled]{
+  background: #707c97;
+}
+
+button[enabled]:hover{
+  opacity: 0.8;
+}
+
+button:active{
+  background: #086edb;
+  opacity: 1
+}

@@ -126,33 +126,6 @@
   margin-right: 10px;
 }
 
-/*.future-meetup {*/
-  /*display: flex;*/
-  /*flex-direction: column;*/
-  /*width: 180px;*/
-  /*height: 190px;*/
-  /*align-items: flex-start;*/
-
-  /*box-shadow: 10px 6px 25px rgba(112, 124, 151, 0.1),*/
-    /*4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);*/
-
-  /*padding: 10px;*/
-/*}*/
-
-/*.history .title {*/
-  /*font-weight: bold;*/
-  /*font-size: 18px;*/
-  /*margin: 5px;*/
-/*}*/
-
-/*.history .contents {*/
-  /*margin: 5px;*/
-  /*word-break: break-all;*/
-  /*word-wrap: break-word;*/
-  /*overflow: hidden;*/
-  /*text-overflow: ellipsis;*/
-/*}*/
-
 .feedbacks {
   display: flex;
   flex-direction: row;

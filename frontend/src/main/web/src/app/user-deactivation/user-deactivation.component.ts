@@ -58,10 +58,10 @@ export class UserDeactivationComponent implements OnInit {
             location: user.location,
             rate: rating,
             description: user.description,
+            photo: user.photo,
             languages: user_languages,
             following: (followers.indexOf(this.userService.currentUser.userId) != -1),
-            awards: awards,
-            photo: user.photo
+            awards: awards
           };
           return list_item;
         }));

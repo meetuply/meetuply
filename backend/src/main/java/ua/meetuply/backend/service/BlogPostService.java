@@ -2,6 +2,7 @@ package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.dao.BlogPostDAO;
 import ua.meetuply.backend.model.AchievementType;
 import ua.meetuply.backend.model.BlogPost;
@@ -21,6 +22,7 @@ public class BlogPostService {
     @Autowired
     AchievementService achievementService;
 
+    @Transactional
     public void createBlogPost(BlogPost blogPost) {
         blogPost.setTime(LocalDateTime.now());
         blogPost.setAuthorId(appUserService.getCurrentUserID());

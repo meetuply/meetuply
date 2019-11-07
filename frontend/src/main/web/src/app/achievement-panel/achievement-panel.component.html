@@ -3,9 +3,9 @@
     <div class="achievement-title">
       <span>{{this.title}}</span>
     </div>
-    <div  [ngClass]="this.showDescription ? 'achievement-icon' : 'achievement-icon tooltip'" (click)="addDescription()">
-      <span *ngIf="!this.showDescription" class="tooltiptext">description</span>
-      <img src='{{this.icon}}'/>
+    <div class="achievement-icon" (click)="addDescription()">
+      <img caption="" src="{{this.icon}}" onerror="this.onerror=null;
+      src='/../../assets/icons/achievement.png'"/>
     </div>
     <div class="achievement-description" *ngIf="showDescription">
       <span> {{this.description}}

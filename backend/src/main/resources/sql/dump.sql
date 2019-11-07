@@ -31,7 +31,8 @@ CREATE TABLE `achievement` (
   `posts` int(11) DEFAULT NULL,
   `rating` float DEFAULT NULL,
   `meetups` int(11) DEFAULT NULL,
-  PRIMARY KEY (`uid`)
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `topic_name_uindex` (`followers`, `posts`, `rating`, `meetups`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.controller.exception.PermissionException;
 import ua.meetuply.backend.dao.AppUserDAO;
@@ -158,6 +159,7 @@ public class AppUserService implements UserDetailsService {
         return getCurrentUser().getRole().equals(roleDAO.getRoleByName("admin"));
     }
 
+    @Transactional
     public void follow(Integer userId) {
         appUserDAO.follow(getCurrentUserID(), userId);
         achievementService.checkOne(AchievementType.FOLLOWERS);
