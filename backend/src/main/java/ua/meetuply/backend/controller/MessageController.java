@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import ua.meetuply.backend.model.Message;
 import ua.meetuply.backend.model.Notification;
+import ua.meetuply.backend.model.SocketNotification;
 import ua.meetuply.backend.service.ChatService;
 import ua.meetuply.backend.service.NotificationService;
 
@@ -35,7 +36,7 @@ public class MessageController {
         // System.out.println(message.getFr); //instead of getFrom, get room, and the get secons user
         //template.convertAndSend("/notifications/new/" + message.getFrom(), "New message, check inbox!");
 
-        Notification n = new Notification();
+        SocketNotification n = new SocketNotification();
         n.setUid(1);
         n.setDateTime(LocalDateTime.now());
         n.setIsRead(false);
@@ -45,6 +46,16 @@ public class MessageController {
 
         System.out.println(message.getFrom());
         System.out.println(n.getReceiverId());
+
+
+        Notification n2 = new Notification();
+        n2.setNotificationID(1);
+        n2.setDate_time(LocalDateTime.now());
+        n2.setIsRead(0);
+        n2.setReceiverID(103);
+        n2.setTemplateID(1);
+        notififcationService.saveNotification(n2);
+
 
         notififcationService.sendNotification(n, message.getFrom());
     }
