@@ -2,6 +2,7 @@ package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.dao.RatingDAO;
 import ua.meetuply.backend.model.Rating;
 
@@ -16,6 +17,7 @@ public class RatingService {
     @Autowired
     AppUserService appUserService;
 
+    @Transactional
     public void createRating(Rating rating, Integer idrated) {
         rating.setDate(LocalDateTime.now());
         rating.setRatedBy(appUserService.getCurrentUserID());

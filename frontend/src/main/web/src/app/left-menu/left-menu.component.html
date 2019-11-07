@@ -2,21 +2,28 @@
 	<div id='avatar'>
 
 
+
     <img *ngIf='user && user.photo' src={{user.photo}} [routerLink]="['/speakers/',user.userId]">
     <img *ngIf='user && !user.photo' src="assets/img/download.png" [routerLink]="['/speakers/',user.userId]">
 		<span *ngIf='user' [routerLink]="['/speakers/',user.userId]">{{user.firstName + " " +  user.lastName}}</span>
 
 
+
 	</div>
 	<div id='menu'>
 
-		<app-left-menu-item *ngFor="let item of this.menu_items" sel="{{selectedItem}}" [item]="item"
-                        (clck)="childClicked($event)"></app-left-menu-item>
+		<app-left-menu-item class='notif' *ngFor="let item of this.menu_items" sel="{{selectedItem}}" [item]="item"
+			(clck)="childClicked($event)"></app-left-menu-item>
 	</div>
 
 	<div id='bottom_menu'>
 		<app-left-menu-item *ngFor="let item of this.bottom_menu_items" sel="{{false}}" [item]="item"
-                        (clck)="bottomMenuClicked($event)"></app-left-menu-item>
-   <!-- <app-logout-menu-item sel="{{false}}" (clck)="childClicked($event)"></app-logout-menu-item> -->
+			(clck)="bottomMenuClicked($event)"></app-left-menu-item>
+		<!-- <app-logout-menu-item sel="{{false}}" (clck)="childClicked($event)"></app-logout-menu-item> -->
 	</div>
+
+
+</div>
+<div class='notifications' *ngIf="tempNotifications.length > 0">
+	<div *ngFor="let notif of tempNotifications" (click)="notificationClick(notif)">{{notif.plainText}}</div>
 </div>

@@ -8,12 +8,8 @@
 	</div>
 
 	<div class="main" infinite-scroll [infiniteScrollDistance]="scrollDistance" (scrolled)='this.onScrollDown()'>
-
 		<div class='left_column'>
-
-
 			<div *ngFor="let speaker_item of this.speaker_list;let i = index">
-
 				<app-speaker-list-item *ngIf="isOdd(i)" [speakerListItem]="speaker_item">
 				</app-speaker-list-item>
 			</div>

@@ -134,8 +134,9 @@
       </div>
 
     <div class='create-button'>
-      <app-button  text='Submit' (onClick)="onSubmit($event)" type="submit" fontSize='24' type='1'
-      ></app-button>
+      <button disabled="{{(achievementForm.get(this.selectedOption).errors) || (this.achievementForm.get('title').errors) ||
+          this.achievementForm.get('icon').errors || this.achievementForm.get('description').errors}}"
+               (click)="onSubmit($event)" type="submit" fontSize='24' type='1'>submit</button>
     </div>
     </div>
   </form>
