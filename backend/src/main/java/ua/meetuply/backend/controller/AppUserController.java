@@ -13,6 +13,8 @@ import ua.meetuply.backend.validator.AppUserValidator;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -38,6 +40,9 @@ public class AppUserController {
     @Autowired
     private ChatService chatService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Resource(name = "emailServiceImpl")
     private EmailService emailService;
 
@@ -62,7 +67,7 @@ public class AppUserController {
     @GetMapping("/recover")
     public ResponseEntity requestRecover(@RequestParam("email") String email) throws NotFoundException {
         AppUser user = appUserService.getUserByEmail(email);
-        if(user == null) throw NotFoundException.createWith("Cannot find user with email " + email);
+        if (user == null) throw NotFoundException.createWith("Cannot find user with email " + email);
         ConfirmationToken ct = confirmationService.generateToken(user);
         emailService.sendRecoverEmail(user, confirmationService.getRecoveryLink(ct));
         return ResponseEntity.ok().build();
@@ -85,6 +90,23 @@ public class AppUserController {
     public @ResponseBody
     Iterable<Integer> getRoomsByUserID(@PathVariable("userId") Integer userId) {
         return chatService.getChatRoomsByUser(userId);
+    }
+
+    @GetMapping("/{userId}/notifications")
+    public @ResponseBody
+    List<Map<String, Object>> getAllUserNotifications(@PathVariable("userId") Integer userId) {
+        return notificationService.getAllUserNotifications(userId);
+    }
+
+    @GetMapping("/{userId}/notifications/read")
+    public @ResponseBody
+    List<Map<String, Object>> getAllUserReadNotifications(@PathVariable("userId") Integer userId) {
+        return notificationService.getReadedOrUnreadedNotifications(userId, 1);
+    }
+
+    @GetMapping("/{userId}/notifications/unread")
+    public List<Map<String, Object>> getAllUserUnreadNotifications(@PathVariable("userId") Integer userId) {
+        return notificationService.getReadedOrUnreadedNotifications(userId, 0);
     }
 
     @GetMapping("/{userId}/roomsList")

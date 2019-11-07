@@ -4,5 +4,14 @@ export class Notification {
 	isRead: boolean;
 	receiverId: number;
 	htmlText: string;
-	FplainText: string;
+	plainText: string;
+
+	//fix
+
+
+	date_time: Date;
+	is_read: boolean;
+	receiver_id: number;
+	html_text: string;
+	plain_text: string;
 }
