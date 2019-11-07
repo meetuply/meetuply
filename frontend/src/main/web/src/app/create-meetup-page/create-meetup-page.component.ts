@@ -116,11 +116,8 @@ export class CreateMeetupPageComponent implements OnInit {
 
     this.meetupService.create(meetup).subscribe(data => {
 
-      console.log(data);
-      if (data == null) {
-        alert("meetup created!")
-        //supposed to redirect somewhere
-      }
+      window.location.href ='/meetups';
+
     }, error => {
 
       alert('some thing happened:' + error)

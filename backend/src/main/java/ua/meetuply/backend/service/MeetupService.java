@@ -33,13 +33,16 @@ public class MeetupService {
     @Autowired
     private FilterDAO filterDAO;
 
+
+    @Transactional
     public void createMeetup(FullMeetup meetup) {
+
         meetup.setStateId(stateService.get(StateNames.SCHEDULED.name).getStateId());
         meetup.setSpeakerId(appUserService.getCurrentUserID());
 
         meetupDao.saveFull(meetup);
         achievementService.checkOne(AchievementType.MEETUPS);
-        achievementService.checkMultiple();
+        achievementService.checkOne(AchievementType.MEETUPS_TOPIC);
     }
 
     public List<Topic> getMeetupTopics(Integer i){
@@ -70,7 +73,7 @@ public class MeetupService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void join(Integer meetupID) throws Exception {
         AppUser user = appUserService.getCurrentUser();
-        if (user == null) throw NotFoundException.createWith("current");
+        if (user == null) throw NotFoundException.createWith("Please, sign in");
         if (meetupDao.get(meetupID) == null) throw NotFoundException.createWith("There is no meetup #" + meetupID);
         meetupDao.join(meetupID, user.getUserId());
         Meetup meetup = meetupDao.get(meetupID);
@@ -78,6 +81,9 @@ public class MeetupService {
             stateService.updateState(meetup, stateService.get(StateNames.BOOKED.name));
     }
 
+    public Iterable<Meetup> getUserMeetupsBeforeDay(Integer userId, int day) {
+        return meetupDao.getUserMeetupsBeforeDay(userId, day);
+    }
 
     public Iterable<Meetup> getMeetupsChunkWithUsernameAndRating(Integer startRow, Integer endRow) {
         return meetupDao.getMeetupsChunkWithUsernameAndRating(startRow, endRow);

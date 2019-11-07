@@ -13,6 +13,6 @@ import java.time.LocalDateTime;
 public class Rating {
     private int value;
     private LocalDateTime date;
-    private AppUser ratedUser;
-    private AppUser ratedBy;
+    private Integer ratedUser;
+    private Integer ratedBy;
 }

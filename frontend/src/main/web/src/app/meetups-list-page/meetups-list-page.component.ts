@@ -34,7 +34,6 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
     private meetupService: MeetupService,
     public stateService: StateService) {
     this.userID = this.userService.currentUser.userId;
-
   }
 
   ngOnInit() {

@@ -1,7 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {UserService} from "../_services";
-import {Speaker_list_item} from "../_models/speaker_list_item";
-
+import {SpeakerListItem} from "../_models/speakerListItem";
 
 @Component({
   selector: 'app-speaker-list-item',
@@ -10,11 +9,11 @@ import {Speaker_list_item} from "../_models/speaker_list_item";
 })
 export class SpeakerListItemComponent implements OnInit {
 
-  @Input() speaker_list_item: Speaker_list_item;
+  @Input() speakerListItem: SpeakerListItem;
   error;
 
   followText(): string {
-    if (this.speaker_list_item.following === true) {
+    if (this.speakerListItem.following === true) {
       return "Unfollow";
     }
     return "Follow";
@@ -22,7 +21,7 @@ export class SpeakerListItemComponent implements OnInit {
   }
 
   followType(): number {
-    if (this.speaker_list_item.following === true) {
+    if (this.speakerListItem.following === true) {
       return 2;
     }
     return 1;
@@ -35,23 +34,23 @@ export class SpeakerListItemComponent implements OnInit {
   }
 
   link(): string {
-    return "/speakers/" + this.speaker_list_item.id;
+    return "/speakers/" + this.speakerListItem.id;
   }
 
   followButtonClicked(event) {
-    if (this.speaker_list_item.following)
-      this.userService.unfollow(this.speaker_list_item.id).subscribe(
+    if (this.speakerListItem.following)
+      this.userService.unfollow(this.speakerListItem.id).subscribe(
         data => {
-          this.speaker_list_item.following = false;
+          this.speakerListItem.following = false;
         },
         error => {
           this.error = error;
         }
       );
     else
-      this.userService.follow(this.speaker_list_item.id).subscribe(
+      this.userService.follow(this.speakerListItem.id).subscribe(
         data => {
-          this.speaker_list_item.following = true;
+          this.speakerListItem.following = true;
         },
         error => {
           this.error = error;
@@ -60,7 +59,7 @@ export class SpeakerListItemComponent implements OnInit {
   }
 
   isCurrentUser(){
-    return this.userService.currentUser.userId===this.speaker_list_item.id
+    return this.userService.currentUser.userId===this.speakerListItem.id
   }
 
 }

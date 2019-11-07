@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Achievement} from "../_models/achievement";
+import {Topic} from "../_models";
 
 
 @Injectable({providedIn: 'root'})
@@ -17,9 +18,6 @@ export class AchievementService {
     return this.http.get<Achievement[]>(this.achievementApiUrl);
   }
 
-  // getAchievementsChunk(startRow: number, endRow: number): Observable<Achievement[]> {
-  //   return this.http.get<Achievement[]>(this.achievementApiUrl + `${startRow}` + "/" + `${endRow}`)
-  // }
 
   create(achievement: Achievement): Observable<Achievement> {
     return this.http.post<Achievement>(this.achievementApiUrl, achievement);

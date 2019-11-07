@@ -4,8 +4,9 @@ import {UserService} from '../_services/user.service'
 import {Subscription} from "rxjs";
 import {Meetup} from "../_models/meetup";
 import {MeetupService} from "../_services/meetup.service";
-import {Blog_list_item} from "../_models/blog_list_item";
+import {BlogListItem} from "../_models/blogListItem";
 import {BlogService} from "../_services/blog.service";
+import {StateService} from "../_services/state.service";
 
 
 @Component({
@@ -15,20 +16,46 @@ import {BlogService} from "../_services/blog.service";
 })
 export class DashboardPageComponent implements OnInit {
 
-  futureMeetups: Meetup[] = [];
-  myMeetups: Meetup[] = [];
-  blogPosts: Blog_list_item[] = [];
+  id: number;
+  soonPeriodDaysFromNow = 3;
+  soonMeetups: Meetup[] = [];
+  userMeetups: Meetup[] = [];
+  lastNotifications = [];
+  blogPosts: BlogListItem[] = [];
+  viewAllSoon = false;
+  viewAllUser = false;
   error;
   private sub: Subscription;
 
   constructor(private router: Router,
               public userService: UserService,
               private meetupService: MeetupService,
-              private blogService: BlogService) {
+              private blogService: BlogService,
+              public stateService: StateService) {
   }
 
   ngOnInit() {
+    this.id = this.userService.currentUser.userId;
     this.loadBlogPosts();
+    this.loadMeetups();
+  }
+
+  loadMeetups(){
+    this.meetupService.getFutureMeetups(this.id).toPromise().then(
+      data => {
+        this.userMeetups = data;
+      },
+      error => {
+        console.log(error)
+      }
+    );
+    this.meetupService.getSoonMeetups(this.id, this.soonPeriodDaysFromNow).toPromise().then(
+      data => {
+        this.soonMeetups = data;
+      },
+      error => {
+        console.log(error)
+      })
   }
 
   loadBlogPosts() {
@@ -46,7 +73,7 @@ export class DashboardPageComponent implements OnInit {
                   authorid = author.userId;
                 }
               );
-              return new Blog_list_item(item, username, photo, authorid)
+              return new BlogListItem(item, username, photo, authorid)
             }
           ));
           console.log(this.blogPosts);
@@ -56,8 +83,14 @@ export class DashboardPageComponent implements OnInit {
         console.log(error);
       }
     );
+  }
 
+  changeViewAllSoon(){
+    this.viewAllSoon = !this.viewAllSoon;
+  }
 
+  changeViewAllUser(){
+    this.viewAllUser = !this.viewAllUser;
   }
 
   ngOnDestroy() {

@@ -1,6 +1,7 @@
 export class Feedback {
-	name: string;
-	surname: string;
-	contents: string;
-	rating: number;
+  feedbackId:number;
+  feedbackContent:string;
+  date:Date;
+  feedbackBy:number;
+  feedbackTo:number;
 }
