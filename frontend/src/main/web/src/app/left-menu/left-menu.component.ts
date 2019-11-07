@@ -32,13 +32,21 @@ export class LeftMenuComponent implements OnInit {
     { icon: "turn-off.svg", text: 'log out', redirectTo: null }
   ];
 
+
+  tempNotifications: Notification[] = [
+    //"one",
+    //"another"
+  ];
+
   constructor(private http: HttpClient,
     private router: Router,
     private authenticationService: AuthenticationService,
     private notificationService: NotificationService,
     public userService: UserService,
     private route: ActivatedRoute
-  ) { }
+  ) {
+
+  }
 
   childClicked($event) {
     this.selectedItem = $event;
@@ -70,10 +78,25 @@ export class LeftMenuComponent implements OnInit {
 
 
     this.notificationService.connect(this.userService.currentUser.userId, data => {
-      alert("New notification!!Do what you want with it, I go to sleep");
+      //alert("New notification!!Do what you want with it, I go to sleep");
+
+      let msg =  JSON.parse(data.body);
+      this.tempNotifications.push(msg);
+
+      setTimeout(() => {
+        const index = this.tempNotifications.indexOf(msg, 0);
+        this.tempNotifications.splice(index, 1)
+      }, 3000)
+
       console.log("new notification!")
       console.log(data)
     })
 
   }
+
+  notificationClick(val: any) {
+    //this.router.navigateByUrl("/notifications")
+  }
+
+
 }

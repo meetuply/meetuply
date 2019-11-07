@@ -60,7 +60,19 @@ app-left-menu-item {
   margin: 10px;
 }
 
-/*
+.notifications {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 200px;
+  padding: 5px;
+  border: 1px solid grey;
+}
 
-if small screen then makeicons dissapear and border bottom light up
-*/
+.notifications > * {
+  margin: 8px;
+  border: 2px solid #c4c4c4;
+  border-radius: 6px;
+  padding: 8px;
+}
+
