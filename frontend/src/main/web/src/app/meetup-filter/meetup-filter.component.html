@@ -1,115 +1,86 @@
 <div class='filter'>
 
-	<div class='row1'>
+  <div class='row1'>
 
-		<div class='topics'>
-			<div class='ti'>
-				Topics
-			</div>
-			<div class='topics_list'>
-				<app-toggle-button id='1' text='lol1' (toggled)="toggled($event)">
-				</app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-				<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
+    <div class='topics'>
+      <div class='ti'>
+        Topics
+      </div>
+      <div class='topics_list'>
+        <app-toggle-button *ngFor="let topic of this.topics" name="topics" id='{{topic.topicId}}' text='{{topic.name}}'
+                           (toggled)="topicToggled($event)"></app-toggle-button>
+      </div>
 
-			</div>
+    </div>
 
-		</div>
+    <div class='date_time'>
+      <div class='ti'>
+        Date
+      </div>
+      <div class='date'>
 
-		<div class='date_time'>
-			<div class='ti'>
-				Date
-			</div>
-			<div class='date'>
-				<app-toggle-button id='1' icon='calendar' text='any' (toggled)="toggled($event)"></app-toggle-button>
-				<div class='sep'> - </div>
-				<app-toggle-button id='2' icon='calendar' text='any' (toggled)="toggled($event)"></app-toggle-button>
-			</div>
-			<div class='ti'>
-				Time
-			</div>
-			<div class='time'>
-				<app-toggle-button id='1' icon='time' text='any' (toggled)="toggled($event)"></app-toggle-button>
-				<div class='sep'> - </div>
-				<app-toggle-button id='2' icon='time' text='any' (toggled)="toggled($event)"></app-toggle-button>
-			</div>
+        <input matInput [matDatepicker]="picker" placeholder="Start date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <!--        <input matInput [matDatepicker]="picker" placeholder="Choose a date" disabled>-->
+        <!--        <mat-datepicker #picker disabled="false"></mat-datepicker>-->
+        <!--				<app-toggle-button id='1' icon='calendar' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
+        <div class='sep'> - </div>
+        <input matInput [matDatepicker]="picker1" placeholder="Start date">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+        <!--				<app-toggle-button id='2' icon='calendar' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
+      </div>
+      <div class='ti'>
+        Time
+      </div>
+      <div class='time'>
+        <ngb-timepicker ngModel="time"></ngb-timepicker>
+        <!--        <app-toggle-button id='1' icon='time' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
+        <div class='sep'> - </div>
+        <ngb-timepicker ngModel="time"></ngb-timepicker>
+<!--        <app-toggle-button id='2' icon='time' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
+      </div>
 
-		</div>
+    </div>
 
 
-		<div class='saved'>
-			<div class='ti'>
-				Saved filters
-			</div>
-			<!--
-			<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
-			<app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
-			<app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>-->
-			<app-button text='Save current filter' fontSize='24'></app-button>
-		</div>
+    <div class='saved'>
+      <!--
+            <app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
+            <app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
+            <app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>-->
+      <app-button text='Save current filter' fontSize='24'></app-button>
+    </div>
 
-	</div>
+    <div class ='filters'>
+      <div class='ti'>
+        Saved filters
+      </div>
+      <div class='filters_list'>
+        <app-toggle-button *ngFor="let filter of this.filters" name="filters" id='{{filter.id}}' text='{{filter.name}}'
+                           (toggled)="filterToggled($event)"></app-toggle-button>
+      </div>
+    </div>
+  </div>
 
-	<div class='row2'>
+  <div class='row2'>
 
 
-		<div class='rating'>
-			<div class='ti'>
-				Speaker Rating
-			</div>
-			<div class='rate'>
-				<app-toggle-button id='1' icon='star' text='any' (toggled)="toggled($event)"></app-toggle-button>
-				<div class='sep'> - </div>
-				<app-toggle-button id='2' icon='star' text='any' (toggled)="toggled($event)"></app-toggle-button>
-			</div>
+    <div class='rating'>
+      <div class='ti'>
+        Speaker Rating
+      </div>
+      <div class='rate'>
+        <!--				<app-toggle-button id='1' icon='star' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
+        <div class='form_line'><input type="ratingFrom" name="ratingFrom" placeholder="from" min="0" max="5"/></div>
+        <div class='sep'> - </div>
+        <div class='form_line'><input type="ratingTo" name="ratingTo" placeholder="to" min="0" max="5"/></div>
+        <!--				<app-toggle-button id='2' icon='star' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
+      </div>
 
-		</div>
-
-<!--		<div class='weekday'>-->
-<!--			<div class='ti'>-->
-<!--				Weekday-->
-<!--			</div>-->
-<!--			<div class='week'>-->
-<!--				<app-toggle-button id='0' text='monday' (toggled)="toggledWeekday($event)"></app-toggle-button>-->
-<!--				<app-toggle-button id='1' text='tuesday' (toggled)="toggledWeekday($event)"></app-toggle-button>-->
-<!--				<app-toggle-button id='2' text='wednesday' (toggled)="toggledWeekday($event)"></app-toggle-button>-->
-<!--				<app-toggle-button id='3' text='thursday' (toggled)="toggledWeekday($event)"></app-toggle-button>-->
-<!--				<app-toggle-button id='4' text='friday' (toggled)="toggledWeekday($event)"></app-toggle-button>-->
-<!--				<app-toggle-button id='5' text='saturday' (toggled)="toggledWeekday($event)"></app-toggle-button>-->
-<!--				<app-toggle-button id='6' text='sunday' (toggled)="toggledWeekday($event)"></app-toggle-button>-->
-
-<!--			</div>-->
-<!--		</div>-->
-
-	</div>
+    </div>
+  </div>
 
 
 
