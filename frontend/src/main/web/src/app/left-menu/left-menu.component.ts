@@ -1,5 +1,5 @@
 import { Component, OnInit, Output } from '@angular/core';
-import { Menu_item } from '../_models/menu_item';
+import { MenuItem } from '../_models/menuItem';
 import { HttpClient } from "@angular/common/http";
 import { Router, ActivatedRoute } from "@angular/router";
 import { AuthenticationService, UserService } from "../_services";
@@ -16,7 +16,7 @@ export class LeftMenuComponent implements OnInit {
 
   selectedItem: string;
 
-  menu_items: Menu_item[] = [
+  menu_items: MenuItem[] = [
     { icon: "apps.png", text: 'dashboard', redirectTo: "dashboard", userCanSee: true, adminCanSee: false},
     { icon: "globe.png", text: 'meetups', redirectTo: "meetups", userCanSee: true, adminCanSee: true},
     { icon: "user.png", text: 'speakers', redirectTo: "speakers", userCanSee: true, adminCanSee: false },
@@ -30,7 +30,7 @@ export class LeftMenuComponent implements OnInit {
   ];
 
 
-  bottom_menu_items: Menu_item[] = [
+  bottom_menu_items: MenuItem[] = [
     { icon: "settings.svg", text: 'settings', redirectTo: "settings", userCanSee: true, adminCanSee: true },
     { icon: "turn-off.svg", text: 'log out', redirectTo: null, userCanSee: true, adminCanSee: true }
   ];

@@ -121,26 +121,25 @@ export class BlogListPageComponent implements OnInit {
   }
 
   changeFilter(filter: string) {
-    if (this.user.role.roleName != 'admin') {
-      this.filter = filter;
-      document.getElementById('subs').setAttribute("class", "filter-off");
-      document.getElementById('all').setAttribute("class", "filter-off");
-      document.getElementById('my').setAttribute("class", "filter-off");
-      switch (filter) {
-        case "subs":
-          document.getElementById('subs').setAttribute("class", "filter-on");
-          break;
-        case "all":
-          document.getElementById('all').setAttribute("class", "filter-on");
-          break;
-        case "my":
-          document.getElementById('my').setAttribute("class", "filter-on");
-          break;
-        case "user":
-          this.id = this.router.snapshot.params['id'];
-          break;
-      }
+    this.filter = filter;
+    document.getElementById('subs').setAttribute("class", "filter-off");
+    document.getElementById('all').setAttribute("class", "filter-off");
+    document.getElementById('my').setAttribute("class", "filter-off");
+    switch (filter) {
+      case "subs":
+        document.getElementById('subs').setAttribute("class", "filter-on");
+        break;
+      case "all":
+        document.getElementById('all').setAttribute("class", "filter-on");
+        break;
+      case "my":
+        document.getElementById('my').setAttribute("class", "filter-on");
+        break;
+      case "user":
+        this.id = this.router.snapshot.params['id'];
+        break;
     }
+
   }
 
   itemDeletedHandler(deleted: BlogListItem) {

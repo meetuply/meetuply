@@ -18,9 +18,9 @@
   <app-meetup-filter *ngIf="this.filter_shown"></app-meetup-filter>
 
   <div class="additional-filters" >
-    <span [ngClass]="showActiveFlag ? 'active-choice': 'flag'" (click)="showActive()">future </span>|
-    <span [ngClass]="showAllFlag ? 'active-choice': 'flag'" (click)="showAll()">all </span>|
-    <span [ngClass]="showMyFlag ? 'active-choice': 'flag'" (click)="showMy()">my</span>
+    <span [ngClass]="showActiveFlag ? 'active-choice': 'flag'" (click)="showActive()">future </span>
+    <span [ngClass]="showAllFlag ? 'active-choice': 'flag'" (click)="showAll()">| all </span>
+    <span *ngIf="userService.currentUser.role.roleName == 'user'" [ngClass]="showMyFlag ? 'active-choice': 'flag'" (click)="showMy()">| my</span>
   </div>
 
   <div class="main"

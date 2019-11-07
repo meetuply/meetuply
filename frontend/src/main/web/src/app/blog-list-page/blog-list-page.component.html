@@ -3,7 +3,7 @@
   <p class='title'>Blog</p>
 
   <div class="header">
-    <div *ngIf="user.role.roleName != 'admin'" class="filter">
+    <div class="filter">
       <p>Filter by:</p>
       <p class="filter-on" id="subs" (click)="filterBy($event, 'subs')">subscriptions</p>
       <p class="filter-off" id="all" (click)="filterBy($event, 'all')">| all</p>
@@ -11,7 +11,7 @@
     </div>
 
     <div class="create-new">
-      <app-button *ngIf="user.role.roleName != 'admin'" fontSize='20' [routerLink]="['/blog/create']" type='1' text='New post'></app-button>
+      <app-button *ngIf="user.role.roleName == 'user'" fontSize='20' [routerLink]="['/blog/create']" type='1' text='New post'></app-button>
     </div>
   </div>
 
