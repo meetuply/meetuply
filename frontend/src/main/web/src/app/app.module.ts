@@ -65,6 +65,8 @@ import {FeedbackCreatePageComponent} from "./feedback-create-page/feedback-creat
 import { BanPageComponent } from './ban-page/ban-page.component';
 import { BansPageComponent } from './bans-page/bans-page.component';
 import { NotificationsPageComponent } from './notifications-page/notifications-page.component';
+import {MatNativeDateModule} from "@angular/material";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -138,7 +140,9 @@ import { NotificationsPageComponent } from './notifications-page/notifications-p
     MatFormFieldModule,
     MatDatepickerModule,
     MatInputModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    MatNativeDateModule,
+    NgbModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

@@ -1,7 +1,7 @@
 package ua.meetuply.backend.service;
 
 import org.springframework.stereotype.Component;
-import ua.meetuply.backend.dao.IDAO;
+import ua.meetuply.backend.dao.IFilterDAO;
 import ua.meetuply.backend.model.Filter;
 import javax.annotation.Resource;
 import java.util.List;
@@ -9,8 +9,8 @@ import java.util.List;
 @Component
 public class FilterServiceImpl implements FilterService {
 
-    @Resource(name= "filterDAO")
-    private IDAO<Filter> filterDao;
+    @Resource(name = "filterDAO")
+    private IFilterDAO<Filter> filterDao;
 
     @Override
     public Filter getFilter(Integer filterId) {
@@ -20,6 +20,11 @@ public class FilterServiceImpl implements FilterService {
     @Override
     public void createFilter(Filter filter) {
         filterDao.save(filter);
+    }
+
+    @Override
+    public List<Filter> getUsersFilter(Integer uid) {
+        return filterDao.getUsersFilters(uid);
     }
 
     @Override
