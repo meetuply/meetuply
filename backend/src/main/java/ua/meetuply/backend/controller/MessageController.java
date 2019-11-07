@@ -23,6 +23,10 @@ public class MessageController {
     public void greeting(@Payload Message message) throws Exception {
         chatService.addMessage(message);
         template.convertAndSend("/chat/session_messages/" + message.getTo_room_id(), message);
+
+
+       // System.out.println(message.getFr); //instead of getFrom, get room, and the get secons user
+        template.convertAndSend("/notifications/new/" + message.getFrom(), "New message, check inbox!");
     }
 
 }
