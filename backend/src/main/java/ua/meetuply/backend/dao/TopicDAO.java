@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import ua.meetuply.backend.model.Topic;
@@ -19,7 +18,7 @@ public class TopicDAO implements IDAO<Topic>, RowMapper<Topic> {
     private static final String GET_TOPICS_FOR_ACHIEVEMENT = "select * from topic where uid in (select topic_id from achievement_topic where achievement_id = ?)";
 
     @Autowired
-    public JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public Topic get(Integer id) {

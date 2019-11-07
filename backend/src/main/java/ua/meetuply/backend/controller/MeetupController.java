@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ua.meetuply.backend.model.AppUser;
+import ua.meetuply.backend.model.Filter;
+import ua.meetuply.backend.model.Meetup;
+import ua.meetuply.backend.model.Topic;
 import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.FilterService;
@@ -141,12 +145,6 @@ public class MeetupController {
         return meetupService.isAttendee(meetupID, userID);
     }
 
-
-    @GetMapping("/filter")
-    public List<Meetup> filter(@RequestBody Filter filter) {
-        return meetupService.findBy(filter);
-    }
-
     @GetMapping("/filters")
     public List<Filter> filters() {
         return meetupService.getAllFilters();
@@ -159,28 +157,27 @@ public class MeetupController {
         return ResponseEntity.ok().build();
     }
 
-    //TODO rename url
-    @GetMapping("/filter-test")
+    @GetMapping("/filter/search")
     public @ResponseBody
     List<Meetup> getMeetupsByFilter(@RequestParam(value = "filter") Integer filterId, Model model) {
         Filter filter = filterService.getFilter(filterId);
         List<Meetup> meetups = meetupService.findMeetupsByFilter(filter);
         model.addAttribute(meetups);
-        //TODO decide what page will be here
-        //return "";
         return meetups;
     }
 
-    //TODO rename url
-    @GetMapping("/criteria-test")
+    @GetMapping("/criteria/search")
     public @ResponseBody
-    List<Meetup> getMeetupsByCriteria(@RequestParam(value = "rating", required = false) Double rating,
-                                      @RequestParam(value = "date-from", required = false) Timestamp dateFrom,
-                                      @RequestParam(value = "date-to", required = false) Timestamp dateTo,
-                                      Model model) {
-        List<Meetup> meetups = meetupService.findMeetupsByCriteria(rating, dateFrom, dateTo);
-        model.addAttribute(meetups);
-        return meetups;
+    List<Meetup> getMeetupsByCriteria(@RequestParam(value = "ratingFrom", required = false) Float ratingFrom,
+                                      @RequestParam(value = "ratingTo", required = false) Float ratingTo,
+                                      @RequestParam(value = "dateFrom", required = false) String dateFrom,
+                                      @RequestParam(value = "dateTo", required = false) String dateTo,
+                                      @RequestParam(value = "topics", required = false) List<Topic> topics) {
+
+        Timestamp dateFromTimestamp = meetupService.getTimestampFromString(dateFrom);
+        Timestamp dateToTimestamp = meetupService.getTimestampFromString(dateTo);
+        return meetupService.findMeetupsByCriteria(ratingFrom, ratingTo, dateFromTimestamp, dateToTimestamp,
+                topics, appUserService.getCurrentUserID());
     }
 
     @PatchMapping("/{meetupID}/action={action}")

@@ -16,13 +16,13 @@ public class Filter {
 
     private Integer id;
     private String name;
-    private Double ratingFrom;
-    private Double ratingTo;
+    private Float ratingFrom;
+    private Float ratingTo;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Timestamp dateFrom;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Timestamp dateTo;
     private Integer userId;
-    private List<Integer> topicIds;
+    private List<Topic> topics;
 
 }

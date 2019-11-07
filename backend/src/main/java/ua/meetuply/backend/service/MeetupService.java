@@ -11,8 +11,12 @@ import ua.meetuply.backend.dao.FilterDAO;
 import ua.meetuply.backend.dao.MeetupDAO;
 import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.model.State.StateNames;
+import ua.meetuply.backend.model.Topic;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -113,7 +117,7 @@ public class MeetupService {
     }
 
     public List<Meetup> findMeetupsByFilter(Filter filter) {
-        return meetupDao.findMeetupsByFilter(filter);
+        return meetupDao.findBy(filter);
     }
 
     public Integer getUserMeetupsNumber(Integer userId) {
@@ -164,12 +168,28 @@ public class MeetupService {
         } else throw PermissionException.createWith("you cannot modify not yours meetups");
     }
 
-    public List<Meetup> findMeetupsByCriteria(Double rating, Timestamp dateFrom, Timestamp dateTo) {
+    public List<Meetup> findMeetupsByCriteria(float ratingFrom, float ratingTo, Timestamp dateFrom, Timestamp dateTo,
+                                              List<Topic> topics, Integer userId) {
         Filter filterDto = new Filter();
-        //filterDto.setRating(rating);
         filterDto.setDateFrom(dateFrom);
         filterDto.setDateTo(dateTo);
-        return meetupDao.findMeetupsByFilter(filterDto);
+        filterDto.setRatingFrom(ratingFrom);
+        filterDto.setRatingTo(ratingTo);
+        filterDto.setTopics(topics);
+        filterDto.setUserId(userId);
+        return meetupDao.findBy(filterDto);
+    }
+
+    public Timestamp getTimestampFromString(String dateTime) {
+        Timestamp timestamp;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+            Date parseDate = dateFormat.parse(dateTime);
+            timestamp = new java.sql.Timestamp(parseDate.getTime());
+        } catch (ParseException e) {
+            return null;
+        }
+        return timestamp;
     }
 
     public List<Meetup> findBy(Filter filter) {
