@@ -27,6 +27,10 @@ export class UserService {
 
   //get speakers (sonly users who made at least 1 meetup ) for now all users
 
+  getCurrentUser(): Observable<User> {
+    return this.get(this.currentUser.userId);
+  }
+
   get(id: number): Observable<User> {
     return this.http.get<User>(this.userApiUrl + `${id}`);
   }
@@ -99,7 +103,7 @@ export class UserService {
   reactivate(userId: number): Observable<{}>{
     return this.http.put(this.userApiUrl + 'activate/' + userId, {});
   }
-  
+
   recover(user: User, token: string): Observable<{}> {
     return this.http.patch(this.userApiUrl + (token ? "recover?token=" + token : ""), user);
   }
@@ -107,6 +111,7 @@ export class UserService {
   requestRecover(email: string) {
     return this.http.get(this.userApiUrl + "recover?email=" + email);
   }
+
   update(user: User): Observable<{}> {
     return this.http.put(this.userApiUrl, user);
   }
