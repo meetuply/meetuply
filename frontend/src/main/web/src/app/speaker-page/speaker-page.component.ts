@@ -246,6 +246,10 @@ export class SpeakerPageComponent implements OnInit {
     return this.userService.currentUser.userId == this.id
   }
 
+  isAdmin(){
+    return this.userService.currentUser.role.roleName === 'admin';
+  }
+
   ngOnDestroy() {
     if (this.sub) this.sub.unsubscribe();
   }
