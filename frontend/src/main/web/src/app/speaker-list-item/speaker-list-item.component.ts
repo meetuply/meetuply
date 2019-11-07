@@ -27,7 +27,7 @@ export class SpeakerListItemComponent implements OnInit {
     return 1;
   }
 
-  constructor(private userService: UserService) {
+  constructor(public userService: UserService) {
   }
 
   ngOnInit() {

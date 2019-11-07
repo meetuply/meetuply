@@ -7,13 +7,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.dao.SQLPredicate.Operation;
-import ua.meetuply.backend.model.AppUser;
-import ua.meetuply.backend.model.Filter;
-import ua.meetuply.backend.model.Meetup;
+import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.model.State.StateNames;
+import ua.meetuply.backend.service.LanguageService;
 import ua.meetuply.backend.service.StateService;
 
-import java.sql.Timestamp;
+import javax.sql.DataSource;
+import java.sql.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,8 +43,8 @@ public class MeetupDAO implements IDAO<Meetup> {
     private static final String GET_USER_MEETUPS_NUMBER_QUERY = "select count(*) from meetup where speaker_id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM meetup";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM meetup WHERE uid = ?";
-    private static final String SAVE_QUERY = "INSERT INTO meetup (`uid`,`place`, `title`, `description`,`registered_attendees`, `min_attendees`, `max_attendees`," +
-            "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SAVE_QUERY = "INSERT INTO `meetup` (`place`, `title`, `description`,`registered_attendees`, `min_attendees`, `max_attendees`," +
+            "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM meetup WHERE uid = ?";
     private static final String UPDATE_QUERY = "UPDATE meetup SET place = ?, " +
             "title = ?, description = ? ,registered_attendees = ?, min_attendees = ?," +
@@ -80,11 +80,16 @@ public class MeetupDAO implements IDAO<Meetup> {
 
 
 
+    private static final String GET_TOPICS_BY_MEETUP = "SELECT * from `topic` WHERE `uid` in (SELECT `topic_id` from `meetup_topic` WHERE `meetup_id` = ?)";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private StateService stateService;
+
+    @Autowired
+    private LanguageService languageService;
 
     @Override
     public Meetup get(Integer id) {
@@ -99,11 +104,86 @@ public class MeetupDAO implements IDAO<Meetup> {
 
     @Override
     public void save(Meetup meetup) {
-        jdbcTemplate.update(SAVE_QUERY, null,
+
+
+        //System.out.println(meetup);
+        //INSERT INTO `meetup_topic` (topic_id, meetup_id) VALUES ()
+        jdbcTemplate.update(SAVE_QUERY,
                 meetup.getMeetupPlace(), meetup.getMeetupTitle(), meetup.getMeetupDescription(),
                 meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
                 meetup.getMeetupStartDateTime(), meetup.getMeetupFinishDateTime(), meetup.getStateId(), meetup.getSpeakerId());
     }
+
+
+    public void saveFull(FullMeetup meetup) {
+
+        Connection con;
+        try {
+            con = jdbcTemplate.getDataSource().getConnection();
+
+            con.setAutoCommit(false);
+
+            Statement statement = con.createStatement();
+
+
+            String str1 = "INSERT INTO `meetup` (`place`, `title`, `description`,`registered_attendees`, `min_attendees`, `max_attendees`," +
+                    "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (" +
+                    "'" + meetup.getMeetupPlace() + "'," +
+                    "'" + meetup.getMeetupTitle() + "'," +
+                    "'" + meetup.getMeetupDescription() + "'," +
+                    meetup.getMeetupRegisteredAttendees() + "," +
+                    meetup.getMeetupMinAttendees() + "," +
+                    meetup.getMeetupMaxAttendees() + ",'" +
+                    meetup.getMeetupStartDateTime() + "','" +
+                    meetup.getMeetupFinishDateTime() + "'," +
+                    meetup.getStateId() + "," +
+                    meetup.getSpeakerId() + ")";
+
+
+            statement.executeUpdate(str1, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = statement.getGeneratedKeys();
+
+
+            con.commit();
+
+            rs.next();
+
+            Integer id = rs.getInt(1);
+
+
+            String str2 = "INSERT INTO `meetup_language` (`language_id`,`meetup_id`) VALUES (" +
+                    languageService.get(meetup.getLanguage()).getLanguageId() + "," +
+                    id + ")";
+
+
+            statement.executeUpdate(str2);
+
+
+            for (Integer topic : meetup.getTopics()) {
+                String query = "insert into `meetup_topic` (topic_id,meetup_id) values('"
+                        + topic + "','" + id + "')";
+                statement.addBatch(query);
+            }
+
+            statement.executeBatch();
+            con.commit();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+
+    }
+
+
+    public List<Topic> getMeetupTopics(Integer i) {
+        List<Topic> topicList = jdbcTemplate.query(GET_TOPICS_BY_MEETUP, new Object[]{i},
+                new TopicRowMapper());
+        return topicList;
+    }
+
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -139,12 +219,12 @@ public class MeetupDAO implements IDAO<Meetup> {
                 new MeetupJoinedWithUserRowMapper());
     }
 
-    public List<Meetup> getUserFutureMeetups(Integer userId){
+    public List<Meetup> getUserFutureMeetups(Integer userId) {
         return jdbcTemplate.query(GET_USER_FUTURE_MEETUPS, new Object[]{userId},
                 new MeetupRowMapper());
     }
 
-    public List<Meetup> getUserPastMeetups(Integer userId){
+    public List<Meetup> getUserPastMeetups(Integer userId) {
         return jdbcTemplate.query(GET_USER_PAST_MEETUPS, new Object[]{userId},
                 new MeetupRowMapper());
     }
@@ -185,7 +265,7 @@ public class MeetupDAO implements IDAO<Meetup> {
     }
 
     public List<Meetup> find(SQLPredicate where) {
-        StringBuilder query = new StringBuilder(GET_ALL_QUERY+" ");
+        StringBuilder query = new StringBuilder(GET_ALL_QUERY + " ");
         if (where != null) query.append("WHERE ").append(where.toString());
         System.out.println(query);
         return jdbcTemplate.query(query.toString(), new MeetupRowMapper());
@@ -195,7 +275,7 @@ public class MeetupDAO implements IDAO<Meetup> {
         List<SQLPredicate> andList = Arrays.asList(
                 new SQLPredicate("state_id", Operation.IN,
                         Arrays.asList(stateService.get(StateNames.SCHEDULED.name).getStateId(),
-                                      stateService.get(StateNames.BOOKED.name).getStateId())),
+                                stateService.get(StateNames.BOOKED.name).getStateId())),
                 new SQLPredicate("speaker_id", Operation.EQUALS, user.getUserId())
         );
         SQLPredicate where = new SQLPredicate(Operation.AND, andList);
@@ -227,7 +307,7 @@ public class MeetupDAO implements IDAO<Meetup> {
         List<SQLPredicate> andList = Arrays.asList(
                 new SQLPredicate("state_id", Operation.IN,
                         Arrays.asList(stateService.get(StateNames.SCHEDULED.name).getStateId(),
-                                      stateService.get(StateNames.BOOKED.name).getStateId())),
+                                stateService.get(StateNames.BOOKED.name).getStateId())),
                 new SQLPredicate("start_date_time", Operation.LESS, "NOW()")
         );
         SQLPredicate where = new SQLPredicate(Operation.AND, andList);
@@ -283,12 +363,12 @@ public class MeetupDAO implements IDAO<Meetup> {
 
         if (filter.getRatingFrom() != null)
             andList.add(new SQLPredicate("speaker_id", Operation.IN,
-                        new SQLSelect("avg_rating", "user_id",
-                                new SQLPredicate("value", Operation.GREATER_EQUALS, filter.getRatingFrom()))));
+                    new SQLSelect("avg_rating", "user_id",
+                            new SQLPredicate("value", Operation.GREATER_EQUALS, filter.getRatingFrom()))));
         if (filter.getRatingTo() != null)
             andList.add(new SQLPredicate("speaker_id", Operation.IN,
-                        new SQLSelect("avg_rating", "user_id",
-                                new SQLPredicate("value", Operation.LESS_EQUALS, filter.getRatingTo()))));
+                    new SQLSelect("avg_rating", "user_id",
+                            new SQLPredicate("value", Operation.LESS_EQUALS, filter.getRatingTo()))));
 
         System.out.println(new SQLPredicate(Operation.AND, Arrays.asList(
                 new SQLPredicate("meetup_id", Operation.EQUALS, "uid"),
@@ -296,11 +376,11 @@ public class MeetupDAO implements IDAO<Meetup> {
 
         if (filter.getTopicIds() != null && !filter.getTopicIds().isEmpty())
             andList.add(new SQLPredicate(Operation.EXISTS,
-                                new SQLSelect("meetup_topic", "topic_id",
-                                        new SQLPredicate(Operation.AND, Arrays.asList(
-                                                new SQLPredicate("meetup_id", Operation.EQUALS, "uid"),
-                                                new SQLPredicate("topic_id", Operation.IN, filter.getTopicIds())
-                                                )))));
+                    new SQLSelect("meetup_topic", "topic_id",
+                            new SQLPredicate(Operation.AND, Arrays.asList(
+                                    new SQLPredicate("meetup_id", Operation.EQUALS, "uid"),
+                                    new SQLPredicate("topic_id", Operation.IN, filter.getTopicIds())
+                            )))));
 
         SQLPredicate where = new SQLPredicate(Operation.AND, andList);
         return find(where);
