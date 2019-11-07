@@ -10,7 +10,7 @@ import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
 import {RatingService} from "../_services/rating.service";
 import {BlogService} from "../_services/blog.service";
-import {Blog_list_item} from "../_models/blog_list_item";
+import {BlogListItem} from "../_models/blogListItem";
 import {Subscription} from "rxjs";
 import {Meetup} from "../_models/meetup";
 import {StateService} from "../_services/state.service";
@@ -36,7 +36,7 @@ export class SpeakerPageComponent implements OnInit {
   feedback = [];
   error;
   loading: boolean;
-  lastPost: Blog_list_item;
+  lastPost: BlogListItem;
   lastPostDefined: boolean = false;
   viewAllFuture = false;
   viewAllPast = false;
@@ -102,7 +102,7 @@ export class SpeakerPageComponent implements OnInit {
   loadLastPost(id: number) {
     this.blogService.getBlogPostsByUserId(0, 1, id).subscribe(posts => {
       if (posts.length > 0) {
-        this.lastPost = new Blog_list_item(posts.pop(),
+        this.lastPost = new BlogListItem(posts.pop(),
           this.user.firstName + " " + this.user.lastName,
           this.user.photo, this.id);
         this.lastPostDefined = true;

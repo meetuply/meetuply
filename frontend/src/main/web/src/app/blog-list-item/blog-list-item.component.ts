@@ -1,6 +1,6 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {BlogService} from "../_services/blog.service";
-import {Blog_list_item} from "../_models/blog_list_item";
+import {BlogListItem} from "../_models/blogListItem";
 import {UserService} from "../_services";
 
 
@@ -12,9 +12,9 @@ import {UserService} from "../_services";
 
 export class BlogListItemComponent implements OnInit {
 
-  @Input() blog_list_item: Blog_list_item;
+  @Input() blog_list_item: BlogListItem;
 
-  @Output() itemDeleted: EventEmitter<Blog_list_item> = new EventEmitter();
+  @Output() itemDeleted: EventEmitter<BlogListItem> = new EventEmitter();
 
   error;
 

@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {Blog_comment_item} from "../_models/blog_comment_item";
+import {BlogCommentItem} from "../_models/blogCommentItem";
 import {UserService} from "../_services";
 import {BlogService} from "../_services/blog.service";
 
@@ -11,9 +11,9 @@ import {BlogService} from "../_services/blog.service";
 
 export class BlogCommentItemComponent implements OnInit {
 
-  @Input() blog_comment_item: Blog_comment_item;
+  @Input() blog_comment_item: BlogCommentItem;
 
-  @Output() itemDeleted: EventEmitter<Blog_comment_item> = new EventEmitter();
+  @Output() itemDeleted: EventEmitter<BlogCommentItem> = new EventEmitter();
   error;
 
   constructor(private userService: UserService,

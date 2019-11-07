@@ -1,3 +1,5 @@
+import {Topic} from "./topic";
+
 export class Achievement{
   achievementId: number;
   title: string;
@@ -7,4 +9,5 @@ export class Achievement{
   posts: number;
   rating: number;
   meetups: number;
+  topics: Topic[];
 }

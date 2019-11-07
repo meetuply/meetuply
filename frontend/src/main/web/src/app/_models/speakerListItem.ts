@@ -1,4 +1,4 @@
-export class Speaker_list_item {
+export class SpeakerListItem {
 	name: string;
 	surname: string;
 	location: string;
@@ -7,5 +7,6 @@ export class Speaker_list_item {
 	languages: string[];
 	following: boolean;
 	awards: number;
+	photo: string;
 	id: number;
 }

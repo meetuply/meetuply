@@ -25,12 +25,13 @@
     <td>{{id + 1}}</td>
     <td>{{achievement.title}}</td>
     <td>{{achievement.description}}</td>
-    <td><img *ngIf=achievement.icon src="{{achievement.icon}}"></td>
+    <td><img caption="" src="{{achievement.icon}}" onerror="this.onerror=null;
+    src='/../../assets/icons/noimage.png'"></td>
     <td>{{achievement.followers}}</td>
     <td>{{achievement.posts}}</td>
     <td>{{achievement.rating}}</td>
     <td>{{achievement.meetups}}</td>
-    <td></td>
+    <td><span class="topic-name" *ngFor="let topic of achievement.topics" [routerLink]="['/topics/'+topic.topicId]">{{topic.name}}<br></span></td>
     <td class="delete-button-td"><button class="delete-button" (click)="achievementToggled(achievement.achievementId)"
                 name="{{achievement.name}}"  id='{{achievement.uid}}'>x</button></td>
   </tr>

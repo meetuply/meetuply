@@ -5,7 +5,7 @@ import {Subscription} from "rxjs";
 import {UserService} from "../_services";
 import {BlogService} from "../_services/blog.service";
 import {BlogPost} from "../_models";
-import {Blog_comment_item} from "../_models/blog_comment_item";
+import {BlogCommentItem} from "../_models/blogCommentItem";
 import {BlogComment} from "../_models/comment";
 
 @Component({
@@ -27,8 +27,8 @@ export class BlogPageComponent implements OnInit {
   step = 10;
   scrollDistance = 2;
 
-  commentsList: Blog_comment_item[] = [];
-  newChunk: Blog_comment_item[];
+  commentsList: BlogCommentItem[] = [];
+  newChunk: BlogCommentItem[];
   new_comment: string;
 
   private sub: Subscription;
@@ -69,7 +69,7 @@ export class BlogPageComponent implements OnInit {
                     authorid=author.userId;
                   }
                 );
-                return new Blog_comment_item(item, username, photo, authorid)
+                return new BlogCommentItem(item, username, photo, authorid)
               }
             ));
             this.commentsList.push(...this.newChunk);
@@ -151,7 +151,7 @@ export class BlogPageComponent implements OnInit {
     }
   }
 
-  itemDeletedHandler(deleted: Blog_comment_item) {
+  itemDeletedHandler(deleted: BlogCommentItem) {
     const index = this.commentsList.indexOf(deleted, 0);
     if (index > -1) {
       this.commentsList.splice(index, 1);

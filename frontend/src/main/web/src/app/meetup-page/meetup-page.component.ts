@@ -48,6 +48,7 @@ export class MeetupPageComponent implements OnInit {
     this.loadMeetup(this.id);
   }
 
+
   loadMeetup(id: number) {
     this.loading = true;
     this.sub = this.meetupService.get(id).subscribe(

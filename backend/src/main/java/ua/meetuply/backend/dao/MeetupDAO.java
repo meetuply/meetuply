@@ -60,7 +60,7 @@ public class MeetupDAO implements IDAO<Meetup> {
             "inner join (select uid, coalesce((select avg(value) from rating where rated_user_id = uid), 0.0) as rating\n" +
             "from user) as r\n" +
             "on r.uid = speaker_id\n" +
-            "where state_id IN (SELECT uid FROM state WHERE LOWER(name) in ('scheduled','booked'))\n" +
+            "where start_date_time > now() \n" +
             "order by start_date_time asc limit ?, ?;";
     private static final String GET_USER_MEETUPS_CHUNK_WITH_RATING = "SELECT * from meetup\n" +
             "inner join (select uid, firstname, surname, photo from user) as u on\n" +
@@ -71,7 +71,7 @@ public class MeetupDAO implements IDAO<Meetup> {
             "order by start_date_time desc limit ?, ?;";
     private static final String GET_USER_MEETUPS_BEFORE_DAY = "SELECT * FROM meetup \n" +
             "\twhere uid in (select meetup_id from meetup_attendees where user_id = ?) and\n" +
-            "    start_date_time > now() and start_date_time < (now() + interval ? day)";
+            " start_date_time > now() and start_date_time < (now() + interval ? day) order by start_date_time asc";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -15,8 +15,10 @@ import ua.meetuply.backend.model.Topic;
 
 @Repository
 public class TopicDAO implements IDAO<Topic>, RowMapper<Topic> {
-	
-	@Autowired
+
+    private static final String GET_TOPICS_FOR_ACHIEVEMENT = "select * from topic where uid in (select topic_id from achievement_topic where achievement_id = ?)";
+
+    @Autowired
     public JdbcTemplate jdbcTemplate;
 
     @Override
@@ -28,6 +30,14 @@ public class TopicDAO implements IDAO<Topic>, RowMapper<Topic> {
     public Integer getIdByName(String name) {
         List<Topic> topics = jdbcTemplate.query("SELECT * FROM topic WHERE name=? ", new Object[] { name }, this);
         return topics.size() == 0 ? null : topics.get(0).getTopicId();
+    }
+
+    public Integer getTopicQuantity(Integer topicId) {
+        return jdbcTemplate.queryForObject("SELECT quantity FROM achievement_topic WHERE topic_id=? limit 1;", new Object[] { topicId }, Integer.class);
+    }
+
+    public List<Topic> getAchievementTopics(Integer achievementId) {
+        return jdbcTemplate.query(GET_TOPICS_FOR_ACHIEVEMENT, new Object[]{achievementId}, this);
     }
 
     @Override
