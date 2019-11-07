@@ -12,6 +12,7 @@ import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.FilterService;
 import ua.meetuply.backend.service.MeetupService;
+import ua.meetuply.backend.service.TopicService;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -30,6 +31,9 @@ public class MeetupController {
 
     @Resource
     private FilterService filterService;
+
+    @Resource
+    private TopicService topicService;
 
     @GetMapping()
     public @ResponseBody
@@ -75,8 +79,9 @@ public class MeetupController {
     }
 
     @GetMapping("/soon/{userId}/{day}")
-    public @ResponseBody Iterable<Meetup> getMeetupsBeforeDay(@PathVariable("userId") Integer userId,
-                                                                  @PathVariable("day") int day){
+    public @ResponseBody
+    Iterable<Meetup> getMeetupsBeforeDay(@PathVariable("userId") Integer userId,
+                                         @PathVariable("day") int day) {
         return meetupService.getUserMeetupsBeforeDay(userId, day);
 
     }
@@ -166,18 +171,37 @@ public class MeetupController {
         return meetups;
     }
 
+    //    @GetMapping("/criteria/search")
+//    public @ResponseBody
+//    List<Meetup> getMeetupsByCriteria(@RequestParam(value = "ratingFrom", required = false) Float ratingFrom,
+//                                      @RequestParam(value = "ratingTo", required = false) Float ratingTo,
+//                                      @RequestParam(value = "dateFrom", required = false) String dateFrom,
+//                                      @RequestParam(value = "dateTo", required = false) String dateTo,
+//                                      @RequestParam(value = "topics", required = false) List<Topic> topics) {
+//
+//        Timestamp dateFromTimestamp = meetupService.getTimestampFromString(dateFrom);
+//        Timestamp dateToTimestamp = meetupService.getTimestampFromString(dateTo);
+//        return meetupService.findMeetupsByCriteria(ratingFrom, ratingTo, dateFromTimestamp, dateToTimestamp,
+//                topics, appUserService.getCurrentUserID());
+//    }
     @GetMapping("/criteria/search")
     public @ResponseBody
     List<Meetup> getMeetupsByCriteria(@RequestParam(value = "ratingFrom", required = false) Float ratingFrom,
                                       @RequestParam(value = "ratingTo", required = false) Float ratingTo,
                                       @RequestParam(value = "dateFrom", required = false) String dateFrom,
                                       @RequestParam(value = "dateTo", required = false) String dateTo,
-                                      @RequestParam(value = "topics", required = false) List<Topic> topics) {
+                                      @RequestParam(value = "topics", required = false) List<Integer> topics) {
 
         Timestamp dateFromTimestamp = meetupService.getTimestampFromString(dateFrom);
         Timestamp dateToTimestamp = meetupService.getTimestampFromString(dateTo);
         return meetupService.findMeetupsByCriteria(ratingFrom, ratingTo, dateFromTimestamp, dateToTimestamp,
-                topics, appUserService.getCurrentUserID());
+                topicService.getTopicListFromIdList(topics), appUserService.getCurrentUserID());
+    }
+
+    @GetMapping("/userFilters")
+    public @ResponseBody
+    Iterable<Filter> getUsersFilters() {
+        return filterService.getUsersFilter(appUserService.getCurrentUserID());
     }
 
     @PatchMapping("/{meetupID}/action={action}")

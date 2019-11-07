@@ -8,6 +8,9 @@ import ua.meetuply.backend.model.Topic;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.*;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
+
 @Component
 public class TopicService {
 
@@ -20,6 +23,14 @@ public class TopicService {
 
     public Integer getIdByName(String name){
         return topicDAO.getIdByName(name);
+    }
+
+    public List<Topic> getTopicListFromIdList(List<Integer> topicsId){
+        return isNotEmpty(topicsId) ? topicsId.stream().map(this::get).collect(toList()) : null;
+    }
+
+    public List<Integer> getIdListFromTopicList(List<Topic> topics){
+        return isNotEmpty(topics) ? topics.stream().map(Topic::getTopicId).collect(toList()) : null;
     }
 
     public List<Topic> getByName(String name){

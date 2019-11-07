@@ -12,14 +12,14 @@ import ua.meetuply.backend.model.State.StateNames;
 import ua.meetuply.backend.service.LanguageService;
 import ua.meetuply.backend.model.Topic;
 import ua.meetuply.backend.service.StateService;
+import ua.meetuply.backend.service.TopicService;
 
+import javax.annotation.Resource;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static java.util.stream.Collectors.*;
-import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 
@@ -85,6 +85,9 @@ public class MeetupDAO implements IDAO<Meetup> {
     @Autowired
     private LanguageService languageService;
 
+    @Resource
+    TopicService topicService;
+
     @Override
     public Meetup get(Integer id) {
         List<Meetup> meetups = jdbcTemplate.query(GET_BY_ID_QUERY, new Object[]{id}, new MeetupRowMapper());
@@ -99,9 +102,6 @@ public class MeetupDAO implements IDAO<Meetup> {
     @Override
     public void save(Meetup meetup) {
 
-
-        //System.out.println(meetup);
-        //INSERT INTO `meetup_topic` (topic_id, meetup_id) VALUES ()
         jdbcTemplate.update(SAVE_QUERY,
                 meetup.getMeetupPlace(), meetup.getMeetupTitle(), meetup.getMeetupDescription(),
                 meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
@@ -173,9 +173,8 @@ public class MeetupDAO implements IDAO<Meetup> {
 
 
     public List<Topic> getMeetupTopics(Integer i) {
-        List<Topic> topicList = jdbcTemplate.query(GET_TOPICS_BY_MEETUP, new Object[]{i},
+        return jdbcTemplate.query(GET_TOPICS_BY_MEETUP, new Object[]{i},
                 new TopicRowMapper());
-        return topicList;
     }
 
 
@@ -232,7 +231,6 @@ public class MeetupDAO implements IDAO<Meetup> {
     public void join(Integer meetupID, Integer userID) {
         jdbcTemplate.update(JOIN_MEETUP_QUERY,
                 meetupID, userID);
-        System.out.println("insert meetup " + meetupID + " user " + userID);
     }
 
     public void leave(Integer meetupID, Integer userID) {
@@ -250,7 +248,6 @@ public class MeetupDAO implements IDAO<Meetup> {
     public List<Meetup> find(SQLPredicate where) {
         StringBuilder query = new StringBuilder(GET_ALL_QUERY+" ");
         if (where != null) query.append("WHERE ").append(where.toString());
-        System.out.println(query);
         return jdbcTemplate.query(query.toString(), new MeetupRowMapper());
     }
 
@@ -309,14 +306,7 @@ public class MeetupDAO implements IDAO<Meetup> {
 
     public List<Meetup> findBy(Filter filter) {
         List<SQLPredicate> andList = new LinkedList<>();
-        List<Integer> topicIds = null;
-        if (isEmpty(filter.getTopics())){
-            topicIds = null;
-        }
-        else topicIds = filter.getTopics().stream()
-                .map(Topic::getTopicId)
-                .collect(toList());
-
+        List<Integer> topicIds = topicService.getIdListFromTopicList(filter.getTopics());
 
         if (filter.getDateFrom() != null)
             andList.add(new SQLPredicate("start_date_time", Operation.GREATER_EQUALS, filter.getDateFrom()));
@@ -332,10 +322,6 @@ public class MeetupDAO implements IDAO<Meetup> {
                         new SQLSelect("avg_rating", "user_id",
                                 new SQLPredicate("value", Operation.LESS_EQUALS, filter.getRatingTo()))));
 
-        System.out.println(new SQLPredicate(Operation.AND, Arrays.asList(
-                new SQLPredicate("meetup_id", Operation.EQUALS, "uid"),
-                new SQLPredicate("topic_id", Operation.IN, topicIds))));
-
         if (isNotEmpty(topicIds))
             andList.add(new SQLPredicate(Operation.EXISTS,
                         new SQLSelect("meetup_topic", "topic_id",
@@ -345,10 +331,7 @@ public class MeetupDAO implements IDAO<Meetup> {
                                                 )))));
 
         SQLPredicate where = new SQLPredicate(Operation.AND, andList);
-        StringBuilder query = new StringBuilder(GET_ALL_QUERY + " ");
-        query.append("WHERE ").append(where.toString());
-        System.out.println(query);
-        return jdbcTemplate.query(query.toString(), new MeetupRowMapper());
+        return jdbcTemplate.query(GET_ALL_QUERY + " WHERE " + where.toString(), new MeetupRowMapper());
     }
 
 }
