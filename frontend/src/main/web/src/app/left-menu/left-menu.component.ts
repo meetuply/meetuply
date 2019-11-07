@@ -3,7 +3,9 @@ import { MenuItem } from '../_models/menuItem';
 import { HttpClient } from "@angular/common/http";
 import { Router, ActivatedRoute } from "@angular/router";
 import { AuthenticationService, UserService } from "../_services";
-import {User} from "../_models";
+import { User } from "../_models";
+import { NotificationService } from '../_services/notification.service'
+import { Notification } from '../_models/notification'
 
 
 @Component({
@@ -19,8 +21,8 @@ export class LeftMenuComponent implements OnInit {
   user: User;
 
   menu_items: MenuItem[] = [
-    { icon: "apps.png", text: 'dashboard', redirectTo: "dashboard", userCanSee: true, adminCanSee: false},
-    { icon: "globe.png", text: 'meetups', redirectTo: "meetups", userCanSee: true, adminCanSee: true},
+    { icon: "apps.png", text: 'dashboard', redirectTo: "dashboard", userCanSee: true, adminCanSee: false },
+    { icon: "globe.png", text: 'meetups', redirectTo: "meetups", userCanSee: true, adminCanSee: true },
     { icon: "user.png", text: 'speakers', redirectTo: "speakers", userCanSee: true, adminCanSee: false },
     { icon: "user.png", text: 'users', redirectTo: "deactivation", userCanSee: false, adminCanSee: true },
     { icon: "comment.png", text: 'chat', redirectTo: "chats", userCanSee: true, adminCanSee: false },
@@ -46,6 +48,7 @@ export class LeftMenuComponent implements OnInit {
   constructor(private http: HttpClient,
     private router: Router,
     private authenticationService: AuthenticationService,
+    private notificationService: NotificationService,
     public userService: UserService,
     private route: ActivatedRoute
   ) {
@@ -66,8 +69,8 @@ export class LeftMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userService.getCurrentUser().subscribe(user => this.user = user);
-
+   
+    this.user = this.userService.currentUser;
     this.route.pathFromRoot[1].url.subscribe(val => {
 
       if (val[0].toString() == 'create' && val[1].toString() == 'meetup') {
@@ -85,7 +88,7 @@ export class LeftMenuComponent implements OnInit {
     this.notificationService.connect(this.userService.currentUser.userId, data => {
       //alert("New notification!!Do what you want with it, I go to sleep");
 
-      let msg =  JSON.parse(data.body);
+      let msg = JSON.parse(data.body);
       this.tempNotifications.push(msg);
 
       setTimeout(() => {
