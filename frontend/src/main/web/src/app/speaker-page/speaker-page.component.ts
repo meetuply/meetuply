@@ -58,10 +58,10 @@ export class SpeakerPageComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
     this.loadCommonRoom(this.id, this.userService.currentUser.userId);
     this.loadUser(this.id);
+    this.loadRating(this.id);
     this.loadFollowers(this.id);
     this.loadLanguages(this.id);
     this.loadAchievements(this.id);
-    this.loadRating(this.id);
     this.loadMeetups();
   }
 
@@ -84,6 +84,12 @@ export class SpeakerPageComponent implements OnInit {
           await this.loadLastPost(id);
         }
       });
+  }
+
+  loadRating(id:number){
+    this.ratingService.getUserRatingAvg(id).subscribe(res => {
+      this.rate=res;
+    })
   }
 
   loadFollowers(id: number) {
@@ -162,15 +168,11 @@ export class SpeakerPageComponent implements OnInit {
     )
   }
 
-  loadRating(id: number) {
-    this.ratingService.getUserRatingAvg(id);
-  }
-
   followText(): string {
     if (this.following === true) {
-      return "unfollow";
+      return "Unfollow";
     }
-    return "follow";
+    return "Follow";
   }
 
   followType(): number {

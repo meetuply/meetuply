@@ -18,8 +18,8 @@ public class RatingService {
 
     public void createRating(Rating rating, Integer idrated) {
         rating.setDate(LocalDateTime.now());
-        rating.setRatedBy(appUserService.getUser(appUserService.getCurrentUserID()));
-        rating.setRatedUser(appUserService.getUser(idrated));
+        rating.setRatedBy(appUserService.getCurrentUserID());
+        rating.setRatedUser(idrated);
         ratingDAO.save(rating);
     }
 
