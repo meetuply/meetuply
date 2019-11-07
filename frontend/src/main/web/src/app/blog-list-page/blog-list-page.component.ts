@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {Blog_list_item} from '../_models/blog_list_item';
+import {BlogListItem} from '../_models/blogListItem';
 import {BlogService} from "../_services/blog.service"
 import {Subscription} from "rxjs";
 import {UserService} from "../_services";
 import {ActivatedRoute} from "@angular/router";
+import {User} from "../_models";
 
 @Component({
   selector: 'app-blog-list-page',
@@ -14,7 +15,7 @@ import {ActivatedRoute} from "@angular/router";
 export class BlogListPageComponent implements OnInit {
 
   id: number;
-
+  user: User;
   loading = false;
   lastRow = 0;
   maxPostsOnPage: number;
@@ -22,14 +23,15 @@ export class BlogListPageComponent implements OnInit {
   scrollDistance = 2;
   author: string;
   filter: string;
-  postsList: Blog_list_item[] = [];
-  newChunk: Blog_list_item[];
+  postsList: BlogListItem[] = [];
+  newChunk: BlogListItem[];
   private sub: Subscription;
 
   constructor(private blogService: BlogService, private userService: UserService, private router: ActivatedRoute,) {
   }
 
   ngOnInit() {
+    this.user = this.userService.currentUser;
     if (this.router.snapshot.url.join('/').includes("blog/user/"))
       this.changeFilter("user");
     else
@@ -63,7 +65,7 @@ export class BlogListPageComponent implements OnInit {
                       authorid = author.userId;
                     }
                   );
-                  return new Blog_list_item(item, username, photo, authorid)
+                  return new BlogListItem(item, username, photo, authorid)
                 }
               ));
               this.postsList.push(...this.newChunk);
@@ -91,7 +93,7 @@ export class BlogListPageComponent implements OnInit {
                       authorid = author.userId;
                     }
                   );
-                  return new Blog_list_item(item, username, photo, authorid)
+                  return new BlogListItem(item, username, photo, authorid)
                 }
               ));
               this.postsList.push(...this.newChunk);
@@ -137,9 +139,10 @@ export class BlogListPageComponent implements OnInit {
         this.id = this.router.snapshot.params['id'];
         break;
     }
+
   }
 
-  itemDeletedHandler(deleted: Blog_list_item) {
+  itemDeletedHandler(deleted: BlogListItem) {
     const index = this.postsList.indexOf(deleted, 0);
     if (index > -1) {
       this.postsList.splice(index, 1);

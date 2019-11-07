@@ -23,7 +23,8 @@
 
 .achievement-description{
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: bold;
   word-break: break-all;
   word-wrap: break-word;
   max-width: 100px;
@@ -36,4 +37,30 @@
   border-radius: 50%;
   text-align: center;
   margin-top: 5px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 100px;
+  background-color: transparent;
+  font-size: 13px;
+  color: black;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  margin-left: 24px;
+  margin-bottom: 60px;
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  transition-delay: 1s;
+  transition-property: visibility;
 }

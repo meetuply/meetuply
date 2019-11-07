@@ -10,6 +10,8 @@ public interface FilterService {
 
     void createFilter(Filter filter);
 
+    List<Filter> getUsersFilter(Integer uid);
+
     void updateFilter(Filter filter);
 
     void deleteFilter(Integer id);

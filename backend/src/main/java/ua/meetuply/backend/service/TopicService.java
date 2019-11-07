@@ -8,6 +8,9 @@ import ua.meetuply.backend.model.Topic;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.*;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
+
 @Component
 public class TopicService {
 
@@ -22,6 +25,14 @@ public class TopicService {
         return topicDAO.getIdByName(name);
     }
 
+    public List<Topic> getTopicListFromIdList(List<Integer> topicsId){
+        return isNotEmpty(topicsId) ? topicsId.stream().map(this::get).collect(toList()) : null;
+    }
+
+    public List<Integer> getIdListFromTopicList(List<Topic> topics){
+        return isNotEmpty(topics) ? topics.stream().map(Topic::getTopicId).collect(toList()) : null;
+    }
+
     public List<Topic> getByName(String name){
         List<Topic> topics = topicDAO.getAll();
         List<Topic> result = new ArrayList<Topic>();
@@ -29,6 +40,14 @@ public class TopicService {
             if(topic.getName().contains(name)) result.add(topic);
         }
         return result;
+    }
+
+    public Integer getTopicQuantity (Integer topicId){
+        return topicDAO.getTopicQuantity(topicId);
+    }
+
+    public List<Topic> getAchievementTopics(Integer achievementId){
+        return topicDAO.getAchievementTopics(achievementId);
     }
 
     public void create(Topic topic){

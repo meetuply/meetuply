@@ -31,6 +31,10 @@ export class AuthenticationService {
     return this.authDataSubject.value;
   }
 
+  public isAdmin(): boolean {
+    return this.currentUserValue.role.roleName == 'admin';
+  }
+
   login(username: string, password: string) {
       let authData = window.btoa(username + ':' + password);
       localStorage.setItem('authData', authData);

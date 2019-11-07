@@ -1,4 +1,4 @@
-export class Speaker_list_item {
+export class SpeakerListItem {
 	name: string;
 	surname: string;
 	location: string;

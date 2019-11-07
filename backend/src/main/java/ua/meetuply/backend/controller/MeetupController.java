@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Filter;
 import ua.meetuply.backend.model.Meetup;
+import ua.meetuply.backend.model.Topic;
+import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.FilterService;
 import ua.meetuply.backend.service.MeetupService;
+import ua.meetuply.backend.service.TopicService;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -29,48 +32,63 @@ public class MeetupController {
     @Resource
     private FilterService filterService;
 
+    @Resource
+    private TopicService topicService;
+
     @GetMapping()
-    public @ResponseBody Iterable<Meetup> getAllMeetups(){
-            return meetupService.getAllMeetups();
+    public @ResponseBody
+    Iterable<Meetup> getAllMeetups() {
+        return meetupService.getAllMeetups();
     }
 
     @GetMapping("/{startRow}/{endRow}")
-    public @ResponseBody Iterable<Meetup> getMeetupsChunkWithUsernameAndRating(
+    public @ResponseBody
+    Iterable<Meetup> getMeetupsChunkWithUsernameAndRating(
             @PathVariable("startRow") Integer startRow,
-            @PathVariable("endRow") Integer endRow)
-    {
+            @PathVariable("endRow") Integer endRow) {
         return meetupService.getMeetupsChunkWithUsernameAndRating(startRow, endRow);
     }
 
     @GetMapping("/active/{startRow}/{endRow}")
-    public @ResponseBody Iterable<Meetup> getMeetupsChunkActive(
+    public @ResponseBody
+    Iterable<Meetup> getMeetupsChunkActive(
             @PathVariable("startRow") Integer startRow,
-            @PathVariable("endRow") Integer endRow)
-    {
+            @PathVariable("endRow") Integer endRow) {
         return meetupService.getMeetupsChunkActive(startRow, endRow);
     }
 
     @GetMapping("user/{startRow}/{endRow}")
-    public @ResponseBody Iterable<Meetup> getUserMeetupsChunk(
+    public @ResponseBody
+    Iterable<Meetup> getUserMeetupsChunk(
             @PathVariable("startRow") Integer startRow,
-            @PathVariable("endRow") Integer endRow)
-    {
+            @PathVariable("endRow") Integer endRow) {
         return meetupService.getUserMeetupsChunk(startRow, endRow);
     }
 
     @GetMapping("/{meetupId}/attendees")
-    public @ResponseBody Iterable<AppUser> getAttendees(@PathVariable("meetupId") Integer meetupId){
+    public @ResponseBody
+    Iterable<AppUser> getAttendees(@PathVariable("meetupId") Integer meetupId) {
         return appUserService.getMeetupAttendees(meetupId);
     }
 
+
+    @GetMapping("/{meetupId}/topics")
+    public @ResponseBody
+    Iterable<Topic> getTopics(@PathVariable("meetupId") Integer meetupId) {
+        return meetupService.getMeetupTopics(meetupId);
+    }
+
     @GetMapping("/soon/{userId}/{day}")
-    public @ResponseBody Iterable<Meetup> getAttendees(@PathVariable("userId") Integer userId,
-                                                       @PathVariable("day") int day){
+    public @ResponseBody
+    Iterable<Meetup> getMeetupsBeforeDay(@PathVariable("userId") Integer userId,
+                                         @PathVariable("day") int day) {
         return meetupService.getUserMeetupsBeforeDay(userId, day);
+
     }
 
     @PostMapping()
-    public ResponseEntity createMeetup(@Valid @RequestBody Meetup meetup){
+    public ResponseEntity createMeetup(@RequestBody @Valid FullMeetup meetup) {
+
         meetupService.createMeetup(meetup);
         return ResponseEntity.ok().build();
     }
@@ -92,18 +110,18 @@ public class MeetupController {
 
     @GetMapping("/future/{userId}")
     @ResponseBody
-    public Iterable<Meetup> getUserFutureMeetups(@PathVariable("userId") Integer userId){
+    public Iterable<Meetup> getUserFutureMeetups(@PathVariable("userId") Integer userId) {
         return meetupService.getUserFutureMeetups(userId);
     }
 
     @GetMapping("/past/{userId}")
     @ResponseBody
-    public Iterable<Meetup> getUserPastMeetups(@PathVariable("userId") Integer userId){
+    public Iterable<Meetup> getUserPastMeetups(@PathVariable("userId") Integer userId) {
         return meetupService.getUserPastMeetups(userId);
     }
 
     @DeleteMapping("/{meetupId}")
-    public ResponseEntity deleteMeetup(@PathVariable("meetupId") Integer meetupId){
+    public ResponseEntity deleteMeetup(@PathVariable("meetupId") Integer meetupId) {
         if (meetupService.getMeetupById(meetupId) == null) {
             return ResponseEntity.notFound().build();
         }
@@ -125,16 +143,11 @@ public class MeetupController {
     }
 
     @GetMapping("/{meetupID}/attendee")
-    public @ResponseBody Boolean leave(
+    public @ResponseBody
+    Boolean leave(
             @PathVariable("meetupID") Integer meetupID,
             @RequestParam("id") Integer userID) {
         return meetupService.isAttendee(meetupID, userID);
-    }
-
-
-    @GetMapping("/filter")
-    public List<Meetup> filter(@RequestBody Filter filter) {
-        return meetupService.findBy(filter);
     }
 
     @GetMapping("/filters")
@@ -143,41 +156,59 @@ public class MeetupController {
     }
 
     @PostMapping("/filters")
-    public ResponseEntity<Meetup> createFilter (@Valid @RequestBody Filter filter){
+    public ResponseEntity<Meetup> createFilter(@Valid @RequestBody Filter filter) {
         filter.setUserId(appUserService.getCurrentUserID());
         filterService.createFilter(filter);
         return ResponseEntity.ok().build();
     }
 
-    //TODO rename url
-    @GetMapping("/filter-test")
+    @GetMapping("/filter/search")
     public @ResponseBody
     List<Meetup> getMeetupsByFilter(@RequestParam(value = "filter") Integer filterId, Model model) {
         Filter filter = filterService.getFilter(filterId);
         List<Meetup> meetups = meetupService.findMeetupsByFilter(filter);
         model.addAttribute(meetups);
-        //TODO decide what page will be here
-        //return "";
         return meetups;
     }
 
-    //TODO rename url
-    @GetMapping("/criteria-test")
+    //    @GetMapping("/criteria/search")
+//    public @ResponseBody
+//    List<Meetup> getMeetupsByCriteria(@RequestParam(value = "ratingFrom", required = false) Float ratingFrom,
+//                                      @RequestParam(value = "ratingTo", required = false) Float ratingTo,
+//                                      @RequestParam(value = "dateFrom", required = false) String dateFrom,
+//                                      @RequestParam(value = "dateTo", required = false) String dateTo,
+//                                      @RequestParam(value = "topics", required = false) List<Topic> topics) {
+//
+//        Timestamp dateFromTimestamp = meetupService.getTimestampFromString(dateFrom);
+//        Timestamp dateToTimestamp = meetupService.getTimestampFromString(dateTo);
+//        return meetupService.findMeetupsByCriteria(ratingFrom, ratingTo, dateFromTimestamp, dateToTimestamp,
+//                topics, appUserService.getCurrentUserID());
+//    }
+    @GetMapping("/criteria/search")
     public @ResponseBody
-    List<Meetup> getMeetupsByCriteria(@RequestParam(value = "rating", required = false) Double rating,
-                                      @RequestParam(value = "date-from", required = false) Timestamp dateFrom,
-                                      @RequestParam(value = "date-to", required = false) Timestamp dateTo,
-                                      Model model) {
-        List<Meetup> meetups = meetupService.findMeetupsByCriteria(rating, dateFrom, dateTo);
-        model.addAttribute(meetups);
-        return meetups;
+    List<Meetup> getMeetupsByCriteria(@RequestParam(value = "ratingFrom", required = false) Float ratingFrom,
+                                      @RequestParam(value = "ratingTo", required = false) Float ratingTo,
+                                      @RequestParam(value = "dateFrom", required = false) String dateFrom,
+                                      @RequestParam(value = "dateTo", required = false) String dateTo,
+                                      @RequestParam(value = "topics", required = false) List<Integer> topics) {
+
+        Timestamp dateFromTimestamp = meetupService.getTimestampFromString(dateFrom);
+        Timestamp dateToTimestamp = meetupService.getTimestampFromString(dateTo);
+        return meetupService.findMeetupsByCriteria(ratingFrom, ratingTo, dateFromTimestamp, dateToTimestamp,
+                topicService.getTopicListFromIdList(topics), appUserService.getCurrentUserID());
+    }
+
+    @GetMapping("/userFilters")
+    public @ResponseBody
+    Iterable<Filter> getUsersFilters() {
+        return filterService.getUsersFilter(appUserService.getCurrentUserID());
     }
 
     @PatchMapping("/{meetupID}/action={action}")
     public ResponseEntity changeState
             (@PathVariable("meetupID") Integer meetupID,
              @PathVariable("action") String action,
-             @RequestBody(required=false) Meetup meetup) throws Exception {
+             @RequestBody(required = false) Meetup meetup) throws Exception {
         switch (action) {
             case "cancel":
                 meetupService.cancelMeetup(meetupID);

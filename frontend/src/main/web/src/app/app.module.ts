@@ -61,6 +61,7 @@ import {MatMomentDateModule} from "@angular/material-moment-adapter";
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { SettingsComponent } from './settings/settings.component';
 import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
+import {FeedbackCreatePageComponent} from "./feedback-create-page/feedback-create-page.component";
 import { BanPageComponent } from './ban-page/ban-page.component';
 import { BansPageComponent } from './bans-page/bans-page.component';
 
@@ -75,6 +76,7 @@ import { BansPageComponent } from './bans-page/bans-page.component';
     ButtonComponent,
     LeftMenuComponent,
     LeftMenuItemComponent,
+    FeedbackCreatePageComponent,
     DashboardPageComponent,
     SpeakerPageComponent,
     SpeakerListPageComponent,

@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
 import { Location } from '@angular/common';
+import {TopicService} from "../_services";
 
 @Component({
   selector: 'app-achievements-page',
@@ -10,9 +11,12 @@ import { Location } from '@angular/common';
 })
 export class AchievementsPageComponent implements OnInit {
 
-  @Input() achievements: Achievement[];
+  achievements: Achievement[];
+  iconSrc = "";
+  iconExists = true;
 
-  constructor(private achievementService: AchievementService, private location: Location) { }
+  constructor(private achievementService: AchievementService, private location: Location,
+              private topicService: TopicService) { }
 
   ngOnInit() {
     this.loadAchievements();
@@ -32,15 +36,45 @@ export class AchievementsPageComponent implements OnInit {
     );
   }
 
-  loadAchievements(){
-    this.achievementService.getAll().toPromise().then(
-      data => {
-        this.achievements = data;
-      }, error => {
+  async loadAchievements(){
+    await this.achievementService.getAll().subscribe(
+        data => {
+         this.achievements = data;
+         this.achievements.forEach(a => this.topicService.getAchievementTopics(a.achievementId)
+           .subscribe(data => {
+             a.topics = data;
+             if (a.topics.length > 0){
+               this.topicService.getTopicQuantity(a.topics[0].topicId).subscribe(
+                 data => a.meetups = data
+               )
+             }
+           }));
+       }, error => {
         console.log(error);
       }
     );
   }
+
+  // checkImageExists(imageUrl, callBack) {
+  //   var imageData = new Image();
+  //   imageData.onload = function() {
+  //     callBack(true);
+  //   };
+  //   imageData.onerror = function() {
+  //     callBack(false);
+  //   };
+  //   imageData.src = imageUrl;
+  // }
+  //
+  // check(imageUrl){
+  //   this.checkImageExists(imageUrl, function(exists){
+  //     if (exists){
+  //       this.iconSrc = imageUrl;
+  //     } else {
+  //       this.iconSrc = "";
+  //     }
+  //   });
+  // }
 
   public goBack(){
     this.location.back();
