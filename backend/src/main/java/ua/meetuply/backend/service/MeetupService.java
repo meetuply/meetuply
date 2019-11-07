@@ -9,10 +9,7 @@ import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.controller.exception.PermissionException;
 import ua.meetuply.backend.dao.FilterDAO;
 import ua.meetuply.backend.dao.MeetupDAO;
-import ua.meetuply.backend.model.AchievementType;
-import ua.meetuply.backend.model.AppUser;
-import ua.meetuply.backend.model.Filter;
-import ua.meetuply.backend.model.Meetup;
+import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.model.State.StateNames;
 
 import java.sql.Timestamp;
@@ -36,14 +33,22 @@ public class MeetupService {
     @Autowired
     private FilterDAO filterDAO;
 
+
     @Transactional
-    public void createMeetup(Meetup meetup) {
+    public void createMeetup(FullMeetup meetup) {
+
         meetup.setStateId(stateService.get(StateNames.SCHEDULED.name).getStateId());
         meetup.setSpeakerId(appUserService.getCurrentUserID());
-        meetupDao.save(meetup);
+
+        meetupDao.saveFull(meetup);
         achievementService.checkOne(AchievementType.MEETUPS);
         achievementService.checkOne(AchievementType.MEETUPS_TOPIC);
     }
+
+    public List<Topic> getMeetupTopics(Integer i){
+        return meetupDao.getMeetupTopics(i);
+    }
+
 
     public List<Meetup> getAllMeetups() {
         return meetupDao.getAll();

@@ -1,6 +1,6 @@
 import {BlogComment} from "./comment";
 
-export class Blog_comment_item {
+export class BlogCommentItem {
   comment: BlogComment;
   author: string;
   authorPhoto: string;

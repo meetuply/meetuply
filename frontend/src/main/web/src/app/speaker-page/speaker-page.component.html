@@ -11,7 +11,7 @@
       <div class='avatar'>
         <img *ngIf="user.photo" src={{user.photo}}>
         <img *ngIf="!user.photo" src="assets/img/download.png">
-        <app-rating size='24' rating="{{this.user}}"></app-rating>
+        <app-rating *ngIf="rate" size='16' rating="{{this.rate}}"></app-rating>
       </div>
 
       <div class='other'>
@@ -27,10 +27,14 @@
 
         </div>
         <div class='additional' *ngIf="!isCurrentUser()">
-          <app-button *ngIf="userService.currentUser.role.roleName != 'admin'" [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
-          </app-button>
-          <app-button *ngIf="userService.currentUser.role.roleName != 'admin'" text='message' type='1' (click)="message()" fontSize='20'></app-button>
+          <div class='additional' *ngIf="this.userService.currentUser.role.roleName !== 'admin'">
+            <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
+            </app-button>
+            <app-button text='Message' type='1' (click)="message()" fontSize='20'></app-button>
+            <app-button text="Ban" type='2' fontSize='20' routerLink="/speakers/{{this.user.userId}}/ban"></app-button>
+          </div>
           <div class='additional' *ngIf="this.userService.currentUser.role.roleName === 'admin'">
+            <app-button text="View bans" type='1' fontSize='20' routerLink="/speakers/{{this.user.userId}}/view_bans"></app-button>
             <app-button [text]="deactivationText()" [type]='deactivationType()' (onClick)="deactivationButtonClicked($event)" fontSize='20'></app-button>
           </div>
         </div>

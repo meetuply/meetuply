@@ -1,4 +1,7 @@
-export class Meetup{
+import { Language } from "./language";
+import { Topic } from "./topic";
+
+export class Meetup {
   meetupId: number;
   meetupPlace: string;
   meetupTitle: string;
@@ -10,4 +13,7 @@ export class Meetup{
   meetupFinishDateTime: Date;
   stateId: number;
   speakerId: number;
+
+  language: string;
+  topics: number[];
 }

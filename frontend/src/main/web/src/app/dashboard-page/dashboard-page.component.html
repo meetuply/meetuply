@@ -1,7 +1,7 @@
 <app-left-menu></app-left-menu>
 <div class='content'>
 
-  <div class="title">Welcome, {{this.userService.currentUser.firstName}}!</div>
+  <div class="title">Welcome, {{userService.currentUser.firstName}}!</div>
 
   <div class='dashboard'>
 
@@ -43,7 +43,7 @@
             [meetupListItem]="meetup"
             [isMy]="userService.currentUser.userId == meetup.speakerId"
             [state]="stateService.states[meetup.stateId]"
-            [showAuthorInfo]=false>
+            [showAuthorInfo]=true>
           </app-meetup-list-item>
         </div>
       </div>

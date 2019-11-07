@@ -10,7 +10,7 @@ import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
 import {RatingService} from "../_services/rating.service";
 import {BlogService} from "../_services/blog.service";
-import {Blog_list_item} from "../_models/blog_list_item";
+import {BlogListItem} from "../_models/blogListItem";
 import {Subscription} from "rxjs";
 import {Meetup} from "../_models/meetup";
 import {StateService} from "../_services/state.service";
@@ -36,7 +36,7 @@ export class SpeakerPageComponent implements OnInit {
   feedback = [];
   error;
   loading: boolean;
-  lastPost: Blog_list_item;
+  lastPost: BlogListItem;
   lastPostDefined: boolean = false;
   viewAllFuture = false;
   viewAllPast = false;
@@ -58,10 +58,10 @@ export class SpeakerPageComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
     this.loadCommonRoom(this.id, this.userService.currentUser.userId);
     this.loadUser(this.id);
+    this.loadRating(this.id);
     this.loadFollowers(this.id);
     this.loadLanguages(this.id);
     this.loadAchievements(this.id);
-    this.loadRating(this.id);
     this.loadMeetups();
   }
 
@@ -86,6 +86,12 @@ export class SpeakerPageComponent implements OnInit {
       });
   }
 
+  loadRating(id:number){
+    this.ratingService.getUserRatingAvg(id).subscribe(res => {
+      this.rate=res;
+    })
+  }
+
   loadFollowers(id: number) {
     this.userService.getUserFollowers(id).subscribe(res => {
       this.followers = res;
@@ -102,7 +108,7 @@ export class SpeakerPageComponent implements OnInit {
   loadLastPost(id: number) {
     this.blogService.getBlogPostsByUserId(0, 1, id).subscribe(posts => {
       if (posts.length > 0) {
-        this.lastPost = new Blog_list_item(posts.pop(),
+        this.lastPost = new BlogListItem(posts.pop(),
           this.user.firstName + " " + this.user.lastName,
           this.user.photo, this.id);
         this.lastPostDefined = true;
@@ -162,15 +168,11 @@ export class SpeakerPageComponent implements OnInit {
     )
   }
 
-  loadRating(id: number) {
-    this.ratingService.getUserRatingAvg(id);
-  }
-
   followText(): string {
     if (this.following === true) {
-      return "unfollow";
+      return "Unfollow";
     }
-    return "follow";
+    return "Follow";
   }
 
   followType(): number {

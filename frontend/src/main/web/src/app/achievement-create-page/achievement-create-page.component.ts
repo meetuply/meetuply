@@ -13,8 +13,6 @@ import set = Reflect.set;
 })
 export class AchievementCreatePageComponent implements OnInit {
 
-  //todo update validation
-
   achievementForm: FormGroup;
   topics: any;
   showTopics: boolean = false;
@@ -58,8 +56,9 @@ export class AchievementCreatePageComponent implements OnInit {
       achievement => {
         if (this.selectedTopics.size > 0) {
           this.createForMeetupsSameQuantity(achievement.achievementId, Array.from(this.selectedTopics.values()));
+        } else{
+          this.location.back();
         }
-        this.location.back();
       }, error => {
         console.log(error)
       }
@@ -73,9 +72,8 @@ export class AchievementCreatePageComponent implements OnInit {
     formData.append("quantity", this.achievementForm.get('meetups').value);
     this.achievementService.createForMeetupsSameQuantity(formData).subscribe(
       data => {
-        if (data) {
           console.log(data);
-        }
+          this.location.back();
       }, error => {
         console.log(error);
       }

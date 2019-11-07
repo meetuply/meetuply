@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {Menu_item} from "../_models/menu_item";
+import {MenuItem} from "../_models/menuItem";
 import {Router} from "@angular/router";
 import {AuthenticationService} from "../_services";
 import {User} from "../_models";
@@ -12,7 +12,7 @@ import {User} from "../_models";
 })
 export class LeftMenuItemComponent implements OnInit {
 
-  @Input() item: Menu_item;
+  @Input() item: MenuItem;
   @Input() sel: string;
   @Output() clck = new EventEmitter<string>();
   user: User;

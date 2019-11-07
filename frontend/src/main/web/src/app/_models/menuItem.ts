@@ -1,4 +1,4 @@
-export class Menu_item {
+export class MenuItem {
 	icon: string;
 	text: string;
 	redirectTo: string;

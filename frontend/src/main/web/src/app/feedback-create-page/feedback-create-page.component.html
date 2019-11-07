@@ -1,0 +1,27 @@
+<app-left-menu></app-left-menu>
+<div class='content'>
+
+  <div class='back' (click)="goBack()"></div>
+	<div class='main'>
+
+		<div class='title'>
+			Leave a feedback
+		</div>
+
+		<form class="form">
+			<div class='form_line'><span>Rating</span><input type="number" name="rating" value="1" [(ngModel)]="this.rating" step="1" min="1" max="5" required /></div>
+      <p class="form-error" id="rating-error">Rating can't be empty</p>
+
+			<div class='form_line'>
+				<span>Feedback</span>
+				<textarea placeholder="Write your feedback" cols="30" rows="8" name="feedback"  [(ngModel)]="this.feedback" autocomplete="off"></textarea>
+			</div>
+
+			<div class='extra'>
+				<app-button text='Submit' (onClick)="submit($event)" fontSize='24' type='1'></app-button>
+			</div>
+		</form>
+
+    </div>
+  </div>
+
