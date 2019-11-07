@@ -3,6 +3,7 @@ import { MenuItem } from '../_models/menuItem';
 import { HttpClient } from "@angular/common/http";
 import { Router, ActivatedRoute } from "@angular/router";
 import { AuthenticationService, UserService } from "../_services";
+import {User} from "../_models";
 
 
 @Component({
@@ -15,6 +16,7 @@ import { AuthenticationService, UserService } from "../_services";
 export class LeftMenuComponent implements OnInit {
 
   selectedItem: string;
+  user: User;
 
   menu_items: MenuItem[] = [
     { icon: "apps.png", text: 'dashboard', redirectTo: "dashboard", userCanSee: true, adminCanSee: false},
@@ -56,6 +58,7 @@ export class LeftMenuComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userService.getCurrentUser().subscribe(user => this.user = user);
 
     this.route.pathFromRoot[1].url.subscribe(val => {
 

@@ -113,6 +113,7 @@
   font-style: italic;
   margin: 1rem 1rem;
   font-size: 16px;
+  color: #7f7f7f;
 }
 
 .future-meetups {
@@ -238,3 +239,4 @@
 .one-future-meetup{
   width: 100%;
 }
+
