@@ -64,7 +64,8 @@ import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component"
 import {FeedbackCreatePageComponent} from "./feedback-create-page/feedback-create-page.component";
 import { BanPageComponent } from './ban-page/ban-page.component';
 import { BansPageComponent } from './bans-page/bans-page.component';
-
+import {MatNativeDateModule} from "@angular/material";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -136,7 +137,9 @@ import { BansPageComponent } from './bans-page/bans-page.component';
     MatFormFieldModule,
     MatDatepickerModule,
     MatInputModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    MatNativeDateModule,
+    NgbModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
