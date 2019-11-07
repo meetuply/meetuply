@@ -16,15 +16,17 @@ import java.sql.Statement;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Component
-public class FilterDAO implements IDAO<Filter>, RowMapper<Filter> {
+public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
 
     private static final String CREATE_FILTER_QUERY = "INSERT INTO `saved_filter` " +
             "(`name`, `rating_from`, `rating_to`,`date_time_from`, `date_time_to`, `owner_id`) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String CREATE_FILTER_TOPIC_QUERY = "INSERT INTO `filter_topic` (`topic_id`, `filter_id`) VALUES (?, ?)";
     private static final String GET_FILTER_QUERY = "SELECT * FROM saved_filter WHERE uid = ?";
     private static final String GET_FILTERS_TOPICS_QUERY = "SELECT `topic_id` FROM `filter_topic` WHERE filter_id = ?";
+    private static final String GET_USERS_FILTERS_QUERY = "SELECT * FROM saved_filter WHERE owner_id = ?";
 
     @Resource
     private IDAO<Topic> topicDao;
@@ -37,7 +39,12 @@ public class FilterDAO implements IDAO<Filter>, RowMapper<Filter> {
         return filters.size() == 0 ? null : filters.get(0);
     }
 
-    public List<Integer> getTopicIds(Integer filterId) {
+    @Override
+    public List<Filter> getUsersFilters(Integer userId){
+        return jdbcTemplate.query(GET_USERS_FILTERS_QUERY, new Object[]{userId}, this);
+    }
+
+    private List<Integer> getTopicIds(Integer filterId) {
         return jdbcTemplate.queryForList(GET_FILTERS_TOPICS_QUERY, new Object[]{filterId}, Integer.class);
     }
 
@@ -67,8 +74,10 @@ public class FilterDAO implements IDAO<Filter>, RowMapper<Filter> {
 
 //        jdbcTemplate.update(CREATE_FILTER_QUERY, filter.getName(), filter.getRatingFrom(), filter.getRatingTo(), filter.getDateFrom(),
 //                filter.getDateTo(), filter.getUserId());
-        for (Topic topic : filter.getTopics()) {
-            jdbcTemplate.update(CREATE_FILTER_TOPIC_QUERY, topic.getTopicId(), key);
+        if (isNotEmpty(filter.getTopics())) {
+            for (Topic topic : filter.getTopics()) {
+                jdbcTemplate.update(CREATE_FILTER_TOPIC_QUERY, topic.getTopicId(), key);
+            }
         }
     }
 
