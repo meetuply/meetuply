@@ -22,7 +22,8 @@ public class FeedbackController {
     AppUserService appUserService;
 
     @GetMapping()
-    public @ResponseBody Iterable<Feedback> getAllFeedbacks() {
+    public @ResponseBody
+    Iterable<Feedback> getAllFeedbacks() {
         return feedbackService.getFeedbacks();
     }
 
@@ -32,35 +33,49 @@ public class FeedbackController {
     }
 
     @GetMapping("/{user-id}")
-    public @ResponseBody Iterable<Feedback> getFeedbackByFeedbackTo(@PathVariable("user-id") Integer userId) {
+    public @ResponseBody
+    Iterable<Feedback> getFeedbackByFeedbackTo(@PathVariable("user-id") Integer userId) {
         return feedbackService.getFeedbacksByFeedbackTo(userId);
     }
 
     @GetMapping("/my")
-    public @ResponseBody Iterable<Feedback> getFeedbackByAuthor() {
+    public @ResponseBody
+    Iterable<Feedback> getFeedbackByAuthor() {
         return feedbackService.getFeedbacksByAuthor(appUserService.getCurrentUserID());
     }
 
     @GetMapping("/{user-id}/my")
-    public @ResponseBody Iterable<Feedback> getFeedbackFromCurrentTo(@PathVariable("user-id") Integer userId) {
-        return feedbackService.getFeedbacksByTo(appUserService.getCurrentUserID(),userId);
+    public @ResponseBody
+    Iterable<Feedback> getFeedbackFromCurrentTo(@PathVariable("user-id") Integer userId) {
+        return feedbackService.getFeedbacksByTo(appUserService.getCurrentUserID(), userId);
+    }
+
+    @GetMapping("/{user-id}/feedback-waiting")
+    @ResponseBody
+    public Iterable<Integer> getUserFeedbackWaiting(@PathVariable("user-id") Integer userId) {
+        return feedbackService.getFeedbacksWaiting(userId);
     }
 
     @PostMapping("/{user-id}")
     public ResponseEntity createFeedback(@PathVariable("user-id") Integer userId,
-                                         @Valid @RequestBody Feedback feedback){
-        if (feedback.getFeedbackContent().length()<=0 || appUserService.getUser(userId)==null || appUserService.getCurrentUserID()==userId)
+                                         @Valid @RequestBody Feedback feedback) {
+        if (feedback == null ||
+                feedback.getFeedbackContent().length() <= 0 ||
+                appUserService.getUser(userId) == null ||
+                appUserService.getCurrentUserID() == userId) {
             return ResponseEntity.badRequest().build();
+        }
         feedbackService.createFeedback(feedback);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{feedback-id}")
     public ResponseEntity updateFeedback(@PathVariable("feedback-id") Integer feedbackId,
-                                            @RequestBody Feedback feedback) {
-        if (!(appUserService.getCurrentUser().getRole().getRoleName().equals("admin")))
+                                         @RequestBody Feedback feedback) {
+        if (!(appUserService.getCurrentUser().getRole().getRoleName().equals("admin"))) {
             return ResponseEntity.badRequest().build();
-        if (feedbackService.getFeedbackById(feedbackId) == null) {
+        }
+        if (feedback == null || feedbackService.getFeedbackById(feedbackId) == null) {
             return ResponseEntity.badRequest().build();
         }
         feedback.setFeedbackId(feedbackId);
@@ -69,9 +84,10 @@ public class FeedbackController {
     }
 
     @DeleteMapping("/{feedback-id}")
-    public ResponseEntity deleteFeedback(@PathVariable("feedback-id") Integer feedbackId){
-        if (!(appUserService.getCurrentUser().getRole().getRoleName().equals("admin")))
+    public ResponseEntity deleteFeedback(@PathVariable("feedback-id") Integer feedbackId) {
+        if (!(appUserService.getCurrentUser().getRole().getRoleName().equals("admin"))) {
             return ResponseEntity.badRequest().build();
+        }
         if (feedbackService.getFeedbackById(feedbackId) == null) {
             return ResponseEntity.badRequest().build();
         }

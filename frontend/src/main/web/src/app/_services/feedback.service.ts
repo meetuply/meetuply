@@ -18,7 +18,11 @@ export class FeedbackService {
     return this.http.get(this.feedbackApiUrl + `${idby}` +"/"+`${idto}`);
   }
 
+  getWaitingFeedback(id:number): Observable<number[]> {
+    return this.http.get<number[]>(this.feedbackApiUrl + `${id}/feedback-waiting`);
+  }
+
   createFeedback(feedback: Feedback): Observable<{}> {
-    return this.http.post(this.feedbackApiUrl + `${feedback.feedbackTo}`, feedback);
+    return this.http.put(this.feedbackApiUrl + `${feedback.feedbackTo}`, feedback);
   }
 }

@@ -26,11 +26,11 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
     private static final String GET_BY_ID_QUERY = "SELECT * FROM post WHERE uid = ?";
     private static final String SAVE_QUERY = "INSERT INTO `post` (`title`, `date_time`, `content`, `author_id`) VALUES (?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM post WHERE uid = ?";
-    private static final String UPDATE_QUERY = "UPDATE post SET content = ? AND title = ? WHERE uid = ?";
+    private static final String UPDATE_QUERY = "UPDATE post SET content = ?, title = ? WHERE uid = ?";
 
     private static final String FIND_POSTS_BY_FILTER_ALL = "SELECT * FROM post WHERE author_id NOT IN (SELECT uid FROM user WHERE is_deactivated=1) order by uid desc LIMIT ?, ?";
     private static final String FIND_POSTS_BY_FILTER_MY = "SELECT * FROM post WHERE author_id = ? order by uid desc LIMIT ?, ? ";
-    private static final String FIND_POSTS_BY_FILTER_SUBS = "SELECT * FROM post WHERE author_id IN (:subs) order by uid desc LIMIT :startRow, :endRow";
+    private static final String FIND_POSTS_BY_FILTER_SUBS = "SELECT * FROM post WHERE author_id IN (SELECT followed_user_id FROM followers WHERE follower_id = ?) order by uid desc LIMIT ?, ?";
     private static final String FIND_POSTS_BY_USER_ID = "SELECT * FROM post WHERE author_id=? order by uid desc LIMIT ?, ?";
 
     @Autowired
@@ -60,18 +60,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
     public List<BlogPost> getBlogPostsChunk(Integer startRow, Integer endRow,String filter) {
         switch (filter){
             case "subs":
-                List<AppUser> subs = appUserService.getUserSubscriptionsUsers(appUserService.getCurrentUserID());
-                subs.removeIf(u -> u.isDeactivated());
-                List<Integer> subsids = subs.stream().map(s -> s.getUserId()).collect(Collectors.toList());
-                if (subs.size()>=1){
-                    MapSqlParameterSource parameters = new MapSqlParameterSource();
-                    parameters.addValue("subs", subsids);
-                    parameters.addValue("startRow", startRow);
-                    parameters.addValue("endRow", endRow);
-
-                    return namedParameterJdbcTemplate.query(FIND_POSTS_BY_FILTER_SUBS, parameters, this);
-                }
-                else return new ArrayList<BlogPost>();
+                return jdbcTemplate.query(FIND_POSTS_BY_FILTER_SUBS, new Object[]{appUserService.getCurrentUserID(), startRow, endRow}, this);
             case "my":
                 return jdbcTemplate.query(FIND_POSTS_BY_FILTER_MY, new Object[]{appUserService.getCurrentUserID(), startRow, endRow}, this);
             case "all":
@@ -103,7 +92,6 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
     @Override
     public BlogPost mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         BlogPost blogPost = new BlogPost();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         blogPost.setBlogPostId(resultSet.getInt("uid"));
         blogPost.setBlogPostTitle(resultSet.getString("title"));
         blogPost.setBlogPostContent(resultSet.getString("content"));

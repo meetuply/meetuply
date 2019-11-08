@@ -40,7 +40,6 @@ export class BlogCreatePageComponent implements OnInit {
 
       this.blogService.createBlogPost(blogpost).subscribe(data => {
         if (data == null) {
-          //supposed to redirect somewhere
           this.goBack();
         }
       }, error => {

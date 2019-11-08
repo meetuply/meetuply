@@ -6,8 +6,10 @@
     <div class="filter">
       <p>Filter by:</p>
       <p class="filter-on" id="subs" (click)="filterBy($event, 'subs')">subscriptions</p>
-      <p class="filter-off" id="all" (click)="filterBy($event, 'all')">| all</p>
-      <p class="filter-off" id="my" (click)="filterBy($event, 'my')">| my posts</p>
+      <p> | </p>
+      <p class="filter-off" id="all" (click)="filterBy($event, 'all')">all</p>
+      <p> | </p>
+      <p class="filter-off" id="my" (click)="filterBy($event, 'my')">my posts</p>
     </div>
 
     <div class="create-new">

@@ -28,10 +28,11 @@
         </div>
         <div class='additional' *ngIf="!isCurrentUser() && !user.deactivated">
           <div class='additional' *ngIf="!isAdmin()">
-            <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
-            </app-button>
+            <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'></app-button>
             <app-button text='Message' type='1' (click)="message()" fontSize='20'></app-button>
             <app-button text="Ban" type='2' fontSize='20' routerLink="/speakers/{{this.user.userId}}/ban"></app-button>
+            <app-button *ngIf="needsFeedback" text="Leave feedback" type='1' fontSize='20' routerLink="/feedback/{{this.user.userId}}"></app-button>
+<!--            <app-button text="Leave feedback" type='1' fontSize='20' (onClick)="hasToLeaveFeedback()"></app-button>-->
           </div>
           <div class='additional' *ngIf="isAdmin()">
             <app-button text="View bans" type='1' fontSize='20' routerLink="/speakers/{{this.user.userId}}/view_bans"></app-button>

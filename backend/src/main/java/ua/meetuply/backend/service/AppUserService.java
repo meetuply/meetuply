@@ -136,6 +136,8 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getUserIdByName(name);
     }
 
+    public List<Integer> getWaitingFeedbackFrom(Integer userId) { return appUserDAO.getWaitingFeedbackFrom(userId);}
+
     public void activateUser(AppUser user) {
         user.setRegistration_confirmed(true);
         appUserDAO.update(user);
@@ -203,4 +205,6 @@ public class AppUserService implements UserDetailsService {
         } else user = new User(appUser.getEmail(), appUser.getPassword(), new HashSet<>());
         return user;
     }
+
+
 }
