@@ -11,7 +11,7 @@ import {BlogService} from "../_services/blog.service";
 
 export class BlogCommentItemComponent implements OnInit {
 
-  @Input() blog_comment_item: BlogCommentItem;
+  @Input() blogCommentItem: BlogCommentItem;
 
   @Output() itemDeleted: EventEmitter<BlogCommentItem> = new EventEmitter();
   error;
@@ -27,8 +27,8 @@ export class BlogCommentItemComponent implements OnInit {
   }
 
   deleteComment(){
-    this.blogService.deleteBlogComment(this.blog_comment_item.comment.blogCommentId).subscribe();
-    this.itemDeleted.emit(this.blog_comment_item);
+    this.blogService.deleteBlogComment(this.blogCommentItem.comment.blogCommentId).subscribe();
+    this.itemDeleted.emit(this.blogCommentItem);
   }
 
 }

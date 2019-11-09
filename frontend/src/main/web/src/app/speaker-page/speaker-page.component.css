@@ -88,6 +88,8 @@
 .main {
   width: 65%;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .extra {
@@ -111,9 +113,15 @@
 .view-all-link{
   text-decoration: none;
   font-style: italic;
-  margin: 1rem 1rem;
+  margin: 1rem 0.5rem;
   font-size: 16px;
-  color: #7f7f7f;
+  font-weight: normal;
+  color: blue;
+  cursor: pointer;
+}
+
+.view-all-link:hover{
+  text-decoration: underline;
 }
 
 .future-meetups {
@@ -125,33 +133,6 @@
 .future-meetups * {
   margin-right: 10px;
 }
-
-/*.future-meetup {*/
-  /*display: flex;*/
-  /*flex-direction: column;*/
-  /*width: 180px;*/
-  /*height: 190px;*/
-  /*align-items: flex-start;*/
-
-  /*box-shadow: 10px 6px 25px rgba(112, 124, 151, 0.1),*/
-    /*4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);*/
-
-  /*padding: 10px;*/
-/*}*/
-
-/*.history .title {*/
-  /*font-weight: bold;*/
-  /*font-size: 18px;*/
-  /*margin: 5px;*/
-/*}*/
-
-/*.history .contents {*/
-  /*margin: 5px;*/
-  /*word-break: break-all;*/
-  /*word-wrap: break-word;*/
-  /*overflow: hidden;*/
-  /*text-overflow: ellipsis;*/
-/*}*/
 
 .feedbacks {
   display: flex;
@@ -225,16 +206,17 @@
   min-width: 100px;
 }
 
-.view-all-future, .view-all-past{
-  color: blue;
-  font-size: 13px;
-  font-style: italic;
-  cursor: pointer;
-}
+/* you don't need to add a class for each link if they're the same*/
+/*.view-all-future, .view-all-past{*/
+/*  color: blue;*/
+/*  font-size: 13px;*/
+/*  font-style: italic;*/
+/*  cursor: pointer;*/
+/*}*/
 
-.view-all-future:hover, .view-all-past:hover {
-  text-decoration: underline;
-}
+/*.view-all-future:hover, .view-all-past:hover {*/
+/*  text-decoration: underline;*/
+/*}*/
 
 .one-future-meetup{
   width: 100%;
@@ -243,4 +225,8 @@
 .lang-title{
   font-size: 1.5em;
   font-weight: bold;
+}
+
+#feedback{
+  overflow-x: auto
 }

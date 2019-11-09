@@ -32,7 +32,7 @@ public class FeedbackController {
         return feedbackService.getFeedbackById(feedbackId);
     }
 
-    @GetMapping("/{user-id}")
+    @GetMapping("/user/{user-id}")
     public @ResponseBody
     Iterable<Feedback> getFeedbackByFeedbackTo(@PathVariable("user-id") Integer userId) {
         return feedbackService.getFeedbacksByFeedbackTo(userId);

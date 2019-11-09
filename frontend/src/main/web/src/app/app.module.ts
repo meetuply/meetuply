@@ -67,6 +67,7 @@ import { BansPageComponent } from './bans-page/bans-page.component';
 import { NotificationsPageComponent } from './notifications-page/notifications-page.component';
 import {MatNativeDateModule} from "@angular/material";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {FeedbackListItemComponent} from "./feedback-list-item/feedback-list-item.component";
 
 
 
@@ -80,6 +81,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     LeftMenuComponent,
     LeftMenuItemComponent,
     FeedbackCreatePageComponent,
+    FeedbackListItemComponent,
     DashboardPageComponent,
     SpeakerPageComponent,
     SpeakerListPageComponent,

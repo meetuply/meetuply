@@ -23,11 +23,21 @@ export class BlogCreatePageComponent implements OnInit {
     window.document.getElementById("content-error").setAttribute("style","display:none;");
     if (this.post_title.length<=0){
       window.document.getElementById("title-error").setAttribute("style","display:block;");
+      window.document.getElementById("title-error").innerText=("Title can't be empty")
     }
     if (this.post_content.length<=0){
       window.document.getElementById("content-error").setAttribute("style","display:block");
+      window.document.getElementById("content-error").innerText=("Content can't be empty")
     }
-    if (this.post_title.length>0 && this.post_content.length>0) {
+    if (this.post_title.length>150){
+      window.document.getElementById("title-error").setAttribute("style","display:block;");
+      window.document.getElementById("title-error").innerText=("Title can't be longer than 150 characters");
+    }
+    if (this.post_content.length>2000){
+      window.document.getElementById("content-error").setAttribute("style","display:block");
+      window.document.getElementById("content-error").innerText=("Content can't be longer than 2000 characters")
+    }
+    if (this.post_title.length>0 && this.post_content.length>0 && this.post_title.length<150 && this.post_content.length<2000) {
       let datetime = new Date(Date.now());
 
       let blogpost: BlogPost = {

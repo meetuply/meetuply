@@ -17,7 +17,7 @@ export class FeedbackCreatePageComponent implements OnInit {
   rating: number;
   feedback: string;
   id: number;
-  isActive:boolean;
+  isActive: boolean;
 
   constructor(private _location: Location, private router: Router,
               private route: ActivatedRoute,
@@ -26,10 +26,13 @@ export class FeedbackCreatePageComponent implements OnInit {
               private ratingService: RatingService) {
   }
 
-  submit($event) {
+  submit(event) {
     window.document.getElementById("rating-error").setAttribute("style", "display:none;");
+    window.document.getElementById("feedback-error").setAttribute("style", "display:none;");
     if (this.rating <= 0 || this.rating == null) {
       window.document.getElementById("rating-error").setAttribute("style", "display:block;");
+    } else if (this.feedback.length > 500) {
+      window.document.getElementById("feedback-error").setAttribute("style", "display:block;");
     } else {
       let new_rating: Rating = {
         value: this.rating,
@@ -51,8 +54,6 @@ export class FeedbackCreatePageComponent implements OnInit {
               date: new Date(Date.now())
             };
 
-            console.log(new_feedback);
-
             this.feedbackService.createFeedback(new_feedback).subscribe(data => {
               if (data == null) {
               }
@@ -60,7 +61,7 @@ export class FeedbackCreatePageComponent implements OnInit {
               console.log(error);
             });
           }
-          this.router.navigate(['speakers/'+this.id]);
+          this.router.navigate(['speakers/' + this.id]);
         }
 
       }, error => {
@@ -76,8 +77,8 @@ export class FeedbackCreatePageComponent implements OnInit {
 
     this.userService.get(this.id).subscribe(
       data => {
-        this.isActive = (data && !data.deactivated)
-        this.feedbackService.getWaitingFeedback(this.userService.currentUser.userId).subscribe(ids =>{
+        this.isActive = (data && !data.deactivated);
+        this.feedbackService.getWaitingFeedback(this.userService.currentUser.userId).subscribe(ids => {
           this.isActive = this.isActive && ids.some(x => x == this.id);
         })
       }

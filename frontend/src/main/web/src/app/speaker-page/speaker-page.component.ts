@@ -16,6 +16,9 @@ import {Meetup} from "../_models/meetup";
 import {StateService} from "../_services/state.service";
 import {MeetupService} from "../_services/meetup.service";
 import {FeedbackService} from "../_services/feedback.service";
+import {Feedback} from "../_models/feedback";
+import {BlogCommentItem} from "../_models/blogCommentItem";
+import {FeedbackListItem} from "../_models/feedback-list-item";
 
 
 @Component({
@@ -35,13 +38,14 @@ export class SpeakerPageComponent implements OnInit {
   achievementList: Achievement[] = [];
   futureMeetups: Meetup[] = [];
   pastMeetups: Meetup[] = [];
-  feedback = [];
+  feedback: FeedbackListItem[] = [];
   error;
   loading: boolean;
   lastPost: BlogListItem;
   lastPostDefined: boolean = false;
   viewAllFuture = false;
   viewAllPast = false;
+  viewAllFeedback=false;
   currentUser: number;
   commonRoomId: number;
   meetup: Meetup;
@@ -69,6 +73,7 @@ export class SpeakerPageComponent implements OnInit {
     this.loadLanguages(this.id);
     this.loadAchievements(this.id);
     this.loadMeetups();
+    this.loadFeedback(this.id);
     this.hasToLeaveFeedback();
   }
 
@@ -97,6 +102,39 @@ export class SpeakerPageComponent implements OnInit {
     this.ratingService.getUserRatingAvg(id).subscribe(res => {
       this.rate = res;
     })
+  }
+
+  loadFeedback(id:number){
+    this.feedbackService.getFeedbackTo(id).subscribe(
+      async data => {
+        if (data) {
+          this.feedback = await Promise.all(data.map(async item => {
+              let username = "";
+              let photo = "";
+              let authorid = 0;
+              let rating: number = 0;
+
+              await this.userService.get(item.feedbackBy).toPromise().then(
+                async author => {
+                  username = author.firstName + " " + author.lastName;
+                  photo = author.photo;
+                  authorid=author.userId;
+
+                  await this.ratingService.getRatingByTo(authorid,id).toPromise().then(rate => {
+                    rating = rate.value;
+                  });
+                }
+              );
+
+              return new FeedbackListItem(item, rating, username, photo, authorid)
+            }
+          ));
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 
   loadFollowers(id: number) {
@@ -165,6 +203,10 @@ export class SpeakerPageComponent implements OnInit {
 
   changeViewAllPast(event) {
     this.viewAllPast = !this.viewAllPast;
+  }
+
+  changeViewAllFeedback(event) {
+    this.viewAllFeedback = !this.viewAllFeedback;
   }
 
   loadAchievements(id: number) {
@@ -265,4 +307,6 @@ export class SpeakerPageComponent implements OnInit {
   ngOnDestroy() {
     if (this.sub) this.sub.unsubscribe();
   }
+
+
 }
