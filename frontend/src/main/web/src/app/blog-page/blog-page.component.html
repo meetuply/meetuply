@@ -60,7 +60,7 @@
       <div class="comments-container" infinite-scroll [infiniteScrollDistance]="scrollDistance" (scrolled)='this.onScrollDown()'>
         <div class='comments_column'>
           <div *ngFor="let comment_item of this.commentsList;let i = index">
-            <app-blog-comment-item (itemDeleted)="itemDeletedHandler($event)" [blog_comment_item]='comment_item'></app-blog-comment-item>
+            <app-blog-comment-item (itemDeleted)="itemDeletedHandler($event)" [blogCommentItem]='comment_item'></app-blog-comment-item>
           </div>
         </div>
       </div>

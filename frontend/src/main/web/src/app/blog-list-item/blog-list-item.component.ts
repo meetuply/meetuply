@@ -12,7 +12,7 @@ import {UserService} from "../_services";
 
 export class BlogListItemComponent implements OnInit {
 
-  @Input() blog_list_item: BlogListItem;
+  @Input() blogListItem: BlogListItem;
 
   @Output() itemDeleted: EventEmitter<BlogListItem> = new EventEmitter();
 
@@ -29,8 +29,8 @@ export class BlogListItemComponent implements OnInit {
   }
 
   deletePost(){
-    this.blogService.deleteBlogPost(this.blog_list_item.id).subscribe();
-    this.itemDeleted.emit(this.blog_list_item);
+    this.blogService.deleteBlogPost(this.blogListItem.id).subscribe();
+    this.itemDeleted.emit(this.blogListItem);
   }
 
 }

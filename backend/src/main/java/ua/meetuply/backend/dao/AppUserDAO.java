@@ -8,6 +8,7 @@ import ua.meetuply.backend.model.AppUser;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -20,8 +21,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     RoleDAO roleDAO;
 
     public List<AppUser> getMeetupAttendees(Integer id) {
-        List<AppUser> attendeesList = jdbcTemplate.query("select * from user where uid in (select user_id from meetup_attendees where meetup_id = ?)", new Object[]{id}, this);
-        return attendeesList;
+        return jdbcTemplate.query("select * from user where uid in (select user_id from meetup_attendees where meetup_id = ?)", new Object[]{id}, this);
     }
 
     public AppUser findAppUserByEmail(String email) {
@@ -75,8 +75,11 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     }
 
     public List<AppUser> getUserSubscriptionsUsers(Integer id) {
-        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE uid IN (SELECT followed_user_id FROM followers WHERE follower_id = ?)", new Object[]{id}, this);
-        return users;
+        return jdbcTemplate.query("SELECT * FROM user WHERE uid IN (SELECT followed_user_id FROM followers WHERE follower_id = ?)", new Object[]{id}, this);
+    }
+
+    public List<Integer> getWaitingFeedbackFrom(Integer userId) {
+        return jdbcTemplate.queryForList("SELECT speaker_id FROM meetup WHERE uid IN (SELECT meetup_id FROM meetup_attendees WHERE user_id = ?)", new Object[]{userId, userId}, Integer.class);
     }
 
     public void follow(Integer currentUserID, Integer userId) {
@@ -158,6 +161,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
         );
         return appUser;
     }
+
 
 
 }

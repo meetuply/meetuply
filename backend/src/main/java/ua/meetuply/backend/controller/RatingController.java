@@ -23,14 +23,12 @@ public class RatingController {
     private AppUserService appUserService;
 
     @GetMapping()
-    public @ResponseBody
-    Iterable<Rating> getAllRatings() {
+    public Iterable<Rating> getAllRatings() {
         return ratingService.getAllRatings();
     }
 
     @GetMapping("/{user-id}")
-    public @ResponseBody
-    Iterable<Rating> getUserRating(@PathVariable("user-id") Integer id) {
+    public Iterable<Rating> getUserRating(@PathVariable("user-id") Integer id) {
         return ratingService.getUserRating(id);
     }
 
@@ -72,6 +70,7 @@ public class RatingController {
         rating.setRatedBy(appUserService.getCurrentUserID());
         rating.setRatedUser(userId);
         rating.setDate(LocalDateTime.now());
+
         ratingService.updateRating(rating);
         return ResponseEntity.ok().build();
     }

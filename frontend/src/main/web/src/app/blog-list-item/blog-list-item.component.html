@@ -1,32 +1,32 @@
 <div class='item'>
-  <div class = 'main'>
-    <div class='author' [routerLink]="['/speakers/',blog_list_item.authorId]">
+  <div class='main'>
+    <div class='author' [routerLink]="['/speakers/',blogListItem.authorId]">
       <div class='avatar'>
-        <img *ngIf="blog_list_item.authorPhoto" src={{blog_list_item.authorPhoto}}>
-        <img *ngIf="!blog_list_item.authorPhoto" src="assets/img/download.png">
+        <img *ngIf="blogListItem.authorPhoto" src={{blog_list_item.authorPhoto}}>
+        <img *ngIf="!blogListItem.authorPhoto" src="assets/img/download.png">
       </div>
-        <div class='info'>
-          <div class='name'>
-            {{this.blog_list_item.author}}
-          </div>
+      <div class='info'>
+        <div class='name'>
+          {{this.blogListItem.author}}
         </div>
+      </div>
     </div>
 
     <div class='post'>
       <div class='post-title'>
-        <span *ngIf="this.blog_list_item.title.length > 50">{{this.blog_list_item.title | slice:0:50}}...</span>
-        <span *ngIf="this.blog_list_item.title.length < 50">{{this.blog_list_item.title}}</span>
+        <span *ngIf="this.blogListItem.title.length > 50">{{this.blogListItem.title | slice:0:50}}...</span>
+        <span *ngIf="this.blogListItem.title.length < 50">{{this.blogListItem.title}}</span>
       </div>
       <div class='post-content'>
-        <span *ngIf="this.blog_list_item.content.length > 300">{{this.blog_list_item.content | slice:0:300}}...</span>
-        <span *ngIf="this.blog_list_item.content.length < 300">{{this.blog_list_item.content}}</span>
+        <span *ngIf="this.blogListItem.content.length > 300">{{this.blogListItem.content | slice:0:300}}...</span>
+        <span *ngIf="this.blogListItem.content.length < 300">{{this.blogListItem.content}}</span>
       </div>
       <div class="post-time">
-        <p>{{this.blog_list_item.date.toString().replace("T"," ")}}</p>
+        <p>{{this.blogListItem.date.toString().replace("T", " ")}}</p>
       </div>
     </div>
 
-    <app-button [text]="'>'" fontSize='50' routerLink="/blog/{{this.blog_list_item.id}}" type='4'></app-button>
+    <app-button [text]="'>'" fontSize='50' routerLink="/blog/{{this.blogListItem.id}}" type='4'></app-button>
     <app-button [text]="'X'" fontSize='50' *ngIf="isAdmin()" (onClick)="deletePost()" type='2'></app-button>
   </div>
 </div>

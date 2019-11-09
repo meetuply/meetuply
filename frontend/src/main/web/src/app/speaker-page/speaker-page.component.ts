@@ -15,6 +15,10 @@ import {Subscription} from "rxjs";
 import {Meetup} from "../_models/meetup";
 import {StateService} from "../_services/state.service";
 import {MeetupService} from "../_services/meetup.service";
+import {FeedbackService} from "../_services/feedback.service";
+import {Feedback} from "../_models/feedback";
+import {BlogCommentItem} from "../_models/blogCommentItem";
+import {FeedbackListItem} from "../_models/feedback-list-item";
 
 
 @Component({
@@ -30,20 +34,25 @@ export class SpeakerPageComponent implements OnInit {
   languages: string[];
   rate: number;
   following: boolean;
+  needsFeedback: boolean;
   achievementList: Achievement[] = [];
   futureMeetups: Meetup[] = [];
   pastMeetups: Meetup[] = [];
-  feedback = [];
+  feedback: FeedbackListItem[] = [];
   error;
   loading: boolean;
   lastPost: BlogListItem;
   lastPostDefined: boolean = false;
   viewAllFuture = false;
   viewAllPast = false;
+  viewAllFeedback=false;
   currentUser: number;
   commonRoomId: number;
   meetup: Meetup;
   private sub: Subscription;
+
+  test:boolean;
+  test1:number[];
 
   constructor(private _location: Location, private router: Router,
               public userService: UserService, private route: ActivatedRoute,
@@ -51,7 +60,8 @@ export class SpeakerPageComponent implements OnInit {
               private ratingService: RatingService, private chatService: ChatService,
               public stateService: StateService,
               private meetupService: MeetupService,
-              private blogService: BlogService) {
+              private blogService: BlogService,
+              private feedbackService: FeedbackService) {
   }
 
   ngOnInit() {
@@ -63,6 +73,8 @@ export class SpeakerPageComponent implements OnInit {
     this.loadLanguages(this.id);
     this.loadAchievements(this.id);
     this.loadMeetups();
+    this.loadFeedback(this.id);
+    this.hasToLeaveFeedback();
   }
 
   goBack() {
@@ -86,10 +98,43 @@ export class SpeakerPageComponent implements OnInit {
       });
   }
 
-  loadRating(id:number){
+  loadRating(id: number) {
     this.ratingService.getUserRatingAvg(id).subscribe(res => {
-      this.rate=res;
+      this.rate = res;
     })
+  }
+
+  loadFeedback(id:number){
+    this.feedbackService.getFeedbackTo(id).subscribe(
+      async data => {
+        if (data) {
+          this.feedback = await Promise.all(data.map(async item => {
+              let username = "";
+              let photo = "";
+              let authorid = 0;
+              let rating: number = 0;
+
+              await this.userService.get(item.feedbackBy).toPromise().then(
+                async author => {
+                  username = author.firstName + " " + author.lastName;
+                  photo = author.photo;
+                  authorid=author.userId;
+
+                  await this.ratingService.getRatingByTo(authorid,id).toPromise().then(rate => {
+                    rating = rate.value;
+                  });
+                }
+              );
+
+              return new FeedbackListItem(item, rating, username, photo, authorid)
+            }
+          ));
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 
   loadFollowers(id: number) {
@@ -160,6 +205,10 @@ export class SpeakerPageComponent implements OnInit {
     this.viewAllPast = !this.viewAllPast;
   }
 
+  changeViewAllFeedback(event) {
+    this.viewAllFeedback = !this.viewAllFeedback;
+  }
+
   loadAchievements(id: number) {
     this.achievementService.getUserAchievements(id).toPromise().then(
       achievements => {
@@ -197,7 +246,7 @@ export class SpeakerPageComponent implements OnInit {
   }
 
   deactivationButtonClicked(event) {
-    if(!this.user.deactivated) {
+    if (!this.user.deactivated) {
       this.userService.deactivate(this.id).subscribe(
         data => {
           this.loadUser(this.id);
@@ -206,8 +255,7 @@ export class SpeakerPageComponent implements OnInit {
           this.error = error;
         }
       );
-    }
-    else {
+    } else {
       this.userService.reactivate(this.id).subscribe(
         data => {
           this.loadUser(this.id);
@@ -251,11 +299,19 @@ export class SpeakerPageComponent implements OnInit {
     return this.userService.currentUser.userId == this.id
   }
 
-  isAdmin(){
+  isAdmin() {
     return this.userService.currentUser.role.roleName === 'admin';
+  }
+
+  hasToLeaveFeedback() {
+    this.feedbackService.getWaitingFeedback(this.userService.currentUser.userId).subscribe(data => {
+      this.needsFeedback = data.some(x => x == this.id);
+    });
   }
 
   ngOnDestroy() {
     if (this.sub) this.sub.unsubscribe();
   }
+
+
 }
