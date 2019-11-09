@@ -76,7 +76,7 @@
         Blog <a class="view-all-link" routerLink="/blog/user/{{this.id}}">view all</a>
       </div>
       <div class='blogpost'>
-        <app-blog-list-item *ngIf="this.lastPost" [blogListItem]='this.lastPost'></app-blog-list-item>
+        <app-blog-list-item *ngIf="this.lastPost" (itemDeleted)="blogDeletedHandler($event)" [blog_list_item]='this.lastPost'></app-blog-list-item>
       </div>
     </div>
 

@@ -10,7 +10,7 @@ import * as SockJS from 'sockjs-client'
 })
 export class NotificationService {
 
-	private notififcationApiUrl = `${environment.apiUrl}/api/ratings/`;
+	private notififcationApiUrl = `${environment.apiUrl}/api/notifications/`;
 
 	constructor(private http: HttpClient) {
 	}
@@ -44,6 +44,12 @@ export class NotificationService {
 
 		});
 	}
+
+	/*getUserNotifications(userId: number):Observable<Noti[]> {
+		return this.http.get<Topic[]>(this.topicApiUrl);
+	  
+
+	}*/
 
 	/*
 	getUserRatingAvg(id: number) {

@@ -290,6 +290,11 @@ export class SpeakerPageComponent implements OnInit {
       );
   }
 
+  blogDeletedHandler(deleted: BlogListItem) {
+    this.lastPost = null;
+    this.loadLastPost(this.id);
+  }
+
   isCurrentUser() {
     return this.userService.currentUser.userId == this.id
   }

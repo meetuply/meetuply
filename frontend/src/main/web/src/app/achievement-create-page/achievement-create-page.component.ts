@@ -18,6 +18,7 @@ export class AchievementCreatePageComponent implements OnInit {
   showTopics: boolean = false;
   selectedOption = 'followers';
   selectedTopics = new Set();
+  disabled = true;
 
   constructor(private fb: FormBuilder, private achievementService: AchievementService,
               private topicService: TopicService, private location: Location) {
