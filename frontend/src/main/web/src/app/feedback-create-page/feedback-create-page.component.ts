@@ -51,15 +51,16 @@ export class FeedbackCreatePageComponent implements OnInit {
               date: new Date(Date.now())
             };
 
+            console.log(new_feedback);
+
             this.feedbackService.createFeedback(new_feedback).subscribe(data => {
               if (data == null) {
-                this.goBack();
               }
             }, error => {
               console.log(error);
             });
           }
-          this.goBack();
+          this.router.navigate(['speakers/'+this.id]);
         }
 
       }, error => {
@@ -74,8 +75,15 @@ export class FeedbackCreatePageComponent implements OnInit {
     this.feedback = "";
 
     this.userService.get(this.id).subscribe(
-      data => this.isActive = (data!=null && !data.deactivated)
+      data => {
+        this.isActive = (data && !data.deactivated)
+        this.feedbackService.getWaitingFeedback(this.userService.currentUser.userId).subscribe(ids =>{
+          this.isActive = this.isActive && ids.some(x => x == this.id);
+        })
+      }
     )
+
+
   }
 
   goBack() {
