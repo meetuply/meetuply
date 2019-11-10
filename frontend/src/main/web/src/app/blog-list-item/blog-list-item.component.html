@@ -26,7 +26,9 @@
       </div>
     </div>
 
+    <div class="right">
     <app-button [text]="'>'" fontSize='50' routerLink="/blog/{{this.blogListItem.id}}" type='4'></app-button>
     <app-button [text]="'X'" fontSize='50' *ngIf="isAdmin()" (onClick)="deletePost()" type='2'></app-button>
+  </div>
   </div>
 </div>

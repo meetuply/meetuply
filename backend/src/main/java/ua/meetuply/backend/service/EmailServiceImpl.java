@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Mail;
+import ua.meetuply.backend.model.Meetup;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
@@ -35,6 +36,7 @@ public class EmailServiceImpl implements EmailService {
     private static final String DEACTIVATION_TEMPLATE_NAME = "diactivation-email.ftl";
     private static final String RECOVER_TEMPLATE_NAME = "recover-email.ftl";
     private static final String SUCCESS_RECOVER_TEMPLATE_NAME = "success-recover-email.ftl";
+    private static final String CANCELLATION_TEMPLATE_NAME = "cancellation-email.ftl";
 
     @Value("${spring.mail.username}")
     private String sender;
@@ -143,6 +145,23 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    public void informCancellation(AppUser user, Meetup meetup) {
+        Mail recoveryMail = new Mail();
+        recoveryMail.setMailFrom(sender);
+        recoveryMail.setMailTo(user.getEmail());
+        recoveryMail.setMailSubject("'" + meetup.getMeetupTitle() + "'was cancel");
+        Map<String, Object> model = new HashMap<>();
+        model.put("name", user.getFirstName());
+        model.put("meetup_name", meetup.getMeetupTitle());
+        recoveryMail.setModel(model);
+        MimeMessagePreparator messagePreparator = mimeMessage -> prepareMimeMessage(CANCELLATION_TEMPLATE_NAME, recoveryMail, mimeMessage);
+
+        try {
+            javaMailSender.send(messagePreparator);
+        } catch (MailException e) {
+            throw new MailSendException(e.getMessage());
+        }
+    }
 
     private void prepareMimeMessage(String templateName, Mail mail, MimeMessage mimeMessage)
             throws IOException, TemplateException, MessagingException {

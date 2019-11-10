@@ -37,6 +37,9 @@ public class MeetupService {
     @Autowired
     private FilterDAO filterDAO;
 
+    @Autowired
+    private EmailService emailService;
+
 
     @Transactional
     public void createMeetup(FullMeetup meetup) {
@@ -126,16 +129,24 @@ public class MeetupService {
 
     public void cancelMeetup(Integer meetupID) throws Exception {
         Meetup meetup = getMeetupById(meetupID);
-        if (meetup == null) throw NotFoundException.createWith("There is no meetup #" + meetupID);
+        if (meetup == null) {
+            throw NotFoundException.createWith("There is no meetup #" + meetupID);
+        }
 
-        if (meetup.getSpeakerId() == appUserService.getCurrentUserID() || appUserService.isAdmin())
+        if (meetup.getSpeakerId() == appUserService.getCurrentUserID() || appUserService.isAdmin()) {
             if (meetup.getStateId().equals(stateService.get(StateNames.BOOKED.name).getStateId())
                     || meetup.getStateId().equals(stateService.get(StateNames.SCHEDULED.name).getStateId())
-                    || meetup.getStateId().equals(stateService.get(StateNames.TERMINATED.name).getStateId()))
+                    || meetup.getStateId().equals(stateService.get(StateNames.TERMINATED.name).getStateId())) {
                 stateService.updateState(meetup, stateService.get(StateNames.CANCELED.name));
-            else
+                for (AppUser user: appUserService.getMeetupAttendees(meetupID)) {
+                    emailService.informCancellation(user, meetup);
+                }
+            } else {
                 throw MeetupStateException.createWith("you cannot switch to Canceled from " + stateService.get(meetup.getStateId()).getName());
-        else throw PermissionException.createWith("you cannot modify not yours meetups");
+            }
+        } else {
+            throw PermissionException.createWith("you cannot modify not yours meetups");
+        }
     }
 
     public void terminateMeetup(Integer meetupID) throws Exception {

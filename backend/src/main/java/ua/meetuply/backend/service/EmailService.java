@@ -1,6 +1,7 @@
 package ua.meetuply.backend.service;
 
 import ua.meetuply.backend.model.AppUser;
+import ua.meetuply.backend.model.Meetup;
 
 public interface EmailService {
 
@@ -10,4 +11,5 @@ public interface EmailService {
 
     void sendRecoverEmail(AppUser user, String recoveryMail);
     void sendSuccessRecoverEmail(AppUser user);
+    void informCancellation(AppUser user, Meetup meetup);
 }
