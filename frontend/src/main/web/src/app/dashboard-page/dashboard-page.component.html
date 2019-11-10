@@ -62,7 +62,7 @@
         </div>
         <div class="blogposts" *ngIf="blogPosts.length>0">
           <div *ngFor="let post_item of this.blogPosts;let i = index">
-            <app-blog-list-item [blog_list_item]='post_item'></app-blog-list-item>
+            <app-blog-list-item [blogListItem]='post_item'></app-blog-list-item>
           </div>
         </div>
       </div>

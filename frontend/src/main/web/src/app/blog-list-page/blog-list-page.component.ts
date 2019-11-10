@@ -19,7 +19,7 @@ export class BlogListPageComponent implements OnInit {
   loading = false;
   lastRow = 0;
   maxPostsOnPage: number;
-  step = 4;
+  step = 10;
   scrollDistance = 2;
   author: string;
   filter: string;

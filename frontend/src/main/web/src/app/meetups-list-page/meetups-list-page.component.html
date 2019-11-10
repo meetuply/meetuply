@@ -19,8 +19,10 @@
 
   <div class="additional-filters" >
     <span [ngClass]="showActiveFlag ? 'active-choice': 'flag'" (click)="showActive()">future </span>
-    <span [ngClass]="showAllFlag ? 'active-choice': 'flag'" (click)="showAll()">| all </span>
-    <span *ngIf="userService.currentUser.role.roleName == 'user'" [ngClass]="showMyFlag ? 'active-choice': 'flag'" (click)="showMy()">| my</span>
+    <span>|</span>
+    <span [ngClass]="showAllFlag ? 'active-choice': 'flag'" (click)="showAll()"> all </span>
+    <span>|</span>
+    <span *ngIf="userService.currentUser.role.roleName == 'user'" [ngClass]="showMyFlag ? 'active-choice': 'flag'" (click)="showMy()"> my</span>
   </div>
 
   <div class="main"
@@ -48,6 +50,7 @@
     </div>
     </div>
     </div>
+  <div style="height: 200px"></div>
   </div>
 
 

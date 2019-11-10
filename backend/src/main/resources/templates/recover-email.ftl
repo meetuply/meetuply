@@ -9,7 +9,7 @@
 
     You've recently requested password recovery. Please click on the link below to do that: <br/>
 
-    ${VERIFICATION_URL}<br/>
+    <a href="${VERIFICATION_URL}">Change password</a><br/>
 
     If you didn't do this, please disregard this email.<br/>
 

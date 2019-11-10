@@ -2,6 +2,7 @@ package ua.meetuply.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.model.AppUser;
@@ -45,6 +46,15 @@ public class AppUserController {
 
     @Resource(name = "emailServiceImpl")
     private EmailService emailService;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder dataBinder) {
+        Object target = dataBinder.getTarget();
+        if (target == null) return;
+        if (target.getClass() == AppUser.class) {
+            dataBinder.setValidator(appUserValidator);
+        }
+    }
 
     @GetMapping
     public AppUser user() {

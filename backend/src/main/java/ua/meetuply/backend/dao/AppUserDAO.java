@@ -20,13 +20,11 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     RoleDAO roleDAO;
 
     public List<AppUser> getMeetupAttendees(Integer id) {
-        List<AppUser> attendeesList = jdbcTemplate.query("select * from user where uid in (select user_id from meetup_attendees where meetup_id = ?)", new Object[]{id}, this);
-        return attendeesList;
+        return jdbcTemplate.query("select * from user where uid in (select user_id from meetup_attendees where meetup_id = ?)", new Object[]{id}, this);
     }
 
     public AppUser findAppUserByEmail(String email) {
-        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE email = ?", new Object[]{email}, this);
-        return users.size() == 0 ? null : users.get(0);
+        return jdbcTemplate.queryForObject("SELECT * FROM user WHERE email = ?", new Object[]{email}, this);
     }
 
     public List<AppUser> getAppUsers() {
@@ -49,7 +47,6 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     }
 
     public Integer getUserIdByEmail(String email) {
-        System.out.println("IN DAO   " + jdbcTemplate.queryForObject("SELECT uid FROM user WHERE email = ?", new Object[]{email}, Integer.class));
         Integer userId = jdbcTemplate.queryForObject("SELECT uid FROM user WHERE email = ?", new Object[]{email}, Integer.class);
         return userId == null ? -1 : userId;
     }
@@ -75,8 +72,11 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     }
 
     public List<AppUser> getUserSubscriptionsUsers(Integer id) {
-        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE uid IN (SELECT followed_user_id FROM followers WHERE follower_id = ?)", new Object[]{id}, this);
-        return users;
+        return jdbcTemplate.query("SELECT * FROM user WHERE uid IN (SELECT followed_user_id FROM followers WHERE follower_id = ?)", new Object[]{id}, this);
+    }
+
+    public List<Integer> getWaitingFeedbackFrom(Integer userId) {
+        return jdbcTemplate.queryForList("SELECT speaker_id FROM meetup WHERE uid IN (SELECT meetup_id FROM meetup_attendees WHERE user_id = ?)", new Object[]{userId, userId}, Integer.class);
     }
 
     public void follow(Integer currentUserID, Integer userId) {
@@ -89,13 +89,12 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
     @Override
     public List<AppUser> getAll() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void save(AppUser user) {
         jdbcTemplate.update(
-                // TODO role_id
                 "INSERT INTO `user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`, `description`, `location`,`photo`) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId(), user.getDescription(), user.getLocation(), user.getPhoto()
@@ -158,6 +157,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
         );
         return appUser;
     }
+
 
 
 }

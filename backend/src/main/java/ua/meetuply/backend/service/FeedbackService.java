@@ -35,11 +35,13 @@ public class FeedbackService {
         return feedbackDAO.getAll();
     }
 
-    public Feedback getFeedbackById(Integer id) {return  feedbackDAO.get(id);}
+    public Feedback getFeedbackById(Integer id) {return feedbackDAO.get(id);}
 
     public List<Feedback> getFeedbacksByAuthor(Integer id) {return feedbackDAO.getByAuthor(id);}
 
     public List<Feedback> getFeedbacksByFeedbackTo(Integer id) {return feedbackDAO.getByFeedbackTo(id);}
 
     public Iterable<Feedback> getFeedbacksByTo(Integer idby, Integer idto) { return feedbackDAO.getByTo(idby, idto);}
+
+    public List<Integer> getFeedbacksWaiting(Integer attendee) {return feedbackDAO.getFeedbacksWaiting(attendee);}
 }

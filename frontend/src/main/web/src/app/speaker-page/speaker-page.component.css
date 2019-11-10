@@ -86,15 +86,22 @@
 }
 
 .main {
-  width: 65%;
+  width: 70%;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .extra {
-  width: 35%;
+  width: 30%;
+  margin-left: 10px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+}
+
+.overall{
+  margin-top: 30px;
 }
 
 .main .description {
@@ -111,9 +118,15 @@
 .view-all-link{
   text-decoration: none;
   font-style: italic;
-  margin: 1rem 1rem;
+  margin: 1rem 0.5rem;
   font-size: 16px;
-  color: #7f7f7f;
+  font-weight: normal;
+  color: blue;
+  cursor: pointer;
+}
+
+.view-all-link:hover{
+  text-decoration: underline;
 }
 
 .future-meetups {
@@ -198,16 +211,17 @@
   min-width: 100px;
 }
 
-.view-all-future, .view-all-past{
-  color: blue;
-  font-size: 13px;
-  font-style: italic;
-  cursor: pointer;
-}
+/* you don't need to add a class for each link if they're the same*/
+/*.view-all-future, .view-all-past{*/
+/*  color: blue;*/
+/*  font-size: 13px;*/
+/*  font-style: italic;*/
+/*  cursor: pointer;*/
+/*}*/
 
-.view-all-future:hover, .view-all-past:hover {
-  text-decoration: underline;
-}
+/*.view-all-future:hover, .view-all-past:hover {*/
+/*  text-decoration: underline;*/
+/*}*/
 
 .one-future-meetup{
   width: 100%;
@@ -216,4 +230,8 @@
 .lang-title{
   font-size: 1.5em;
   font-weight: bold;
+}
+
+#feedback{
+  overflow-x: auto
 }

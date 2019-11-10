@@ -9,7 +9,7 @@
 
 Thanks for using MEETUPLY! Please confirm your email address by clicking on the link below.<br/>
 
-${VERIFICATION_URL}<br/>
+<a href="${VERIFICATION_URL}">Confirm my email</a><br/>
 
 If you did not sign up for a MEETUPLY account please disregard this email.<br/>
 

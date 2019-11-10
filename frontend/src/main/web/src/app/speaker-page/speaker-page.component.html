@@ -28,14 +28,18 @@
         </div>
         <div class='additional' *ngIf="!isCurrentUser() && !user.deactivated">
           <div class='additional' *ngIf="!isAdmin()">
-            <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)" fontSize='20'>
-            </app-button>
+            <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)"
+                        fontSize='20'></app-button>
             <app-button text='Message' type='1' (click)="message()" fontSize='20'></app-button>
             <app-button text="Ban" type='2' fontSize='20' routerLink="/speakers/{{this.user.userId}}/ban"></app-button>
+            <app-button *ngIf="needsFeedback" text="Leave feedback" type='1' fontSize='20'
+                        routerLink="/feedback/{{this.user.userId}}"></app-button>
           </div>
           <div class='additional' *ngIf="isAdmin()">
-            <app-button text="View bans" type='1' fontSize='20' routerLink="/speakers/{{this.user.userId}}/view_bans"></app-button>
-            <app-button [text]="deactivationText()" [type]='deactivationType()' (onClick)="deactivationButtonClicked($event)" fontSize='20'></app-button>
+            <app-button text="View bans" type='1' fontSize='20'
+                        routerLink="/speakers/{{this.user.userId}}/view_bans"></app-button>
+            <app-button [text]="deactivationText()" [type]='deactivationType()'
+                        (onClick)="deactivationButtonClicked($event)" fontSize='20'></app-button>
           </div>
         </div>
         <div class='additional_info' *ngIf="user && this.followers">
@@ -43,8 +47,6 @@
         </div>
 
       </div>
-
-
     </div>
 
     <div class='about' *ngIf="user && this.user.description">
@@ -54,85 +56,77 @@
       {{this.user.description}}
     </div>
 
-    <div *ngIf="achievementList.length != 0" class='about'>
-      Achievements
-    </div>
-    <div class="achievement-wrapper">
-      <div class='achievements'>
-        <div *ngFor="let achievement of this.achievementList">
-          <app-achievement-panel [title]='achievement.title' [icon]='achievement.icon'
-                                 [description]='achievement.description'>
-          </app-achievement-panel>
+    <div class="section">
+      <div *ngIf="achievementList.length != 0" class='about'>
+        Achievements
+      </div>
+      <div class="achievement-wrapper">
+        <div class='achievements'>
+          <div *ngFor="let achievement of this.achievementList">
+            <app-achievement-panel [title]='achievement.title' [icon]='achievement.icon'
+                                   [description]='achievement.description'>
+            </app-achievement-panel>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="blogpost"*ngIf="lastPost">
-      <div class='about' >
-        Blog
-        <a class="view-all-link" routerLink="/blog/user/{{this.id}}">view all</a>
+    <div class="section" id="blogpost" *ngIf="lastPost">
+      <div class='about'>
+        Blog <a class="view-all-link" routerLink="/blog/user/{{this.id}}">view all</a>
       </div>
       <div class='blogpost'>
-        <app-blog-list-item *ngIf="this.lastPost" (itemDeleted)="blogDeletedHandler($event)" [blog_list_item]='this.lastPost'></app-blog-list-item>
+        <app-blog-list-item *ngIf="this.lastPost" (itemDeleted)="blogDeletedHandler($event)" [blogListItem]='this.lastPost'></app-blog-list-item>
       </div>
     </div>
 
-    <div *ngIf="futureMeetups.length > 0" class='about'>
-      Next Meetup <span class="view-all-future" (click)="changeViewAllFuture($event)">
-      view all</span>
-    </div>
-    <div class='future-meetups'>
-      <div *ngFor="let meetup of (viewAllFuture ?
-              (futureMeetups) : (futureMeetups | slice:0:1))">
-        <div class="one-future-meetup">
-          <app-meetup-list-item
-            [meetupListItem]="meetup"
-            [isMy]="userService.currentUser.userId == meetup.speakerId"
-            [state]="stateService.states[meetup.stateId]"
-            [showAuthorInfo]=false>
-          </app-meetup-list-item>
+    <div class="section" id="future-meetups">
+      <div *ngIf="futureMeetups.length > 0" class='about'>
+        Next Meetup <span class="view-all-link" (click)="changeViewAllFuture($event)">view all</span>
+      </div>
+      <div class='future-meetups'>
+        <div *ngFor="let meetup of (viewAllFuture ?
+                (futureMeetups) : (futureMeetups | slice:0:1))">
+          <div class="one-future-meetup">
+            <app-meetup-list-item
+              [meetupListItem]="meetup"
+              [isMy]="userService.currentUser.userId == meetup.speakerId"
+              [state]="stateService.states[meetup.stateId]"
+              [showAuthorInfo]=false>
+            </app-meetup-list-item>
+          </div>
         </div>
       </div>
     </div>
 
-    <div *ngIf="pastMeetups.length > 0" class='about'>
-      Past Meetup <span class="view-all-past" (click)="changeViewAllPast($event)">
+    <div class="section" id="past-meetups">
+      <div *ngIf="pastMeetups.length > 0" class='about'>
+        Past Meetup <span class="view-all-link" (click)="changeViewAllPast($event)">
       view all</span>
-    </div>
-    <div class='future-meetups'>
-      <div *ngFor="let meetup of (viewAllPast ?
+      </div>
+      <div class='future-meetups'>
+        <div *ngFor="let meetup of (viewAllPast ?
               (pastMeetups) : (pastMeetups | slice:0:1))">
-        <div class="one-future-meetup">
-          <app-meetup-list-item
-            [meetupListItem]="meetup"
-            [isMy]="userService.currentUser.userId == meetup.speakerId"
-            [state]="stateService.states[meetup.stateId]"
-            [showAuthorInfo]=false>
-          </app-meetup-list-item>
+          <div class="one-future-meetup">
+            <app-meetup-list-item
+              [meetupListItem]="meetup"
+              [isMy]="userService.currentUser.userId == meetup.speakerId"
+              [state]="stateService.states[meetup.stateId]"
+              [showAuthorInfo]=false>
+            </app-meetup-list-item>
+          </div>
         </div>
       </div>
     </div>
 
-    <div *ngIf="feedback.length>0" class='about'>
-      Feedbacks
-    </div>
-    <div class='feedbacks'>
-
-      <div *ngFor="let feedback of this.feedback;let i = index">
-        <div *ngIf="i < 4" class='feedback'>
-
-          <div class='author'>
-            <img src="assets/img/download.png">
-            <span>{{feedback.name + " " + feedback.surname}}</span>
-
-          </div>
-
-          <span class='contents'>{{feedback.contents}}</span>
-
-          <div class='rating'>
-            <app-rating size='20' rating='{{feedback.rating}}'></app-rating>
-          </div>
-
+    <div class="section" id="feedback">
+      <div *ngIf="feedback.length>0" class='about'>
+        Feedback <span class="view-all-link" (click)="changeViewAllFeedback($event)">view all</span>
+      </div>
+      <div class='feedbacks'>
+        <div *ngFor="let feedback of (viewAllFeedback ?
+              (feedback) : (feedback | slice:0:2))">
+          <app-feedback-list-item [feedbackListItem]='feedback'></app-feedback-list-item>
         </div>
       </div>
     </div>
@@ -140,9 +134,7 @@
   </div>
   <div class='extra'>
     <div class='languages'>
-
       <div class='icon'>
-
       </div>
       <div class='overall'>
         <div class="lang-title">
@@ -152,7 +144,6 @@
           <div *ngFor="let language of languages">{{language}}</div>
         </div>
       </div>
-
     </div>
     <div class='achievements'>
       <div class='icon'>

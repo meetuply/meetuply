@@ -26,7 +26,7 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
     private static final String GET_BY_ID_QUERY = "SELECT * FROM post WHERE uid = ?";
     private static final String SAVE_QUERY = "INSERT INTO `post` (`title`, `date_time`, `content`, `author_id`) VALUES (?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM post WHERE uid = ?";
-    private static final String UPDATE_QUERY = "UPDATE post SET content = ? AND title = ? WHERE uid = ?";
+    private static final String UPDATE_QUERY = "UPDATE post SET content = ?, title = ? WHERE uid = ?";
 
     private static final String FIND_POSTS_BY_FILTER_ALL = "SELECT * FROM post WHERE author_id NOT IN (SELECT uid FROM user WHERE is_deactivated=1) order by uid desc LIMIT ?, ?";
     private static final String FIND_POSTS_BY_FILTER_MY = "SELECT * FROM post WHERE author_id = ? order by uid desc LIMIT ?, ? ";
@@ -92,7 +92,6 @@ public class BlogPostDAO implements IDAO<BlogPost>, RowMapper<BlogPost> {
     @Override
     public BlogPost mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         BlogPost blogPost = new BlogPost();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         blogPost.setBlogPostId(resultSet.getInt("uid"));
         blogPost.setBlogPostTitle(resultSet.getString("title"));
         blogPost.setBlogPostContent(resultSet.getString("content"));

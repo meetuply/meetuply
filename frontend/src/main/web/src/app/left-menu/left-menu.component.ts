@@ -70,7 +70,7 @@ export class LeftMenuComponent implements OnInit {
 
   ngOnInit() {
 
-    this.user = this.userService.currentUser;
+    this.userService.getCurrentUser().subscribe(user => this.user = user);
     this.route.pathFromRoot[1].url.subscribe(val => {
 
       if (val[0].toString() == 'create' && val[1].toString() == 'meetup') {

@@ -19,8 +19,8 @@ export class RatingService {
     return this.http.get<number>(this.ratingApiUrl + `${id}` + "/avg");
   }
 
-  getRatingByTo(idby: number, idto: number): Observable<{}>{
-    return this.http.get(this.ratingApiUrl + `${idby}` +"/"+`${idto}`);
+  getRatingByTo(idby: number, idto: number): Observable<Rating> {
+    return this.http.get<Rating>(this.ratingApiUrl + `${idby}` +"/"+`${idto}`);
   }
 
   createRating(rating: Rating): Observable<{}> {
