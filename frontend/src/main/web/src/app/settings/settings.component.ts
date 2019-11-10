@@ -29,12 +29,11 @@ export class SettingsComponent implements OnInit {
   apply() {
     this.userService.update(this.user).subscribe(
       data => {
-
         this.languageService.updateUser(this.user.userId, Array.from(this.selectedLanguages))
           .subscribe(data => this.router.navigate(['speakers', this.user.userId])),
           error => this.error
       },
-      error => this.error,
+      error => this.error = error,
     )
   }
 

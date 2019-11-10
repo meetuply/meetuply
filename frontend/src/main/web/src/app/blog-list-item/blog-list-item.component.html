@@ -1,8 +1,8 @@
 <div class='item'>
   <div class='main'>
     <div class='author' [routerLink]="['/speakers/',blogListItem.authorId]">
-      <div class='avatar'>
-        <img *ngIf="blogListItem.authorPhoto" src={{blog_list_item.authorPhoto}}>
+      <div *ngIf="blogListItem" class='avatar'>
+        <img *ngIf="blogListItem.authorPhoto" src={{blogListItem.authorPhoto}}>
         <img *ngIf="!blogListItem.authorPhoto" src="assets/img/download.png">
       </div>
       <div class='info'>
