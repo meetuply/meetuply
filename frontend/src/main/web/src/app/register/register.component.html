@@ -1,6 +1,6 @@
 <div class='dialog'>
 
-  <form name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" [mustMatch]="['password', 'confirmPassword']" novalidate
+  <form class="form" name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" [mustMatch]="['password', 'confirmPassword']" novalidate
         *ngIf="!registered">
     <p class='title'>Sign up</p>
     <p *ngIf="error" class='error'>{{error}}</p>

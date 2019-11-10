@@ -1,5 +1,5 @@
 
-.dialog form {
+.dialog form{
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -15,6 +15,9 @@
   margin-top: 200px;
 }
 
+.dialog form input {
+  width: 450px;
+}
 .dialog form input, .dialog form button, .dialog form a {
   margin: 7px 10px;
 }
@@ -40,8 +43,13 @@
 }
 
 .dialog form .link {
+  cursor: pointer;
   font-size: 12px;
   color: #2a8bf2;
+}
+
+a:link {
+  text-decoration: none;
 }
 
 .dialog form .checkbox_row * {
@@ -79,6 +87,13 @@
   box-shadow: 10px 6px 25px rgba(112, 124, 151, 0.1),
   4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);
 }
+
+.invalid-feedback, .error {
+  color: #ff3366;
+  font-size: 12px;
+  margin: 0;
+}
+
 
 .invalid-feedback, .error {
   color: #ff3366;

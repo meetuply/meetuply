@@ -8,7 +8,6 @@ import ua.meetuply.backend.model.AppUser;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -25,8 +24,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     }
 
     public AppUser findAppUserByEmail(String email) {
-        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE email = ?", new Object[]{email}, this);
-        return users.size() == 0 ? null : users.get(0);
+        return jdbcTemplate.queryForObject("SELECT * FROM user WHERE email = ?", new Object[]{email}, this);
     }
 
     public List<AppUser> getAppUsers() {
@@ -49,7 +47,6 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     }
 
     public Integer getUserIdByEmail(String email) {
-        System.out.println("IN DAO   " + jdbcTemplate.queryForObject("SELECT uid FROM user WHERE email = ?", new Object[]{email}, Integer.class));
         Integer userId = jdbcTemplate.queryForObject("SELECT uid FROM user WHERE email = ?", new Object[]{email}, Integer.class);
         return userId == null ? -1 : userId;
     }
@@ -92,13 +89,12 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
     @Override
     public List<AppUser> getAll() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void save(AppUser user) {
         jdbcTemplate.update(
-                // TODO role_id
                 "INSERT INTO `user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`, `description`, `location`,`photo`) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId(), user.getDescription(), user.getLocation(), user.getPhoto()
