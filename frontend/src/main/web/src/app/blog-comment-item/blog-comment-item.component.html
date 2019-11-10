@@ -2,7 +2,7 @@
   <div class = 'main'>
     <div class='author' [routerLink]="['/speakers/',blogCommentItem.authorId]">
       <div class='avatar'>
-        <img *ngIf="blogCommentItem.authorPhoto" src={{this.blog_comment_item.authorPhoto}}>
+        <img *ngIf="blogCommentItem.authorPhoto" src={{this.blogCommentItem.authorPhoto}}>
         <img *ngIf="!blogCommentItem.authorPhoto" src="assets/img/download.png">
       </div>
         <div class='info'>
