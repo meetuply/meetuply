@@ -82,10 +82,6 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getMeetupAttendees(meetupId);
     }
 
-    public Integer getUserIdByEmail(String email) {
-        return appUserDAO.getUserIdByEmail(email);
-    }
-
     public List<Integer> getUserSubscribers(Integer id) {
         return appUserDAO.getUserSubscribers(id);
     }
@@ -131,10 +127,6 @@ public class AppUserService implements UserDetailsService {
 
     public AppUser getUserByEmail(String email) {
         return appUserDAO.getUserByEmail(email);
-    }
-
-    public Integer getUserIdByName(String name) {
-        return appUserDAO.getUserIdByName(name);
     }
 
     public List<Integer> getWaitingFeedbackFrom(Integer userId) { return appUserDAO.getWaitingFeedbackFrom(userId);}

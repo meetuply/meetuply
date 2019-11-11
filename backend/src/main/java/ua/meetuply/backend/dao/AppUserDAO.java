@@ -24,7 +24,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     }
 
     public AppUser findAppUserByEmail(String email) {
-        return jdbcTemplate.queryForObject("SELECT * FROM user WHERE email = ?", new Object[]{email}, this);
+        return jdbcTemplate.query("SELECT * FROM user WHERE email = ?", new Object[]{email}, this).stream().findFirst().orElse(null);
     }
 
     public List<AppUser> getAppUsers() {
@@ -42,8 +42,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
     @Override
     public AppUser get(Integer id) {
-        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE uid = ?", new Object[]{id}, this);
-        return users.size() == 0 ? null : users.get(0);
+        return jdbcTemplate.query("SELECT * FROM user WHERE uid = ?", new Object[]{id}, this).stream().findFirst().orElse(null);
     }
 
     public Integer getUserIdByEmail(String email) {
@@ -59,8 +58,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
 
     public AppUser getUserByEmail(String email) {
-        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE email = ?", new Object[]{email}, this);
-        return users.size() == 0 ? null : users.get(0);
+        return jdbcTemplate.query("SELECT * FROM user WHERE email = ?", new Object[]{email}, this).stream().findFirst().orElse(null);
     }
 
     public List<Integer> getUserSubscribers(Integer id) {
