@@ -1,15 +1,14 @@
 package ua.meetuply.backend.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import ua.meetuply.backend.model.Topic;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 
 @Repository
@@ -29,6 +28,11 @@ public class TopicDAO implements IDAO<Topic>, RowMapper<Topic> {
     public Integer getIdByName(String name) {
         List<Topic> topics = jdbcTemplate.query("SELECT * FROM topic WHERE name=? ", new Object[] { name }, this);
         return topics.size() == 0 ? null : topics.get(0).getTopicId();
+    }
+
+    public List<Topic> getByName(String term) {
+        term = "%" + term + "%";
+        return jdbcTemplate.query("SELECT * FROM topic WHERE name LIKE ?", new Object[] { term },this);
     }
 
     public Integer getTopicQuantity(Integer topicId) {
