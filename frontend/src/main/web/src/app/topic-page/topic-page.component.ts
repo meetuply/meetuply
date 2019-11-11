@@ -34,6 +34,10 @@ export class TopicPageComponent implements OnInit {
       .subscribe(() => this.goBack());
   }
 
+  delete(topic: Topic): void {
+    this.topicService.deleteTopic(topic).subscribe(() => this.goBack());
+  }
+
   ngOnInit() {
     this.getTopic();
   }

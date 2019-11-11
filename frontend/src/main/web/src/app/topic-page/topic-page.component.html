@@ -1,15 +1,18 @@
 <app-left-menu></app-left-menu>
 <div class='content'>
-  <p class='title'>Topics</p>
-  <div *ngIf="topic">
-    <h2>{{topic.name}}</h2>
-    <div>
-      <label>name:
+  <div class='main'>
+    <div class='back' (click)="goBack()"></div>
+    <p class='title'>Update topic name</p>
+
+    <div *ngIf="topic">
+      <div class="add">
         <input [(ngModel)]="topic.name" placeholder="name"/>
-      </label>
+        <app-button type='1' text="Save" fontSize="15"
+                    (click)="save()"></app-button>
+        <app-button type='2' text="Delete" class="delete" fontSize="15"
+                    (click)="delete(topic)"></app-button>
+      </div>
+      <h2>{{topic.name}}</h2>
     </div>
   </div>
-
-  <button (click)="goBack()">go back</button>
-  <button (click)="save()">save</button>
 </div>
