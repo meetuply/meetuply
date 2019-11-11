@@ -12,20 +12,25 @@
       </div>
     </div>
 
-    <div class='post'>
-      <div class='post-title'>
-        <span *ngIf="this.blogListItem.title.length > 50">{{this.blogListItem.title | slice:0:50}}...</span>
-        <span *ngIf="this.blogListItem.title.length < 50">{{this.blogListItem.title}}</span>
-      </div>
-      <div class='post-content'>
-        <span *ngIf="this.blogListItem.content.length > 300">{{this.blogListItem.content | slice:0:300}}...</span>
-        <span *ngIf="this.blogListItem.content.length < 300">{{this.blogListItem.content}}</span>
+    <div class="central">
+      <div class='post'>
+        <div class='post-title'>
+          <span *ngIf="this.blogListItem.title.length > 50">{{this.blogListItem.title | slice:0:50}}...</span>
+          <span *ngIf="this.blogListItem.title.length < 50">{{this.blogListItem.title}}</span>
+        </div>
+        <div class='post-content'>
+          <span *ngIf="this.blogListItem.content.length > 200">{{this.blogListItem.content | slice:0:200}}...</span>
+          <span *ngIf="this.blogListItem.content.length < 200">{{this.blogListItem.content}}</span>
+        </div>
       </div>
       <div class="post-time">
         <p>{{this.blogListItem.date.toString().replace("T", " ")}}</p>
       </div>
     </div>
   </div>
-  <button class="button btn1" routerLink="/blog/{{this.blogListItem.id}}"><img class="icon" src="assets/icons/arrow-point-to-right.svg"></button>
-  <button *ngIf="isAdmin()" class="button btn2" (click)="deletePost()"><img class="icon" src="assets/icons/garbage.svg"></button>
+  <button class="button btn1" routerLink="/blog/{{this.blogListItem.id}}"><img class="icon"
+                                                                               src="assets/icons/arrow-point-to-right.svg">
+  </button>
+  <button *ngIf="isAdmin()" class="button btn2" (click)="deletePost()"><img class="icon" src="assets/icons/garbage.svg">
+  </button>
 </div>
