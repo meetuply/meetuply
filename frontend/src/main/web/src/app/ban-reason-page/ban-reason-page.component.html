@@ -1,15 +1,18 @@
 <app-left-menu></app-left-menu>
 <div class='content'>
-  <p class='title'>Ban Reasons</p>
-  <div *ngIf="banReason">
-    <h2>{{banReason.name}}</h2>
-    <div>
-      <label>name:
-        <input [(ngModel)]="banReason.name" placeholder="name"/>
-      </label>
-    </div>
-  </div>
+  <div class='main'>
+    <div class='back' (click)="goBack()"></div>
+    <p class='title'>Update reason name</p>
 
-  <button (click)="goBack()">go back</button>
-  <button (click)="save()">save</button>
+  <div *ngIf="banReason">
+    <div class="add">
+      <input [(ngModel)]="banReason.name" placeholder="name"/>
+      <app-button type='1' text="Save" fontSize="15"
+                  (click)="save()"></app-button>
+      <app-button type='2' text="Delete" class="delete" fontSize="15"
+                  (click)="delete(banReason)"></app-button>
+    </div>
+    <h2>{{banReason.name}}</h2>
+  </div>
+  </div>
 </div>
