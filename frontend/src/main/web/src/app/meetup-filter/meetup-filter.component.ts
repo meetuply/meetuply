@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { TopicService } from '../_services/topic.service'
+import { TopicService } from '../_services'
 import { Topic } from '../_models'
 import {Filter} from "../_models/filter";
 import {FilterService} from "../_services/filter.service";
-import {Meetup} from "../_models/meetup";
 
 @Component({
   selector: 'app-meetup-filter',
@@ -37,16 +36,17 @@ export class MeetupFilterComponent implements OnInit {
   ];
 
   submit(){
+    this.checkRequiredFields(this.filter_name);
+    // var start_date = new Date(
+    //   this.filter_start_date.toString().replace('/', '-').split('').reverse().join('')
+    //   + 'T' + this.filter_start_time.toString().replace('/', '-').split('').reverse().join(''));
     var start_date = new Date(this.filter_start_date + 'T' + this.filter_start_time);
     var end_date = new Date(this.filter_end_date + 'T' + this.filter_end_time);
-    var newTopics ;
-    var top = this.topics.forEach(x => {
-
-    })
+    alert(start_date);
+    // console.log(end_date);
     var filter: Filter = {
       id: 0,
-      // name: this.filter_name,
-      name: "tanya",
+      name: this.filter_name,
       ratingFrom: this.filter_ratingFrom,
       ratingTo: this.filter_ratingTo,
       dateFrom: start_date,
@@ -57,17 +57,21 @@ export class MeetupFilterComponent implements OnInit {
     this.filterService.create(filter).subscribe(data => {
 
     }, error1 => {
-      alert('some thing happened:' + error1)
+      // alert('Some thing happened:' + error1)
 
     })
-
   }
-
 
   constructor(
     private topicService: TopicService,
     private filterService: FilterService) {
 
+  }
+
+  checkRequiredFields(input) {
+    if(input === null) {
+      throw new Error("Attribute 'name' is required");
+    }
   }
 
   ngOnInit() {
@@ -152,7 +156,7 @@ export class MeetupFilterComponent implements OnInit {
     if (this.startDate() > this.endDate()) {
       return "Start date is bigger then end date"; //1 star is bigger then end
     }
-    if (this.startDate().setTime(this.startDate().getTime() + (1 * 60 * 60 * 1000)) < Date.now()) {
+    if (this.startDate().setTime(this.startDate().getTime() + (60 * 60 * 1000)) < Date.now()) {
       return "Start date has already passed"; //2 start is already ended
     }
   }

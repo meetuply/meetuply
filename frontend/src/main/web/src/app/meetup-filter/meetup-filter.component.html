@@ -8,7 +8,7 @@
       </div>
       <div class='topics_list'>
         <app-toggle-button *ngFor="let topic of this.topics" name="topics" id='{{topic.topicId}}' text='{{topic.name}}'
-                           (toggled)="topicToggled($event)"></app-toggle-button>
+                           (toggled)="topicToggled(topic)"></app-toggle-button>
       </div>
 
     </div>
@@ -19,27 +19,30 @@
       </div>
       <div class='date'>
 
-        <input matInput [matDatepicker]="picker" placeholder="Start date" name="start_date" [(ngModel)]="this.filter_start_date">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-        <!--        <input matInput [matDatepicker]="picker" placeholder="Choose a date" disabled>-->
-        <!--        <mat-datepicker #picker disabled="false"></mat-datepicker>-->
-        <!--				<app-toggle-button id='1' icon='calendar' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
+        <div class='form_line'><span></span><input type="date" name="dateFrom" placeholder="Start date" data-date-format="YYYY-MM-DD"
+                                                              #start_date="ngModel" [(ngModel)]="this.filter_start_date"/></div>
+<!--        <input matInput [matDatepicker]="picker" placeholder="Start date" name="start_date" [(ngModel)]="this.filter_start_date">-->
+<!--        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
+<!--        <mat-datepicker #picker></mat-datepicker>-->
+
         <div class='sep'> - </div>
-        <input matInput [matDatepicker]="picker1" placeholder="Finish date" name = "end_date" [(ngModel)]="this.filter_end_date">
-        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-        <mat-datepicker #picker1></mat-datepicker>
-        <!--				<app-toggle-button id='2' icon='calendar' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
+        <div class='form_line'><span></span><input type="date" name="dateTo" placeholder="Finish date" data-date-format="YYYY-MM-DD"
+                                                              #end_date="ngModel" [(ngModel)]="this.filter_end_date"/></div>
+<!--        <input matInput [matDatepicker]="picker1" placeholder="Finish date" name = "end_date" [(ngModel)]="this.filter_end_date">-->
+<!--        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>-->
+<!--        <mat-datepicker #picker1></mat-datepicker>-->
       </div>
       <div class='ti'>
         Time
       </div>
       <div class='time'>
-        <ngb-timepicker ngModel="time" name="start_time" [(ngModel)]="this.filter_start_time"></ngb-timepicker>
-        <!--        <app-toggle-button id='1' icon='time' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
+        <div class='form_line'><span></span><input type="time" name="start_time" placeholder="Start time"
+                                                              #start_time="ngModel" [(ngModel)]="this.filter_start_time"/></div>
+<!--        <ngb-timepicker ngModel="time" name="dateFrom" [(ngModel)]="this.filter_start_time"></ngb-timepicker>-->
         <div class='sep'> - </div>
-        <ngb-timepicker ngModel="time" name = "end_time" [(ngModel)]="this.filter_end_time"></ngb-timepicker>
-<!--        <app-toggle-button id='2' icon='time' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
+        <div class='form_line'><span></span><input type="time" name="start_time" placeholder="Finish time"
+                                                              #start_time="ngModel" [(ngModel)]="this.filter_end_time"/></div>
+<!--        <ngb-timepicker ngModel="time" name = "dateTo" [(ngModel)]="this.filter_end_time"></ngb-timepicker>-->
       </div>
 
     </div>
@@ -78,7 +81,12 @@
         <div class='form_line'><input type="ratingTo" name="ratingTo" placeholder="to" min="0" max="5" [(ngModel)]="this.filter_ratingTo"/></div>
         <!--				<app-toggle-button id='2' icon='star' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
       </div>
-
+    </div>
+    <div class = 'filterName'>
+      <div class='ti'>
+        Filter name
+      </div>
+      <div class='form_line filter_name'><input type="filter_name" name="filter_name" placeholder="name" [(ngModel)]="this.filter_name" required/></div>
     </div>
   </div>
 
