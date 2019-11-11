@@ -61,8 +61,8 @@ public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
             PreparedStatement ps = connection
                     .prepareStatement(CREATE_FILTER_QUERY, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, filter.getName());
-            ps.setFloat(2, filter.getRatingFrom());
-            ps.setFloat(3, filter.getRatingTo());
+            ps.setObject(2, filter.getRatingFrom());
+            ps.setObject(3, filter.getRatingTo());
             ps.setTimestamp(4, filter.getDateFrom());
             ps.setTimestamp(5, filter.getDateTo());
             ps.setInt(6, filter.getUserId());
