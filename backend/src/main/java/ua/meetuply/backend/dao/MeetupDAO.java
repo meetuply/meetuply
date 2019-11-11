@@ -6,16 +6,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.dao.SQLPredicate.Operation;
 import ua.meetuply.backend.model.*;
-import ua.meetuply.backend.model.State.StateNames;
 import ua.meetuply.backend.service.LanguageService;
-import ua.meetuply.backend.model.Topic;
 import ua.meetuply.backend.service.StateService;
 import ua.meetuply.backend.service.TopicService;
 
 import javax.annotation.Resource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -251,57 +253,50 @@ public class MeetupDAO implements IDAO<Meetup> {
         return jdbcTemplate.query(query.toString(), new MeetupRowMapper());
     }
 
-    public List<Meetup> futureScheduledAndBookedMeetupsOf(AppUser user) {
-        List<SQLPredicate> andList = Arrays.asList(
+    public List<Meetup> futureScheduledAndBookedMeetupsOf(AppUser user) throws NotFoundException {
+        return find(
+                new SQLPredicate(Operation.AND,
+                            new SQLPredicate("state_id", Operation.IN,
+                                    stateService.get(State.SCHEDULED).getStateId(),
+                                    stateService.get(State.BOOKED).getStateId()),
+                            new SQLPredicate("speaker_id", Operation.EQUALS,
+                                    user.getUserId())));
+    }
+
+    public List<Meetup> currentMeetupsOf(AppUser user) throws NotFoundException {
+        return find(
+                new SQLPredicate(Operation.AND,
+                        new SQLPredicate("state_id", Operation.EQUALS,
+                                    stateService.get(State.IN_PROGRESS).getStateId()),
+                        new SQLPredicate("speaker_id", Operation.EQUALS,
+                                  user.getUserId())));
+    }
+
+    public List<Meetup> notEnoughAttendees1Hour() throws NotFoundException {
+        return find(new SQLPredicate(Operation.AND,
+                        new SQLPredicate("start_date_time", Operation.LESS,
+                                "NOW() + INTERVAL 1 HOUR"),
+                        new SQLPredicate("state_id", Operation.EQUALS,
+                                    stateService.get(State.SCHEDULED).getStateId()),
+                        new SQLPredicate("min_attendees", Operation.GREATER,
+                                "registered_attendees")));
+    }
+
+    public List<Meetup> goingToStart() throws NotFoundException {
+        return find(new SQLPredicate(Operation.AND,
                 new SQLPredicate("state_id", Operation.IN,
-                        Arrays.asList(stateService.get(StateNames.SCHEDULED.name).getStateId(),
-                                      stateService.get(StateNames.BOOKED.name).getStateId())),
-                new SQLPredicate("speaker_id", Operation.EQUALS, user.getUserId())
-        );
-        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
-        return find(where);
+                                    stateService.get(State.SCHEDULED).getStateId(),
+                                    stateService.get(State.BOOKED).getStateId()),
+                new SQLPredicate("start_date_time", Operation.LESS,
+                                "NOW()")));
     }
 
-    public List<Meetup> currentMeetupsOf(AppUser user) {
-        List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("state_id", Operation.EQUALS,
-                        stateService.get(StateNames.IN_PROGRESS.name).getStateId()),
-                new SQLPredicate("speaker_id", Operation.EQUALS, user.getUserId())
-        );
-        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
-        return find(where);
-    }
-
-    public List<Meetup> notEnoughAttendees1Hour() {
-        List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("start_date_time", Operation.LESS, "NOW() + INTERVAL 1 HOUR"),
-                new SQLPredicate("state_id", Operation.EQUALS,
-                        stateService.get(StateNames.SCHEDULED.name).getStateId()),
-                new SQLPredicate("min_attendees", Operation.GREATER, "registered_attendees")
-        );
-        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
-        return find(where);
-    }
-
-    public List<Meetup> goingToStart() {
-        List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("state_id", Operation.IN,
-                        Arrays.asList(stateService.get(StateNames.SCHEDULED.name).getStateId(),
-                                stateService.get(StateNames.BOOKED.name).getStateId())),
-                new SQLPredicate("start_date_time", Operation.LESS, "NOW()")
-        );
-        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
-        return find(where);
-    }
-
-    public List<Meetup> goingToFinish() {
-        List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("finish_date_time", Operation.LESS, "NOW()"),
-                new SQLPredicate("state_id", Operation.EQUALS,
-                        stateService.get(StateNames.IN_PROGRESS.name).getStateId())
-        );
-        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
-        return find(where);
+    public List<Meetup> goingToFinish() throws NotFoundException {
+        return find(new SQLPredicate(Operation.AND,
+                        new SQLPredicate("finish_date_time", Operation.LESS,
+                                "NOW()"),
+                        new SQLPredicate("state_id", Operation.EQUALS,
+                                    stateService.get(State.IN_PROGRESS).getStateId())));
     }
 
     public List<Meetup> findBy(Filter filter) {

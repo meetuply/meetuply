@@ -136,7 +136,7 @@ public class AppUserService implements UserDetailsService {
         appUserDAO.update(user);
     }
 
-    public void deactivateUser(AppUser user) {
+    public void deactivateUser(AppUser user) throws NotFoundException {
         user.setDeactivated(true);
         appUserDAO.update(user);
         sessionService.expireUserSessions(user.getEmail());
@@ -182,7 +182,7 @@ public class AppUserService implements UserDetailsService {
             appUserDAO.changePassword(appUser);
             confirmationTokenDAO.delete(ct.getTokenid());
             return getUser(appUser.getUserId());
-        } else throw NotFoundException.createWith("Token can't be null");
+        } else throw new NotFoundException("Token can't be null");
     }
 
     @Override

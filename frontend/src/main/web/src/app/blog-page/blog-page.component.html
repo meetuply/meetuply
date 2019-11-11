@@ -47,9 +47,10 @@
 
           <div class="form-container">
             <form class="comment-text">
-                <textarea placeholder="You can leave your comment here" rows="4" name="comment" [(ngModel)]="this.new_comment" required autocomplete="off"></textarea>
+                <textarea class="text-comm" placeholder="You can leave your comment here" rows="4" name="comment" [(ngModel)]="this.new_comment" required autocomplete="off"></textarea>
               <div class="button-container">
-                <app-button [text]="'>'" (onClick)="submitComment($event)" type='4'></app-button>
+                <button class="button btn1" (click)="submitComment($event)"><img class="icon" src="assets/icons/arrow-point-to-right.svg"></button>
+
               </div>
             </form>
             <p id="form-error">Comment can't be empty</p>

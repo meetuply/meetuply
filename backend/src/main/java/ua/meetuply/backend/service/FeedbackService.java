@@ -2,6 +2,7 @@ package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.dao.FeedbackDAO;
 import ua.meetuply.backend.model.Feedback;
 
@@ -43,5 +44,5 @@ public class FeedbackService {
 
     public Iterable<Feedback> getFeedbacksByTo(Integer idby, Integer idto) { return feedbackDAO.getByTo(idby, idto);}
 
-    public List<Integer> getFeedbacksWaiting(Integer attendee) {return feedbackDAO.getFeedbacksWaiting(attendee);}
+    public List<Integer> getFeedbacksWaiting(Integer attendee) throws NotFoundException {return feedbackDAO.getFeedbacksWaiting(attendee);}
 }

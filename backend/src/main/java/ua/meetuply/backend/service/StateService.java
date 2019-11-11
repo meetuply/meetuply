@@ -2,19 +2,18 @@ package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.dao.MeetupDAO;
 import ua.meetuply.backend.dao.StateDAO;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Meetup;
 import ua.meetuply.backend.model.State;
-import ua.meetuply.backend.model.State.StateNames;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @CacheConfig(cacheNames = {"states"})
@@ -33,12 +32,39 @@ public class StateService {
         return stateDAO.getAll();
     }
 
-    public State get(String name) {
-        return getAll().get(name);
+    @CacheEvict(value = "states", allEntries = true)
+    public void evictStatesCache() {
     }
 
-    public State get(Integer id) {
-        return getAll().values().stream().filter(s -> s.getStateId().equals(id)).findFirst().orElse(null);
+    public Set<State> get(String... names) throws NotFoundException {
+        Set states = new HashSet<State>();
+        for (String name: names) {
+            states.add(get(name));
+        }
+        return states;
+    }
+
+    public State get(String name) throws NotFoundException {
+        if (!getAll().containsKey(name)) {
+            evictStatesCache();
+        }
+        if (getAll().containsKey(name)) {
+            return getAll().get(name);
+        } else {
+            throw new NotFoundException("State with name " + name + " is not founded");
+        }
+    }
+
+    public State get(Integer id) throws NotFoundException {
+        try {
+            return getAll().values().stream().filter(s -> s.getStateId().equals(id))
+                    .findFirst().orElseThrow(NotFoundException::new);
+        } catch (NotFoundException e) {
+            evictStatesCache();
+            return getAll().values().stream().filter(s -> s.getStateId().equals(id))
+                    .findFirst().orElseThrow(() ->
+                            new NotFoundException("State with id " + id.toString() + " is not founded"));
+        }
     }
 
     public void updateState(List<Meetup> meetups, State state) {
@@ -50,27 +76,27 @@ public class StateService {
         meetupDAO.update(meetups);
     }
 
-    public void cancelFutureMeetupsOf(AppUser user) {
-        updateState(meetupDAO.futureScheduledAndBookedMeetupsOf(user), get(StateNames.CANCELED.name));
+    public void cancelFutureMeetupsOf(AppUser user) throws NotFoundException {
+        updateState(meetupDAO.futureScheduledAndBookedMeetupsOf(user), get(State.CANCELED));
     }
 
-    public void terminateCurrentMeetupsOf(AppUser user) {
-        updateState(meetupDAO.currentMeetupsOf(user), get(StateNames.TERMINATED.name));
+    public void terminateCurrentMeetupsOf(AppUser user) throws NotFoundException {
+        updateState(meetupDAO.currentMeetupsOf(user), get(State.TERMINATED));
     }
 
 
     @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1500)
-    public void cancelNotEnoughAttendees() {
-        updateState(meetupDAO.notEnoughAttendees1Hour(), get(StateNames.CANCELED.name));
+    public void cancelNotEnoughAttendees() throws NotFoundException {
+        updateState(meetupDAO.notEnoughAttendees1Hour(), get(State.CANCELED));
     }
 
     @Scheduled(fixedRate = 1000 * 60)
-    public void updateInProgress() {
-        updateState(meetupDAO.goingToStart(), get(StateNames.IN_PROGRESS.name));
+    public void updateInProgress() throws NotFoundException {
+        updateState(meetupDAO.goingToStart(), get(State.IN_PROGRESS));
     }
 
     @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 500)
-    public void updatePassed() {
-        updateState(meetupDAO.goingToFinish(), get(StateNames.PASSED.name));
+    public void updatePassed() throws NotFoundException {
+        updateState(meetupDAO.goingToFinish(), get(State.PASSED));
     }
 }

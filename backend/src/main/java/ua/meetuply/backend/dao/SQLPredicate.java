@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -32,9 +33,20 @@ public class SQLPredicate {
         this.rvalue = rvalue;
     }
 
+    public SQLPredicate(Object lvalue, Operation operation, Object... rvalues) {
+        this.lvalue = lvalue;
+        this.operation = operation;
+        this.rvalue = Arrays.asList(rvalues);
+    }
+
     public SQLPredicate(Operation operation, Object rvalue) {
         this.operation = operation;
         this.rvalue = rvalue;
+    }
+
+    public SQLPredicate(Operation operation, Object... rvalues) {
+        this.operation = operation;
+        this.rvalue = Arrays.asList(rvalues);;
     }
 
     private Object lvalue;

@@ -77,7 +77,7 @@ public class AppUserController {
     @GetMapping("/recover")
     public ResponseEntity requestRecover(@RequestParam("email") String email) throws NotFoundException {
         AppUser user = appUserService.getUserByEmail(email);
-        if (user == null) throw NotFoundException.createWith("Cannot find user with email " + email);
+        if (user == null) throw new NotFoundException("Cannot find user with email " + email);
         ConfirmationToken ct = confirmationService.generateToken(user);
         emailService.sendRecoverEmail(user, confirmationService.getRecoveryLink(ct));
         return ResponseEntity.ok().build();
@@ -195,7 +195,7 @@ public class AppUserController {
     }
 
     @PutMapping("/deactivate/{id}")
-    public ResponseEntity deactivateUser(@PathVariable("id") Integer userId) {
+    public ResponseEntity deactivateUser(@PathVariable("id") Integer userId) throws NotFoundException {
         AppUser user = appUserService.getUser(userId);
         if (user == null) return ResponseEntity.notFound().build();
         appUserService.deactivateUser(user);

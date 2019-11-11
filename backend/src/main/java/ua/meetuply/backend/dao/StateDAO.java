@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ua.meetuply.backend.model.State;
+import ua.meetuply.backend.model.StateImpl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,8 +18,8 @@ public class StateDAO implements RowMapper<State> {
     @Autowired
     public JdbcTemplate jdbcTemplate;
 
-    public State get(Integer id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM state WHERE uid = ?", new Object[]{id}, State.class);
+    public StateImpl get(Integer id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM state WHERE uid = ?", new Object[]{id}, StateImpl.class);
     }
 
     public Map<String, State> getAll() {
@@ -28,7 +29,7 @@ public class StateDAO implements RowMapper<State> {
 
     @Override
     public State mapRow(ResultSet resultSet, int i) throws SQLException {
-        return new State(
+        return new StateImpl(
                 resultSet.getInt("uid"),
                 resultSet.getString("name")
         );

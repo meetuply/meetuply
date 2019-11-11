@@ -1,26 +1,14 @@
 package ua.meetuply.backend.model;
 
-import lombok.*;
+public interface State {
+    String BOOKED = "Booked";
+    String CANCELED = "Canceled";
+    String IN_PROGRESS = "In progress";
+    String PASSED = "Passed";
+    String SCHEDULED = "Scheduled";
+    String TERMINATED = "Terminated";
 
-@Getter
-@ToString
-@EqualsAndHashCode
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class State {
-    private Integer stateId;
-    private String name;
+    Integer getStateId();
+    String getName();
 
-    public enum StateNames {
-        BOOKED("Booked"),
-        CANCELED("Canceled"),
-        IN_PROGRESS("In progress"),
-        PASSED("Passed"),
-        SCHEDULED("Scheduled"),
-        TERMINATED("Terminated");
-
-        public final String name;
-        StateNames(String name) { this.name = name; }
-    }
 }

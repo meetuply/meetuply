@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Filter;
 import ua.meetuply.backend.model.Meetup;
@@ -87,7 +88,7 @@ public class MeetupController {
     }
 
     @PostMapping()
-    public ResponseEntity createMeetup(@RequestBody @Valid FullMeetup meetup) {
+    public ResponseEntity createMeetup(@RequestBody @Valid FullMeetup meetup) throws NotFoundException {
 
         meetupService.createMeetup(meetup);
         return ResponseEntity.ok().build();
