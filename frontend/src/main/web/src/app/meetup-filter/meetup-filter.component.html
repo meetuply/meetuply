@@ -19,14 +19,14 @@
       </div>
       <div class='date'>
 
-        <input matInput [matDatepicker]="picker" placeholder="Start date">
+        <input matInput [matDatepicker]="picker" placeholder="Start date" name="start_date" [(ngModel)]="this.filter_start_date">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
         <!--        <input matInput [matDatepicker]="picker" placeholder="Choose a date" disabled>-->
         <!--        <mat-datepicker #picker disabled="false"></mat-datepicker>-->
         <!--				<app-toggle-button id='1' icon='calendar' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
         <div class='sep'> - </div>
-        <input matInput [matDatepicker]="picker1" placeholder="Start date">
+        <input matInput [matDatepicker]="picker1" placeholder="Finish date" name = "end_date" [(ngModel)]="this.filter_end_date">
         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
         <mat-datepicker #picker1></mat-datepicker>
         <!--				<app-toggle-button id='2' icon='calendar' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
@@ -35,10 +35,10 @@
         Time
       </div>
       <div class='time'>
-        <ngb-timepicker ngModel="time"></ngb-timepicker>
+        <ngb-timepicker ngModel="time" name="start_time" [(ngModel)]="this.filter_start_time"></ngb-timepicker>
         <!--        <app-toggle-button id='1' icon='time' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
         <div class='sep'> - </div>
-        <ngb-timepicker ngModel="time"></ngb-timepicker>
+        <ngb-timepicker ngModel="time" name = "end_time" [(ngModel)]="this.filter_end_time"></ngb-timepicker>
 <!--        <app-toggle-button id='2' icon='time' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
       </div>
 
@@ -50,7 +50,7 @@
             <app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>
             <app-toggle-button id='2' text='lol2' (toggled)="toggled($event)"></app-toggle-button>
             <app-toggle-button id='3' text='lol3' (toggled)="toggled($event)"></app-toggle-button>-->
-      <app-button text='Save current filter' fontSize='24'></app-button>
+      <app-button text='Save current filter' fontSize='24' (onClick)="submit()"></app-button>
     </div>
 
     <div class ='filters'>
@@ -73,9 +73,9 @@
       </div>
       <div class='rate'>
         <!--				<app-toggle-button id='1' icon='star' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
-        <div class='form_line'><input type="ratingFrom" name="ratingFrom" placeholder="from" min="0" max="5"/></div>
+        <div class='form_line'><input type="ratingFrom" name="ratingFrom" placeholder="from" min="0" max="5" [(ngModel)]="this.filter_ratingFrom"/></div>
         <div class='sep'> - </div>
-        <div class='form_line'><input type="ratingTo" name="ratingTo" placeholder="to" min="0" max="5"/></div>
+        <div class='form_line'><input type="ratingTo" name="ratingTo" placeholder="to" min="0" max="5" [(ngModel)]="this.filter_ratingTo"/></div>
         <!--				<app-toggle-button id='2' icon='star' text='any' (toggled)="toggled($event)"></app-toggle-button>-->
       </div>
 

@@ -3,6 +3,7 @@ import { TopicService } from '../_services/topic.service'
 import { Topic } from '../_models'
 import {Filter} from "../_models/filter";
 import {FilterService} from "../_services/filter.service";
+import {Meetup} from "../_models/meetup";
 
 @Component({
   selector: 'app-meetup-filter',
@@ -13,9 +14,15 @@ import {FilterService} from "../_services/filter.service";
 
 export class MeetupFilterComponent implements OnInit {
 
-  text1 = "lol123";
+  filter_name: string;
+  filter_ratingFrom: number;
+  filter_ratingTo: number;
+  filter_start_date: string;
+  filter_start_time: string;
+  filter_end_date: string;
+  filter_end_time: string;
   topics: Topic[];
-  selectedTopics = new Set();
+  selectedTopics = new Set<Topic>();
   filters: Filter[];
   selectedFilters = new Set();
 
@@ -28,6 +35,33 @@ export class MeetupFilterComponent implements OnInit {
     false,
     false
   ];
+
+  submit(){
+    var start_date = new Date(this.filter_start_date + 'T' + this.filter_start_time);
+    var end_date = new Date(this.filter_end_date + 'T' + this.filter_end_time);
+    var newTopics ;
+    var top = this.topics.forEach(x => {
+
+    })
+    var filter: Filter = {
+      id: 0,
+      // name: this.filter_name,
+      name: "tanya",
+      ratingFrom: this.filter_ratingFrom,
+      ratingTo: this.filter_ratingTo,
+      dateFrom: start_date,
+      dateTo: end_date,
+      userId: 0,
+      topics: Array.from(this.selectedTopics)
+    };
+    this.filterService.create(filter).subscribe(data => {
+
+    }, error1 => {
+      alert('some thing happened:' + error1)
+
+    })
+
+  }
 
 
   constructor(
@@ -77,13 +111,51 @@ export class MeetupFilterComponent implements OnInit {
     this.weekdayStates[$event[0]] = $event[1]
   }
 
-  toggled($event) {
 
-    if ($event[0] == 1) {
-      this.text1 = "" + (Math.random() * 5);
+  isDate(f: string) {
+    var d = new Date(f);
+    return d instanceof Date;
+  }
+
+
+  startDate() {
+    return new Date(this.filter_start_date + 'T' + this.filter_start_time);
+  }
+
+  endDate() {
+    return new Date(this.filter_end_date + 'T' + this.filter_end_time);
+  }
+
+  validDates() {
+
+    if (this.isDate(this.filter_start_date.toString()) == false || this.isDate(this.filter_end_date.toString()) == false) {
+      return 1; //0 invalid dates
+    }
+    if (this.startDate() > this.endDate()) {
+      return 2; //1 star is bigger then end
+    }
+    if (this.startDate().getTime() <= Date.now()) {
+      return 2; //2 start is already ended
     }
 
+    if (this.endDate().getTime() <= Date.now()) {
+      return 3; //2 start is already ended
+    }
 
+    return 0;
   }
+
+  dateMessage() {
+    if (this.isDate(this.filter_start_date.toString()) == false || this.isDate(this.filter_end_date.toString()) == false) {
+      return "Invalid dates"; //0 invalid dates
+    }
+    if (this.startDate() > this.endDate()) {
+      return "Start date is bigger then end date"; //1 star is bigger then end
+    }
+    if (this.startDate().setTime(this.startDate().getTime() + (1 * 60 * 60 * 1000)) < Date.now()) {
+      return "Start date has already passed"; //2 start is already ended
+    }
+  }
+
 
 }

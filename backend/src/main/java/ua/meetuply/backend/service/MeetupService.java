@@ -105,7 +105,7 @@ public class MeetupService {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void leave(Integer meetupID) throws Exception {
+    public void leave(Integer meetupID) throws NotFoundException {
         AppUser user = appUserService.getCurrentUser();
         if (user == null) throw NotFoundException.createWith("current");
         if (meetupDao.get(meetupID) == null) throw NotFoundException.createWith("There is no meetup #" + meetupID);
