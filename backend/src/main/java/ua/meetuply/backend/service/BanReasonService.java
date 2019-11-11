@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.BanReasonDAO;
 import ua.meetuply.backend.model.BanReason;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -18,13 +17,8 @@ public class BanReasonService {
         return banReasonDAO.get(id);
     }
 
-    public List<BanReason> getByName(String name){
-        List<BanReason> banReasons = banReasonDAO.getAll();
-        List<BanReason> result = new ArrayList<BanReason>();
-        for (BanReason banReason : banReasons) {
-            if(banReason.getName().contains(name)) result.add(banReason);
-        }
-        return result;
+    public List<BanReason> getByName(String term) {
+        return banReasonDAO.getByName(term);
     }
 
     public void create(BanReason banReason){
