@@ -25,10 +25,7 @@
         <p>{{this.blogListItem.date.toString().replace("T", " ")}}</p>
       </div>
     </div>
-
-    <div class="right">
-    <app-button [text]="'>'" fontSize='50' routerLink="/blog/{{this.blogListItem.id}}" type='4'></app-button>
-    <app-button [text]="'X'" fontSize='50' *ngIf="isAdmin()" (onClick)="deletePost()" type='2'></app-button>
   </div>
-  </div>
+  <button class="button btn1" routerLink="/blog/{{this.blogListItem.id}}"><img class="icon" src="assets/icons/arrow-point-to-right.svg"></button>
+  <button *ngIf="isAdmin()" class="button btn2" (click)="deletePost()"><img class="icon" src="assets/icons/garbage.svg"></button>
 </div>
