@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { catchError } from "rxjs/operators";
 import { Observable, throwError } from "rxjs";
 import { environment } from "../../environments/environment";
+import {Meetup} from "../_models/meetup";
 
 
 @Injectable({ providedIn: 'root' })
@@ -14,6 +15,9 @@ export class FilterService {
 
   constructor(private http: HttpClient) { }
 
+  create(filter: Filter): Observable<{}> {
+    return this.http.post(this.filterApiUrl+ "filters", filter);
+  }
 
   getAll():Observable<Filter[]> {
     return this.http.get<Filter[]>(this.filterApiUrl);
