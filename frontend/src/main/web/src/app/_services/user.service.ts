@@ -51,6 +51,10 @@ export class UserService {
     return this.http.get<User[]>(this.userApiUrl + 'members/all/' + start + "/" + size)
   }
 
+  getChunkForAdminByName(start: number, size: number, name:string): Observable<User[]> {
+    return this.http.get<User[]>(this.userApiUrl + 'members/all/' + start + "/" + size + "/search?name=" + name.toLowerCase() )
+  }
+
   getUserFollowers(userId: number): Observable<number[]> {
     return this.http.get<number[]>(this.userApiUrl + `${userId}/subscribers`);
   }

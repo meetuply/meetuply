@@ -23,6 +23,9 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
             "SELECT * FROM user WHERE uid = ?";
     private static final String SELECT_CHUNK_OF_USERS =
             "SELECT * FROM user WHERE registration_confirmed=1 order by uid asc LIMIT ?, ?";
+    private static final String SELECT_CHUNK_OF_USERS_BY_NAME =
+            "SELECT *, CONCAT(firstname, ' ', surname) AS full_name FROM user WHERE is_deactivated=0 AND registration_confirmed=1 " +
+                    "HAVING LOWER(full_name) LIKE CONCAT('%',?,'%') ORDER BY uid asc LIMIT ?, ?";
     private static final String SELECT_CHUNK_OF_SPEAKERS =
             "SELECT * FROM user WHERE is_deactivated=0 AND registration_confirmed=1 AND uid IN " +
                     "(SELECT speaker_id FROM meetup UNION SELECT author_id FROM post) " +
@@ -89,6 +92,10 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
     public List<AppUser> getSpeakersChunkByName(Integer startRow, Integer endRow, String name) {
         return jdbcTemplate.query(SELECT_CHUNK_OF_SPEAKERS_BY_NAME, new Object[]{name, startRow, endRow}, this);
+    }
+
+    public List<AppUser> getUsersChunkByName(Integer startRow, Integer endRow, String name) {
+        return jdbcTemplate.query(SELECT_CHUNK_OF_USERS_BY_NAME, new Object[]{name, startRow, endRow}, this);
     }
 
     public Integer getUserIdByEmail(String email) {
