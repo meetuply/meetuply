@@ -4,8 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ua.meetuply.backend.dao.NotificationsDAO;
+import ua.meetuply.backend.model.Notification;
+import ua.meetuply.backend.model.NotificationTemplate;
+import ua.meetuply.backend.model.SocketNotification;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.NotificationService;
+import ua.meetuply.backend.service.NotificationTemplateService;
+//import ua.meetuply.backend.service.NotificationService;
 
 import java.util.List;
 import java.util.Map;
@@ -15,26 +21,48 @@ import java.util.Map;
 @RestController
 public class NotificationController {
 
+    //@Autowired
+    //private NotificationService notificationService;
+
+    //@Autowired
+    //private AppUserService appUserService;
+
+
+    @Autowired
+    private NotificationTemplateService templateService;
+
     @Autowired
     private NotificationService notificationService;
 
+
     @Autowired
-    private AppUserService appUserService;
+    private NotificationsDAO doa;
 
-
-
-
-    @DeleteMapping("/{id}")
-    public void deleteNotification(@PathVariable("id") Integer id) {
-        if (notificationService.get(id) == null) { ResponseEntity.badRequest().build();}
-        else { notificationService.delete(id); }
+    @GetMapping("/templates/{id}")
+    public @ResponseBody
+    NotificationTemplate getAllCurrentNotification(@PathVariable("id") Integer id) {
+        return templateService.get(id);
     }
 
+    @GetMapping("/templates")
+    public @ResponseBody
+    List<NotificationTemplate> getAllCurrentNotification() {
+        return templateService.getAll();
+    }
+
+    @GetMapping()
+    public @ResponseBody
+    List<SocketNotification> getAllNotifications() {
+        return notificationService.getAll();
+    }
 
     @GetMapping("/{id}")
     public @ResponseBody
-    List<Map<String, Object>> getAllCurrentNotification(@PathVariable("id") Integer id) {
-        return notificationService.getCurrentUserNotification(appUserService.getCurrentUserID(), id);
+    SocketNotification getNotification(@PathVariable("id") Integer id) {
+        return notificationService.get(id);
     }
+
+
+
 
 }

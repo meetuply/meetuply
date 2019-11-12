@@ -14,4 +14,6 @@ public class NotificationTemplate {
     private String name;
     private String htmlText;
     private String plainText;
+
+
 }

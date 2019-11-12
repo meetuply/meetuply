@@ -6,12 +6,4 @@ export class Notification {
 	htmlText: string;
 	plainText: string;
 
-	//fix
-
-
-	date_time: Date;
-	is_read: boolean;
-	receiver_id: number;
-	html_text: string;
-	plain_text: string;
 }
