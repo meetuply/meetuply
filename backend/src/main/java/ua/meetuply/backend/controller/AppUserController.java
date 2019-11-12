@@ -18,10 +18,6 @@ import java.util.List;
 @RequestMapping("api/user")
 public class AppUserController {
 
-    private static final String GREETING_TEMPLATE_NAME = "email-template.ftl";
-    private static final String VERIFICATION_TEMPLATE_NAME = "verification-email.ftl";
-    private static final String GREETING_SUBJECT = "Greeting";
-
     @Autowired
     private AppUserService appUserService;
 
@@ -175,7 +171,7 @@ public class AppUserController {
         appUserService.createAppUser(appUser);
         ConfirmationToken ct = confirmationService.generateToken(appUserService.getUserByEmail(appUser.getEmail()));
 
-        emailService.sendVerificationEmail(appUser, VERIFICATION_TEMPLATE_NAME, "Verify your account",
+        emailService.sendVerificationEmail(appUser, "Verify your account",
                 confirmationService.getConfirmLink(ct));
         return ResponseEntity.ok().build();
     }
@@ -184,7 +180,7 @@ public class AppUserController {
     public ResponseEntity<AppUser> confirmUser(@RequestParam("token") String confirmationToken) {
         AppUser user = confirmationService.confirmUser(confirmationToken);
         if (user != null) {
-            emailService.sendGreetingEmail(user, GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
+            emailService.sendGreetingEmail(user);
         } else {
             return ResponseEntity.badRequest().build();
         }
