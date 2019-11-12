@@ -12,7 +12,10 @@ import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Meetup;
 import ua.meetuply.backend.model.State;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 public class StateService {
@@ -32,8 +35,7 @@ public class StateService {
     }
 
     @CacheEvict(value = "states", allEntries = true)
-    public void evictStatesCache() {
-    }
+    public void evictStatesCache() {}
 
     public Set<State> get(String... names) throws NotFoundException {
         Set states = new HashSet<State>();
@@ -45,7 +47,7 @@ public class StateService {
 
     public State get(String name) throws NotFoundException {
         if (!stateService.getAll().containsKey(name)) {
-            evictStatesCache();
+            stateService.evictStatesCache();
         }
         if (stateService.getAll().containsKey(name)) {
             return stateService.getAll().get(name);
@@ -59,7 +61,7 @@ public class StateService {
             return stateService.getAll().values().stream().filter(s -> s.getStateId().equals(id))
                     .findFirst().orElseThrow(NotFoundException::new);
         } catch (NotFoundException e) {
-            evictStatesCache();
+            stateService.evictStatesCache();
             return stateService.getAll().values().stream().filter(s -> s.getStateId().equals(id))
                     .findFirst().orElseThrow(() ->
                             new NotFoundException("State with id " + id.toString() + " is not founded"));
