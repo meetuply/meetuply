@@ -5,10 +5,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Meetup {
@@ -23,12 +20,10 @@ public class Meetup {
     private LocalDateTime meetupFinishDateTime;
     private Integer stateId;
     private Integer speakerId;
-
     private String speakerFirstName;
     private String speakerLastName;
     private Float rating;
     private String speakerPhoto;
-
     private String language;
     private List<Integer> topics;
 }

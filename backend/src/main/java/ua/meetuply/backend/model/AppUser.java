@@ -2,6 +2,8 @@ package ua.meetuply.backend.model;
 
 import lombok.*;
 
+import java.util.Objects;
+
 @Data
 @AllArgsConstructor
 public class AppUser {
