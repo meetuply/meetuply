@@ -1,4 +1,4 @@
-package ua.meetuply.backend.dao;
+package ua.meetuply.backend.dao.rowMapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import ua.meetuply.backend.model.Meetup;

@@ -2,11 +2,7 @@ package ua.meetuply.backend.model;
 
 import lombok.*;
 
-@Getter
-@ToString
-@EqualsAndHashCode
-@Setter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
 public class Achievement {
 
