@@ -52,17 +52,20 @@
 
 .central{
   margin-left: 20px;
+  margin-right: 10px;
 }
 
 .post{
   display: block;
   text-align: left;
-  margin: 0px 0px 0px 0px;
-  overflow: auto;
+  margin: 0px;
+  overflow: hidden;
+  max-height: 8em;
 }
 
 .post-title{
-  margin: 5px 0px;
+  margin: 5px 0;
+  max-height: 1.5em;
   font-weight: bold;
   font-size: 1.5em;
   display: block;

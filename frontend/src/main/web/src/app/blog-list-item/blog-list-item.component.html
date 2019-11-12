@@ -19,8 +19,8 @@
           <span *ngIf="this.blogListItem.title.length < 50">{{this.blogListItem.title}}</span>
         </div>
         <div class='post-content'>
-          <span *ngIf="this.blogListItem.content.length > 200">{{this.blogListItem.content | slice:0:200}}...</span>
-          <span *ngIf="this.blogListItem.content.length < 200">{{this.blogListItem.content}}</span>
+          <p *ngIf="this.blogListItem.content.length > 250">{{this.blogListItem.content | slice:0:250}}...</p>
+          <p *ngIf="this.blogListItem.content.length < 250">{{this.blogListItem.content}}</p>
         </div>
       </div>
       <div class="post-time">
