@@ -12,7 +12,6 @@ import ua.meetuply.backend.validator.AppUserValidator;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
@@ -88,27 +87,23 @@ public class AppUserController {
 
     @RequestMapping("/members")
     @GetMapping()
-    public @ResponseBody
-    Iterable<AppUser> getAllMeetups() {
+    public Iterable<AppUser> getAllMeetups() {
         return appUserService.getAppUsers();
     }
 
     @GetMapping("/{userId}/rooms")
-    public @ResponseBody
-    Iterable<Integer> getRoomsByUserID(@PathVariable("userId") Integer userId) {
+    public Iterable<Integer> getRoomsByUserID(@PathVariable("userId") Integer userId) {
         return chatService.getChatRoomsByUser(userId);
     }
 
 
     @GetMapping("/{userId}/notifications")
-    public @ResponseBody
-    List<SocketNotification> getAllUserNotifications(@PathVariable("userId") Integer userId) {
+    public List<SocketNotification> getAllUserNotifications(@PathVariable("userId") Integer userId) {
         return notificationService.getUserNotifications(userId);
     }
 
     @GetMapping("/{userId}/notifications/read")
-    public @ResponseBody
-    List<SocketNotification> getAllUserReadNotifications(@PathVariable("userId") Integer userId) {
+    public List<SocketNotification> getAllUserReadNotifications(@PathVariable("userId") Integer userId) {
         return notificationService.getUserNotificationsByStatus(userId, true);
     }
 
@@ -119,20 +114,24 @@ public class AppUserController {
 
 
     @GetMapping("/{userId}/roomsList")
-    public @ResponseBody
-    Iterable<ChatroomThumbnail> getRoomsThumbnail(@PathVariable("userId") Integer userId) {
+    public Iterable<ChatroomThumbnail> getRoomsThumbnail(@PathVariable("userId") Integer userId) {
         return chatService.getChatRoomsThumbnails(userId);
     }
 
     @GetMapping("/members/{startRow}/{endRow}")
-    public @ResponseBody
-    Iterable<AppUser> getUsersChunk(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
+    public Iterable<AppUser> getUsersChunk(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
         return appUserService.getUsersChunk(startRow, endRow);
     }
 
+    @GetMapping("/members/{startRow}/{endRow}/search")
+    public Iterable<AppUser> getUsersChunkByName(@PathVariable("startRow") Integer startRow,
+                                                 @PathVariable("endRow") Integer endRow,
+                                                 @RequestParam("name") String name) {
+        return appUserService.getUsersChunkByName(startRow, endRow, name);
+    }
+
     @GetMapping("/members/all/{startRow}/{endRow}")
-    public @ResponseBody
-    Iterable<AppUser> getUsersChunkForAdmin(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
+    public Iterable<AppUser> getUsersChunkForAdmin(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
         return appUserService.getUsersChunkForAdmin(startRow, endRow);
     }
 
@@ -151,14 +150,13 @@ public class AppUserController {
         return appUserService.getUserSubscribers(userId);
     }
 
-    @GetMapping("/{id}/subscribtions")
-    public Iterable<Integer> getSubscribtions(@PathVariable("id") Integer userId) {
+    @GetMapping("/{id}/subscriptions")
+    public Iterable<Integer> getSubscriptions(@PathVariable("id") Integer userId) {
         return appUserService.getUserSubscriptions(userId);
     }
 
-
-    @GetMapping("/{id}/subscribtions/users")
-    public Iterable<AppUser> getSubscribtionsUsers(@PathVariable("id") Integer userId) {
+    @GetMapping("/{id}/subscriptions/users")
+    public Iterable<AppUser> getSubscriptionsUsers(@PathVariable("id") Integer userId) {
         return appUserService.getUserSubscriptionsUsers(userId);
     }
 

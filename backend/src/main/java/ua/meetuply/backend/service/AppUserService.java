@@ -77,6 +77,10 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getSpeakersChunk(startRow, endRow);
     }
 
+    public List<AppUser> getUsersChunkByName(Integer startRow, Integer endRow, String name) {
+        return appUserDAO.getSpeakersChunkByName(startRow, endRow, name);
+    }
+
     public List<AppUser> getUsersChunkForAdmin(Integer startRow, Integer endRow) {
         return appUserDAO.getUsersChunk(startRow, endRow);
     }
@@ -202,6 +206,7 @@ public class AppUserService implements UserDetailsService {
         } else user = new User(appUser.getEmail(), appUser.getPassword(), new HashSet<>());
         return user;
     }
+
 
 
 }
