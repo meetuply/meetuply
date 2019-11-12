@@ -1,4 +1,4 @@
-package ua.meetuply.backend.dao;
+package ua.meetuply.backend.dao.rowMapper;
 
 import ua.meetuply.backend.model.Topic;
 

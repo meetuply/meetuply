@@ -11,6 +11,7 @@ import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.dao.SQLPredicate.Operation;
 import ua.meetuply.backend.dao.rowMapper.MeetupJoinedWithUserRowMapper;
 import ua.meetuply.backend.dao.rowMapper.MeetupRowMapper;
+import ua.meetuply.backend.dao.rowMapper.TopicRowMapper;
 import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.service.LanguageService;
 import ua.meetuply.backend.service.StateService;
