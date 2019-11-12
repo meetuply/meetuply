@@ -33,6 +33,7 @@
 			<div class='icon'></div>
 			<div> {{this.speakerListItem.awards}}</div>
 		</div>
+    <div *ngIf="this.userService.currentUser.role.roleName === 'admin'">{{this.bans}} reports</div>
     <div class='follow-btn' *ngIf="this.userService.currentUser.role.roleName !== 'admin'">
 		<app-button *ngIf="!isCurrentUser()" [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)"  fontSize='20'></app-button>
     </div>

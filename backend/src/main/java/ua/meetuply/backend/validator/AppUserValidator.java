@@ -36,18 +36,13 @@ public class AppUserValidator implements Validator {
         if (appUser.getLastName().length() > 100) errors.rejectValue("surname", "Length.appUser.email", "Email address is too long");
         if (appUser.getPassword().length() > 73) errors.rejectValue("password", "Length.appUser.password", "Password is too long");
 
-
         if (!this.emailValidator.isValid(appUser.getEmail())) {
             errors.rejectValue("email", "Pattern.appUser.email", "Not valid email");
         } else if (appUser.getUserId() == null) {
-            AppUser dbUser = appUserDAO.findAppUserByEmail(appUser.getEmail());
+            AppUser dbUser = appUserDAO.getUserByEmail(appUser.getEmail());
             if (dbUser != null) {
                 errors.rejectValue("email", "Duplicate.appUser.email", "User with such email is already registered");
             }
-        }
-
-        if (!errors.hasErrors()) {
-
         }
     }
 }

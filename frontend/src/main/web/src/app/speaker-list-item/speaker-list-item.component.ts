@@ -1,6 +1,7 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {UserService} from "../_services";
 import {SpeakerListItem} from "../_models/speakerListItem";
+import {BanService} from "../_services/ban.service";
 
 @Component({
   selector: 'app-speaker-list-item',
@@ -11,6 +12,7 @@ export class SpeakerListItemComponent implements OnInit {
 
   @Input() speakerListItem: SpeakerListItem;
   error;
+  bans: number;
 
   followText(): string {
     if (this.speakerListItem.following === true) {
@@ -27,14 +29,20 @@ export class SpeakerListItemComponent implements OnInit {
     return 1;
   }
 
-  constructor(public userService: UserService) {
+  constructor(public userService: UserService,
+              private banService: BanService) {
   }
 
   ngOnInit() {
+    this.loadBans(this.speakerListItem.id);
   }
 
   link(): string {
     return "/speakers/" + this.speakerListItem.id;
+  }
+
+  loadBans(id: number) {
+    this.banService.get(id).subscribe(bans => this.bans = bans.length);
   }
 
   followButtonClicked(event) {

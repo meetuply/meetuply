@@ -3,89 +3,89 @@ package ua.meetuply.backend.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.meetuply.backend.model.Notification;
-import ua.meetuply.backend.service.AppUserService;
-import ua.meetuply.backend.service.NotificationTemplateService;
+import ua.meetuply.backend.model.SocketNotification;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 @Repository
-public class NotificationsDAO implements IDAO<Notification>, RowMapper<Notification>{
+public class NotificationsDAO implements  RowMapper<Notification> {
 
 
     @Autowired
     public JdbcTemplate jdbcTemplate;
-    AppUserService appUserService;
-    NotificationTemplateService notificationTemplateService;
-
-    private String SqlGetAllUserNotifications = "SELECT * FROM notification n, notification_template nt " +
-            "WHERE n.receiver_id = ? AND n.template_id = nt.uid";
-
-    private String SqlGetCurrentUserNotification = "SELECT * FROM notification n, notification_template nt " +
-            "WHERE n.receiver_id = ? AND nt.uid = ? AND n.template_id = nt.uid";
-
-    private String SqlGetReadedOrUnreadedNotifications = "Select * From notification n, notification_template nt " +
-            "WHERE n.receiver_id = ? " +
-            "AND n.template_id = nt.uid " +
-            "AND n.is_read = ?";
 
 
-    //user's id
-    @Override
-    public Notification get(Integer id) {
-        List<Notification> notification = jdbcTemplate.query("SELECT * FROM notification WHERE uid = ?", new Object[]{id}, this);
-        return notification.size() == 0 ? null : notification.get(0);
+    private static String GET_NOTIFICATION_BY_ID_QUERY = "select t1.uid,t1.date_time,t1.is_read,t1.receiver_id , t2.html_text, t2.plain_text \n" +
+            "from notification t1 \n" +
+            "join notification_template t2 on t1.template_id = t2.uid \n" +
+            "WHERE t1.uid = ?";
+    private static String GET_NOTIFICATIONS_QUERY = "select t1.uid,t1.date_time,t1.is_read,t1.receiver_id , t2.html_text, t2.plain_text \n" +
+            "from notification t1 \n" +
+            "join notification_template t2 on t1.template_id = t2.uid";
+    private static String SAVE_NOTIFICATION_QUERY = "INSERT INTO `notification` (`date_time`, `is_read`, `receiver_id`, `template_id`) " + "VALUES (?, ?, ?, ?)";
+    private static String UPDATE_NOTIFICATION_QUERY = "UPDATE notification SET date_time = ?, is_read = ?, receiver_id = ?, template_id = ? WHERE uid = ?";
+    private static String DELETE_NOTIFICATION_QUERY = "DELETE FROM notification WHERE uid = ?";
+
+    private String GET_USER_NOTIFICATIONS_QUERY = "select t1.uid,t1.date_time,t1.is_read,t1.receiver_id , t2.html_text, t2.plain_text \n" +
+            "from notification t1 \n" +
+            "join notification_template t2 on t1.template_id = t2.uid \n" +
+            "WHERE t1.receiver_id = ?";
+
+    private String GET_USER_NOTIFICATIONS_BY_STATUS = "select t1.uid,t1.date_time,t1.is_read,t1.receiver_id , t2.html_text, t2.plain_text \n" +
+            "from notification t1 \n" +
+            "join notification_template t2 on t1.template_id = t2.uid \n" +
+            "WHERE t1.receiver_id = ? \n" +
+            "AND t1.is_read = ?";
+
+
+
+    public SocketNotification get(Integer id) {
+        return jdbcTemplate.queryForObject(GET_NOTIFICATION_BY_ID_QUERY, new Object[]{id}, new SocketNotificationRowMapper());
     }
 
-    @Override
-    public List<Notification> getAll() {
-        List<Notification> notification = jdbcTemplate.query("SELECT * FROM notification", this);
-        return notification.size() == 0 ? null : notification;
+    public List<SocketNotification> getAll() {
+        return jdbcTemplate.query(GET_NOTIFICATIONS_QUERY, new SocketNotificationRowMapper());
     }
 
-    @Override
+
     public void save(Notification notification) {
-        jdbcTemplate.update("INSERT INTO `notification` (`date_time`, `is_read`, `receiver_id`, `template_id`) " + "VALUES (?, ?, ?, ?)",
-                notification.getDate_time(), notification.getIsRead(), notification.getReceiverID(), notification.getTemplateID());
+        jdbcTemplate.update(SAVE_NOTIFICATION_QUERY,
+                notification.getDateTime(), notification.getIsRead(), notification.getReceiverId(), notification.getTemplateId());
     }
 
-    @Override
+
     public void update(Notification notification) {
-        jdbcTemplate.update("UPDATE notification SET date_time = ?, is_read = ?, receiver_id = ?, template_id = ? WHERE uid = ?",
-                notification.getDate_time(), notification.getIsRead(), notification.getReceiverID(), notification.getTemplateID(), notification.getNotificationID());
+        jdbcTemplate.update(UPDATE_NOTIFICATION_QUERY,
+                notification.getDateTime(), notification.getIsRead(), notification.getReceiverId(), notification.getTemplateId(), notification.getNotificationId());
     }
 
-    @Override
+
     public void delete(Integer id) {
-        jdbcTemplate.update("DELETE FROM notification WHERE uid = ?", id);
+        jdbcTemplate.update(DELETE_NOTIFICATION_QUERY, id);
     }
 
-    @Override
+
+    public List<SocketNotification> getUserNotifications(Integer userId) {
+        return jdbcTemplate.query(GET_USER_NOTIFICATIONS_QUERY, new Object[]{userId}, new SocketNotificationRowMapper());
+    }
+
+
+    public List<SocketNotification> getReadedOrUnreadedNotifications(Integer userId, boolean readOrUnread) {
+        return jdbcTemplate.query(GET_USER_NOTIFICATIONS_BY_STATUS, new Object[]{userId, readOrUnread}, new SocketNotificationRowMapper());
+    }
+
+
     public Notification mapRow(ResultSet resultSet, int i) throws SQLException {
         return new Notification(
                 resultSet.getInt("uid"),
                 resultSet.getTimestamp("date_time").toLocalDateTime(),
-                resultSet.getInt("is_read"),
+                resultSet.getBoolean("is_read"),
                 resultSet.getInt("receiver_id"),
                 resultSet.getInt("template_id")
         );
     }
-
-    public List<Map<String, Object>> getAllUserNotifications(Integer userId) {
-        return jdbcTemplate.queryForList(SqlGetAllUserNotifications, userId);
-    }
-
-    public List<Map<String, Object>> getCurrentUserNotification(Integer userId, Integer notificationId) {
-        return jdbcTemplate.queryForList(SqlGetCurrentUserNotification, userId, notificationId);
-    }
-
-    public List<Map<String, Object>> getReadedOrUnreadedNotifications(Integer userId, Integer readOrUnread) {
-        return jdbcTemplate.queryForList(SqlGetReadedOrUnreadedNotifications, userId, readOrUnread);
-    }
-
 }

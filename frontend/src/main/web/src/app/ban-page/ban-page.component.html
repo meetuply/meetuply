@@ -1,7 +1,7 @@
 <app-left-menu></app-left-menu>
 <div class='content'>
   <div class='back' (click)="goBack()"></div>
-    <p class='title'>Ban user</p>
+    <p class='title'>Report</p>
 
     <div *ngIf="this.banReasonId">
       <div class="add">
@@ -12,7 +12,7 @@
     </div>
 
     <div *ngIf="!this.banReasonId">
-      <p>Choose ban reason</p>
+      <p>Choose reason</p>
       <div class="item"*ngFor="let banReason of banReasons">
       <div class="main">
         <div class="profile">

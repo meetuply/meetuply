@@ -41,6 +41,9 @@ public class MeetupService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private NotificationService notificationService;
+
 
     @Transactional
     public void createMeetup(FullMeetup meetup) throws NotFoundException {
@@ -48,6 +51,12 @@ public class MeetupService {
         meetup.setStateId(stateService.get(State.SCHEDULED).getStateId());
         meetup.setSpeakerId(appUserService.getCurrentUserID());
         meetupDao.saveFull(meetup);
+
+        //notifiy all subscribers the a new meetup is created
+        for (Integer user: appUserService.getUserSubscribers(appUserService.getCurrentUserID())) {
+            notificationService.sendNotification(user,"subscription_new_meetup_template");
+        }
+
         achievementService.checkOne(AchievementType.MEETUPS);
         achievementService.checkOne(AchievementType.MEETUPS_TOPIC);
     }
@@ -94,7 +103,12 @@ public class MeetupService {
         if (user == null) throw new NotFoundException("Cannot find current user");
         if (meetupDao.get(meetupID) == null) throw new NotFoundException("There is no meetup #" + meetupID);
         meetupDao.join(meetupID, user.getUserId());
+
         Meetup meetup = meetupDao.get(meetupID);
+
+        notificationService.sendNotification(user.getUserId(),"meetup_subscription_template");
+        notificationService.sendNotification(meetup.getSpeakerId(),"new_meetup_atendee_template");
+
         if (meetup.getMeetupRegisteredAttendees() == meetup.getMeetupMaxAttendees())
             stateService.updateState(meetup, stateService.get(State.BOOKED));
     }
@@ -122,6 +136,7 @@ public class MeetupService {
         if (meetupDao.get(meetupID) == null) throw new NotFoundException("There is no meetup #" + meetupID);
         meetupDao.leave(meetupID, user.getUserId());
         Meetup meetup = meetupDao.get(meetupID);
+
         if (meetup.getMeetupRegisteredAttendees() != meetup.getMeetupMaxAttendees())
             stateService.updateState(meetup, stateService.get(State.SCHEDULED));
     }
@@ -151,7 +166,9 @@ public class MeetupService {
                 stateService.updateState(meetup, stateService.get(State.CANCELED));
                 for (AppUser user: appUserService.getMeetupAttendees(meetupID)) {
                     emailService.informCancellation(user, meetup);
+                    notificationService.sendNotification(user.getUserId(),"meetup_canceled_template");
                 }
+                notificationService.sendNotification(meetup.getSpeakerId(),"meetup_canceled_template");
             } else {
                 throw MeetupStateException.createWith("you cannot switch to Canceled from " + stateService.get(meetup.getStateId()).getName());
             }

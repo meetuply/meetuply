@@ -94,6 +94,7 @@ export class CreateMeetupPageComponent implements OnInit {
   submit() {
     var start_date = new Date(this.meetup_start_date + 'T' + this.meetup_start_time);
     var end_date = new Date(this.meetup_end_date + 'T' + this.meetup_end_time);
+
     var meetup: Meetup = {
       meetupId: 0,
       speakerId: 0,
@@ -134,6 +135,9 @@ export class CreateMeetupPageComponent implements OnInit {
   ngOnInit() {
     this.loadLanguages();
     this.loadTopics();
+
+    var offset = new Date().getTimezoneOffset() / -60;
+    alert(offset);
   }
 
   goBack() {

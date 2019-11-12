@@ -1,7 +1,6 @@
 package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,11 +12,16 @@ import ua.meetuply.backend.model.AppUser;
 import ua.meetuply.backend.model.Meetup;
 import ua.meetuply.backend.model.State;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
-@CacheConfig(cacheNames = {"states"})
 public class StateService {
+
+    @Autowired
+    StateService stateService;
 
     @Autowired
     StateDAO stateDAO;
@@ -25,19 +29,16 @@ public class StateService {
     @Autowired
     MeetupDAO meetupDAO;
 
-    private Map<String, State> states = new HashMap<>();
-
-    @Cacheable
+    @Cacheable("states")
     public Map<String, State> getAll() {
         return stateDAO.getAll();
     }
 
     @CacheEvict(value = "states", allEntries = true)
-    public void evictStatesCache() {
-    }
+    public void evictStatesCache() {}
 
     public Set<State> get(String... names) throws NotFoundException {
-        Set states = new HashSet<State>();
+        Set<State> states = new HashSet<>();
         for (String name: names) {
             states.add(get(name));
         }
@@ -45,11 +46,11 @@ public class StateService {
     }
 
     public State get(String name) throws NotFoundException {
-        if (!getAll().containsKey(name)) {
-            evictStatesCache();
+        if (!stateService.getAll().containsKey(name)) {
+            stateService.evictStatesCache();
         }
-        if (getAll().containsKey(name)) {
-            return getAll().get(name);
+        if (stateService.getAll().containsKey(name)) {
+            return stateService.getAll().get(name);
         } else {
             throw new NotFoundException("State with name " + name + " is not founded");
         }
@@ -57,11 +58,11 @@ public class StateService {
 
     public State get(Integer id) throws NotFoundException {
         try {
-            return getAll().values().stream().filter(s -> s.getStateId().equals(id))
+            return stateService.getAll().values().stream().filter(s -> s.getStateId().equals(id))
                     .findFirst().orElseThrow(NotFoundException::new);
         } catch (NotFoundException e) {
-            evictStatesCache();
-            return getAll().values().stream().filter(s -> s.getStateId().equals(id))
+            stateService.evictStatesCache();
+            return stateService.getAll().values().stream().filter(s -> s.getStateId().equals(id))
                     .findFirst().orElseThrow(() ->
                             new NotFoundException("State with id " + id.toString() + " is not founded"));
         }
@@ -83,7 +84,6 @@ public class StateService {
     public void terminateCurrentMeetupsOf(AppUser user) throws NotFoundException {
         updateState(meetupDAO.currentMeetupsOf(user), get(State.TERMINATED));
     }
-
 
     @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1500)
     public void cancelNotEnoughAttendees() throws NotFoundException {

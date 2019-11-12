@@ -19,6 +19,7 @@ import {FeedbackService} from "../_services/feedback.service";
 import {Feedback} from "../_models/feedback";
 import {BlogCommentItem} from "../_models/blogCommentItem";
 import {FeedbackListItem} from "../_models/feedback-list-item";
+import {BanService} from "../_services/ban.service";
 
 
 @Component({
@@ -32,6 +33,7 @@ export class SpeakerPageComponent implements OnInit {
   user: User;
   followers: number[];
   languages: string[];
+  bans: number;
   rate: number;
   following: boolean;
   needsFeedback: boolean;
@@ -61,7 +63,8 @@ export class SpeakerPageComponent implements OnInit {
               public stateService: StateService,
               private meetupService: MeetupService,
               private blogService: BlogService,
-              private feedbackService: FeedbackService) {
+              private feedbackService: FeedbackService,
+              private banService: BanService) {
   }
 
   ngOnInit() {
@@ -71,6 +74,7 @@ export class SpeakerPageComponent implements OnInit {
     this.loadRating(this.id);
     this.loadFollowers(this.id);
     this.loadLanguages(this.id);
+    this.loadBans(this.id);
     this.loadAchievements(this.id);
     this.loadMeetups();
     this.loadFeedback(this.id);
@@ -148,6 +152,10 @@ export class SpeakerPageComponent implements OnInit {
     this.userService.getUserLanguages(id).subscribe(res =>
       this.languages = res.map(l => l.name)
     );
+  }
+
+  loadBans(id: number) {
+    this.banService.get(id).subscribe(bans => this.bans = bans.length);
   }
 
   loadLastPost(id: number) {

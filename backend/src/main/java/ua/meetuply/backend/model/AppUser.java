@@ -24,4 +24,5 @@ public class AppUser {
     public String getFullName() {
         return getFirstName() + " " + getLastName();
     }
+
 }
