@@ -78,7 +78,7 @@ public class AppUserService implements UserDetailsService {
     }
 
     public List<AppUser> getUsersChunkByName(Integer startRow, Integer endRow, String name) {
-        return appUserDAO.getUsersChunkByName(startRow, endRow, name);
+        return appUserDAO.getSpeakersChunkByName(startRow, endRow, name);
     }
 
     public List<AppUser> getUsersChunkForAdmin(Integer startRow, Integer endRow) {

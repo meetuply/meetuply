@@ -99,13 +99,15 @@ public class AppUserController {
 
 
     @GetMapping("/{userId}/notifications")
-    public List<Map<String, Object>> getAllUserNotifications(@PathVariable("userId") Integer userId) {
-        return notificationService.getAllUserNotifications(userId);
+    public @ResponseBody
+    List<SocketNotification> getAllUserNotifications(@PathVariable("userId") Integer userId) {
+        return notificationService.getUserNotifications(userId);
     }
 
     @GetMapping("/{userId}/notifications/read")
-    public List<Map<String, Object>> getAllUserReadNotifications(@PathVariable("userId") Integer userId) {
-        return notificationService.getReadedOrUnreadedNotifications(userId, 1);
+    public @ResponseBody
+    List<SocketNotification> getAllUserReadNotifications(@PathVariable("userId") Integer userId) {
+        return notificationService.getUserNotificationsByStatus(userId, true);
     }
 
     @GetMapping("/{userId}/notifications/unread")

@@ -80,6 +80,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     }
 
     public List<AppUser> getUsersChunk(Integer startRow, Integer endRow) {
+        return jdbcTemplate.query(SELECT_CHUNK_OF_USERS, new Object[]{startRow, endRow}, this);
     }
 
     public List<AppUser> getSpeakersChunkByName(Integer startRow, Integer endRow, String name) {
