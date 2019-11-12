@@ -70,15 +70,15 @@ public class AppUserService implements UserDetailsService {
     }
 
     public List<AppUser> getAppUsers() {
-        return appUserDAO.getAppUsers();
+        return appUserDAO.getAll();
     }
 
     public List<AppUser> getUsersChunk(Integer startRow, Integer endRow) {
-        return appUserDAO.getUsersChunk(startRow, endRow);
+        return appUserDAO.getSpeakersChunk(startRow, endRow);
     }
 
     public List<AppUser> getUsersChunkForAdmin(Integer startRow, Integer endRow) {
-        return appUserDAO.getUsersChunkForAdmin(startRow, endRow);
+        return appUserDAO.getUsersChunk(startRow, endRow);
     }
 
     public List<AppUser> getMeetupAttendees(Integer meetupId) {
@@ -86,15 +86,15 @@ public class AppUserService implements UserDetailsService {
     }
 
     public List<Integer> getUserSubscribers(Integer id) {
-        return appUserDAO.getUserSubscribers(id);
+        return appUserDAO.getFollowersIdsOfUser(id);
     }
 
     public List<Integer> getUserSubscriptions(Integer id) {
-        return appUserDAO.getUserSubscriptions(id);
+        return appUserDAO.getFollowedUsersIdsOfUser(id);
     }
 
     public List<AppUser> getUserSubscriptionsUsers(Integer id) {
-        return appUserDAO.getUserSubscriptionsUsers(id);
+        return appUserDAO.getFollowedUsersOfUser(id);
     }
 
     public AppUser getUser(Integer id) {
@@ -131,8 +131,6 @@ public class AppUserService implements UserDetailsService {
     public AppUser getUserByEmail(String email) {
         return appUserDAO.getUserByEmail(email);
     }
-
-    public List<Integer> getWaitingFeedbackFrom(Integer userId) { return appUserDAO.getWaitingFeedbackFrom(userId);}
 
     public void activateUser(AppUser user) {
         user.setRegistration_confirmed(true);
@@ -192,7 +190,7 @@ public class AppUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        AppUser appUser = appUserDAO.findAppUserByEmail(email);
+        AppUser appUser = appUserDAO.getUserByEmail(email);
         if (appUser == null) throw new UsernameNotFoundException(email);
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));

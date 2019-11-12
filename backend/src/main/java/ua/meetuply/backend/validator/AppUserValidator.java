@@ -39,7 +39,7 @@ public class AppUserValidator implements Validator {
         if (!this.emailValidator.isValid(appUser.getEmail())) {
             errors.rejectValue("email", "Pattern.appUser.email", "Not valid email");
         } else if (appUser.getUserId() == null) {
-            AppUser dbUser = appUserDAO.findAppUserByEmail(appUser.getEmail());
+            AppUser dbUser = appUserDAO.getUserByEmail(appUser.getEmail());
             if (dbUser != null) {
                 errors.rejectValue("email", "Duplicate.appUser.email", "User with such email is already registered");
             }
