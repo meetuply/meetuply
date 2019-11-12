@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { TopicService } from '../_services/topic.service'
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { TopicService } from '../_services'
 import { Topic } from '../_models'
 import {Filter} from "../_models/filter";
 import {FilterService} from "../_services/filter.service";
-
+import {MeetupListItem} from "../_models/meetupListItem";
 @Component({
   selector: 'app-meetup-filter',
   templateUrl: './meetup-filter.component.html',
@@ -13,11 +13,19 @@ import {FilterService} from "../_services/filter.service";
 
 export class MeetupFilterComponent implements OnInit {
 
-  text1 = "lol123";
+  filter_name: string;
+  filter_ratingFrom: number;
+  filter_ratingTo: number;
+  filter_start_date: string;
+  filter_start_time: string;
+  filter_end_date: string;
+  filter_end_time: string;
   topics: Topic[];
-  selectedTopics = new Set();
+  @Output() meetups: EventEmitter<MeetupListItem[]> = new EventEmitter<any>();
+  // @Output() meetups : EventEmitter<Meetup[]> = new EventEmitter();
+  selectedTopics = new Set<Topic>();
   filters: Filter[];
-  selectedFilters = new Set();
+  selectedFilters = new Set<number>();
 
   weekdayStates:boolean[] = [
     false,
@@ -29,11 +37,51 @@ export class MeetupFilterComponent implements OnInit {
     false
   ];
 
+  submit(){
+    this.checkRequiredFields(this.filter_name);
+    var start_date = new Date(this.filter_start_date + 'T' + this.filter_start_time);
+    var end_date = new Date(this.filter_end_date + 'T' + this.filter_end_time);
+    // alert(start_date);
+    // console.log(end_date);
+    var filter: Filter = {
+      id: 0,
+      name: this.filter_name,
+      ratingFrom: this.filter_ratingFrom,
+      ratingTo: this.filter_ratingTo,
+      dateFrom: start_date,
+      dateTo: end_date,
+      userId: 0,
+      topics: Array.from(this.selectedTopics)
+    };
+    this.filterService.create(filter).subscribe(data => {
+
+    }, error1 => {
+      alert('Some thing happened:' + error1)
+
+    })
+  }
+
+  search(){
+    this.filterService.getMeetupsByFilter(this.selectedFilters.values().next().value).subscribe(data =>
+      // this.meetups.emit(meetupsList)
+      // this.meetups.push(...data);
+      this.meetups.emit(data)
+      // this.meetups.emit(data)
+    );
+    console.log(this.meetups)
+
+  }
 
   constructor(
     private topicService: TopicService,
     private filterService: FilterService) {
 
+  }
+
+  checkRequiredFields(input) {
+    if(input === null) {
+      throw new Error("Attribute 'name' is required");
+    }
   }
 
   ngOnInit() {
@@ -69,21 +117,57 @@ export class MeetupFilterComponent implements OnInit {
     } else {
       this.selectedFilters.delete($event[0]);
     }
-    console.log(this.selectedFilters)
-
   }
 
   toggledWeekday($event) {
     this.weekdayStates[$event[0]] = $event[1]
   }
 
-  toggled($event) {
 
-    if ($event[0] == 1) {
-      this.text1 = "" + (Math.random() * 5);
+  isDate(f: string) {
+    var d = new Date(f);
+    return d instanceof Date;
+  }
+
+
+  startDate() {
+    return new Date(this.filter_start_date + 'T' + this.filter_start_time);
+  }
+
+  endDate() {
+    return new Date(this.filter_end_date + 'T' + this.filter_end_time);
+  }
+
+  validDates() {
+
+    if (this.isDate(this.filter_start_date.toString()) == false || this.isDate(this.filter_end_date.toString()) == false) {
+      return 1; //0 invalid dates
+    }
+    if (this.startDate() > this.endDate()) {
+      return 2; //1 star is bigger then end
+    }
+    if (this.startDate().getTime() <= Date.now()) {
+      return 2; //2 start is already ended
     }
 
+    if (this.endDate().getTime() <= Date.now()) {
+      return 3; //2 start is already ended
+    }
 
+    return 0;
   }
+
+  dateMessage() {
+    if (this.isDate(this.filter_start_date.toString()) == false || this.isDate(this.filter_end_date.toString()) == false) {
+      return "Invalid dates"; //0 invalid dates
+    }
+    if (this.startDate() > this.endDate()) {
+      return "Start date is bigger then end date"; //1 star is bigger then end
+    }
+    if (this.startDate().setTime(this.startDate().getTime() + (60 * 60 * 1000)) < Date.now()) {
+      return "Start date has already passed"; //2 start is already ended
+    }
+  }
+
 
 }

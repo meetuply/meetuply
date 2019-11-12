@@ -69,15 +69,18 @@
 			<div class='form_line'>
 				<span>Description:</span>
 				<textarea placeholder="Description" cols="30" rows="8" name="description"
-					[(ngModel)]="this.meetup_description" autocomplete="off"></textarea>
+					[(ngModel)]="this.meetup_description" maxlength="400" autocomplete="off"></textarea>
 			</div>
 
+
+
+
 			<button class="button btn1">Enter</button>
-			<!--
-			<div class='extra'>
-				<app-button text='Create meetup' (onClick)="submit($event)" fontSize='24' type='1'></app-button>
-			</div>
-		-->
+			<!--&lt;!&ndash;-->
+			<!--<div class='extra'>-->
+				<!--<app-button text='Create meetup' (onClick)="submit($event)" fontSize='24' type='1'></app-button>-->
+			<!--</div>-->
+		<!--&ndash;&gt;-->
 		</form>
 	</div>
 </div>

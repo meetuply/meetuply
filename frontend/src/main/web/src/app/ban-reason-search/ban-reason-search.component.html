@@ -1,13 +1,16 @@
 <div id="search-component">
-  <h4><label for="search-box">Ban Reason Search</label></h4>
+  <div class='search'>
+    <div class='search_icon'></div>
+    <input #searchBox id="search-box" (input)="search(searchBox.value)"  placeholder="search"/>
+  </div>
 
-  <input #searchBox id="search-box" (input)="search(searchBox.value)" />
-
-  <ul class="search-result">
-    <li *ngFor="let banReason of banReasons$ | async" >
-      <a routerLink="/ban_reasons/{{banReason.banReasonId}}">
-        {{banReason.name}}
-      </a>
-    </li>
-  </ul>
+  <div class="item" *ngFor="let banReason of banReasons$ | async">
+    <div class="main">
+      <div class="profile">
+        <div routerLink="/ban_reasons/{{banReason.banReasonId}}">
+          {{banReason.name}}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

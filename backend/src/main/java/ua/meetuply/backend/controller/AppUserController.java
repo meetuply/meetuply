@@ -5,26 +5,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.controller.exception.NotFoundException;
-import ua.meetuply.backend.model.AppUser;
-import ua.meetuply.backend.model.ChatroomThumbnail;
-import ua.meetuply.backend.model.ConfirmationToken;
-import ua.meetuply.backend.model.Language;
+import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.service.*;
 import ua.meetuply.backend.validator.AppUserValidator;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
 @RequestMapping("api/user")
 public class AppUserController {
-
-    private static final String GREETING_TEMPLATE_NAME = "email-template.ftl";
-    private static final String VERIFICATION_TEMPLATE_NAME = "verification-email.ftl";
-    private static final String GREETING_SUBJECT = "Greeting";
 
     @Autowired
     private AppUserService appUserService;
@@ -77,7 +69,7 @@ public class AppUserController {
     @GetMapping("/recover")
     public ResponseEntity requestRecover(@RequestParam("email") String email) throws NotFoundException {
         AppUser user = appUserService.getUserByEmail(email);
-        if (user == null) throw NotFoundException.createWith("Cannot find user with email " + email);
+        if (user == null) throw new NotFoundException("Cannot find user with email " + email);
         ConfirmationToken ct = confirmationService.generateToken(user);
         emailService.sendRecoverEmail(user, confirmationService.getRecoveryLink(ct));
         return ResponseEntity.ok().build();
@@ -91,50 +83,59 @@ public class AppUserController {
 
     @RequestMapping("/members")
     @GetMapping()
-    public @ResponseBody
-    Iterable<AppUser> getAllMeetups() {
+    public Iterable<AppUser> getAllMeetups() {
         return appUserService.getAppUsers();
     }
 
     @GetMapping("/{userId}/rooms")
-    public @ResponseBody
-    Iterable<Integer> getRoomsByUserID(@PathVariable("userId") Integer userId) {
+    public Iterable<Integer> getRoomsByUserID(@PathVariable("userId") Integer userId) {
         return chatService.getChatRoomsByUser(userId);
     }
 
+
     @GetMapping("/{userId}/notifications")
-    public @ResponseBody
-    List<Map<String, Object>> getAllUserNotifications(@PathVariable("userId") Integer userId) {
-        return notificationService.getAllUserNotifications(userId);
+    public List<SocketNotification> getAllUserNotifications(@PathVariable("userId") Integer userId) {
+        return notificationService.getUserNotifications(userId);
     }
 
     @GetMapping("/{userId}/notifications/read")
-    public @ResponseBody
-    List<Map<String, Object>> getAllUserReadNotifications(@PathVariable("userId") Integer userId) {
-        return notificationService.getReadedOrUnreadedNotifications(userId, 1);
+    public List<SocketNotification> getAllUserReadNotifications(@PathVariable("userId") Integer userId) {
+        return notificationService.getUserNotificationsByStatus(userId, true);
     }
 
     @GetMapping("/{userId}/notifications/unread")
-    public List<Map<String, Object>> getAllUserUnreadNotifications(@PathVariable("userId") Integer userId) {
-        return notificationService.getReadedOrUnreadedNotifications(userId, 0);
+    public List<SocketNotification> getAllUserUnreadNotifications(@PathVariable("userId") Integer userId) {
+        return notificationService.getUserNotificationsByStatus(userId, false);
     }
 
+
     @GetMapping("/{userId}/roomsList")
-    public @ResponseBody
-    Iterable<ChatroomThumbnail> getRoomsThumbnail(@PathVariable("userId") Integer userId) {
+    public Iterable<ChatroomThumbnail> getRoomsThumbnail(@PathVariable("userId") Integer userId) {
         return chatService.getChatRoomsThumbnails(userId);
     }
 
     @GetMapping("/members/{startRow}/{endRow}")
-    public @ResponseBody
-    Iterable<AppUser> getUsersChunk(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
+    public Iterable<AppUser> getUsersChunk(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
         return appUserService.getUsersChunk(startRow, endRow);
     }
 
+    @GetMapping("/members/{startRow}/{endRow}/search")
+    public Iterable<AppUser> getUsersChunkByName(@PathVariable("startRow") Integer startRow,
+                                                 @PathVariable("endRow") Integer endRow,
+                                                 @RequestParam("name") String name) {
+        return appUserService.getUsersChunkByName(startRow, endRow, name);
+    }
+
     @GetMapping("/members/all/{startRow}/{endRow}")
-    public @ResponseBody
-    Iterable<AppUser> getUsersChunkForAdmin(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
+    public Iterable<AppUser> getUsersChunkForAdmin(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow) {
         return appUserService.getUsersChunkForAdmin(startRow, endRow);
+    }
+
+    @GetMapping("/members/all/{startRow}/{endRow}/search")
+    public Iterable<AppUser> getUsersChunkForAdminByName(@PathVariable("startRow") Integer startRow,
+                                                 @PathVariable("endRow") Integer endRow,
+                                                 @RequestParam("name") String name) {
+        return appUserService.getUsersChunkForAdminByName(startRow, endRow, name);
     }
 
     @GetMapping("/{id}")
@@ -152,14 +153,13 @@ public class AppUserController {
         return appUserService.getUserSubscribers(userId);
     }
 
-    @GetMapping("/{id}/subscribtions")
-    public Iterable<Integer> getSubscribtions(@PathVariable("id") Integer userId) {
+    @GetMapping("/{id}/subscriptions")
+    public Iterable<Integer> getSubscriptions(@PathVariable("id") Integer userId) {
         return appUserService.getUserSubscriptions(userId);
     }
 
-
-    @GetMapping("/{id}/subscribtions/users")
-    public Iterable<AppUser> getSubscribtionsUsers(@PathVariable("id") Integer userId) {
+    @GetMapping("/{id}/subscriptions/users")
+    public Iterable<AppUser> getSubscriptionsUsers(@PathVariable("id") Integer userId) {
         return appUserService.getUserSubscriptionsUsers(userId);
     }
 
@@ -178,7 +178,7 @@ public class AppUserController {
         appUserService.createAppUser(appUser);
         ConfirmationToken ct = confirmationService.generateToken(appUserService.getUserByEmail(appUser.getEmail()));
 
-        emailService.sendVerificationEmail(appUser, VERIFICATION_TEMPLATE_NAME, "Verify your account",
+        emailService.sendVerificationEmail(appUser, "Verify your account",
                 confirmationService.getConfirmLink(ct));
         return ResponseEntity.ok().build();
     }
@@ -187,7 +187,7 @@ public class AppUserController {
     public ResponseEntity<AppUser> confirmUser(@RequestParam("token") String confirmationToken) {
         AppUser user = confirmationService.confirmUser(confirmationToken);
         if (user != null) {
-            emailService.sendGreetingEmail(user, GREETING_TEMPLATE_NAME, GREETING_SUBJECT);
+            emailService.sendGreetingEmail(user);
         } else {
             return ResponseEntity.badRequest().build();
         }
@@ -195,7 +195,7 @@ public class AppUserController {
     }
 
     @PutMapping("/deactivate/{id}")
-    public ResponseEntity deactivateUser(@PathVariable("id") Integer userId) {
+    public ResponseEntity deactivateUser(@PathVariable("id") Integer userId) throws NotFoundException {
         AppUser user = appUserService.getUser(userId);
         if (user == null) return ResponseEntity.notFound().build();
         appUserService.deactivateUser(user);

@@ -15,7 +15,7 @@
     </div>
   </div>
 
-  <app-meetup-filter *ngIf="this.filter_shown"></app-meetup-filter>
+  <app-meetup-filter (meetups)="search($event)" *ngIf="this.filter_shown"></app-meetup-filter>
 
   <div class="additional-filters" >
     <span [ngClass]="showActiveFlag ? 'active-choice': 'flag'" (click)="showActive()">future </span>
@@ -34,9 +34,9 @@
       <div *ngFor="let meetupItem of this.meetupsList;let i = index">
         <app-meetup-list-item
           *ngIf="isOdd(i)"
-                              [meetupListItem]='meetupItem'
-                              [isMy]="userService.currentUser.userId == meetupItem.speakerId"
-                              [state]="stateService.states[meetupItem.stateId]">
+          [meetupListItem]='meetupItem'
+          [isMy]="userService.currentUser.userId == meetupItem.speakerId"
+          [state]="stateService.states[meetupItem.stateId]">
         </app-meetup-list-item>
       </div>
     </div>

@@ -1,30 +1,28 @@
 <app-left-menu></app-left-menu>
 <div class='content'>
-  <p class='title'>Ban user</p>
   <div class='back' (click)="goBack()"></div>
+    <p class='title'>Report</p>
 
-  <div *ngIf="this.banReasonId">
-    <label>Ban description:
-      <input #banDescription />
-    </label>
-    <!-- (click) passes input value to add() and then clears the input -->
-    <a routerLink="/speakers">
-      <button (click)="addBanDescription(banDescription.value); banDescription.value=''">
-      add
-    </button>
-    </a>
-  </div>
+    <div *ngIf="this.banReasonId">
+      <div class="add">
+        <input #banDescription placeholder="description"/>
+        <app-button type='1' text="Add" fontSize="15" routerLink="/speakers"
+                  (click)="addBanDescription(banDescription.value); banDescription.value=''"></app-button>
+      </div>
+    </div>
 
-  <div *ngIf="!this.banReasonId">
-    <p>Choose ban reason</p>
-    <ul class='banReasons'>
-      <li *ngFor="let banReason of banReasons">
-        <a>
-        {{banReason.name}}
-        </a>
-        <button class="delete" title="choose ban reason"
-                  (click)="addBanReason(banReason)">x</button>
-      </li>
-    </ul>
+    <div *ngIf="!this.banReasonId">
+      <p>Choose reason</p>
+      <div class="item"*ngFor="let banReason of banReasons">
+      <div class="main">
+        <div class="profile">
+          <div>
+          {{banReason.name}}
+          </div>
+          <app-button type='1' text="Choose" class="delete" fontSize="15"
+                      (click)="addBanReason(banReason)"></app-button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

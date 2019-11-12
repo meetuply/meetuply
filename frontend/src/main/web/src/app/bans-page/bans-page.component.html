@@ -1,15 +1,16 @@
 <app-left-menu></app-left-menu>
-<div class='content'>
+<div class='container'>
   <div class='back' (click)="goBack()"></div>
 
-  <div>
-    <table>
-      <caption>User's bans</caption>
+  <div class="main-title">
+    <span class="caption">User's reports</span>
+  </div>
+    <table class="js-serial">
       <thead>
       <tr>
         <th>#</th>
         <th scope="col">Author</th>
-        <th scope="col">Ban reason</th>
+        <th scope="col">Reason</th>
         <th scope="col">Description</th>
         <th scope="col">Date</th>
       </tr>
@@ -20,9 +21,8 @@
         <td>{{banForView.author.firstName}} {{banForView.author.lastName}}</td>
         <td>{{banForView.banReason.name}}</td>
         <td>{{banForView.description}}</td>
-        <td>{{banForView.dateTime | date:'MMM d, y h:mm a'}}</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+        <td>{{banForView.time | date:'dd-MM-y HH:mm'}}</td>
+     </tr>
+     </tbody>
+   </table>
 </div>

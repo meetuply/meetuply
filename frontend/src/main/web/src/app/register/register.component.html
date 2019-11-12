@@ -1,33 +1,40 @@
 <div class='dialog'>
 
-  <form class="form" name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" [mustMatch]="['password', 'confirmPassword']" novalidate
+  <form class="form" name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm"
+        [mustMatch]="['password', 'confirmPassword']" novalidate
         *ngIf="!registered">
     <p class='title'>Sign up</p>
     <p *ngIf="error" class='error'>{{error}}</p>
 
-    <input class="form-control" type="text" name="firstName" placeholder="name" [(ngModel)]="user.firstName" #firstName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && firstName.invalid }" required/>
+    <input class="form-control" type="text" name="firstName" placeholder="name" [(ngModel)]="user.firstName"
+           #firstName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && firstName.invalid }" required/>
     <div *ngIf="f.submitted && firstName.invalid" class="invalid-feedback">
       <div *ngIf="firstName.errors.required">Name is required</div>
     </div>
 
-    <input class="form-control" type="text" name="lastName" placeholder="surname" [(ngModel)]="user.lastName" #lastName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && lastName.invalid }" required/>
+    <input class="form-control" type="text" name="lastName" placeholder="surname" [(ngModel)]="user.lastName"
+           #lastName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && lastName.invalid }" required/>
     <div *ngIf="f.submitted && lastName.invalid" class="invalid-feedback">
       <div *ngIf="lastName.errors.required">Surname is required</div>
     </div>
 
-    <input class="form-control" type="text" name="email" placeholder="email" [(ngModel)]="user.email" #email="ngModel" [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required email />
+    <input class="form-control" type="text" name="email" placeholder="email" [(ngModel)]="user.email" #email="ngModel"
+           [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required email/>
     <div *ngIf="f.submitted && email.invalid" class="invalid-feedback">
       <div *ngIf="email.errors.required">Email is required</div>
       <div *ngIf="email.errors.email">Email must be a valid email address</div>
     </div>
 
-    <input class="form-control" type="password" name="password" placeholder="password" [(ngModel)]="user.password" #password="ngModel" [ngClass]="{ 'is-invalid': f.submitted && password.invalid }" required minlength="6"/>
+    <input class="form-control" type="password" name="password" placeholder="password" [(ngModel)]="user.password"
+           #password="ngModel" [ngClass]="{ 'is-invalid': f.submitted && password.invalid }" required minlength="6"/>
     <div *ngIf="f.submitted && password.invalid" class="invalid-feedback">
       <div *ngIf="password.errors.required">Password is required</div>
       <div *ngIf="password.errors.minlength">Password must be at least 6 characters</div>
     </div>
 
-    <input class="form-control" type="password" name="confirmPassword" placeholder="repeat password" [(ngModel)]="user.confirmedPassword" #confirmPassword="ngModel" [ngClass]="{ 'is-invalid': f.submitted && confirmPassword.invalid }" required/>
+    <input class="form-control" type="password" name="confirmPassword" placeholder="repeat password"
+           [(ngModel)]="user.confirmedPassword" #confirmPassword="ngModel"
+           [ngClass]="{ 'is-invalid': f.submitted && confirmPassword.invalid }" required/>
     <div *ngIf="f.submitted && confirmPassword.invalid" class="invalid-feedback">
       <div *ngIf="confirmPassword.errors.required">Confirm Password is required</div>
       <div *ngIf="confirmPassword.errors.mustMatch">Passwords must match</div>
@@ -44,7 +51,7 @@
 </div>
 
 <div *ngIf="loading">
-  <div style="position:fixed; left: 0; right: 0; margin:0 auto;">
+  <div>
     <mat-spinner style="margin:0 auto;" diameter=50 color="accent"></mat-spinner>
   </div>
 </div>

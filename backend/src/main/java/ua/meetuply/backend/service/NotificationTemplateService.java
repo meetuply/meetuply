@@ -17,6 +17,10 @@ public class NotificationTemplateService {
         return notificationTemplateDAO.get(id);
     }
 
+    public NotificationTemplate getByName(String name) {
+        return notificationTemplateDAO.getByName(name);
+    }
+
     public void create(NotificationTemplate notificationTemplate) {
         notificationTemplateDAO.save(notificationTemplate);
     }

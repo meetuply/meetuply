@@ -47,6 +47,9 @@ public class AppUserService implements UserDetailsService {
     @Autowired
     AchievementService achievementService;
 
+    @Autowired
+    NotificationService notificationService;
+
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void createAppUser(AppUser appUser) {
@@ -67,35 +70,39 @@ public class AppUserService implements UserDetailsService {
     }
 
     public List<AppUser> getAppUsers() {
-        return appUserDAO.getAppUsers();
+        return appUserDAO.getAll();
     }
 
     public List<AppUser> getUsersChunk(Integer startRow, Integer endRow) {
-        return appUserDAO.getUsersChunk(startRow, endRow);
+        return appUserDAO.getSpeakersChunk(startRow, endRow);
+    }
+
+    public List<AppUser> getUsersChunkByName(Integer startRow, Integer endRow, String name) {
+        return appUserDAO.getSpeakersChunkByName(startRow, endRow, name);
     }
 
     public List<AppUser> getUsersChunkForAdmin(Integer startRow, Integer endRow) {
-        return appUserDAO.getUsersChunkForAdmin(startRow, endRow);
+        return appUserDAO.getUsersChunk(startRow, endRow);
+    }
+
+    public List<AppUser> getUsersChunkForAdminByName(Integer startRow, Integer endRow, String name) {
+        return appUserDAO.getUsersChunkByName(startRow, endRow, name);
     }
 
     public List<AppUser> getMeetupAttendees(Integer meetupId) {
         return appUserDAO.getMeetupAttendees(meetupId);
     }
 
-    public Integer getUserIdByEmail(String email) {
-        return appUserDAO.getUserIdByEmail(email);
-    }
-
     public List<Integer> getUserSubscribers(Integer id) {
-        return appUserDAO.getUserSubscribers(id);
+        return appUserDAO.getFollowersIdsOfUser(id);
     }
 
     public List<Integer> getUserSubscriptions(Integer id) {
-        return appUserDAO.getUserSubscriptions(id);
+        return appUserDAO.getFollowedUsersIdsOfUser(id);
     }
 
     public List<AppUser> getUserSubscriptionsUsers(Integer id) {
-        return appUserDAO.getUserSubscriptionsUsers(id);
+        return appUserDAO.getFollowedUsersOfUser(id);
     }
 
     public AppUser getUser(Integer id) {
@@ -133,18 +140,12 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getUserByEmail(email);
     }
 
-    public Integer getUserIdByName(String name) {
-        return appUserDAO.getUserIdByName(name);
-    }
-
-    public List<Integer> getWaitingFeedbackFrom(Integer userId) { return appUserDAO.getWaitingFeedbackFrom(userId);}
-
     public void activateUser(AppUser user) {
         user.setRegistration_confirmed(true);
         appUserDAO.update(user);
     }
 
-    public void deactivateUser(AppUser user) {
+    public void deactivateUser(AppUser user) throws NotFoundException {
         user.setDeactivated(true);
         appUserDAO.update(user);
         sessionService.expireUserSessions(user.getEmail());
@@ -165,6 +166,8 @@ public class AppUserService implements UserDetailsService {
     public void follow(Integer userId) {
         appUserDAO.follow(getCurrentUserID(), userId);
         achievementService.checkOne(AchievementType.FOLLOWERS);
+        notificationService.sendNotification(userId,"new_subscriber_template");
+        notificationService.sendNotification(getCurrentUserID(),"new_subscription_template");
     }
 
     public void unfollow(Integer userId) {
@@ -190,12 +193,12 @@ public class AppUserService implements UserDetailsService {
             appUserDAO.changePassword(appUser);
             confirmationTokenDAO.delete(ct.getTokenid());
             return getUser(appUser.getUserId());
-        } else throw NotFoundException.createWith("Token can't be null");
+        } else throw new NotFoundException("Token can't be null");
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        AppUser appUser = appUserDAO.findAppUserByEmail(email);
+        AppUser appUser = appUserDAO.getUserByEmail(email);
         if (appUser == null) throw new UsernameNotFoundException(email);
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
@@ -207,6 +210,7 @@ public class AppUserService implements UserDetailsService {
         } else user = new User(appUser.getEmail(), appUser.getPassword(), new HashSet<>());
         return user;
     }
+
 
 
 }

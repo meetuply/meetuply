@@ -28,42 +28,31 @@ export class ChatsListPageComponent implements OnInit {
     this.userService.getRoomsThumbnails(userId).subscribe(
       res => {
         this.rooms = res;
-        //console.log(res);
+        //console.log(this.rooms);
+        
+        this.loadFollowings(this.userService.currentUser.userId);
+       
       }
     )
   }
-
-
-  isPresentInThumbnail(user: User) {
-
-    let ch1 = this.rooms.filter(thumbnail => thumbnail.message === null);
-    if (ch1.length >= 1) return false;
-
-    let rms = this.rooms.filter(thumbnail => thumbnail.user.userId == user.userId)
-    if (rms.length == 0) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-
 
 
   loadFollowings(userId: number) {
 
-
+    var userIds = this.rooms.filter( room => room.message != null ).map( room => room.user.userId);
+    
     this.userService.getUserFollowingsList(userId).subscribe(
       users => {
-        this.followings = users.filter(user => !this.isPresentInThumbnail(user));
-        //console.log(users)
-      }
-    )
+        this.followings = users.filter(user => !userIds.includes(user.userId));
+       
+      })
+
+    
   }
 
   ngOnInit() {
     this.loadChatRooms(this.userService.currentUser.userId);
-    this.loadFollowings(this.userService.currentUser.userId);
+    
   }
 
   write_message() {

@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
 import {Filter} from "../_models/filter";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { catchError } from "rxjs/operators";
 import { Observable, throwError } from "rxjs";
 import { environment } from "../../environments/environment";
+import {Meetup} from "../_models/meetup";
+import {MeetupListItem} from "../_models/meetupListItem";
 
 
 @Injectable({ providedIn: 'root' })
@@ -14,6 +15,9 @@ export class FilterService {
 
   constructor(private http: HttpClient) { }
 
+  create(filter: Filter): Observable<{}> {
+    return this.http.post(this.filterApiUrl+ "filters", filter);
+  }
 
   getAll():Observable<Filter[]> {
     return this.http.get<Filter[]>(this.filterApiUrl);
@@ -21,6 +25,10 @@ export class FilterService {
 
   getUsersFilters():Observable<Filter[]>{
     return this.http.get<Filter[]>(this.filterApiUrl+"userFilters")
+  }
+
+  getMeetupsByFilter(filter: number):Observable<MeetupListItem[]>{
+    return this.http.get<MeetupListItem[]>(this.filterApiUrl+"filter/search?filter=" + filter);
   }
 
   private handleError(error: HttpErrorResponse) {

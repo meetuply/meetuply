@@ -1,7 +1,8 @@
 package ua.meetuply.backend.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.controller.exception.MeetupStateException;
@@ -10,16 +11,16 @@ import ua.meetuply.backend.controller.exception.PermissionException;
 import ua.meetuply.backend.dao.FilterDAO;
 import ua.meetuply.backend.dao.MeetupDAO;
 import ua.meetuply.backend.model.*;
-import ua.meetuply.backend.model.State.StateNames;
-import ua.meetuply.backend.model.Topic;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
-@Component
+@Slf4j
+@Service
 public class MeetupService {
 
     @Autowired
@@ -37,52 +38,79 @@ public class MeetupService {
     @Autowired
     private FilterDAO filterDAO;
 
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private NotificationService notificationService;
+
 
     @Transactional
-    public void createMeetup(FullMeetup meetup) {
-
-        meetup.setStateId(stateService.get(StateNames.SCHEDULED.name).getStateId());
+    public void createMeetup(FullMeetup meetup) throws NotFoundException {
+        log.debug("Creating meetup");
+        meetup.setStateId(stateService.get(State.SCHEDULED).getStateId());
         meetup.setSpeakerId(appUserService.getCurrentUserID());
-
         meetupDao.saveFull(meetup);
+
+        //notifiy all subscribers the a new meetup is created
+        for (Integer user: appUserService.getUserSubscribers(appUserService.getCurrentUserID())) {
+            notificationService.sendNotification(user,"subscription_new_meetup_template");
+        }
+
         achievementService.checkOne(AchievementType.MEETUPS);
         achievementService.checkOne(AchievementType.MEETUPS_TOPIC);
     }
 
-    public List<Topic> getMeetupTopics(Integer i){
-        return meetupDao.getMeetupTopics(i);
+    public List<Topic> getMeetupTopics(Integer meetupId){
+        log.debug("Getting meetup topics by id");
+        return meetupDao.getMeetupTopics(meetupId);
     }
 
 
     public List<Meetup> getAllMeetups() {
+        log.debug("Getting all meetups");
         return meetupDao.getAll();
     }
 
     public Meetup getMeetupById(Integer meetupId) {
+        log.debug("Getting meetup by id");
         return meetupDao.get(meetupId);
     }
 
     public void updateMeetup(Meetup meetup) {
+        log.debug("Updating meetup");
         meetupDao.update(meetup);
     }
 
     public void deleteMeetup(Integer meetupId) {
+        log.debug("Deleting meetup");
         meetupDao.delete(meetupId);
     }
 
-    public List<Meetup> getUserFutureMeetups(Integer userId){return meetupDao.getUserFutureMeetups(userId);}
+    public List<Meetup> getUserFutureMeetups(Integer userId){
+        log.debug("Getting user future meetups");
+        return meetupDao.getUserFutureMeetups(userId);
+    }
 
-    public List<Meetup> getUserPastMeetups(Integer userId){return meetupDao.getUserPastMeetups(userId);}
+    public List<Meetup> getUserPastMeetups(Integer userId){
+        log.debug("Getting user past meetups");
+        return meetupDao.getUserPastMeetups(userId);
+    }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void join(Integer meetupID) throws Exception {
         AppUser user = appUserService.getCurrentUser();
-        if (user == null) throw NotFoundException.createWith("Please, sign in");
-        if (meetupDao.get(meetupID) == null) throw NotFoundException.createWith("There is no meetup #" + meetupID);
+        if (user == null) throw new NotFoundException("Cannot find current user");
+        if (meetupDao.get(meetupID) == null) throw new NotFoundException("There is no meetup #" + meetupID);
         meetupDao.join(meetupID, user.getUserId());
+
         Meetup meetup = meetupDao.get(meetupID);
+
+        notificationService.sendNotification(user.getUserId(),"meetup_subscription_template");
+        notificationService.sendNotification(meetup.getSpeakerId(),"new_meetup_atendee_template");
+
         if (meetup.getMeetupRegisteredAttendees() == meetup.getMeetupMaxAttendees())
-            stateService.updateState(meetup, stateService.get(StateNames.BOOKED.name));
+            stateService.updateState(meetup, stateService.get(State.BOOKED));
     }
 
     public Iterable<Meetup> getUserMeetupsBeforeDay(Integer userId, int day) {
@@ -102,14 +130,15 @@ public class MeetupService {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void leave(Integer meetupID) throws Exception {
+    public void leave(Integer meetupID) throws NotFoundException {
         AppUser user = appUserService.getCurrentUser();
-        if (user == null) throw NotFoundException.createWith("current");
-        if (meetupDao.get(meetupID) == null) throw NotFoundException.createWith("There is no meetup #" + meetupID);
+        if (user == null) throw new NotFoundException("Cannot find current user");
+        if (meetupDao.get(meetupID) == null) throw new NotFoundException("There is no meetup #" + meetupID);
         meetupDao.leave(meetupID, user.getUserId());
         Meetup meetup = meetupDao.get(meetupID);
+
         if (meetup.getMeetupRegisteredAttendees() != meetup.getMeetupMaxAttendees())
-            stateService.updateState(meetup, stateService.get(StateNames.SCHEDULED.name));
+            stateService.updateState(meetup, stateService.get(State.SCHEDULED));
     }
 
     public boolean isAttendee(Integer meetupID, Integer userID) {
@@ -126,25 +155,35 @@ public class MeetupService {
 
     public void cancelMeetup(Integer meetupID) throws Exception {
         Meetup meetup = getMeetupById(meetupID);
-        if (meetup == null) throw NotFoundException.createWith("There is no meetup #" + meetupID);
+        if (meetup == null) {
+            throw new NotFoundException("There is no meetup #" + meetupID);
+        }
 
-        if (meetup.getSpeakerId() == appUserService.getCurrentUserID() || appUserService.isAdmin())
-            if (meetup.getStateId().equals(stateService.get(StateNames.BOOKED.name).getStateId())
-                    || meetup.getStateId().equals(stateService.get(StateNames.SCHEDULED.name).getStateId())
-                    || meetup.getStateId().equals(stateService.get(StateNames.TERMINATED.name).getStateId()))
-                stateService.updateState(meetup, stateService.get(StateNames.CANCELED.name));
-            else
+        if (meetup.getSpeakerId() == appUserService.getCurrentUserID() || appUserService.isAdmin()) {
+            State state = stateService.get(meetup.getStateId());
+            Set<State> allowedStates = stateService.get(State.BOOKED, State.SCHEDULED, State.TERMINATED);
+            if (allowedStates.contains(state)) {
+                stateService.updateState(meetup, stateService.get(State.CANCELED));
+                for (AppUser user: appUserService.getMeetupAttendees(meetupID)) {
+                    emailService.informCancellation(user, meetup);
+                    notificationService.sendNotification(user.getUserId(),"meetup_canceled_template");
+                }
+                notificationService.sendNotification(meetup.getSpeakerId(),"meetup_canceled_template");
+            } else {
                 throw MeetupStateException.createWith("you cannot switch to Canceled from " + stateService.get(meetup.getStateId()).getName());
-        else throw PermissionException.createWith("you cannot modify not yours meetups");
+            }
+        } else {
+            throw PermissionException.createWith("you cannot modify not yours meetups");
+        }
     }
 
     public void terminateMeetup(Integer meetupID) throws Exception {
         Meetup meetup = getMeetupById(meetupID);
-        if (meetup == null) throw NotFoundException.createWith("There is no meetup #" + meetupID);
+        if (meetup == null) throw new NotFoundException("There is no meetup #" + meetupID);
 
         if (meetup.getSpeakerId() == appUserService.getCurrentUserID() || appUserService.isAdmin())
-            if (meetup.getStateId().equals(stateService.get(StateNames.IN_PROGRESS.name).getStateId()))
-                stateService.updateState(meetup, stateService.get(StateNames.TERMINATED.name));
+            if (meetup.getStateId().equals(stateService.get(State.IN_PROGRESS).getStateId()))
+                stateService.updateState(meetup, stateService.get(State.TERMINATED));
             else
                 throw MeetupStateException.createWith("you cannot switch to Terminated from " + stateService.get(meetup.getStateId()).getName());
         else throw PermissionException.createWith("you cannot modify not yours meetups");
@@ -152,17 +191,17 @@ public class MeetupService {
 
     public void rescheduleTerminatedMeetup(Meetup meetup) throws Exception {
         Meetup oldMeetup = getMeetupById(meetup.getMeetupId());
-        if (oldMeetup == null) throw NotFoundException.createWith("There is no meetup #" + meetup.getMeetupId());
+        if (oldMeetup == null) throw new NotFoundException("There is no meetup #" + meetup.getMeetupId());
 
 
         if (oldMeetup.getSpeakerId() == appUserService.getCurrentUserID()) {
             oldMeetup.setMeetupStartDateTime(meetup.getMeetupStartDateTime());
             oldMeetup.setMeetupFinishDateTime(meetup.getMeetupFinishDateTime());
-            if (oldMeetup.getStateId().equals(stateService.get(StateNames.TERMINATED.name).getStateId()))
+            if (oldMeetup.getStateId().equals(stateService.get(State.TERMINATED).getStateId()))
                 if (oldMeetup.getMeetupRegisteredAttendees() == oldMeetup.getMeetupRegisteredAttendees())
-                    stateService.updateState(oldMeetup, stateService.get(StateNames.BOOKED.name));
+                    stateService.updateState(oldMeetup, stateService.get(State.BOOKED));
                 else
-                    stateService.updateState(oldMeetup, stateService.get(StateNames.SCHEDULED.name));
+                    stateService.updateState(oldMeetup, stateService.get(State.SCHEDULED));
             else
                 throw MeetupStateException.createWith("you cannot switch to Scheduled/Booked from " + stateService.get(meetup.getStateId()).getName());
         } else throw PermissionException.createWith("you cannot modify not yours meetups");

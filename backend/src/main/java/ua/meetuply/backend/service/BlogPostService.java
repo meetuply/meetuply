@@ -22,11 +22,19 @@ public class BlogPostService {
     @Autowired
     AchievementService achievementService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Transactional
     public void createBlogPost(BlogPost blogPost) {
         blogPost.setTime(LocalDateTime.now());
         blogPost.setAuthorId(appUserService.getCurrentUserID());
         blogPostDAO.save(blogPost);
+
+        for (Integer user: appUserService.getUserSubscribers(appUserService.getCurrentUserID())) {
+            notificationService.sendNotification(user,"subscription_new_post_template");
+        }
+
         achievementService.checkOne(AchievementType.POSTS);
     }
 

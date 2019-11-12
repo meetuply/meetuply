@@ -6,6 +6,8 @@ import { UserService } from "../_services";
 import { StateService } from "../_services/state.service";
 import { Router } from "@angular/router";
 import {User} from "../_models";
+import {Filter} from "../_models/filter";
+import {Meetup} from "../_models/meetup";
 
 @Component({
   selector: 'app-meetups-list-page',
@@ -15,6 +17,7 @@ import {User} from "../_models";
 
 export class MeetupsListPageComponent implements OnInit, OnDestroy {
 
+  filter: Filter;
   loading = false;
   lastRow = 0;
   maxMeetupsOnPage: number;
@@ -145,4 +148,13 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
       this.sub.unsubscribe();
     }
   }
+
+  search(m:MeetupListItem[]) {
+    this.meetupsList = m;
+    console.log(event);
+  }
+
+  // search($event){
+  //   console.log(event)
+  // }
 }

@@ -1,15 +1,14 @@
 package ua.meetuply.backend.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import ua.meetuply.backend.model.BanReason;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class BanReasonDAO implements IDAO<BanReason>, RowMapper<BanReason> {
@@ -27,6 +26,11 @@ public class BanReasonDAO implements IDAO<BanReason>, RowMapper<BanReason> {
     public List<BanReason> getAll() {
         List<BanReason> banReasons = jdbcTemplate.query("SELECT * FROM ban_reason", this);
         return banReasons;
+    }
+
+    public List<BanReason> getByName(String term) {
+        term = "%" + term + "%";
+        return jdbcTemplate.query("SELECT * FROM ban_reason WHERE name LIKE ?", new Object[] { term },this);
     }
 
     @Override

@@ -13,130 +13,160 @@ import java.util.List;
 @Repository
 public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
-    @Autowired
-    public JdbcTemplate jdbcTemplate;
+    private static final String SELECT_ALL_QUERY =
+            "SELECT * FROM user";
+    private static final String SELECT_USER_BY_EMAIL_QUERY =
+            "SELECT * FROM user WHERE email = ?";
+    private static final String SELECT_USER_ID_BY_EMAIL_QUERY =
+            "SELECT uid FROM user WHERE email = ?";
+    private static final String SELECT_USER_BY_ID =
+            "SELECT * FROM user WHERE uid = ?";
+    private static final String SELECT_CHUNK_OF_USERS =
+            "SELECT * FROM user WHERE registration_confirmed=1 order by uid asc LIMIT ?, ?";
+    private static final String SELECT_CHUNK_OF_USERS_BY_NAME =
+            "SELECT *, CONCAT(firstname, ' ', surname) AS full_name FROM user WHERE is_deactivated=0 AND registration_confirmed=1 " +
+                    "HAVING LOWER(full_name) LIKE CONCAT('%',?,'%') ORDER BY uid asc LIMIT ?, ?";
+    private static final String SELECT_CHUNK_OF_SPEAKERS =
+            "SELECT * FROM user WHERE is_deactivated=0 AND registration_confirmed=1 AND uid IN " +
+                    "(SELECT speaker_id FROM meetup UNION SELECT author_id FROM post) " +
+                    "ORDER BY uid LIMIT ?, ?";
+    private static final String SELECT_CHUNK_OF_SPEAKERS_BY_NAME =
+            "SELECT *, CONCAT(firstname, ' ', surname) AS full_name FROM user WHERE is_deactivated=0 AND registration_confirmed=1 AND uid IN " +
+                    "(SELECT speaker_id FROM meetup UNION SELECT author_id FROM post) " +
+                    "HAVING LOWER(full_name) LIKE CONCAT('%',?,'%') ORDER BY uid asc LIMIT ?, ?";
+    private static final String SELECT_MEETUP_ATTENDEES_QUERY =
+            "SELECT * FROM user WHERE uid IN (SELECT user_id FROM meetup_attendees WHERE meetup_id = ?)";
+    private static final String SELECT_FOLLOWERS_IDS_OF_USER_QUERY =
+            "SELECT follower_id FROM followers WHERE followed_user_id = ?";
+    private static final String SELECT_FOLLOWED_USERS_IDS_OF_USER_QUERY =
+            "SELECT followed_user_id FROM followers WHERE follower_id = ?";
+    private static final String SELECT_FOLLOWED_USERS_OF_USER_QUERY =
+            "SELECT * FROM user WHERE uid IN (SELECT followed_user_id FROM followers WHERE follower_id = ?)";
+    private static final String SELECT_FOLLOWER_NUMBER_QUERY =
+            "select count(*) from followers where followed_user_id = ?";
+
+    private static final String INSERT_INTO_FOLLOWERS_QUERY =
+            "INSERT INTO followers (`follower_id`, `followed_user_id`) VALUES (?, ?)";
+    private static final String INSERT_USER_QUERY =
+            "INSERT INTO `user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`, `description`, `location`,`photo`) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private static final String UPDATE_USER_QUERY =
+            "UPDATE user " +
+                    "SET email = ?, " +
+                    "password = ?, " +
+                    "firstname = ?, " +
+                    "surname = ?, " +
+                    "registration_confirmed = ?, " +
+                    "is_deactivated = ?, " +
+                    "allow_notifications = ?, " +
+                    "role_id = ?, " +
+                    "description = ?, " +
+                    "location = ?, " +
+                    "photo = ? WHERE uid = ?";
+    private static final String UPDATE_PASSWORD_QUERY =
+            "UPDATE user SET password = ? WHERE uid = ?";
+
+    private static final String DELETE_FROM_FOLLOWERS_QUERY =
+            "DELETE FROM followers WHERE follower_id = ? AND followed_user_id = ?";
+    private static final String DELETE_USER_QUERY =
+            "DELETE FROM user WHERE uid = ?";
 
     @Autowired
-    RoleDAO roleDAO;
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private RoleDAO roleDAO;
 
     public List<AppUser> getMeetupAttendees(Integer id) {
-        return jdbcTemplate.query("select * from user where uid in (select user_id from meetup_attendees where meetup_id = ?)", new Object[]{id}, this);
+        return jdbcTemplate.query(SELECT_MEETUP_ATTENDEES_QUERY, new Object[]{id}, this);
     }
 
-    public AppUser findAppUserByEmail(String email) {
-        return jdbcTemplate.queryForObject("SELECT * FROM user WHERE email = ?", new Object[]{email}, this);
+    public List<AppUser> getSpeakersChunk(Integer startRow, Integer endRow) {
+        return jdbcTemplate.query(SELECT_CHUNK_OF_SPEAKERS, new Object[]{startRow, endRow}, this);
     }
-
-    public List<AppUser> getAppUsers() {
-        return jdbcTemplate.query("SELECT * FROM user", this);
-    }
-
 
     public List<AppUser> getUsersChunk(Integer startRow, Integer endRow) {
-        return jdbcTemplate.query("SELECT * FROM user WHERE is_deactivated=0 AND registration_confirmed=1 order by uid asc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
+        return jdbcTemplate.query(SELECT_CHUNK_OF_USERS, new Object[]{startRow, endRow}, this);
     }
 
-    public List<AppUser> getUsersChunkForAdmin(Integer startRow, Integer endRow) {
-        return jdbcTemplate.query("SELECT * FROM user WHERE registration_confirmed=1 order by uid asc LIMIT ?, ?", new Object[]{startRow, endRow}, this);
+    public List<AppUser> getSpeakersChunkByName(Integer startRow, Integer endRow, String name) {
+        return jdbcTemplate.query(SELECT_CHUNK_OF_SPEAKERS_BY_NAME, new Object[]{name, startRow, endRow}, this);
+    }
+
+    public List<AppUser> getUsersChunkByName(Integer startRow, Integer endRow, String name) {
+        return jdbcTemplate.query(SELECT_CHUNK_OF_USERS_BY_NAME, new Object[]{name, startRow, endRow}, this);
+    }
+
+    public Integer getUserIdByEmail(String email) {
+        Integer userId = jdbcTemplate.queryForObject(SELECT_USER_ID_BY_EMAIL_QUERY, new Object[]{email}, Integer.class);
+        return userId == null ? -1 : userId;
+    }
+
+    public AppUser getUserByEmail(String email) {
+        return jdbcTemplate.query(SELECT_USER_BY_EMAIL_QUERY, new Object[]{email}, this).stream().findFirst().orElse(null);
+    }
+
+    public List<Integer> getFollowersIdsOfUser(Integer id) {
+        return jdbcTemplate.queryForList(SELECT_FOLLOWERS_IDS_OF_USER_QUERY, new Object[]{id}, Integer.class);
+    }
+
+    public List<Integer> getFollowedUsersIdsOfUser(Integer id) {
+        return jdbcTemplate.queryForList(SELECT_FOLLOWED_USERS_IDS_OF_USER_QUERY, new Object[]{id}, Integer.class);
+    }
+
+    public List<AppUser> getFollowedUsersOfUser(Integer id) {
+        return jdbcTemplate.query(SELECT_FOLLOWED_USERS_OF_USER_QUERY, new Object[]{id}, this);
+    }
+
+    public void follow(Integer currentUserID, Integer userId) {
+        jdbcTemplate.update(INSERT_INTO_FOLLOWERS_QUERY, currentUserID, userId);
+    }
+
+    public void unfollow(int currentUserID, Integer userId) {
+        jdbcTemplate.update(DELETE_FROM_FOLLOWERS_QUERY, currentUserID, userId);
+    }
+
+    public void changePassword(AppUser appUser) {
+        jdbcTemplate.update(UPDATE_PASSWORD_QUERY,
+                appUser.getPassword(), appUser.getUserId());
+    }
+
+    public Integer getFollowersNumber(Integer id) {
+        Integer followersNumber = jdbcTemplate.queryForObject(SELECT_FOLLOWER_NUMBER_QUERY,
+                new Object[]{id}, Integer.class);
+        return followersNumber != null ? followersNumber : 0;
     }
 
     @Override
     public AppUser get(Integer id) {
-        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE uid = ?", new Object[]{id}, this);
-        return users.size() == 0 ? null : users.get(0);
-    }
-
-    public Integer getUserIdByEmail(String email) {
-        Integer userId = jdbcTemplate.queryForObject("SELECT uid FROM user WHERE email = ?", new Object[]{email}, Integer.class);
-        return userId == null ? -1 : userId;
-    }
-
-
-    public Integer getUserIdByName(String firstname) {
-        Integer userId = jdbcTemplate.queryForObject("SELECT uid FROM user WHERE firstname = ?", new Object[]{firstname}, Integer.class);
-        return userId == null ? -1 : userId;
-    }
-
-
-    public AppUser getUserByEmail(String email) {
-        List<AppUser> users = jdbcTemplate.query("SELECT * FROM user WHERE email = ?", new Object[]{email}, this);
-        return users.size() == 0 ? null : users.get(0);
-    }
-
-    public List<Integer> getUserSubscribers(Integer id) {
-        return jdbcTemplate.queryForList("SELECT follower_id FROM followers WHERE followed_user_id = ?", new Object[]{id}, Integer.class);
-    }
-
-    public List<Integer> getUserSubscriptions(Integer id) {
-        return jdbcTemplate.queryForList("SELECT followed_user_id FROM followers WHERE follower_id = ?", new Object[]{id}, Integer.class);
-    }
-
-    public List<AppUser> getUserSubscriptionsUsers(Integer id) {
-        return jdbcTemplate.query("SELECT * FROM user WHERE uid IN (SELECT followed_user_id FROM followers WHERE follower_id = ?)", new Object[]{id}, this);
-    }
-
-    public List<Integer> getWaitingFeedbackFrom(Integer userId) {
-        return jdbcTemplate.queryForList("SELECT speaker_id FROM meetup WHERE uid IN (SELECT meetup_id FROM meetup_attendees WHERE user_id = ?)", new Object[]{userId, userId}, Integer.class);
-    }
-
-    public void follow(Integer currentUserID, Integer userId) {
-        jdbcTemplate.update("INSERT INTO followers (`follower_id`, `followed_user_id`) VALUES (?, ?)", currentUserID, userId);
-    }
-
-    public void unfollow(int currentUserID, Integer userId) {
-        jdbcTemplate.update("DELETE FROM followers WHERE follower_id = ? AND followed_user_id = ?", currentUserID, userId);
+        return jdbcTemplate.query(SELECT_USER_BY_ID, new Object[]{id}, this).stream().findFirst().orElse(null);
     }
 
     @Override
     public List<AppUser> getAll() {
-        throw new UnsupportedOperationException();
+        return jdbcTemplate.query(SELECT_ALL_QUERY, this);
     }
 
     @Override
     public void save(AppUser user) {
-        jdbcTemplate.update(
-                "INSERT INTO `user` (`email`, `password`, `firstname`, `surname`, `registration_confirmed`, `is_deactivated`, `allow_notifications`, `role_id`, `description`, `location`,`photo`) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update(INSERT_USER_QUERY,
                 user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), 0, 0, 1, user.getRole().getRoleId(), user.getDescription(), user.getLocation(), user.getPhoto()
         );
     }
 
     @Override
     public void update(AppUser appUser) {
-        jdbcTemplate.update("UPDATE user " +
-                        "SET email = ?, " +
-                        "password = ?, " +
-                        "firstname = ?, " +
-                        "surname = ?, " +
-                        "registration_confirmed = ?, " +
-                        "is_deactivated = ?, " +
-                        "allow_notifications = ?, " +
-                        "role_id = ?, " +
-                        "description = ?, " +
-                        "location = ?, " +
-                        "photo = ? WHERE uid = ?",
+        jdbcTemplate.update(UPDATE_USER_QUERY,
                 appUser.getEmail(), appUser.getPassword(), appUser.getFirstName(),
                 appUser.getLastName(), appUser.isRegistration_confirmed(),
                 appUser.isDeactivated(), appUser.isAllow_notifications(), appUser.getRole().getRoleId(),
                 appUser.getDescription(), appUser.getLocation(), appUser.getPhoto(), appUser.getUserId());
-
-    }
-
-    public void changePassword(AppUser appUser) {
-        jdbcTemplate.update("UPDATE user SET password = ? WHERE uid = ?",
-                appUser.getPassword(), appUser.getUserId());
-
     }
 
     @Override
     public void delete(Integer id) {
-        jdbcTemplate.update("DELETE FROM user WHERE uid = ?", id);
-    }
-
-    public Integer getFollowersNumber(Integer id) {
-        Integer followersNumber = jdbcTemplate.queryForObject("select count(*) from followers where followed_user_id = ?;",
-                new Object[]{id}, Integer.class);
-        return followersNumber != null ? followersNumber : 0;
+        jdbcTemplate.update(DELETE_USER_QUERY, id);
     }
 
     public AppUser mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -157,7 +187,4 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
         );
         return appUser;
     }
-
-
-
 }

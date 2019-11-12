@@ -50,6 +50,7 @@ app-button {
   font-size: 35px;
   font-weight: bold;
   margin-right: auto;
+  color: lightgray;
 }
 .Landing-Header * {
   margin: 10px;
@@ -58,7 +59,7 @@ app-button {
 
 #mainLabel {
   margin-top: 25px;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
   text-align: center;
   padding-left: 20%;

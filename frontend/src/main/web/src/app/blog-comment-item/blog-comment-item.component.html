@@ -20,6 +20,7 @@
         {{this.blogCommentItem.date.toString().replace("T"," ")}}
       </div>
     </div>
-    <app-button [text]="'X'" fontSize='50' *ngIf="isAdmin()" (onClick)="deleteComment()" type='2'></app-button>
+    <button *ngIf="isAdmin()" class="button btn2" (click)="deleteComment()"><img class="icon" src="assets/icons/garbage.svg"></button>
+
   </div>
 </div>

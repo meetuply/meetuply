@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.model.Feedback;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.FeedbackService;
@@ -52,7 +53,7 @@ public class FeedbackController {
 
     @GetMapping("/{user-id}/feedback-waiting")
     @ResponseBody
-    public Iterable<Integer> getUserFeedbackWaiting(@PathVariable("user-id") Integer userId) {
+    public Iterable<Integer> getUserFeedbackWaiting(@PathVariable("user-id") Integer userId) throws NotFoundException {
         return feedbackService.getFeedbacksWaiting(userId);
     }
 

@@ -5,7 +5,7 @@
 
   <div class='dashboard'>
 
-    <div *ngIf="lastNotifications.length > 0" class='section-one'>
+    <div *ngIf="lastNotifications.length > 0" class='section'>
       <span class="section-title">Last Notifications</span>
       <div class="last-notifications">
 
@@ -13,19 +13,19 @@
     </div>
 
     <div *ngIf="userMeetups.length > 0" class='section'>
-      <p class="section-title"> My Meetups <span class="view-all-link" (click)="changeViewAllUser()">
+      <p class="section-title">My Meetups <span class="view-all-link" (click)="changeViewAllUser()">
           view all</span></p>
-    </div>
-    <div class='future-meetups'>
-      <div *ngFor="let meetup of (viewAllUser ?
+      <div class='future-meetups'>
+        <div *ngFor="let meetup of (viewAllUser ?
               (userMeetups) : (userMeetups | slice:0:1))">
-        <div class="one-future-meetup">
-          <app-meetup-list-item
-            [meetupListItem]="meetup"
-            [isMy]="userService.currentUser.userId == meetup.speakerId"
-            [state]="stateService.states[meetup.stateId]"
-            [showAuthorInfo]=false>
-          </app-meetup-list-item>
+          <div class="one-future-meetup">
+            <app-meetup-list-item
+              [meetupListItem]="meetup"
+              [isMy]="userService.currentUser.userId == meetup.speakerId"
+              [state]="stateService.states[meetup.stateId]"
+              [showAuthorInfo]=false>
+            </app-meetup-list-item>
+          </div>
         </div>
       </div>
     </div>
@@ -33,27 +33,46 @@
     <div *ngIf="soonMeetups.length > 0" class='section'>
       <p class="section-title">Coming soon <span class="view-all-link" (click)="changeViewAllSoon()">
           view all</span></p>
-    </div>
-
-    <div class='future-meetups'>
-      <div *ngFor="let meetup of (viewAllSoon ?
+      <div class='future-meetups'>
+        <div *ngFor="let meetup of (viewAllSoon ?
               (soonMeetups) : (soonMeetups | slice:0:1))">
-        <div class="one-future-meetup">
-          <app-meetup-list-item
-            [meetupListItem]="meetup"
-            [isMy]="userService.currentUser.userId == meetup.speakerId"
-            [state]="stateService.states[meetup.stateId]"
-            [showAuthorInfo]=true>
-          </app-meetup-list-item>
+          <div class="one-future-meetup">
+            <app-meetup-list-item
+              [meetupListItem]="meetup"
+              [isMy]="userService.currentUser.userId == meetup.speakerId"
+              [state]="stateService.states[meetup.stateId]"
+              [showAuthorInfo]=true>
+            </app-meetup-list-item>
+          </div>
         </div>
       </div>
     </div>
 
+    <div class="section" *ngIf="speakers.length > 0">
+      <p class="section-title">These speakers need your feedback <span class="view-all-link"
+                                                                       (click)="changeViewAllSpeakers()">view all</span>
+      </p>
+      <div class="speakers">
+        <div *ngFor="let speaker_item of (viewAllSpeakers ? (speakers) : (speakers | slice:0:6))">
+          <div class="speaker_item" style="padding: 30px 15px">
+            <div class='profile' [routerLink]="['/speakers/',speaker_item.userId]">
+              <div *ngIf="speaker_item" class='avatar'>
+                <img *ngIf="speaker_item.photo" src={{speaker_item.photo}}>
+                <img *ngIf="!speaker_item.photo" src="assets/img/download.png">
+              </div>
+              <div class='info'>
+                <div class='name' style="font-size: 18px; margin: 10px">
+                  {{this.speaker_item.firstName + " " + this.speaker_item.lastName}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="section">
-      <p class="section-title"> New Articles <span class="view-all-link" routerLink="/blog">view all</span></p>
-      <div class="new-articles">
-      </div>
+      <p class="section-title">New Articles <span class="view-all-link" routerLink="/blog">view all</span></p>
       <div class='section-one'>
         <div class="message" *ngIf="blogPosts.length==0">
           It seems there are no posts here.

@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.model.Feedback;
+import ua.meetuply.backend.model.State;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.StateService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -60,9 +61,9 @@ public class FeedbackDAO implements RowMapper<Feedback> {
         return jdbcTemplate.query(GET_ALL_QUERY, this);
     }
 
-    public List<Integer> getFeedbacksWaiting(Integer attendee) {
+    public List<Integer> getFeedbacksWaiting(Integer attendee) throws NotFoundException {
         return jdbcTemplate.queryForList(FIND_FEEDBACK_WAITING,
-                new Object[]{attendee, attendee, attendee, stateService.get("Passed").getStateId()}, Integer.class);
+                new Object[]{attendee, attendee, attendee, stateService.get(State.PASSED).getStateId()}, Integer.class);
     }
 	
 	public void save(Feedback feedback) {

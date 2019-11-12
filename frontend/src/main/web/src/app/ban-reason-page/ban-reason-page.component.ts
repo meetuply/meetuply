@@ -34,6 +34,10 @@ export class BanReasonPageComponent implements OnInit {
       .subscribe(() => this.goBack());
   }
 
+  delete(banReason: BanReason): void {
+    this.banReasonService.deleteBanReason(banReason).subscribe(() => this.goBack());
+  }
+
   ngOnInit() {
     this.getBanReason();
   }

@@ -18,6 +18,8 @@ export class SpeakerListPageComponent implements OnInit {
 
   speaker_list: SpeakerListItem[] = [];
   speakerChunk: SpeakerListItem[];
+  searchText: string="";
+  searching=false;
 
   constructor(private http: HttpClient, private userService: UserService,
               private ratingService: RatingService,
@@ -29,8 +31,11 @@ export class SpeakerListPageComponent implements OnInit {
   }
 
   onScrollDown() {
-    console.log(this.speaker_list.length);
-    this.loadUsersChunk();
+    // console.log(this.speaker_list.length);
+    if (!this.searching)
+      this.loadUsersChunk();
+    else
+      this.loadSearchedChunk();
   }
 
   loadUsersChunk() {
@@ -67,6 +72,57 @@ export class SpeakerListPageComponent implements OnInit {
         this.speaker_list.push(...this.speakerChunk);
       }
     )
+  }
+
+  loadSearchedChunk(){
+    this.userService.getChunkByName(this.speaker_list.length, this.chunkSize, this.searchText).subscribe(
+      async users => {
+        this.speakerChunk = await Promise.all(users.map(async user => {
+          let user_languages: string[];
+          let list_item: SpeakerListItem;
+          await this.userService.getUserLanguages(user.userId).toPromise().then(languages =>
+            user_languages = languages.map(language => language.name)
+          );
+          let rating = this.ratingService.getUserRatingAvg(user.userId).toPromise().then(r => rating = r);
+          let awards = 0;
+          await this.achievementService.getUserAchievementsNumber(user.userId).toPromise().then(
+            a => awards = a);
+          let followers: number[];
+          await this.userService.getUserFollowers(user.userId).toPromise().then(f =>
+            followers = f
+          );
+          list_item = {
+            id: user.userId,
+            name: user.firstName,
+            surname: user.lastName,
+            location: user.location,
+            rate: rating,
+            description: user.description,
+            languages: user_languages,
+            following: (followers.indexOf(this.userService.currentUser.userId) != -1),
+            photo: user.photo,
+            awards: awards
+          };
+          return list_item;
+        }));
+        this.speaker_list.push(...this.speakerChunk);
+      }
+    )
+  }
+
+  search(event) {
+    if (this.searchText.length>0) {
+      this.speaker_list=[];
+      this.speakerChunk=[];
+      this.searching=true;
+      this.loadSearchedChunk();
+    }
+    else{
+      this.speaker_list=[];
+      this.speakerChunk=[];
+      this.searching=false;
+      this.loadUsersChunk();
+    }
   }
 
   ngOnInit() {

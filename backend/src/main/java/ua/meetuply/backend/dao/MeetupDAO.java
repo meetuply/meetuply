@@ -1,28 +1,34 @@
 package ua.meetuply.backend.dao;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.dao.SQLPredicate.Operation;
+import ua.meetuply.backend.dao.rowMapper.MeetupJoinedWithUserRowMapper;
+import ua.meetuply.backend.dao.rowMapper.MeetupRowMapper;
+import ua.meetuply.backend.dao.rowMapper.TopicRowMapper;
 import ua.meetuply.backend.model.*;
-import ua.meetuply.backend.model.State.StateNames;
 import ua.meetuply.backend.service.LanguageService;
-import ua.meetuply.backend.model.Topic;
 import ua.meetuply.backend.service.StateService;
 import ua.meetuply.backend.service.TopicService;
 
 import javax.annotation.Resource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
-
+@Slf4j
 @Repository
 public class MeetupDAO implements IDAO<Meetup> {
 
@@ -90,18 +96,20 @@ public class MeetupDAO implements IDAO<Meetup> {
 
     @Override
     public Meetup get(Integer id) {
+        log.debug("Geeting meetup by id {}", id);
         List<Meetup> meetups = jdbcTemplate.query(GET_BY_ID_QUERY, new Object[]{id}, new MeetupRowMapper());
         return meetups.size() == 0 ? null : meetups.get(0);
     }
 
     @Override
     public List<Meetup> getAll() {
+        log.debug("Geeting all meetups");
         return jdbcTemplate.query(GET_ALL_QUERY, new MeetupRowMapper());
     }
 
     @Override
     public void save(Meetup meetup) {
-
+        log.debug("Saving meetup");
         jdbcTemplate.update(SAVE_QUERY,
                 meetup.getMeetupPlace(), meetup.getMeetupTitle(), meetup.getMeetupDescription(),
                 meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
@@ -110,16 +118,12 @@ public class MeetupDAO implements IDAO<Meetup> {
 
 
     public void saveFull(FullMeetup meetup) {
-
+        log.debug("Saving fullMeetup");
         Connection con;
         try {
             con = jdbcTemplate.getDataSource().getConnection();
-
             con.setAutoCommit(false);
-
             Statement statement = con.createStatement();
-
-
             String str1 = "INSERT INTO `meetup` (`place`, `title`, `description`,`registered_attendees`, `min_attendees`, `max_attendees`," +
                     "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (" +
                     "'" + meetup.getMeetupPlace() + "'," +
@@ -132,43 +136,25 @@ public class MeetupDAO implements IDAO<Meetup> {
                     meetup.getMeetupFinishDateTime() + "'," +
                     meetup.getStateId() + "," +
                     meetup.getSpeakerId() + ")";
-
-
             statement.executeUpdate(str1, Statement.RETURN_GENERATED_KEYS);
             ResultSet rs = statement.getGeneratedKeys();
-
-
             con.commit();
-
             rs.next();
-
             Integer id = rs.getInt(1);
-
-
             String str2 = "INSERT INTO `meetup_language` (`language_id`,`meetup_id`) VALUES (" +
                     languageService.get(meetup.getLanguage()).getLanguageId() + "," +
                     id + ")";
-
-
             statement.executeUpdate(str2);
-
-
             for (Integer topic : meetup.getTopics()) {
                 String query = "insert into `meetup_topic` (topic_id,meetup_id) values('"
                         + topic + "','" + id + "')";
                 statement.addBatch(query);
             }
-
             statement.executeBatch();
             con.commit();
-
-
         } catch (SQLException e) {
             e.printStackTrace();
-
         }
-
-
     }
 
 
@@ -177,10 +163,10 @@ public class MeetupDAO implements IDAO<Meetup> {
                 new TopicRowMapper());
     }
 
-
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void update(Meetup meetup) {
+        log.debug("Updating meetup");
         jdbcTemplate.update(UPDATE_QUERY, meetup.getMeetupPlace(), meetup.getMeetupTitle(),
                 meetup.getMeetupDescription(),
                 meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
@@ -190,34 +176,41 @@ public class MeetupDAO implements IDAO<Meetup> {
 
     @Override
     public void delete(Integer id) {
+        log.debug("Deleting meetup");
         jdbcTemplate.update(DELETE_QUERY, id);
     }
 
     public List<Meetup> getUserMeetupsBeforeDay(Integer userId, int day) {
+        log.debug("Getting user meetups for closest {} days", day);
         return jdbcTemplate.query(GET_USER_MEETUPS_BEFORE_DAY,  new Object[]{userId, day}, new MeetupJoinedWithUserRowMapper());
     }
 
     public List<Meetup> getMeetupsChunkWithUsernameAndRating(Integer startRow, Integer endRow) {
+        log.debug("Getting meetups chunk with username and rating");
         return jdbcTemplate.query(GET_MEETUP_CHUNK_WITH_USERNAME_AND_RATING, new Object[]{startRow, endRow},
                 new MeetupJoinedWithUserRowMapper());
     }
 
     public List<Meetup> getMeetupsChunkActive(Integer startRow, Integer endRow) {
+        log.debug("Getting active speaker meetups");
         return jdbcTemplate.query(GET_ACTIVE_MEETUPS_CHUNK_WITH_RATING, new Object[]{startRow, endRow},
                 new MeetupJoinedWithUserRowMapper());
     }
 
     public List<Meetup> getUserMeetupsChunk(Integer userId, Integer startRow, Integer endRow) {
+        log.debug("Getting user meetups chunk with rating");
         return jdbcTemplate.query(GET_USER_MEETUPS_CHUNK_WITH_RATING, new Object[]{userId, userId,userId,startRow, endRow},
                 new MeetupJoinedWithUserRowMapper());
     }
 
     public List<Meetup> getUserFutureMeetups(Integer userId) {
+        log.debug("Getting user future meetups");
         return jdbcTemplate.query(GET_USER_FUTURE_MEETUPS, new Object[]{userId},
                 new MeetupRowMapper());
     }
 
     public List<Meetup> getUserPastMeetups(Integer userId) {
+        log.debug("Getting user past meetups");
         return jdbcTemplate.query(GET_USER_PAST_MEETUPS, new Object[]{userId},
                 new MeetupRowMapper());
     }
@@ -251,57 +244,50 @@ public class MeetupDAO implements IDAO<Meetup> {
         return jdbcTemplate.query(query.toString(), new MeetupRowMapper());
     }
 
-    public List<Meetup> futureScheduledAndBookedMeetupsOf(AppUser user) {
-        List<SQLPredicate> andList = Arrays.asList(
+    public List<Meetup> futureScheduledAndBookedMeetupsOf(AppUser user) throws NotFoundException {
+        return find(
+                new SQLPredicate(Operation.AND,
+                            new SQLPredicate("state_id", Operation.IN,
+                                    stateService.get(State.SCHEDULED).getStateId(),
+                                    stateService.get(State.BOOKED).getStateId()),
+                            new SQLPredicate("speaker_id", Operation.EQUALS,
+                                    user.getUserId())));
+    }
+
+    public List<Meetup> currentMeetupsOf(AppUser user) throws NotFoundException {
+        return find(
+                new SQLPredicate(Operation.AND,
+                        new SQLPredicate("state_id", Operation.EQUALS,
+                                    stateService.get(State.IN_PROGRESS).getStateId()),
+                        new SQLPredicate("speaker_id", Operation.EQUALS,
+                                  user.getUserId())));
+    }
+
+    public List<Meetup> notEnoughAttendees1Hour() throws NotFoundException {
+        return find(new SQLPredicate(Operation.AND,
+                        new SQLPredicate("start_date_time", Operation.LESS,
+                                "NOW() + INTERVAL 1 HOUR"),
+                        new SQLPredicate("state_id", Operation.EQUALS,
+                                    stateService.get(State.SCHEDULED).getStateId()),
+                        new SQLPredicate("min_attendees", Operation.GREATER,
+                                "registered_attendees")));
+    }
+
+    public List<Meetup> goingToStart() throws NotFoundException {
+        return find(new SQLPredicate(Operation.AND,
                 new SQLPredicate("state_id", Operation.IN,
-                        Arrays.asList(stateService.get(StateNames.SCHEDULED.name).getStateId(),
-                                      stateService.get(StateNames.BOOKED.name).getStateId())),
-                new SQLPredicate("speaker_id", Operation.EQUALS, user.getUserId())
-        );
-        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
-        return find(where);
+                                    stateService.get(State.SCHEDULED).getStateId(),
+                                    stateService.get(State.BOOKED).getStateId()),
+                new SQLPredicate("start_date_time", Operation.LESS,
+                                "NOW()")));
     }
 
-    public List<Meetup> currentMeetupsOf(AppUser user) {
-        List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("state_id", Operation.EQUALS,
-                        stateService.get(StateNames.IN_PROGRESS.name).getStateId()),
-                new SQLPredicate("speaker_id", Operation.EQUALS, user.getUserId())
-        );
-        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
-        return find(where);
-    }
-
-    public List<Meetup> notEnoughAttendees1Hour() {
-        List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("start_date_time", Operation.LESS, "NOW() + INTERVAL 1 HOUR"),
-                new SQLPredicate("state_id", Operation.EQUALS,
-                        stateService.get(StateNames.SCHEDULED.name).getStateId()),
-                new SQLPredicate("min_attendees", Operation.GREATER, "registered_attendees")
-        );
-        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
-        return find(where);
-    }
-
-    public List<Meetup> goingToStart() {
-        List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("state_id", Operation.IN,
-                        Arrays.asList(stateService.get(StateNames.SCHEDULED.name).getStateId(),
-                                stateService.get(StateNames.BOOKED.name).getStateId())),
-                new SQLPredicate("start_date_time", Operation.LESS, "NOW()")
-        );
-        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
-        return find(where);
-    }
-
-    public List<Meetup> goingToFinish() {
-        List<SQLPredicate> andList = Arrays.asList(
-                new SQLPredicate("finish_date_time", Operation.LESS, "NOW()"),
-                new SQLPredicate("state_id", Operation.EQUALS,
-                        stateService.get(StateNames.IN_PROGRESS.name).getStateId())
-        );
-        SQLPredicate where = new SQLPredicate(Operation.AND, andList);
-        return find(where);
+    public List<Meetup> goingToFinish() throws NotFoundException {
+        return find(new SQLPredicate(Operation.AND,
+                        new SQLPredicate("finish_date_time", Operation.LESS,
+                                "NOW()"),
+                        new SQLPredicate("state_id", Operation.EQUALS,
+                                    stateService.get(State.IN_PROGRESS).getStateId())));
     }
 
     public List<Meetup> findBy(Filter filter) {

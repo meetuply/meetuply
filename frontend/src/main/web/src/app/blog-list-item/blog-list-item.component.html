@@ -12,21 +12,25 @@
       </div>
     </div>
 
-    <div class='post'>
-      <div class='post-title'>
-        <span *ngIf="this.blogListItem.title.length > 50">{{this.blogListItem.title | slice:0:50}}...</span>
-        <span *ngIf="this.blogListItem.title.length < 50">{{this.blogListItem.title}}</span>
-      </div>
-      <div class='post-content'>
-        <span *ngIf="this.blogListItem.content.length > 300">{{this.blogListItem.content | slice:0:300}}...</span>
-        <span *ngIf="this.blogListItem.content.length < 300">{{this.blogListItem.content}}</span>
+    <div class="central">
+      <div class='post'>
+        <div class='post-title'>
+          <span *ngIf="this.blogListItem.title.length > 50">{{this.blogListItem.title | slice:0:50}}...</span>
+          <span *ngIf="this.blogListItem.title.length < 50">{{this.blogListItem.title}}</span>
+        </div>
+        <div class='post-content'>
+          <p *ngIf="this.blogListItem.content.length > 250">{{this.blogListItem.content | slice:0:250}}...</p>
+          <p *ngIf="this.blogListItem.content.length < 250">{{this.blogListItem.content}}</p>
+        </div>
       </div>
       <div class="post-time">
         <p>{{this.blogListItem.date.toString().replace("T", " ")}}</p>
       </div>
     </div>
-
-    <app-button [text]="'>'" fontSize='50' routerLink="/blog/{{this.blogListItem.id}}" type='4'></app-button>
-    <app-button [text]="'X'" fontSize='50' *ngIf="isAdmin()" (onClick)="deletePost()" type='2'></app-button>
   </div>
+  <button class="button btn1" routerLink="/blog/{{this.blogListItem.id}}"><img class="icon"
+                                                                               src="assets/icons/arrow-point-to-right.svg">
+  </button>
+  <button *ngIf="isAdmin()" class="button btn2" (click)="deletePost()"><img class="icon" src="assets/icons/garbage.svg">
+  </button>
 </div>

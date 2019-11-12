@@ -2,27 +2,23 @@
 <div class='content'>
   <p class='title'>Topics</p>
 
-  <div>
-    <label>Topic name:
-      <input #topicName />
-    </label>
-    <!-- (click) passes input value to add() and then clears the input -->
-    <button (click)="add(topicName.value); topicName.value=''">
-      add
-    </button>
+  <div class="add">
+    <input #topicName placeholder="name"/>
+    <app-button type='1' text="Add" fontSize="15"
+                (click)="add(topicName.value); topicName.value=''"></app-button>
   </div>
 
   <app-topic-search></app-topic-search>
 
-  <div>
-    <ul class='topics'>
-      <li *ngFor="let topic of topics">
-        <a routerLink="/topics/{{topic.topicId}}">
+  <div class="item" *ngFor="let topic of topics">
+    <div class="main">
+      <div class="profile">
+        <div routerLink="/topics/{{topic.topicId}}">
           {{topic.name}}
-        </a>
-        <button class="delete" title="delete topic"
-                (click)="delete(topic)">x</button>
-      </li>
-    </ul>
+        </div>
+        <app-button type='2' text="Delete" class="delete" fontSize="15"
+                        (click)="delete(topic)"></app-button>
+      </div>
+    </div>
   </div>
 </div>

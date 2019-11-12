@@ -5,10 +5,9 @@ import org.springframework.stereotype.Component;
 import ua.meetuply.backend.dao.TopicDAO;
 import ua.meetuply.backend.model.Topic;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Component
@@ -33,13 +32,8 @@ public class TopicService {
         return isNotEmpty(topics) ? topics.stream().map(Topic::getTopicId).collect(toList()) : null;
     }
 
-    public List<Topic> getByName(String name){
-        List<Topic> topics = topicDAO.getAll();
-        List<Topic> result = new ArrayList<Topic>();
-        for (Topic topic : topics) {
-            if(topic.getName().contains(name)) result.add(topic);
-        }
-        return result;
+    public List<Topic> getByName(String term) {
+        return topicDAO.getByName(term);
     }
 
     public Integer getTopicQuantity (Integer topicId){

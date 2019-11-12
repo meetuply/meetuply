@@ -29,7 +29,7 @@ export class CreateMeetupPageComponent implements OnInit {
   topics: Topic[];
   selectedTopics = new Set<number>();
 
-  selectedLanguage: string;
+  selectedLanguage = 'English';
 
   topicToggled($event) {
     if ($event[1] == true) {
@@ -37,14 +37,11 @@ export class CreateMeetupPageComponent implements OnInit {
     } else {
       this.selectedTopics.delete($event[0]);
     }
-    //console.log(this.selectedTopics)
-
   }
 
   loadTopics() {
     this.topicService.getAll().subscribe(topicsList => {
       this.topics = topicsList;
-      //console.log(this.topics)
     }
     )
   }
@@ -115,17 +112,12 @@ export class CreateMeetupPageComponent implements OnInit {
     };
 
     this.meetupService.create(meetup).subscribe(data => {
-
       this.router.navigate(['meetups']);
-
     }, error => {
-
       alert('some thing happened:' + error)
     });
-
-    //console.log(meetup)
+    console.log(meetup)
   }
-
   loadLanguages() {
     this.languageService.getAll().subscribe(languageList => {
       this.languages = languageList.map(language => language.name)
@@ -136,7 +128,6 @@ export class CreateMeetupPageComponent implements OnInit {
           'German'
         ]
       }
-
       this.selectedLanguage = this.languages[0];
     })
   }
@@ -144,6 +135,9 @@ export class CreateMeetupPageComponent implements OnInit {
   ngOnInit() {
     this.loadLanguages();
     this.loadTopics();
+
+    var offset = new Date().getTimezoneOffset() / -60;
+    alert(offset);
   }
 
   goBack() {

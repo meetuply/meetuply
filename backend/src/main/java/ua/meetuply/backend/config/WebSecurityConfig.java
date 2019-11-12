@@ -3,7 +3,6 @@ package ua.meetuply.backend.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,6 +24,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomAuthenticationEntryPoint authenticationEntryPoint;
 
+    @Autowired
+    AppUserService appUserService;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -40,13 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/user/register", "/api/user/confirm", "/api/user/recover", "/api/user/token/**").permitAll()
-
-                //.antMatchers(HttpMethod.GET,"/api/topics/**").authenticated()
-                //.antMatchers("/api/user/deactivate/**", "/api/user/activate/**", "/api/topics/**", "/api/ban_reasons/**").hasRole("ADMIN")
-
                 .antMatchers("/api/user/deactivate/**", "/api/user/activate/**").hasRole("ADMIN")
                 .antMatchers("/api/**").authenticated()
-
                 .antMatchers("/", "/index", "/**").permitAll()
                 .and()
                 .formLogin().disable()
@@ -77,9 +74,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
-    AppUserService appUserService;
-
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {
         return authenticationManager();
@@ -87,14 +81,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public CustomAuthenticationProvider authProvider() {
-        CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
-        authProvider.setAppUserService(appUserService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
+        return new CustomAuthenticationProvider();
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authProvider());
     }
 

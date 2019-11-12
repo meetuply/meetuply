@@ -20,4 +20,13 @@ public class SocketNotification {
 
     private String htmlText;
     private String plainText;
+
+    public SocketNotification(Notification n,NotificationTemplate template) {
+        this.uid = n.getNotificationId();
+        this.dateTime = n.getDateTime();
+        this.isRead = n.getIsRead();
+        this.receiverId = n.getReceiverId();
+        this.htmlText = template.getHtmlText();
+        this.plainText = template.getPlainText();
+    }
 }

@@ -1,10 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
 import {TopicService} from "../_services";
-import { Location } from '@angular/common';
-import set = Reflect.set;
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-achievement-create-page',

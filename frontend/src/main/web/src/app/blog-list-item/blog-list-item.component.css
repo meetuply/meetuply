@@ -10,6 +10,7 @@
 }
 
 .item .main {
+  width: 100%;
   display: flex;
   flex-direction: row;
 }
@@ -19,17 +20,21 @@
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  width: 100px;
 }
 
 .author .info {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  width: 100px;
+  text-align: center;
 }
 
 .author .name {
-  font-size: 14px;
+  font-size: 1em;
   font-weight: bold;
+  width: 100px;
+  text-align: center;
 }
 
 .author .avatar {
@@ -40,21 +45,29 @@
 }
 
 .avatar img {
-  max-width: 50px;
-  max-width: 50px;
+  max-width: 70px;
+  max-width: 70px;
   border-radius: 50%;
 }
 
+.central{
+  margin-left: 20px;
+  margin-right: 10px;
+}
+
 .post{
+  display: block;
   text-align: left;
-  margin: 10px 10px 10px 20px;
-  overflow: auto;
+  margin: 0px;
+  overflow: hidden;
+  max-height: 8em;
 }
 
 .post-title{
-  margin: 8px 0px;
+  margin: 5px 0;
+  max-height: 1.5em;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 1.5em;
   display: block;
   float: none;
   overflow: hidden;
@@ -62,7 +75,7 @@
 }
 
 .post-content{
-  font-size: 14px;
+  font-size: 1em;
   margin-top: 5px;
   text-overflow: fade;
   float: none;
@@ -71,7 +84,54 @@
 }
 
 .post-time{
-  margin-top: 10px;
-  font-size: 12px;
+  margin-top: 18px;
+  font-size: 0.8em;
   color: #7f7f7f;
 }
+
+.right {
+  justify-self: right;
+}
+
+.button {
+  padding: 14px 5px;
+  text-align: center;
+  text-decoration: none;
+  margin-right: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  border: transparent;
+  border-radius: 6px;
+  align-items: center;
+}
+
+.icon {
+  height: 50px;
+  width: 50px;
+}
+
+.btn1 {
+  background: linear-gradient(96.1deg, #7cb8f7 0%, #2a8bf2 100%);
+  box-shadow: 10px 6px 25px rgba(42, 139, 242, 0.15),
+  4px 4px 25px rgba(42, 139, 242, 0.05), 6px 6px 25px rgba(42, 139, 242, 0.15);
+}
+
+.btn2 {
+  background: linear-gradient(96.1deg, #ff648b 0%, #ff3366 100%);
+  box-shadow: 10px 6px 25px rgba(198, 27, 74, 0.15),
+  4px 4px 25px rgba(198, 27, 74, 0.05), 6px 6px 25px rgba(198, 27, 74, 0.1);
+}
+
+.btn3 {
+  background: linear-gradient(96.1deg, #868ea2 0%, #707c97 100%);
+  box-shadow: 10px 6px 25px rgba(112, 124, 151, 0.1),
+  4px 4px 25px rgba(112, 124, 151, 0.1), 6px 6px 25px rgba(112, 124, 151, 0.1);
+}
+
+.invalid-feedback, .error {
+  color: #ff3366;
+  font-size: 12px;
+  margin: 0;
+}
+
