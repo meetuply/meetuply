@@ -54,14 +54,14 @@
       </p>
       <div class="speakers">
         <div *ngFor="let speaker_item of (viewAllSpeakers ? (speakers) : (speakers | slice:0:6))">
-          <div class="speaker_item">
+          <div class="speaker_item" style="padding: 30px 15px">
             <div class='profile' [routerLink]="['/speakers/',speaker_item.userId]">
               <div *ngIf="speaker_item" class='avatar'>
-                <img *ngIf="speaker_item.photo" src={{speaker_item.authorPhoto}}>
+                <img *ngIf="speaker_item.photo" src={{speaker_item.photo}}>
                 <img *ngIf="!speaker_item.photo" src="assets/img/download.png">
               </div>
               <div class='info'>
-                <div class='name'>
+                <div class='name' style="font-size: 18px; margin: 10px">
                   {{this.speaker_item.firstName + " " + this.speaker_item.lastName}}
                 </div>
               </div>
