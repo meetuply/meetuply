@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TopicService } from '../_services'
 import { Topic } from '../_models'
 import {Filter} from "../_models/filter";
 import {FilterService} from "../_services/filter.service";
-
+import {MeetupListItem} from "../_models/meetupListItem";
 @Component({
   selector: 'app-meetup-filter',
   templateUrl: './meetup-filter.component.html',
@@ -21,9 +21,11 @@ export class MeetupFilterComponent implements OnInit {
   filter_end_date: string;
   filter_end_time: string;
   topics: Topic[];
+  @Output() meetups: EventEmitter<MeetupListItem[]> = new EventEmitter<any>();
+  // @Output() meetups : EventEmitter<Meetup[]> = new EventEmitter();
   selectedTopics = new Set<Topic>();
   filters: Filter[];
-  selectedFilters = new Set();
+  selectedFilters = new Set<number>();
 
   weekdayStates:boolean[] = [
     false,
@@ -37,12 +39,9 @@ export class MeetupFilterComponent implements OnInit {
 
   submit(){
     this.checkRequiredFields(this.filter_name);
-    // var start_date = new Date(
-    //   this.filter_start_date.toString().replace('/', '-').split('').reverse().join('')
-    //   + 'T' + this.filter_start_time.toString().replace('/', '-').split('').reverse().join(''));
     var start_date = new Date(this.filter_start_date + 'T' + this.filter_start_time);
     var end_date = new Date(this.filter_end_date + 'T' + this.filter_end_time);
-    alert(start_date);
+    // alert(start_date);
     // console.log(end_date);
     var filter: Filter = {
       id: 0,
@@ -57,9 +56,20 @@ export class MeetupFilterComponent implements OnInit {
     this.filterService.create(filter).subscribe(data => {
 
     }, error1 => {
-      // alert('Some thing happened:' + error1)
+      alert('Some thing happened:' + error1)
 
     })
+  }
+
+  search(){
+    this.filterService.getMeetupsByFilter(this.selectedFilters.values().next().value).subscribe(data =>
+      // this.meetups.emit(meetupsList)
+      // this.meetups.push(...data);
+      this.meetups.emit(data)
+      // this.meetups.emit(data)
+    );
+    console.log(this.meetups)
+
   }
 
   constructor(
@@ -107,8 +117,6 @@ export class MeetupFilterComponent implements OnInit {
     } else {
       this.selectedFilters.delete($event[0]);
     }
-    console.log(this.selectedFilters)
-
   }
 
   toggledWeekday($event) {

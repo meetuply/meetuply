@@ -167,11 +167,9 @@ public class MeetupController {
 
     @GetMapping("/filter/search")
     public @ResponseBody
-    List<Meetup> getMeetupsByFilter(@RequestParam(value = "filter") Integer filterId, Model model) {
+    Iterable<Meetup> getMeetupsByFilter(@RequestParam(value = "filter") Integer filterId) {
         Filter filter = filterService.getFilter(filterId);
-        List<Meetup> meetups = meetupService.findMeetupsByFilter(filter);
-        model.addAttribute(meetups);
-        return meetups;
+        return meetupService.findMeetupsByFilter(filter);
     }
 
     @GetMapping("/criteria/search")
