@@ -1,7 +1,8 @@
 package ua.meetuply.backend.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.controller.exception.MeetupStateException;
@@ -18,7 +19,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-@Component
+@Slf4j
+@Service
 public class MeetupService {
 
     @Autowired
@@ -42,39 +44,49 @@ public class MeetupService {
 
     @Transactional
     public void createMeetup(FullMeetup meetup) throws NotFoundException {
-
+        log.debug("Creating meetup");
         meetup.setStateId(stateService.get(State.SCHEDULED).getStateId());
         meetup.setSpeakerId(appUserService.getCurrentUserID());
-
         meetupDao.saveFull(meetup);
         achievementService.checkOne(AchievementType.MEETUPS);
         achievementService.checkOne(AchievementType.MEETUPS_TOPIC);
     }
 
-    public List<Topic> getMeetupTopics(Integer i){
-        return meetupDao.getMeetupTopics(i);
+    public List<Topic> getMeetupTopics(Integer meetupId){
+        log.debug("Getting meetup topics by id");
+        return meetupDao.getMeetupTopics(meetupId);
     }
 
 
     public List<Meetup> getAllMeetups() {
+        log.debug("Getting all meetups");
         return meetupDao.getAll();
     }
 
     public Meetup getMeetupById(Integer meetupId) {
+        log.debug("Getting meetup by id");
         return meetupDao.get(meetupId);
     }
 
     public void updateMeetup(Meetup meetup) {
+        log.debug("Updating meetup");
         meetupDao.update(meetup);
     }
 
     public void deleteMeetup(Integer meetupId) {
+        log.debug("Deleting meetup");
         meetupDao.delete(meetupId);
     }
 
-    public List<Meetup> getUserFutureMeetups(Integer userId){return meetupDao.getUserFutureMeetups(userId);}
+    public List<Meetup> getUserFutureMeetups(Integer userId){
+        log.debug("Getting user future meetups");
+        return meetupDao.getUserFutureMeetups(userId);
+    }
 
-    public List<Meetup> getUserPastMeetups(Integer userId){return meetupDao.getUserPastMeetups(userId);}
+    public List<Meetup> getUserPastMeetups(Integer userId){
+        log.debug("Getting user past meetups");
+        return meetupDao.getUserPastMeetups(userId);
+    }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void join(Integer meetupID) throws Exception {

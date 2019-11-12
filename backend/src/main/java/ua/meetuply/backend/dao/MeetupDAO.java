@@ -1,5 +1,6 @@
 package ua.meetuply.backend.dao;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,6 +9,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.dao.SQLPredicate.Operation;
+import ua.meetuply.backend.dao.rowMapper.MeetupJoinedWithUserRowMapper;
+import ua.meetuply.backend.dao.rowMapper.MeetupRowMapper;
 import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.service.LanguageService;
 import ua.meetuply.backend.service.StateService;
@@ -24,7 +27,7 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
-
+@Slf4j
 @Repository
 public class MeetupDAO implements IDAO<Meetup> {
 
@@ -92,18 +95,20 @@ public class MeetupDAO implements IDAO<Meetup> {
 
     @Override
     public Meetup get(Integer id) {
+        log.debug("Geeting meetup by id {}", id);
         List<Meetup> meetups = jdbcTemplate.query(GET_BY_ID_QUERY, new Object[]{id}, new MeetupRowMapper());
         return meetups.size() == 0 ? null : meetups.get(0);
     }
 
     @Override
     public List<Meetup> getAll() {
+        log.debug("Geeting all meetups");
         return jdbcTemplate.query(GET_ALL_QUERY, new MeetupRowMapper());
     }
 
     @Override
     public void save(Meetup meetup) {
-
+        log.debug("Saving meetup");
         jdbcTemplate.update(SAVE_QUERY,
                 meetup.getMeetupPlace(), meetup.getMeetupTitle(), meetup.getMeetupDescription(),
                 meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
@@ -112,16 +117,12 @@ public class MeetupDAO implements IDAO<Meetup> {
 
 
     public void saveFull(FullMeetup meetup) {
-
+        log.debug("Saving fullMeetup");
         Connection con;
         try {
             con = jdbcTemplate.getDataSource().getConnection();
-
             con.setAutoCommit(false);
-
             Statement statement = con.createStatement();
-
-
             String str1 = "INSERT INTO `meetup` (`place`, `title`, `description`,`registered_attendees`, `min_attendees`, `max_attendees`," +
                     "`start_date_time`, `finish_date_time`, `state_id`, `speaker_id`) VALUES (" +
                     "'" + meetup.getMeetupPlace() + "'," +
@@ -134,43 +135,25 @@ public class MeetupDAO implements IDAO<Meetup> {
                     meetup.getMeetupFinishDateTime() + "'," +
                     meetup.getStateId() + "," +
                     meetup.getSpeakerId() + ")";
-
-
             statement.executeUpdate(str1, Statement.RETURN_GENERATED_KEYS);
             ResultSet rs = statement.getGeneratedKeys();
-
-
             con.commit();
-
             rs.next();
-
             Integer id = rs.getInt(1);
-
-
             String str2 = "INSERT INTO `meetup_language` (`language_id`,`meetup_id`) VALUES (" +
                     languageService.get(meetup.getLanguage()).getLanguageId() + "," +
                     id + ")";
-
-
             statement.executeUpdate(str2);
-
-
             for (Integer topic : meetup.getTopics()) {
                 String query = "insert into `meetup_topic` (topic_id,meetup_id) values('"
                         + topic + "','" + id + "')";
                 statement.addBatch(query);
             }
-
             statement.executeBatch();
             con.commit();
-
-
         } catch (SQLException e) {
             e.printStackTrace();
-
         }
-
-
     }
 
 
@@ -179,10 +162,10 @@ public class MeetupDAO implements IDAO<Meetup> {
                 new TopicRowMapper());
     }
 
-
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void update(Meetup meetup) {
+        log.debug("Updating meetup");
         jdbcTemplate.update(UPDATE_QUERY, meetup.getMeetupPlace(), meetup.getMeetupTitle(),
                 meetup.getMeetupDescription(),
                 meetup.getMeetupRegisteredAttendees(), meetup.getMeetupMinAttendees(), meetup.getMeetupMaxAttendees(),
@@ -192,34 +175,41 @@ public class MeetupDAO implements IDAO<Meetup> {
 
     @Override
     public void delete(Integer id) {
+        log.debug("Deleting meetup");
         jdbcTemplate.update(DELETE_QUERY, id);
     }
 
     public List<Meetup> getUserMeetupsBeforeDay(Integer userId, int day) {
+        log.debug("Getting user meetups for closest {} days", day);
         return jdbcTemplate.query(GET_USER_MEETUPS_BEFORE_DAY,  new Object[]{userId, day}, new MeetupJoinedWithUserRowMapper());
     }
 
     public List<Meetup> getMeetupsChunkWithUsernameAndRating(Integer startRow, Integer endRow) {
+        log.debug("Getting meetups chunk with username and rating");
         return jdbcTemplate.query(GET_MEETUP_CHUNK_WITH_USERNAME_AND_RATING, new Object[]{startRow, endRow},
                 new MeetupJoinedWithUserRowMapper());
     }
 
     public List<Meetup> getMeetupsChunkActive(Integer startRow, Integer endRow) {
+        log.debug("Getting active speaker meetups");
         return jdbcTemplate.query(GET_ACTIVE_MEETUPS_CHUNK_WITH_RATING, new Object[]{startRow, endRow},
                 new MeetupJoinedWithUserRowMapper());
     }
 
     public List<Meetup> getUserMeetupsChunk(Integer userId, Integer startRow, Integer endRow) {
+        log.debug("Getting user meetups chunk with rating");
         return jdbcTemplate.query(GET_USER_MEETUPS_CHUNK_WITH_RATING, new Object[]{userId, userId,userId,startRow, endRow},
                 new MeetupJoinedWithUserRowMapper());
     }
 
     public List<Meetup> getUserFutureMeetups(Integer userId) {
+        log.debug("Getting user future meetups");
         return jdbcTemplate.query(GET_USER_FUTURE_MEETUPS, new Object[]{userId},
                 new MeetupRowMapper());
     }
 
     public List<Meetup> getUserPastMeetups(Integer userId) {
+        log.debug("Getting user past meetups");
         return jdbcTemplate.query(GET_USER_PAST_MEETUPS, new Object[]{userId},
                 new MeetupRowMapper());
     }

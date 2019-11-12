@@ -155,7 +155,4 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
         );
         return appUser;
     }
-
-
-
 }
