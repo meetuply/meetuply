@@ -154,7 +154,4 @@ export class MeetupsListPageComponent implements OnInit, OnDestroy {
     console.log(event);
   }
 
-  // search($event){
-  //   console.log(event)
-  // }
 }
