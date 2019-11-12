@@ -40,7 +40,7 @@ export class AuthenticationService {
       localStorage.setItem('authData', authData);
       this.authDataSubject.next(authData);
 
-      return this.http.get<any>(`${environment.apiUrl}/api/user/`)
+      return this.http.get<User>(`${environment.apiUrl}/api/user/`)
         .pipe(map(user => {
           // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
           localStorage.setItem('currentUser', JSON.stringify(user));

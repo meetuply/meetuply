@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {AuthenticationService, UserService} from "../_services";
-import {first} from "rxjs/operators";
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from "@angular/router";
+import { AuthenticationService, UserService } from "../_services";
+import { first } from "rxjs/operators";
 
 @Component({
   selector: 'app-login',
@@ -50,7 +50,6 @@ export class LoginComponent {
         error => {
           this.error = error;
           this.loading = false;
-          console.log("ERROR " + error)
         });
   }
 

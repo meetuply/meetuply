@@ -1,7 +1,6 @@
 package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,8 +15,10 @@ import ua.meetuply.backend.model.State;
 import java.util.*;
 
 @Component
-@CacheConfig(cacheNames = {"states"})
 public class StateService {
+
+    @Autowired
+    StateService stateService;
 
     @Autowired
     StateDAO stateDAO;
@@ -25,9 +26,7 @@ public class StateService {
     @Autowired
     MeetupDAO meetupDAO;
 
-    private Map<String, State> states = new HashMap<>();
-
-    @Cacheable
+    @Cacheable("states")
     public Map<String, State> getAll() {
         return stateDAO.getAll();
     }
@@ -45,11 +44,11 @@ public class StateService {
     }
 
     public State get(String name) throws NotFoundException {
-        if (!getAll().containsKey(name)) {
+        if (!stateService.getAll().containsKey(name)) {
             evictStatesCache();
         }
-        if (getAll().containsKey(name)) {
-            return getAll().get(name);
+        if (stateService.getAll().containsKey(name)) {
+            return stateService.getAll().get(name);
         } else {
             throw new NotFoundException("State with name " + name + " is not founded");
         }
@@ -57,11 +56,11 @@ public class StateService {
 
     public State get(Integer id) throws NotFoundException {
         try {
-            return getAll().values().stream().filter(s -> s.getStateId().equals(id))
+            return stateService.getAll().values().stream().filter(s -> s.getStateId().equals(id))
                     .findFirst().orElseThrow(NotFoundException::new);
         } catch (NotFoundException e) {
             evictStatesCache();
-            return getAll().values().stream().filter(s -> s.getStateId().equals(id))
+            return stateService.getAll().values().stream().filter(s -> s.getStateId().equals(id))
                     .findFirst().orElseThrow(() ->
                             new NotFoundException("State with id " + id.toString() + " is not founded"));
         }
