@@ -34,6 +34,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 10px;
+  text-align: center;
 }
 
 .author {
