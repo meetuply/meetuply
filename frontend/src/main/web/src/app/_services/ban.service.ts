@@ -22,6 +22,12 @@ export class BanService {
     return this.http.post<Ban>(this.banApiUrl + `reported=${reportedId}&reason=${reasonId}`, ban);
   }
 
+  /** DELETE: delete the ban from the server */
+  delete(ban: BanForView): Observable<Ban> {
+    return this.http.delete<Ban>(this.banApiUrl + `author=${ban.author.userId}&reported=${ban.reported.userId}
+    &reason=${ban.banReason.banReasonId}`);
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);

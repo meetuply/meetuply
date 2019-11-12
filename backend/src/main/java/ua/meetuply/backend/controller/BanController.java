@@ -69,9 +69,6 @@ public class BanController {
         if (banService.get(banReasonId, banAuthorId, reportedUserId) == null) {
             return ResponseEntity.notFound().build();
         }
- /*       if(banReasonService.get(banReasonId) == null || appUserService.getUser(reportedUserId) == null) {
-            return ResponseEntity.notFound().build();
-        }*/
         else {
             ban.setBanReason(banReasonService.get(banReasonId));
             ban.setAuthor(appUserService.getUser(banAuthorId));
