@@ -4,7 +4,8 @@
 
   <div class='search_div'>
     <div class='search_icon'></div>
-    <input type="text" name="search" placeholder="search" />
+    <input type="text" name="search" placeholder="search" [(ngModel)]="this.searchText"  />
+    <app-button type="1" text="Search" (onClick)="search($event)"></app-button>
   </div>
 
   <div class="main" infinite-scroll [infiniteScrollDistance]="scrollDistance" (scrolled)='this.onScrollDown()'>

@@ -123,7 +123,6 @@ export class SpeakerListPageComponent implements OnInit {
       this.searching=false;
       this.loadUsersChunk();
     }
-
   }
 
   ngOnInit() {

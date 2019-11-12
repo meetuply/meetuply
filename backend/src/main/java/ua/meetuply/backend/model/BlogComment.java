@@ -4,10 +4,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@ToString
-@EqualsAndHashCode
-@Setter
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class BlogComment {
 

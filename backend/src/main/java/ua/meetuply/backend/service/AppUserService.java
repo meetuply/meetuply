@@ -85,6 +85,10 @@ public class AppUserService implements UserDetailsService {
         return appUserDAO.getUsersChunk(startRow, endRow);
     }
 
+    public List<AppUser> getUsersChunkForAdminByName(Integer startRow, Integer endRow, String name) {
+        return appUserDAO.getUsersChunkByName(startRow, endRow, name);
+    }
+
     public List<AppUser> getMeetupAttendees(Integer meetupId) {
         return appUserDAO.getMeetupAttendees(meetupId);
     }

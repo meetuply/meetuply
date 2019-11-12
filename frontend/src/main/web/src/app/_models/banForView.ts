@@ -6,5 +6,5 @@ export class BanForView {
   author: User;
   reported: User;
   description: string;
-  dateTime: Date;
+  time: Date;
 }
