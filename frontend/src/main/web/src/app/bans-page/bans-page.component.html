@@ -1,10 +1,11 @@
 <app-left-menu></app-left-menu>
-<div class='content'>
+<div class='container'>
   <div class='back' (click)="goBack()"></div>
 
-  <div>
-    <table>
-      <caption>User's bans</caption>
+  <div class="main-title">
+    <span class="caption">User's bans</span>
+  </div>
+    <table class="js-serial">
       <thead>
       <tr>
         <th>#</th>
@@ -24,5 +25,4 @@
       </tr>
       </tbody>
     </table>
-  </div>
 </div>

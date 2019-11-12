@@ -26,8 +26,8 @@
           </div>
 
         </div>
-        <div class='additional' *ngIf="!isCurrentUser() && !user.deactivated">
-          <div class='additional' *ngIf="!isAdmin()">
+        <div class='additional' *ngIf="!isCurrentUser()">
+          <div class='additional' *ngIf="!isAdmin() && !user.deactivated">
             <app-button [text]="followText()" [type]='followType()' (onClick)="followButtonClicked($event)"
                         fontSize='20'></app-button>
             <app-button text='Message' type='1' (click)="message()" fontSize='20'></app-button>
