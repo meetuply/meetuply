@@ -32,7 +32,7 @@ public class BlogPostService {
         blogPostDAO.save(blogPost);
 
         for (Integer user: appUserService.getUserSubscribers(appUserService.getCurrentUserID())) {
-            notificationService.sendNotification(user,"subscribtion_new_post_template");
+            notificationService.sendNotification(user,"subscription_new_post_template");
         }
 
         achievementService.checkOne(AchievementType.POSTS);

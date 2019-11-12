@@ -37,15 +37,22 @@ public class NotificationService {
 
     public void sendNotification(Integer receiver, String template) {
 
-
+        System.out.println("ok");
         Notification n2 = new Notification();
         n2.setNotificationId(1);
         n2.setDateTime(LocalDateTime.now());
         n2.setIsRead(false);
         n2.setReceiverId(receiver);
         n2.setTemplateId(notificationTemplateService.getByName(template).getNotificationTemplateId());
+
+        System.out.println("notif");
+
         notificationService.saveNotification(n2);
+
+        System.out.println("saved");
         SocketNotification n = new SocketNotification(n2, notificationTemplateService.get(n2.getTemplateId()));
+
+        System.out.println("try");
 
         sendNotification(n, receiver);
 
