@@ -124,7 +124,8 @@ public class AppUserController {
     }
 
     @GetMapping("/members/{startRow}/{endRow}/search")
-    public Iterable<AppUser> getUsersChunkByName(@PathVariable("startRow") Integer startRow, @PathVariable("endRow") Integer endRow,
+    public Iterable<AppUser> getUsersChunkByName(@PathVariable("startRow") Integer startRow,
+                                                 @PathVariable("endRow") Integer endRow,
                                                  @RequestParam("name") String name) {
         return appUserService.getUsersChunkByName(startRow, endRow, name);
     }

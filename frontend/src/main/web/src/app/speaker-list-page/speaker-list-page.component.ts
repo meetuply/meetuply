@@ -31,7 +31,7 @@ export class SpeakerListPageComponent implements OnInit {
   }
 
   onScrollDown() {
-    console.log(this.speaker_list.length);
+    // console.log(this.speaker_list.length);
     if (!this.searching)
       this.loadUsersChunk();
     else
@@ -112,13 +112,18 @@ export class SpeakerListPageComponent implements OnInit {
 
   search(event) {
     if (this.searchText.length>0) {
+      this.speaker_list=[];
+      this.speakerChunk=[];
       this.searching=true;
+      this.loadSearchedChunk();
     }
     else{
+      this.speaker_list=[];
+      this.speakerChunk=[];
       this.searching=false;
+      this.loadUsersChunk();
     }
-    this.speaker_list=[];
-    this.speakerChunk=[];
+
   }
 
   ngOnInit() {

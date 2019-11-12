@@ -44,7 +44,7 @@ export class UserService {
   }
 
   getChunkByName(start: number, size: number, name:string): Observable<User[]> {
-    return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size + "/search?name=" + name )
+    return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size + "/search?name=" + name.toLowerCase() )
   }
 
   getChunkForAdmin(start: number, size: number): Observable<User[]> {
