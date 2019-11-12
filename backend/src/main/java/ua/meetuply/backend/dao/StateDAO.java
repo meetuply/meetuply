@@ -15,15 +15,19 @@ import java.util.stream.Collectors;
 @Repository
 public class StateDAO implements RowMapper<State> {
 
+    private static final String GET_ALL_QUERY   = "SELECT * FROM state";
+    private static final String GET_BY_ID_QUERY = "SELECT * FROM state WHERE uid = ?";
+
     @Autowired
     public JdbcTemplate jdbcTemplate;
 
     public StateImpl get(Integer id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM state WHERE uid = ?", new Object[]{id}, StateImpl.class);
+        return jdbcTemplate.queryForObject(GET_BY_ID_QUERY, new Object[]{id}, StateImpl.class);
     }
 
     public Map<String, State> getAll() {
-        return jdbcTemplate.query("SELECT * FROM state", this)
+        System.out.println(GET_ALL_QUERY);
+        return jdbcTemplate.query(GET_ALL_QUERY, this)
                 .stream().collect(Collectors.toMap(State::getName, s -> s));
     }
 

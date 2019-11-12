@@ -1,6 +1,7 @@
 package ua.meetuply.backend.config.authentication;
 
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +16,10 @@ import ua.meetuply.backend.service.AppUserService;
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
+    @Autowired
     private AppUserService appUserService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
