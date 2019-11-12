@@ -38,7 +38,7 @@ public class StateService {
     public void evictStatesCache() {}
 
     public Set<State> get(String... names) throws NotFoundException {
-        Set states = new HashSet<State>();
+        Set<State> states = new HashSet<>();
         for (String name: names) {
             states.add(get(name));
         }
@@ -84,7 +84,6 @@ public class StateService {
     public void terminateCurrentMeetupsOf(AppUser user) throws NotFoundException {
         updateState(meetupDAO.currentMeetupsOf(user), get(State.TERMINATED));
     }
-
 
     @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1500)
     public void cancelNotEnoughAttendees() throws NotFoundException {

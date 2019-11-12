@@ -26,7 +26,6 @@ public class StateDAO implements RowMapper<State> {
     }
 
     public Map<String, State> getAll() {
-        System.out.println(GET_ALL_QUERY);
         return jdbcTemplate.query(GET_ALL_QUERY, this)
                 .stream().collect(Collectors.toMap(State::getName, s -> s));
     }

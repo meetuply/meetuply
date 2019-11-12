@@ -26,7 +26,7 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     private static final String SELECT_CHUNK_OF_SPEAKERS =
             "SELECT * FROM user WHERE is_deactivated=0 AND uid IN " +
                     "(SELECT speaker_id FROM meetup UNION SELECT author_id FROM post) " +
-            "ORDER BY uid LIMIT ?, ?";
+                    "ORDER BY uid LIMIT ?, ?";
     private static final String SELECT_MEETUP_ATTENDEES_QUERY =
             "SELECT * FROM user WHERE uid IN (SELECT user_id FROM meetup_attendees WHERE meetup_id = ?)";
     private static final String SELECT_FOLLOWERS_IDS_OF_USER_QUERY =
@@ -46,17 +46,17 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
 
     private static final String UPDATE_USER_QUERY =
             "UPDATE user " +
-            "SET email = ?, " +
-            "password = ?, " +
-            "firstname = ?, " +
-            "surname = ?, " +
-            "registration_confirmed = ?, " +
-            "is_deactivated = ?, " +
-            "allow_notifications = ?, " +
-            "role_id = ?, " +
-            "description = ?, " +
-            "location = ?, " +
-            "photo = ? WHERE uid = ?";
+                    "SET email = ?, " +
+                    "password = ?, " +
+                    "firstname = ?, " +
+                    "surname = ?, " +
+                    "registration_confirmed = ?, " +
+                    "is_deactivated = ?, " +
+                    "allow_notifications = ?, " +
+                    "role_id = ?, " +
+                    "description = ?, " +
+                    "location = ?, " +
+                    "photo = ? WHERE uid = ?";
     private static final String UPDATE_PASSWORD_QUERY =
             "UPDATE user SET password = ? WHERE uid = ?";
 

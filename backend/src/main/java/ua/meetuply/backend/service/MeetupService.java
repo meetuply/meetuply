@@ -124,7 +124,7 @@ public class MeetupService {
         if (meetupDao.get(meetupID) == null) throw new NotFoundException("There is no meetup #" + meetupID);
         meetupDao.leave(meetupID, user.getUserId());
         Meetup meetup = meetupDao.get(meetupID);
-        //mb for leave
+
         if (meetup.getMeetupRegisteredAttendees() != meetup.getMeetupMaxAttendees())
             stateService.updateState(meetup, stateService.get(State.SCHEDULED));
     }
