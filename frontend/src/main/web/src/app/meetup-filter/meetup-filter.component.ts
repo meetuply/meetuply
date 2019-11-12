@@ -10,7 +10,6 @@ import {MeetupListItem} from "../_models/meetupListItem";
   styleUrls: ['./meetup-filter.component.less']
 })
 
-
 export class MeetupFilterComponent implements OnInit {
 
   filter_name: string;
@@ -23,7 +22,8 @@ export class MeetupFilterComponent implements OnInit {
   topics: Topic[];
   @Output() meetups: EventEmitter<MeetupListItem[]> = new EventEmitter<any>();
   // @Output() meetups : EventEmitter<Meetup[]> = new EventEmitter();
-  selectedTopics = new Set<Topic>();
+  // selectedTopics = new Set<Topic>();
+  selectedTopics : Topic[] = [];
   filters: Filter[];
   selectedFilters = new Set<number>();
 
@@ -51,14 +51,14 @@ export class MeetupFilterComponent implements OnInit {
       dateFrom: start_date,
       dateTo: end_date,
       userId: 0,
-      topics: Array.from(this.selectedTopics)
+      topics: this.selectedTopics
     };
-    this.filterService.create(filter).subscribe(data => {
-
-    }, error1 => {
+    this.filterService.create(filter).subscribe(data => {}, error1 => {
       alert('Some thing happened:' + error1)
-
-    })
+    });
+    // this.filters.unshift(filter);
+    this.filter_name = "";
+    // this.loadFilters();
   }
 
   search(){
@@ -101,14 +101,20 @@ export class MeetupFilterComponent implements OnInit {
     );
   }
 
+  // topicToggled($event) {
+  //   if ($event[1] == true) {
+  //     this.selectedTopics.add($event[0]);
+  //   } else {
+  //     this.selectedTopics.delete($event[0]);
+  //   }
+  //   console.log(this.selectedTopics)
+  //
+  // }
   topicToggled($event) {
-    if ($event[1] == true) {
-      this.selectedTopics.add($event[0]);
-    } else {
-      this.selectedTopics.delete($event[0]);
-    }
+    var selected : Topic[];
+    selected = this.topics.filter(x => x.topicId == $event[0]);
+    this.selectedTopics.push(selected.pop())
     console.log(this.selectedTopics)
-
   }
 
   filterToggled($event) {
@@ -168,6 +174,5 @@ export class MeetupFilterComponent implements OnInit {
       return "Start date has already passed"; //2 start is already ended
     }
   }
-
 
 }
