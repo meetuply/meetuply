@@ -29,7 +29,7 @@ export class LeftMenuComponent implements OnInit {
     { icon: "calendar.png", text: 'blog', redirectTo: "blog", userCanSee: true, adminCanSee: true },
     { icon: "bell.png", text: 'notifications', redirectTo: "notifications", userCanSee: true, adminCanSee: false },
     { icon: "star.png", text: 'achievements', redirectTo: "achievements", userCanSee: false, adminCanSee: true },
-    { icon: "comment.png", text: 'bans', redirectTo: "ban_reasons", userCanSee: false, adminCanSee: true },
+    { icon: "comment.png", text: 'report reasons', redirectTo: "ban_reasons", userCanSee: false, adminCanSee: true },
     { icon: "apps.png", text: 'topics', redirectTo: "topics", userCanSee: false, adminCanSee: true },
   ];
 

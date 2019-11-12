@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.controller.exception.NotFoundException;
-import ua.meetuply.backend.model.AppUser;
-import ua.meetuply.backend.model.ChatroomThumbnail;
-import ua.meetuply.backend.model.ConfirmationToken;
-import ua.meetuply.backend.model.Language;
+import ua.meetuply.backend.model.*;
 import ua.meetuply.backend.service.*;
 import ua.meetuply.backend.validator.AppUserValidator;
 
@@ -102,22 +99,24 @@ public class AppUserController {
         return chatService.getChatRoomsByUser(userId);
     }
 
+
     @GetMapping("/{userId}/notifications")
     public @ResponseBody
-    List<Map<String, Object>> getAllUserNotifications(@PathVariable("userId") Integer userId) {
-        return notificationService.getAllUserNotifications(userId);
+    List<SocketNotification> getAllUserNotifications(@PathVariable("userId") Integer userId) {
+        return notificationService.getUserNotifications(userId);
     }
 
     @GetMapping("/{userId}/notifications/read")
     public @ResponseBody
-    List<Map<String, Object>> getAllUserReadNotifications(@PathVariable("userId") Integer userId) {
-        return notificationService.getReadedOrUnreadedNotifications(userId, 1);
+    List<SocketNotification> getAllUserReadNotifications(@PathVariable("userId") Integer userId) {
+        return notificationService.getUserNotificationsByStatus(userId, true);
     }
 
     @GetMapping("/{userId}/notifications/unread")
-    public List<Map<String, Object>> getAllUserUnreadNotifications(@PathVariable("userId") Integer userId) {
-        return notificationService.getReadedOrUnreadedNotifications(userId, 0);
+    public List<SocketNotification> getAllUserUnreadNotifications(@PathVariable("userId") Integer userId) {
+        return notificationService.getUserNotificationsByStatus(userId, false);
     }
+
 
     @GetMapping("/{userId}/roomsList")
     public @ResponseBody

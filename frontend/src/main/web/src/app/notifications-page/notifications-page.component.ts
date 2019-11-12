@@ -51,7 +51,7 @@ export class NotificationsPageComponent implements OnInit {
     this.notificationService.connect(this.userService.currentUser.userId, data => {
 
       let msg = JSON.parse(data.body);
-      msg.plain_text = msg.plainText;
+      
       this.loadedNotifications.unshift(msg)
      
     });
