@@ -43,6 +43,10 @@ export class UserService {
     return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size)
   }
 
+  getChunkByName(start: number, size: number, name:string): Observable<User[]> {
+    return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size + "/search?name=" + name )
+  }
+
   getChunkForAdmin(start: number, size: number): Observable<User[]> {
     return this.http.get<User[]>(this.userApiUrl + 'members/all/' + start + "/" + size)
   }
@@ -52,11 +56,11 @@ export class UserService {
   }
 
   getUserFollowings(userId: number): Observable<number[]> {
-    return this.http.get<number[]>(this.userApiUrl + `${userId}/subscribtions`);
+    return this.http.get<number[]>(this.userApiUrl + `${userId}/subscriptions`);
   }
 
   getUserFollowingsList(userId: number): Observable<User[]> {
-    return this.http.get<User[]>(this.userApiUrl + `${userId}/subscribtions/users`);
+    return this.http.get<User[]>(this.userApiUrl + `${userId}/subscriptions/users`);
   }
 
   getRooms(userId: number): Observable<number[]> {

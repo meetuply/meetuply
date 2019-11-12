@@ -80,7 +80,10 @@ public class AppUserDAO implements IDAO<AppUser>, RowMapper<AppUser> {
     }
 
     public List<AppUser> getUsersChunk(Integer startRow, Integer endRow) {
-        return jdbcTemplate.query(SELECT_CHUNK_OF_USERS, new Object[]{startRow, endRow}, this);
+    }
+
+    public List<AppUser> getSpeakersChunkByName(Integer startRow, Integer endRow, String name) {
+        return jdbcTemplate.query("SELECT *, CONCAT(firstname, ' ', surname) AS full_name FROM user WHERE is_deactivated=0 AND registration_confirmed=1 AND uid IN (SELECT speaker_id FROM meetup UNION SELECT author_id FROM post) HAVING LOWER(full_name) LIKE '%?%' ORDER BY uid asc LIMIT ?, ?", new Object[]{name, startRow, endRow}, this);
     }
 
     public Integer getUserIdByEmail(String email) {
