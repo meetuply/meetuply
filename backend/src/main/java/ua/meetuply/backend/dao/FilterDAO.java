@@ -23,10 +23,11 @@ public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
 
     private static final String CREATE_FILTER_QUERY = "INSERT INTO `saved_filter` " +
             "(`name`, `rating_from`, `rating_to`,`date_time_from`, `date_time_to`, `owner_id`) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String CREATE_FILTER_TOPIC_QUERY = "INSERT INTO `filter_topic` (`topic_id`, `filter_id`) VALUES (?, ?)";
-    private static final String GET_FILTER_QUERY = "SELECT * FROM saved_filter WHERE uid = ?";
+    static final String CREATE_FILTER_TOPIC_QUERY = "INSERT INTO `filter_topic` (`topic_id`, `filter_id`) VALUES (?, ?)";
+    static final String GET_FILTER_QUERY = "SELECT * FROM saved_filter WHERE uid = ?";
     private static final String GET_FILTERS_TOPICS_QUERY = "SELECT `topic_id` FROM `filter_topic` WHERE filter_id = ?";
-    private static final String GET_USERS_FILTERS_QUERY = "SELECT * FROM saved_filter WHERE owner_id = ?";
+    static final String GET_USERS_FILTERS_QUERY = "SELECT * FROM saved_filter WHERE owner_id = ?";
+    static final String GET_ALL_FILTERS_QUERY = "SELECT * FROM saved_filter";
 
     @Resource
     private IDAO<Topic> topicDao;
@@ -40,7 +41,7 @@ public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
     }
 
     @Override
-    public List<Filter> getUsersFilters(Integer userId){
+    public List<Filter> getUsersFilters(Integer userId) {
         return jdbcTemplate.query(GET_USERS_FILTERS_QUERY, new Object[]{userId}, this);
     }
 
@@ -50,11 +51,20 @@ public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
 
     @Override
     public List<Filter> getAll() {
-        return jdbcTemplate.query("SELECT * FROM saved_filter",this);
+        return jdbcTemplate.query(GET_ALL_FILTERS_QUERY, this);
     }
 
     @Override
     public void save(Filter filter) {
+        int key = getSavedFilterId(filter).intValue();
+        if (isNotEmpty(filter.getTopics())) {
+            for (Topic topic : filter.getTopics()) {
+                jdbcTemplate.update(CREATE_FILTER_TOPIC_QUERY, topic.getTopicId(), key);
+            }
+        }
+    }
+
+    Number getSavedFilterId(Filter filter) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -69,16 +79,7 @@ public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
             return ps;
         }, keyHolder);
 
-        int key =  keyHolder.getKey().intValue();
-
-
-//        jdbcTemplate.update(CREATE_FILTER_QUERY, filter.getName(), filter.getRatingFrom(), filter.getRatingTo(), filter.getDateFrom(),
-//                filter.getDateTo(), filter.getUserId());
-        if (isNotEmpty(filter.getTopics())) {
-            for (Topic topic : filter.getTopics()) {
-                jdbcTemplate.update(CREATE_FILTER_TOPIC_QUERY, topic.getTopicId(), key);
-            }
-        }
+        return keyHolder.getKey();
     }
 
     @Override
@@ -107,6 +108,6 @@ public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
                 resultSet.getTimestamp("date_time_to"),
                 resultSet.getInt("owner_id"),
                 topics
-                );
+        );
     }
 }
