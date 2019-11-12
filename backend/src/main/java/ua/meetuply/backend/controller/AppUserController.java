@@ -135,6 +135,13 @@ public class AppUserController {
         return appUserService.getUsersChunkForAdmin(startRow, endRow);
     }
 
+    @GetMapping("/members/all/{startRow}/{endRow}/search")
+    public Iterable<AppUser> getUsersChunkForAdminByName(@PathVariable("startRow") Integer startRow,
+                                                 @PathVariable("endRow") Integer endRow,
+                                                 @RequestParam("name") String name) {
+        return appUserService.getUsersChunkForAdminByName(startRow, endRow, name);
+    }
+
     @GetMapping("/{id}")
     public AppUser get(@PathVariable("id") Integer userId) {
         return appUserService.getUser(userId);

@@ -20,6 +20,9 @@ export class UserDeactivationComponent implements OnInit {
   speaker_list: SpeakerListItem[] = [];
   speaker_chunk: SpeakerListItem[];
 
+  searchText:string="";
+  searching=false;
+
   isOdd(num: number): boolean {
     return num % 2 == 0;
   }
@@ -68,6 +71,57 @@ export class UserDeactivationComponent implements OnInit {
         this.speaker_list.push(...this.speaker_chunk);
       }
     )
+  }
+
+  loadSearchedChunk(){
+    this.userService.getChunkForAdminByName(this.speaker_list.length, this.chunkSize, this.searchText).subscribe(
+      async users => {
+        this.speaker_chunk = await Promise.all(users.map(async user => {
+          let user_languages: string[];
+          let list_item: SpeakerListItem;
+          await this.userService.getUserLanguages(user.userId).toPromise().then(languages =>
+            user_languages = languages.map(language => language.name)
+          );
+          let rating = this.ratingService.getUserRatingAvg(user.userId).toPromise().then(r => rating = r);
+          let awards = 0;
+          await this.achievementService.getUserAchievementsNumber(user.userId).toPromise().then(
+            a => awards = a);
+          let followers: number[];
+          await this.userService.getUserFollowers(user.userId).toPromise().then(f =>
+            followers = f
+          );
+          list_item = {
+            id: user.userId,
+            name: user.firstName,
+            surname: user.lastName,
+            location: user.location,
+            rate: rating,
+            description: user.description,
+            languages: user_languages,
+            following: (followers.indexOf(this.userService.currentUser.userId) != -1),
+            photo: user.photo,
+            awards: awards
+          };
+          return list_item;
+        }));
+        this.speaker_list.push(...this.speaker_chunk);
+      }
+    )
+  }
+
+  search(event) {
+    if (this.searchText.length>0) {
+      this.speaker_list=[];
+      this.speaker_chunk=[];
+      this.searching=true;
+      this.loadSearchedChunk();
+    }
+    else{
+      this.speaker_list=[];
+      this.speaker_chunk=[];
+      this.searching=false;
+      this.loadUsersChunk();
+    }
   }
 
   ngOnInit() {
