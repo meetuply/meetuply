@@ -12,7 +12,6 @@ import ua.meetuply.backend.validator.AppUserValidator;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
@@ -99,14 +98,12 @@ public class AppUserController {
 
 
     @GetMapping("/{userId}/notifications")
-    public @ResponseBody
-    List<SocketNotification> getAllUserNotifications(@PathVariable("userId") Integer userId) {
+    public List<SocketNotification> getAllUserNotifications(@PathVariable("userId") Integer userId) {
         return notificationService.getUserNotifications(userId);
     }
 
     @GetMapping("/{userId}/notifications/read")
-    public @ResponseBody
-    List<SocketNotification> getAllUserReadNotifications(@PathVariable("userId") Integer userId) {
+    public List<SocketNotification> getAllUserReadNotifications(@PathVariable("userId") Integer userId) {
         return notificationService.getUserNotificationsByStatus(userId, true);
     }
 
