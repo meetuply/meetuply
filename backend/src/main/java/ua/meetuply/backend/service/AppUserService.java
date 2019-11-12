@@ -161,7 +161,7 @@ public class AppUserService implements UserDetailsService {
         appUserDAO.follow(getCurrentUserID(), userId);
         achievementService.checkOne(AchievementType.FOLLOWERS);
         notificationService.sendNotification(userId,"new_subscriber_template");
-        notificationService.sendNotification(getCurrentUserID(),"new_subscribtion_template");
+        notificationService.sendNotification(getCurrentUserID(),"new_subscription_template");
     }
 
     public void unfollow(Integer userId) {

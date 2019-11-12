@@ -53,7 +53,7 @@ public class MeetupService {
 
         //notifiy all subscribers the a new meetup is created
         for (Integer user: appUserService.getUserSubscribers(appUserService.getCurrentUserID())) {
-            notificationService.sendNotification(user,"subscribtion_new_meetup_template");
+            notificationService.sendNotification(user,"subscription_new_meetup_template");
         }
 
         achievementService.checkOne(AchievementType.MEETUPS);
