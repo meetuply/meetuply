@@ -6,8 +6,11 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import ua.meetuply.backend.dao.NotificationsDAO;
 import ua.meetuply.backend.model.Notification;
+import ua.meetuply.backend.model.NotificationTemplate;
 import ua.meetuply.backend.model.SocketNotification;
 
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -18,10 +21,33 @@ public class NotificationService {
     @Autowired
     private SimpMessagingTemplate template;
 
+    @Autowired
+    private NotificationTemplateService notificationTemplateService;
+
+    @Autowired
+    private NotificationService notificationService;
+
     //websocket send
-    public void sendNotification(SocketNotification notification, Integer recipient) {
+    private void sendNotification(SocketNotification notification, Integer recipient) {
+
 
         template.convertAndSend("/notifications/new/" + recipient, notification);
+
+    }
+
+    public void sendNotification(Integer receiver, String template) {
+
+
+        Notification n2 = new Notification();
+        n2.setNotificationId(1);
+        n2.setDateTime(LocalDateTime.now());
+        n2.setIsRead(false);
+        n2.setReceiverId(receiver);
+        n2.setTemplateId(notificationTemplateService.getByName(template).getNotificationTemplateId());
+        notificationService.saveNotification(n2);
+        SocketNotification n = new SocketNotification(n2, notificationTemplateService.get(n2.getTemplateId()));
+
+        sendNotification(n, receiver);
 
     }
 
@@ -30,17 +56,12 @@ public class NotificationService {
     @Autowired
     private NotificationsDAO notificationsDAO;
 
-    public Notification get(Integer id) {
+    public SocketNotification get(Integer id) {
         return notificationsDAO.get(id);
     }
 
-    public List<Notification> getAll() {
-        List<Notification> allNotifications = notificationsDAO.getAll();
-        if (allNotifications != null) {
-            System.out.println(allNotifications.toString());
-            return allNotifications;
-        } else return null;
-
+    public List<SocketNotification> getAll() {
+        return notificationsDAO.getAll();
     }
 
     public void saveNotification(Notification notification) {
@@ -51,39 +72,21 @@ public class NotificationService {
         notificationsDAO.update(notification);
     }
 
-    public void updateNotificetionRead(Notification notification) {
-        notification.setIsRead(1);
-        notificationsDAO.update(notification);
-    }
-
     public void delete(Integer id) {
         notificationsDAO.delete(id);
     }
 
-    public List<Map<String, Object>> getAllUserNotifications(Integer userID) {
-        List<Map<String, Object>> allUserNotifications = notificationsDAO.getAllUserNotifications(userID);
-        if (allUserNotifications != null) {
-            System.out.println(allUserNotifications.toString());
 
-            //List<Map<String, Object>> list = getMyMap();
-            for (Map<String, Object> map : allUserNotifications) {
-                System.out.println("--next list--");
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    System.out.println("key: " + entry.getKey() + " - " + "value: " + entry.getValue());
-                }
-            }
-
-            return allUserNotifications;
-        } else return null;
+    public List<SocketNotification> getUserNotifications(Integer userID) {
+        return notificationsDAO.getUserNotifications(userID);
     }
 
-    public List<Map<String, Object>> getCurrentUserNotification(Integer userId, Integer notificationId) {
-        return notificationsDAO.getCurrentUserNotification(userId, notificationId);
+    public List<SocketNotification> getUserNotificationsByStatus(Integer userID, boolean isRead) {
+        return notificationsDAO.getReadedOrUnreadedNotifications(userID, isRead);
     }
 
-    public List<Map<String, Object>> getReadedOrUnreadedNotifications(Integer userId, Integer readedOrUnreaded) {
-        return notificationsDAO.getReadedOrUnreadedNotifications(userId, readedOrUnreaded);
-    }
-
-
+    /*
+    public void updateNotificetionRead(Integer id) {
+        notificationsDAO.setRead(id);
+    }*/
 }

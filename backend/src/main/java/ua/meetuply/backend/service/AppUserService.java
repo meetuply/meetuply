@@ -47,6 +47,9 @@ public class AppUserService implements UserDetailsService {
     @Autowired
     AchievementService achievementService;
 
+    @Autowired
+    NotificationService notificationService;
+
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void createAppUser(AppUser appUser) {
@@ -157,6 +160,8 @@ public class AppUserService implements UserDetailsService {
     public void follow(Integer userId) {
         appUserDAO.follow(getCurrentUserID(), userId);
         achievementService.checkOne(AchievementType.FOLLOWERS);
+        notificationService.sendNotification(userId,"new_subscriber_template");
+        notificationService.sendNotification(getCurrentUserID(),"new_subscribtion_template");
     }
 
     public void unfollow(Integer userId) {

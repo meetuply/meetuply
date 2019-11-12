@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Notification {
 
-    private Integer notificationID;
-    private LocalDateTime date_time;
-    private int isRead;
-    private Integer receiverID;
-    private Integer templateID;
+    private Integer notificationId;
+    private LocalDateTime dateTime;
+    private Boolean isRead;
+    private Integer receiverId;
+    private Integer templateId;
 
 }
