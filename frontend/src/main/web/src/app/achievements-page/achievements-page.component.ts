@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Achievement} from "../_models/achievement";
 import {AchievementService} from "../_services/achievement.service";
 import { Location } from '@angular/common';
@@ -12,8 +12,6 @@ import {TopicService} from "../_services";
 export class AchievementsPageComponent implements OnInit {
 
   achievements: Achievement[];
-  iconSrc = "";
-  iconExists = true;
 
   constructor(private achievementService: AchievementService, private location: Location,
               private topicService: TopicService) { }
@@ -54,27 +52,6 @@ export class AchievementsPageComponent implements OnInit {
       }
     );
   }
-
-  // checkImageExists(imageUrl, callBack) {
-  //   var imageData = new Image();
-  //   imageData.onload = function() {
-  //     callBack(true);
-  //   };
-  //   imageData.onerror = function() {
-  //     callBack(false);
-  //   };
-  //   imageData.src = imageUrl;
-  // }
-  //
-  // check(imageUrl){
-  //   this.checkImageExists(imageUrl, function(exists){
-  //     if (exists){
-  //       this.iconSrc = imageUrl;
-  //     } else {
-  //       this.iconSrc = "";
-  //     }
-  //   });
-  // }
 
   public goBack(){
     this.location.back();
