@@ -56,6 +56,7 @@ public class NotificationController {
         return notificationService.getAll();
     }
 
+
     @GetMapping("/{id}")
     public @ResponseBody
     SocketNotification getNotification(@PathVariable("id") Integer id) {

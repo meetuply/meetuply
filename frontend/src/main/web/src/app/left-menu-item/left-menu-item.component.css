@@ -12,13 +12,11 @@
 
   padding-top: 5px;
   padding-bottom: 5px;
-
 }
 
 .left_menu_item.selected {
   border-left: 3px solid #2a8bf2;
   color: #2a8bf2;
-
 }
 
 .left_menu_item.selected:hover {
@@ -41,16 +39,9 @@
   background-image: url(/assets/icons/apps.png);
 }
 
-/*.icon{*/
-  /*min-width: 24px;*/
-  /*max-width: 24px;*/
-/*}*/
-
-/*.icon img{*/
-  /*max-width:100%;*/
-  /*height:auto;*/
-/*}*/
-
-/*
-if less than 900 then vertical
-*/
+@media only screen and (max-width: 768px) {
+  .left_menu_item #text{
+    font-size: 0.8em;
+    display: none;
+  }
+}

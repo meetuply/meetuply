@@ -1,5 +1,5 @@
 <app-left-menu></app-left-menu>
-<div class='content'>
+<div class='content' [ngStyle]='setStyle()'>
 
 
 
@@ -11,8 +11,10 @@
 		<span [ngClass]="getOldClass()" (click)="oldClick()">Old</span>
 		<span> | </span>
 		<span [ngClass]="getAllClass()" (click)="allClick()">All</span>
+		<app-button *ngIf="this.active == 0 && this.loadedNotifications.length > 0"  fontSize="16" type="2" text="Mark all as read" (click)="readAll()"></app-button>
 	</div>
-	<div class='notifications' *ngIf='loadedNotifications.length > 0'>
+
+	<div class='notifications' *ngIf='loadedNotifications.length > 0' (scroll)="onScroll($event)">
 		<div class='notification' *ngFor="let notification of loadedNotifications">
 			{{notification.plainText}}
 		</div>

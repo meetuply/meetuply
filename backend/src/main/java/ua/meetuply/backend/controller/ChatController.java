@@ -28,6 +28,12 @@ public class ChatController {
         return chatService.getRoomMessages(roomId);
     }
 
+    @GetMapping("/rooms/{roomId}/messages/{start}/{size}")
+    public @ResponseBody
+    Iterable<Message> getRoomMessagesChunk(@PathVariable("roomId") Integer roomId,@PathVariable("start") Integer start,@PathVariable("size") Integer size) {
+        return chatService.getRoomMessagesChunk(roomId,start,size);
+    }
+
     @GetMapping("/rooms/{roomId}/members")
     public @ResponseBody
     Iterable<Integer> getRoomMembers(@PathVariable("roomId") Integer roomId) {

@@ -41,8 +41,6 @@ export class LeftMenuComponent implements OnInit {
 
 
   tempNotifications: Notification[] = [
-    //"one",
-    //"another"
   ];
 
   constructor(private http: HttpClient,
