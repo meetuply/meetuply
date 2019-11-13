@@ -28,6 +28,13 @@ export class ChatService {
 		return this.http.get<Message[]>(this.chatApiUrl + "/rooms/" + roomId + "/messages");
 	}
 
+
+	getRoomMessagesChunk(roomId: number, start: number, size: number): Observable<Message[]> {
+		return this.http.get<Message[]>(this.chatApiUrl + "/rooms/" + roomId + "/messages/" + start + "/" + size);
+	} 
+
+
+
 	getRoomMembers(roomId: number): Observable<number[]> {
 		return this.http.get<number[]>(this.chatApiUrl + "/rooms/" + roomId + "/members");
 	}

@@ -37,16 +37,10 @@ public class MessageController {
         chatService.addMessage(message);
         template.convertAndSend("/chat/session_messages/" + message.getTo_room_id(), message);
 
-
-        System.out.println("Received message from id:" + message.getFrom());
-
         Integer roomId = message.getTo_room_id();
-        System.out.println("Received message to room:" + roomId);
 
         List<Integer> users = chatService.getRoomMembers(roomId);
         users.remove(message.getFrom());
-        System.out.println("TO receiver:" + users.get(0));
-
 
         notififcationService.sendNotification(users.get(0),"new_message_template");
 

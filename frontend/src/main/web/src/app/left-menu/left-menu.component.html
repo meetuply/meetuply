@@ -25,5 +25,6 @@
 
 </div>
 <div class='notifications' *ngIf="tempNotifications.length > 0">
+	<div class='title'>New notifications:</div>
 	<div *ngFor="let notif of tempNotifications" (click)="notificationClick(notif)">{{notif.plainText}}</div>
 </div>

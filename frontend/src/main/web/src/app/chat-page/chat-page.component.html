@@ -13,7 +13,7 @@
 			<div class='info'>{{this.other.firstName}} {{this.other.lastName}}</div>
 		</div>
 	</div>
-	<div class='messages'>
+	<div id='msgs' class='messages' (scroll)="onScroll($event)">
 
 		<app-chat-message *ngFor="let message of this.messages" [msg]='message'></app-chat-message>
 
