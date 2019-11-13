@@ -53,7 +53,7 @@ public class MeetupService {
         meetup.setSpeakerId(currentUserId);
         meetupDao.saveFull(meetup);
 
-        //notifiy all subscribers the a new meetup is created
+        
         for (Integer user: appUserService.getUserSubscribers(currentUserId)) {
             notificationService.sendNotification(user,"subscription_new_meetup_template");
         }

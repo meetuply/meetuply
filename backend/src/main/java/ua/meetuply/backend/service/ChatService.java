@@ -47,7 +47,7 @@ public class ChatService {
         return chatDAO.getRoomMessages(roomId);
     }
 
-    //add user to chat_room, check if chat room has 2 users then not add
+    
     public Message getLastMessage(Integer roomId) {
         return chatDAO.getLastMessage(roomId);
     }
@@ -69,7 +69,7 @@ public class ChatService {
             Message m = getLastMessage(currentChatroom);
             List<Integer> users = getRoomMembers(currentChatroom);
             users.remove(userId);
-            AppUser otherUser = userService.getUser(users.get(0));//fix this plz
+            AppUser otherUser = userService.getUser(users.get(0));
 
             t.setMessage(m);
             t.setUser(otherUser);

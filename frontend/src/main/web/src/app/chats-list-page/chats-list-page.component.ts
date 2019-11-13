@@ -28,7 +28,6 @@ export class ChatsListPageComponent implements OnInit {
     this.userService.getRoomsThumbnails(userId).subscribe(
       res => {
         this.rooms = res;
-        //console.log(this.rooms);
         
         this.loadFollowings(this.userService.currentUser.userId);
        

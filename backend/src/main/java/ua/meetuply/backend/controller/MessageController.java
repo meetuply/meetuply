@@ -8,14 +8,12 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import ua.meetuply.backend.model.Message;
-//import ua.meetuply.backend.model.Notification;
-//import ua.meetuply.backend.model.SocketNotification;
 import ua.meetuply.backend.model.Notification;
 import ua.meetuply.backend.model.SocketNotification;
 import ua.meetuply.backend.service.ChatService;
 import ua.meetuply.backend.service.NotificationService;
 import ua.meetuply.backend.service.NotificationTemplateService;
-//import ua.meetuply.backend.service.NotificationService;
+
 
 import java.time.LocalDateTime;
 import java.util.List;

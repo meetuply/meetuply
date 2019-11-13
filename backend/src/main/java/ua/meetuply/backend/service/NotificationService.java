@@ -27,12 +27,9 @@ public class NotificationService {
     @Autowired
     private NotificationService notificationService;
 
-    //websocket send
-    private void sendNotification(SocketNotification notification, Integer recipient) {
-
-
+    //socket part
+    public void sendNotification(SocketNotification notification, Integer recipient) {
         template.convertAndSend("/notifications/new/" + recipient, notification);
-
     }
 
     public void sendNotification(Integer receiver, String template) {
@@ -49,7 +46,7 @@ public class NotificationService {
         sendNotification(n, receiver);
     }
 
-    //========================s
+    //=====
 
     @Autowired
     private NotificationsDAO notificationsDAO;
@@ -95,8 +92,4 @@ public class NotificationService {
         notificationsDAO.readNotifications(userId);
     }
 
-    /*
-    public void updateNotificetionRead(Integer id) {
-        notificationsDAO.setRead(id);
-    }*/
 }

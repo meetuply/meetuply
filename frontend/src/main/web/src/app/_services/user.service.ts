@@ -25,8 +25,7 @@ export class UserService {
     return this.http.post(this.userApiUrl + 'register', user);
   }
 
-  //get speakers (sonly users who made at least 1 meetup ) for now all users
-
+  
   getCurrentUser(): Observable<User> {
     return this.get(this.currentUser.userId);
   }

@@ -11,7 +11,7 @@ import ua.meetuply.backend.model.SocketNotification;
 import ua.meetuply.backend.service.AppUserService;
 import ua.meetuply.backend.service.NotificationService;
 import ua.meetuply.backend.service.NotificationTemplateService;
-//import ua.meetuply.backend.service.NotificationService;
+
 
 import java.util.List;
 import java.util.Map;
@@ -20,13 +20,6 @@ import java.util.Map;
 @Transactional
 @RestController
 public class NotificationController {
-
-    //@Autowired
-    //private NotificationService notificationService;
-
-    //@Autowired
-    //private AppUserService appUserService;
-
 
     @Autowired
     private NotificationTemplateService templateService;

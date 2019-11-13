@@ -26,7 +26,7 @@ export class NotificationsPageComponent implements OnInit {
         this.loadedNotifications = [];
         this.lastRow = 0;
       },error => {
-        console.log("errpr happened");
+        console.log("error happened");
       }
     )
 
@@ -36,9 +36,6 @@ export class NotificationsPageComponent implements OnInit {
 
   onScroll($event) {
     var scroll = $event.srcElement.scrollTop - $event.srcElement.clientHeight;
-
-    console.log("fd");
-
     if (scroll <= 10) {
       this.loadNotificationsChunk();
 

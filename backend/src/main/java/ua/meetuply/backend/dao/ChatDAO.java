@@ -21,7 +21,6 @@ public class ChatDAO implements RowMapper<Message> {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-
     private static String GET_ROOMS_QUERY = "SELECT * FROM chat_room";
 
     private static String GET_ROOMS_BY_USER_QUERY = "SELECT room_id FROM user_chat_room WHERE uid = ?";

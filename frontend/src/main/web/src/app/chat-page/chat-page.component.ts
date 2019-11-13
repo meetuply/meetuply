@@ -92,10 +92,7 @@ export class ChatPageComponent implements OnInit {
           console.log(this.lastRow + " " + this.messagesChunkSize);
 
           this.lastRow += messages.length;
-        } else {
-          //not error but prevend too fast loading of empty data
-          //console.log("err")
-        }
+        } 
 
 
       }, error => {

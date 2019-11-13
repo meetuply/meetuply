@@ -81,8 +81,6 @@ export class LeftMenuComponent implements OnInit {
       else {
         this.selectedItem = val[0].toString()
 
-
-
         if (val[0].toString() == 'notifications') {
           //do not init notification service
         } else {

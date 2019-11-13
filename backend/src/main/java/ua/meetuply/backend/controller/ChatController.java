@@ -21,7 +21,6 @@ public class ChatController {
     }
 
 
-    //retrieves all emssages in the chat room
     @GetMapping("/rooms/{roomId}/messages")
     public @ResponseBody
     Iterable<Message> getRoomMessages(@PathVariable("roomId") Integer roomId) {

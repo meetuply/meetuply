@@ -15,7 +15,7 @@ public class Message {
     private LocalDateTime date_time;
     private String content;
     private Integer from;
-    private Integer to_user_id;//WTF
+    private Integer to_user_id;
     private Integer to_room_id;
 
     public Message(Integer uid, LocalDateTime date_time, String content, Integer from, Integer to_user_id, Integer to_room_id) {
