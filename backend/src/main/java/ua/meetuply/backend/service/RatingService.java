@@ -22,12 +22,12 @@ public class RatingService {
     AchievementService achievementService;
 
     @Transactional
-    public void createRating(Rating rating, Integer idrated) {
+    public void createRating(Rating rating, Integer ratedUserId) {
         rating.setDate(LocalDateTime.now());
         rating.setRatedBy(appUserService.getCurrentUserID());
-        rating.setRatedUser(idrated);
+        rating.setRatedUser(ratedUserId);
         ratingDAO.save(rating);
-        achievementService.checkOne(AchievementType.RATING, appUserService.getCurrentUserID());
+        achievementService.checkOne(AchievementType.RATING, ratedUserId);
     }
 
     public List<Rating> getAllRatings() {
