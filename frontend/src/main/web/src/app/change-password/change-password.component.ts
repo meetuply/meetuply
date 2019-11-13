@@ -62,21 +62,21 @@ submit()
           this.error = error;
         });
   } else {
-    let user = this.userService.currentUser;
-    if (user) {
-      user.password = this.newPassword;
-      this.userService.update(user).subscribe(
-        data => this.router.navigate(['/settings']),
-        error => {
-          this.sucsessful = false;
-          this.loading = false;
-          this.error = error;
-        }
-      )
-    } else {
-      this.error = "Please, sign in to change password";
-
-    }
+    this.userService.getCurrentUser().subscribe(user => {
+      if (user) {
+        user.password = this.newPassword;
+        this.userService.update(user).subscribe(
+          data => this.router.navigate(['/settings']),
+          error => {
+            this.sucsessful = false;
+            this.loading = false;
+            this.error = error;
+          }
+        )
+      } else {
+        this.error = "Please, sign in to change password";
+      }
+    }, _ => this.error = "Please, sign in");
   }
 
 }

@@ -22,6 +22,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
     this.userService.getCurrentUser().subscribe(user => {
       this.user = user;
+      user.password = null;
       this.loadLanguages();
     });
   }
