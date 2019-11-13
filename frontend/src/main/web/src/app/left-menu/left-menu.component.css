@@ -63,10 +63,11 @@ app-left-menu-item {
 
 .notifications {
   position: fixed;
-  bottom: 0;
-  right: 0;
+  bottom: 20px;
+  right: 20px;
   width: 200px;
   padding: 5px;
+  border-radius: 6px 0px 0px 0px;
   border: 1px solid grey;
 }
 
@@ -82,4 +83,13 @@ img, span {
   cursor: pointer;
 }
 
+.notifications > .title {
+  font-weight: bold;
+  border: 0px;
+}
 
+@media only screen and (max-width: 768px) {
+  #left_menu {
+    min-width: 20px !important;
+  }
+}

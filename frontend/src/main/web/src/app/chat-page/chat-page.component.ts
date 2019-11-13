@@ -4,7 +4,7 @@ import * as SockJS from 'sockjs-client'
 import { ActivatedRoute, Router } from "@angular/router";
 import { ChatService } from '../_services/chat.service'
 import { UserService } from '../_services'
-import {Message, User} from '../_models'
+import { Message, User } from '../_models'
 import { Location } from '@angular/common'
 import { environment } from "../../environments/environment";
 
@@ -22,19 +22,14 @@ export class ChatPageComponent implements OnInit {
 
   other: User;
 
+  lastRow = 0;
+  messagesChunkSize = 15;
+
   constructor(private chatService: ChatService, private userService: UserService,
     private route: ActivatedRoute, private _location: Location, private router: Router) {
 
   }
 
-  loadInitMessages(roomId: number) {
-    this.chatService.getRoomMessages(roomId).subscribe(
-      messages => {
-        this.messages = messages;
-
-      }
-    );
-  }
 
 
   loadMember(roomId: number) {
@@ -45,48 +40,29 @@ export class ChatPageComponent implements OnInit {
         const index = members.indexOf(this.userService.currentUser.userId, 0);
         if (index > -1) {
           members.splice(index, 1);
-
-
           if (members.length <= 0) {
             this.router.navigateByUrl('/chats');
           }
           else {
-
             let otherId = members[0]
             this.userService.get(otherId).subscribe(
               user => this.other = user
             )
-
           }
-
-
         }
         else {
           this.router.navigateByUrl('/chats');
         }
-
       }
-
     );
-
   }
 
   connect() {
-
-
     var socket = new SockJS(`${environment.apiUrl}/meetuply`);
-
-
     this.stompClient = Stomp.over(socket);
-
-
     this.stompClient.connect({}, frame => {
-
       console.log('Connected: ' + frame);
-
       this.subscribe();
-
-
     });
   }
 
@@ -101,6 +77,31 @@ export class ChatPageComponent implements OnInit {
 
   goBack() {
     this._location.back();
+  }
+
+
+  loadChunk(room: number) {
+
+    this.chatService.getRoomMessagesChunk(room, this.lastRow, this.messagesChunkSize).subscribe(
+      messages => {
+        if (messages && messages.length > 0) {
+          this.messages.push(...messages);
+
+          console.log("loaded chunk")
+          console.log(messages);
+          console.log(this.lastRow + " " + this.messagesChunkSize);
+
+          this.lastRow += messages.length;
+        } else {
+          //not error but prevend too fast loading of empty data
+          //console.log("err")
+        }
+
+
+      }, error => {
+        console.log("failed to load chunk")
+      }
+    );
 
   }
 
@@ -110,10 +111,18 @@ export class ChatPageComponent implements OnInit {
     this.roomId = this.route.snapshot.params['id'];
 
     this.loadMember(this.roomId);
-    
     this.connect();
+    this.loadChunk(this.roomId);
+  }
 
-    this.loadInitMessages(this.roomId);
+
+
+  onScroll($event) {
+    var scroll = $event.srcElement.scrollTop;
+    if (scroll <= 0) {
+      this.loadChunk(this.roomId);
+    }
+
   }
 
   @HostListener('window:resize', ['$event'])
@@ -128,7 +137,6 @@ export class ChatPageComponent implements OnInit {
       'height': this.height + "px"
     }
   }
-
 
 
   onKeydown(event) {
