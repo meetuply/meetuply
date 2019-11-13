@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.dao.RatingDAO;
+import ua.meetuply.backend.model.AchievementType;
 import ua.meetuply.backend.model.Rating;
 
 import java.time.LocalDateTime;
@@ -17,12 +18,16 @@ public class RatingService {
     @Autowired
     AppUserService appUserService;
 
+    @Autowired
+    AchievementService achievementService;
+
     @Transactional
     public void createRating(Rating rating, Integer idrated) {
         rating.setDate(LocalDateTime.now());
         rating.setRatedBy(appUserService.getCurrentUserID());
         rating.setRatedUser(idrated);
         ratingDAO.save(rating);
+        achievementService.checkOne(AchievementType.RATING);
     }
 
     public List<Rating> getAllRatings() {
