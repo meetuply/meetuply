@@ -58,7 +58,7 @@ export class MeetupFilterComponent implements OnInit {
       console.log(data);
       this.filters.unshift(data);
     }, error1 => {
-      alert('Some thing happened:' + error1)
+      // alert('Some thing happened:' + error1)
     });
     // this.filters.unshift(filter);
     this.filter_name = "";
@@ -85,7 +85,8 @@ export class MeetupFilterComponent implements OnInit {
   }
 
   checkRequiredFields(input) {
-    if(input === null) {
+    if(input === "" || input === null) {
+      alert("Attribute 'name' is required");
       throw new Error("Attribute 'name' is required");
     }
   }
