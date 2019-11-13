@@ -35,7 +35,7 @@ export class BlogPageComponent implements OnInit {
   loading = false;
   error = null;
 
-  constructor(private userService: UserService, private blogService: BlogService,
+  constructor(public userService: UserService, private blogService: BlogService,
               private _location: Location, private route: ActivatedRoute) {
   }
 
