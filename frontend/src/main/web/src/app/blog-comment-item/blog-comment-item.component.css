@@ -31,7 +31,7 @@
 }
 
 .author .name {
-  font-size: 14px;
+  font-size: 1em;
   font-weight: bold;
   width: 100px;
   text-align: center;
@@ -46,7 +46,7 @@
 
 .avatar img {
   max-width: 50px;
-  max-width: 50px;
+  max-height: 50px;
   border-radius: 50%;
 }
 
@@ -58,7 +58,7 @@
 }
 
 .comment-content{
-  font-size: 14px;
+  font-size: 1em;
   margin-top: 5px;
   text-overflow: fade;
   float: none;
@@ -68,7 +68,7 @@
 
 .comment-time{
   margin-top: 10px;
-  font-size: 12px;
+  font-size: 0.8em;
   color: #7f7f7f;
 }
 
