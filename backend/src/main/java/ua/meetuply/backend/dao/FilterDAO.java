@@ -1,5 +1,6 @@
 package ua.meetuply.backend.dao;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,6 +19,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
+@Slf4j
 @Component
 public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
 
@@ -28,6 +30,7 @@ public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
     private static final String GET_FILTERS_TOPICS_QUERY = "SELECT `topic_id` FROM `filter_topic` WHERE filter_id = ?";
     static final String GET_USERS_FILTERS_QUERY = "SELECT * FROM saved_filter WHERE owner_id = ?";
     static final String GET_ALL_FILTERS_QUERY = "SELECT * FROM saved_filter";
+    private static final String NOT_IMPLEMENTED = "Not implemented";
 
     @Resource
     private IDAO<Topic> topicDao;
@@ -48,11 +51,7 @@ public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
     @Override
     public int saveAndGetCreatedFilter(Filter filter) {
         int key = getSavedFilterId(filter).intValue();
-        if (isNotEmpty(filter.getTopics())) {
-            for (Topic topic : filter.getTopics()) {
-                jdbcTemplate.update(CREATE_FILTER_TOPIC_QUERY, topic.getTopicId(), key);
-            }
-        }
+        doSave(filter, key);
         return key;
     }
 
@@ -68,13 +67,16 @@ public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
     @Override
     public void save(Filter filter) {
         int key = getSavedFilterId(filter).intValue();
+        doSave(filter, key);
+    }
+
+    private void doSave(Filter filter, int key) {
         if (isNotEmpty(filter.getTopics())) {
             for (Topic topic : filter.getTopics()) {
                 jdbcTemplate.update(CREATE_FILTER_TOPIC_QUERY, topic.getTopicId(), key);
             }
         }
     }
-
 
     Number getSavedFilterId(Filter filter) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -96,12 +98,12 @@ public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
 
     @Override
     public void update(Filter filter) {
-
+        log.error(NOT_IMPLEMENTED);
     }
 
     @Override
     public void delete(Integer id) {
-
+        log.error(NOT_IMPLEMENTED);
     }
 
     @Override
