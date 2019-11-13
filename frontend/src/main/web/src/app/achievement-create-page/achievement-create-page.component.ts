@@ -26,9 +26,9 @@ export class AchievementCreatePageComponent implements OnInit {
   ngOnInit() {
     this.loadTopics();
     this.achievementForm = this.fb.group({
-        title: ['', Validators.required],
-        description: ['', Validators.required],
-        icon: ['', Validators.required],
+        title: ['', [Validators.required, Validators.maxLength(20)]],
+        description: ['', [Validators.required, Validators.maxLength(70)]],
+        icon: ['', [Validators.required, Validators.maxLength(500)]],
         followers: ['', Validators.required],
         posts: ['', Validators.required],
         rating: ['', Validators.required],
@@ -49,7 +49,7 @@ export class AchievementCreatePageComponent implements OnInit {
       achievement.posts = this.achievementForm.get('posts').value;
     } else if (this.selectedOption == 'rating') {
       achievement.rating = this.achievementForm.get('rating').value;
-    } else if (!this.selectedTopics) {
+    } else if (this.selectedTopics.size == 0) {
       achievement.meetups = this.achievementForm.get('meetups').value;
     }
     this.achievementService.create(achievement).subscribe(

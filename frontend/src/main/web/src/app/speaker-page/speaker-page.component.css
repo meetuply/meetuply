@@ -204,24 +204,12 @@
 .achievements{
   display: flex;
   flex-direction: row;
-  /*max-width: 100px;*/
+  height: auto;
 }
 
 .achievement-container{
   min-width: 100px;
 }
-
-/* you don't need to add a class for each link if they're the same*/
-/*.view-all-future, .view-all-past{*/
-/*  color: blue;*/
-/*  font-size: 13px;*/
-/*  font-style: italic;*/
-/*  cursor: pointer;*/
-/*}*/
-
-/*.view-all-future:hover, .view-all-past:hover {*/
-/*  text-decoration: underline;*/
-/*}*/
 
 .one-future-meetup{
   width: 100%;
@@ -235,3 +223,36 @@
 #feedback{
   overflow-x: auto
 }
+
+.scrollbar
+{
+  float: left;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.achievement-wrapper
+{
+  text-align: center;
+  width: 500px;
+  margin: auto;
+}
+
+
+#style-3::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,0.3);
+  background-color: #F5F5F5;
+}
+
+#style-3::-webkit-scrollbar
+{
+  background-color: #F5F5F5;
+  height: 6px;
+}
+
+#style-3::-webkit-scrollbar-thumb
+{
+  background-color: #000000;
+}
+

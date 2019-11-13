@@ -1,15 +1,15 @@
 <div class="achievement-container">
   <div class="achievement-wrapper">
     <div class="achievement-title">
-      <span>{{this.title}}</span>
+      <p>{{this.title}}</p>
     </div>
     <div class="achievement-icon" (click)="addDescription()">
       <img caption="" src="{{this.icon}}" onerror="this.onerror=null;
-      src='/../../assets/icons/achievement.png'"/>
+      src='/../../assets/icons/starr.png'"/>
     </div>
     <div class="achievement-description" *ngIf="showDescription">
-      <span> {{this.description}}
-      </span>
+      <p> {{this.description}}
+      </p>
     </div>
   </div>
 </div>
