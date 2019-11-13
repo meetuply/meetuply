@@ -32,6 +32,7 @@ export class MeetupPageComponent implements OnInit {
   attendees: Atendee[] = [];
   hasAccess = false;
   state: string;
+  topics: string[] = [];
 
   constructor(
     private meetupService: MeetupService,
@@ -67,6 +68,12 @@ export class MeetupPageComponent implements OnInit {
         this.loading = false;
       }
     );
+
+    this.topics = [];
+    this.meetupService.getTopics(id).subscribe(
+      data =>
+        data.forEach(t => this.topics.push(t.name))
+    )
   }
 
   getAttendees() {
