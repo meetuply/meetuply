@@ -12,8 +12,11 @@
           <input type="text" formControlName="title" placeholder="title" required/>
           <span class="help-block" *ngIf="this.achievementForm.get('title').errors &&
       (this.achievementForm.get('title').touched || this.achievementForm.get('title').dirty)">
-        <span *ngIf="this.achievementForm.get('title').errors">
+        <span *ngIf="this.achievementForm.get('title').errors.required">
           Title is required
+        </span>
+            <span *ngIf="this.achievementForm.get('title').errors.maxlength">
+          Title is too long
         </span>
       </span>
         </div>
@@ -26,8 +29,11 @@
           <input type="text" formControlName="description" placeholder="description" required/>
           <span class="help-block" *ngIf="this.achievementForm.get('description').errors &&
       (this.achievementForm.get('description').touched || this.achievementForm.get('description').dirty)">
-        <span *ngIf="this.achievementForm.get('description').errors">
+        <span *ngIf="this.achievementForm.get('description').errors.required">
           Description is required
+        </span>
+            <span *ngIf="this.achievementForm.get('description').errors.maxlength">
+          Description is too long
         </span>
       </span>
         </div>
@@ -35,16 +41,22 @@
 
       <div class="input-wrapper">
         <div class="input-title">
-          <span>Icon</span>
+          <span>Icon URL</span>
         </div>
         <div class="input_line">
-          <input type="text" formControlName="icon" placeholder="icon" required/>
+          <input type="text" id="icon" formControlName="icon" placeholder="icon" required/>
           <span class="help-block" *ngIf="this.achievementForm.get('icon').errors &&
       (this.achievementForm.get('icon').touched || this.achievementForm.get('icon').dirty)">
-        <span *ngIf="this.achievementForm.get('icon').errors">
-          Icon is required
+        <span *ngIf="this.achievementForm.get('icon').errors.required">
+          Icon URL is required
         </span>
+            <span *ngIf="this.achievementForm.get('icon').errors?.maxlength">
+            Icon URL is too long. You may shorten it
+              <a href="https://goo.gl/" target="_blank">here</a>
+          </span>
       </span>
+
+
         </div>
       </div>
 
