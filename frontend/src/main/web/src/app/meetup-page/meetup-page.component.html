@@ -35,6 +35,16 @@
                    [rating]='attendee.rating' [id]='attendee.id'>
       </app-atendee>
     </div>
+
+    <div class='about' *ngIf="topics.length != 0">
+      Topics
+    </div>
+
+    <div class='topics'>
+      <span class='topic' *ngFor="let topic of topics">
+        #{{topic}}
+      </span>
+    </div>
   </div>
 
   <div class='additional'>

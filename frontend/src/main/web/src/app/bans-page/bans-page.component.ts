@@ -25,6 +25,11 @@ export class BansPageComponent implements OnInit {
     this.getBans(this.reportedId);
   }
 
+  delete(ban: BanForView): void {
+    this.bans = this.bans.filter(h => h !== ban);
+    this.banService.delete(ban).subscribe();
+  }
+
   public goBack(){
     this.location.back();
   }

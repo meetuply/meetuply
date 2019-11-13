@@ -24,6 +24,13 @@
 
 .filters {
   margin: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.filters * {
+  margin: 5px;
 }
 
 .active {
@@ -36,10 +43,12 @@
 }
 
 .notifications {
+  max-height: 100%;
   padding: 7px;
   margin: 5px;
   border-radius: 6px;
   border: 1px solid grey;
+  overflow: auto;
 }
 
 .notification {

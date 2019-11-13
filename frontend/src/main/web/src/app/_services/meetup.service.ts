@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Meetup } from "../_models/meetup";
 import { environment } from "../../environments/environment";
 import { UserService } from "./user.service";
-import { User } from "../_models";
+import {Topic, User} from "../_models";
 import {MeetupListItem} from "../_models/meetupListItem";
 
 
@@ -55,6 +55,10 @@ export class MeetupService {
 
   getAttendees(meetupId: number): Observable<User[]> {
     return this.http.get<User[]>(this.meetupApiUrl + `${meetupId}` + '/attendees');
+  }
+
+  getTopics(meetupId: number): Observable<Topic[]> {
+    return this.http.get<Topic[]>(this.meetupApiUrl + `${meetupId}` + '/topics');
   }
 
   joinMeetup(meetupID: number): Observable<{}> {

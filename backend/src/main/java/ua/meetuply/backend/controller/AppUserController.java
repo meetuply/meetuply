@@ -108,6 +108,31 @@ public class AppUserController {
         return notificationService.getUserNotificationsByStatus(userId, false);
     }
 
+    //---
+
+    @GetMapping("/{userId}/notifications/{start}/{size}")
+    public List<SocketNotification> getAllUserNotificationsChunk(@PathVariable("userId") Integer userId, @PathVariable("start") Integer start, @PathVariable("size") Integer size) {
+        return notificationService.getUserNotificationsChunk(userId, start, size);
+    }
+
+
+    @GetMapping("/{userId}/notifications/read/{start}/{size}")
+    public List<SocketNotification> getUserReadNotificationsChunk(@PathVariable("userId") Integer userId, @PathVariable("start") Integer start, @PathVariable("size") Integer size) {
+        return notificationService.getUserNotificationsByStatusChunk(userId, true, start, size);
+    }
+
+    @GetMapping("/{userId}/notifications/unread/{start}/{size}")
+    public List<SocketNotification> getUserUnreadNotificationsChunk(@PathVariable("userId") Integer userId, @PathVariable("start") Integer start, @PathVariable("size") Integer size) {
+        return notificationService.getUserNotificationsByStatusChunk(userId, false, start, size);
+    }
+
+    @PutMapping("/{userId}/notifications/readall")
+    public ResponseEntity readNotifications(@PathVariable("userId") Integer userId) {
+        notificationService.readNotifications(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    //---
 
     @GetMapping("/{userId}/roomsList")
     public Iterable<ChatroomThumbnail> getRoomsThumbnail(@PathVariable("userId") Integer userId) {

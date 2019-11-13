@@ -63,6 +63,8 @@
       <div *ngIf="achievementList.length != 0" class='about'>
         Achievements
       </div>
+
+      <div class="scrollbar" id="style-3">
       <div class="achievement-wrapper">
         <div class='achievements'>
           <div *ngFor="let achievement of this.achievementList">
@@ -72,6 +74,8 @@
           </div>
         </div>
       </div>
+      </div>
+
     </div>
 
     <div class="section" id="blogpost" *ngIf="lastPost">

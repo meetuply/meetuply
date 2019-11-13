@@ -1,36 +1,35 @@
-import { Injectable, NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { LandingPageComponent } from "./landing-page/landing-page.component";
-import { LoginComponent } from "./login/login.component";
-import { RegisterComponent } from "./register/register.component";
-import { SpeakerPageComponent } from "./speaker-page/speaker-page.component";
-import { SpeakerListPageComponent } from "./speaker-list-page/speaker-list-page.component";
-import { MeetupsListPageComponent } from "./meetups-list-page/meetups-list-page.component";
-import { MeetupPageComponent } from "./meetup-page/meetup-page.component";
-import { AuthGuard } from "./_helpers";
-import { CreateMeetupPageComponent } from "./create-meetup-page/create-meetup-page.component";
-import { ChatPageComponent } from "./chat-page/chat-page.component";
-import { ChatsListPageComponent } from "./chats-list-page/chats-list-page.component";
-import { UserDeactivationComponent } from "./user-deactivation/user-deactivation.component";
-import { AdminGuard } from "./_helpers/admin.guard";
-import { BlogListPageComponent } from "./blog-list-page/blog-list-page.component";
-import { BlogPageComponent } from "./blog-page/blog-page.component";
-import { BlogCreatePageComponent } from "./blog-create-page/blog-create-page.component";
-import { RegConfirmationComponent } from "./reg-confirmation/reg-confirmation.component";
-import { AchievementCreatePageComponent } from "./achievement-create-page/achievement-create-page.component";
-import { AchievementPanelComponent } from "./achievement-panel/achievement-panel.component";
-import { AchievementsPageComponent } from "./achievements-page/achievements-page.component";
-import { TopicsPageComponent } from "./topics-page/topics-page.component";
-import { TopicPageComponent } from "./topic-page/topic-page.component";
-import { BanReasonsPageComponent } from "./ban-reasons-page/ban-reasons-page.component";
-import { BanReasonPageComponent } from "./ban-reason-page/ban-reason-page.component";
-import { ChangePasswordComponent } from "./change-password/change-password.component";
-import { SettingsComponent } from "./settings/settings.component";
-import { DashboardPageComponent } from "./dashboard-page/dashboard-page.component";
-import { FeedbackCreatePageComponent } from "./feedback-create-page/feedback-create-page.component";
-import { BanPageComponent } from "./ban-page/ban-page.component";
-import { BansPageComponent } from "./bans-page/bans-page.component";
-import { NotificationsPageComponent } from './notifications-page/notifications-page.component'
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {LandingPageComponent} from "./landing-page/landing-page.component";
+import {LoginComponent} from "./login/login.component";
+import {RegisterComponent} from "./register/register.component";
+import {SpeakerPageComponent} from "./speaker-page/speaker-page.component";
+import {SpeakerListPageComponent} from "./speaker-list-page/speaker-list-page.component";
+import {MeetupsListPageComponent} from "./meetups-list-page/meetups-list-page.component";
+import {MeetupPageComponent} from "./meetup-page/meetup-page.component";
+import {AuthGuard} from "./_helpers";
+import {CreateMeetupPageComponent} from "./create-meetup-page/create-meetup-page.component";
+import {ChatPageComponent} from "./chat-page/chat-page.component";
+import {ChatsListPageComponent} from "./chats-list-page/chats-list-page.component";
+import {UserDeactivationComponent} from "./user-deactivation/user-deactivation.component";
+import {AdminGuard} from "./_helpers/admin.guard";
+import {BlogListPageComponent} from "./blog-list-page/blog-list-page.component";
+import {BlogPageComponent} from "./blog-page/blog-page.component";
+import {BlogCreatePageComponent} from "./blog-create-page/blog-create-page.component";
+import {RegConfirmationComponent} from "./reg-confirmation/reg-confirmation.component";
+import {AchievementCreatePageComponent} from "./achievement-create-page/achievement-create-page.component";
+import {AchievementsPageComponent} from "./achievements-page/achievements-page.component";
+import {TopicsPageComponent} from "./topics-page/topics-page.component";
+import {TopicPageComponent} from "./topic-page/topic-page.component";
+import {BanReasonsPageComponent} from "./ban-reasons-page/ban-reasons-page.component";
+import {BanReasonPageComponent} from "./ban-reason-page/ban-reason-page.component";
+import {ChangePasswordComponent} from "./change-password/change-password.component";
+import {SettingsComponent} from "./settings/settings.component";
+import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
+import {FeedbackCreatePageComponent} from "./feedback-create-page/feedback-create-page.component";
+import {BanPageComponent} from "./ban-page/ban-page.component";
+import {BansPageComponent} from "./bans-page/bans-page.component";
+import {NotificationsPageComponent} from './notifications-page/notifications-page.component'
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },

@@ -28,6 +28,12 @@ public class ChatService {
     }
 
 
+    public List<Message> getRoomMessagesChunk(Integer roomId,Integer start,Integer size) {
+
+        return chatDAO.getRoomMessagesChunk(roomId,start,size);
+
+    }
+
     public List<Integer> getChatRoomsByUser(Integer userId) {
         return chatDAO.getChatRoomsByUser(userId);
     }

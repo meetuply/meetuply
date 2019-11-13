@@ -43,8 +43,8 @@ export class UserService {
     return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size)
   }
 
-  getChunkByName(start: number, size: number, name:string): Observable<User[]> {
-    return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size + "/search?name=" + name.toLowerCase() )
+  getChunkByName(start: number, size: number, name: string): Observable<User[]> {
+    return this.http.get<User[]>(this.userApiUrl + 'members/' + start + "/" + size + "/search?name=" + name.toLowerCase())
   }
 
   getChunkForAdmin(start: number, size: number): Observable<User[]> {
@@ -86,6 +86,24 @@ export class UserService {
   getReadNotifications(userId: number): Observable<Notification[]> {
     return this.http.get<Notification[]>(this.userApiUrl + userId + "/notifications/read");
   }
+
+  readAll(userId: number): Observable<{}> {
+    return this.http.put(this.userApiUrl + userId + "/notifications/readall", {});
+  }
+  //---
+
+  getNotificationsChunk(userId: number, start: number, size: number): Observable<Notification[]> {
+    return this.http.get<Notification[]>(this.userApiUrl + userId + "/notifications/" + start + "/" + size);
+  }
+
+  getUnreadNotificationsChunk(userId: number, start: number, size: number): Observable<Notification[]> {
+    return this.http.get<Notification[]>(this.userApiUrl + userId + "/notifications/unread/" + start + "/" + size);
+  }
+
+  getReadNotificationsChunk(userId: number, start: number, size: number): Observable<Notification[]> {
+    return this.http.get<Notification[]>(this.userApiUrl + userId + "/notifications/read/" + start + "/" + size);
+  }
+
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {

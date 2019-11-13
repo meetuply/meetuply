@@ -7,7 +7,7 @@
         Topics
       </div>
       <div class='topics_list'>
-        <app-toggle-button *ngFor="let topic of this.topics" name="topics" id='{{topic.topicId}}' text='{{topic.name}}'
+        <app-toggle-button [active]="this.selectedTopics.includes(topic)" *ngFor="let topic of this.topics" name="topics" id='{{topic.topicId}}' text='{{topic.name}}'
                            (toggled)="topicToggled($event)"></app-toggle-button>
       </div>
 
@@ -61,8 +61,8 @@
         Saved filters
       </div>
       <div class='filters_list'>
-        <app-toggle-button *ngFor="let filter of this.filters" name="filters" id='{{filter.id}}' text='{{filter.name}}'
-                           (toggled)="filterToggled($event)"></app-toggle-button>
+        <app-toggle-button  *ngFor="let filter of this.filters" name="filters" id='{{filter.id}}' text='{{filter.name}}'
+                           (toggled)="filterToggled($event)" [active]="this.selectedFilter==(filter.id)"></app-toggle-button>
       </div>
     </div>
   </div>

@@ -10,7 +10,6 @@ import {MeetupListItem} from "../_models/meetupListItem";
   styleUrls: ['./meetup-filter.component.less']
 })
 
-
 export class MeetupFilterComponent implements OnInit {
 
   filter_name: string;
@@ -23,9 +22,11 @@ export class MeetupFilterComponent implements OnInit {
   topics: Topic[];
   @Output() meetups: EventEmitter<MeetupListItem[]> = new EventEmitter<any>();
   // @Output() meetups : EventEmitter<Meetup[]> = new EventEmitter();
-  selectedTopics = new Set<Topic>();
+  // selectedTopics = new Set<Topic>();
+  selectedTopics : Topic[] = [];
   filters: Filter[];
   selectedFilters = new Set<number>();
+  selectedFilter: number;
 
   weekdayStates:boolean[] = [
     false,
@@ -51,24 +52,29 @@ export class MeetupFilterComponent implements OnInit {
       dateFrom: start_date,
       dateTo: end_date,
       userId: 0,
-      topics: Array.from(this.selectedTopics)
+      topics: this.selectedTopics
     };
     this.filterService.create(filter).subscribe(data => {
-
+      console.log(data);
+      this.filters.unshift(data);
     }, error1 => {
-      alert('Some thing happened:' + error1)
-
-    })
+      // alert('Some thing happened:' + error1)
+    });
+    // this.filters.unshift(filter);
+    this.filter_name = "";
+    this.selectedTopics = [];
+    // this.loadFilters();
   }
 
   search(){
-    this.filterService.getMeetupsByFilter(this.selectedFilters.values().next().value).subscribe(data =>
-      // this.meetups.emit(meetupsList)
-      // this.meetups.push(...data);
+    this.filterService.getMeetupsByFilter(this.selectedFilter).subscribe(data =>
       this.meetups.emit(data)
-      // this.meetups.emit(data)
     );
     console.log(this.meetups)
+    this.selectedFilters.clear();
+    this.selectedFilters.forEach(x => {
+    })
+
 
   }
 
@@ -79,7 +85,8 @@ export class MeetupFilterComponent implements OnInit {
   }
 
   checkRequiredFields(input) {
-    if(input === null) {
+    if(input === "" || input === null) {
+      alert("Attribute 'name' is required");
       throw new Error("Attribute 'name' is required");
     }
   }
@@ -102,25 +109,22 @@ export class MeetupFilterComponent implements OnInit {
   }
 
   topicToggled($event) {
-    if ($event[1] == true) {
-      this.selectedTopics.add($event[0]);
-    } else {
-      this.selectedTopics.delete($event[0]);
+    var selected : Topic[];
+    selected = this.topics.filter(x => x.topicId == $event[0]);
+    var elem = selected.pop();
+    if(this.selectedTopics.includes(elem)){
+      this.selectedTopics.splice(this.selectedTopics.indexOf(elem), 1);
     }
+    else {
+      this.selectedTopics.push(elem);
+    }
+    // this.selectedTopics.push(selected.pop())
     console.log(this.selectedTopics)
-
   }
 
   filterToggled($event) {
-    if ($event[1] == true) {
-      this.selectedFilters.add($event[0])
-    } else {
-      this.selectedFilters.delete($event[0]);
-    }
-  }
-
-  toggledWeekday($event) {
-    this.weekdayStates[$event[0]] = $event[1]
+    this.selectedFilter = parseInt($event[0]);
+    console.log(this.selectedFilter)
   }
 
 
@@ -168,6 +172,5 @@ export class MeetupFilterComponent implements OnInit {
       return "Start date has already passed"; //2 start is already ended
     }
   }
-
 
 }

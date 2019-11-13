@@ -220,13 +220,13 @@ public class MeetupService {
     }
 
     public Timestamp getTimestampFromString(String dateTime) {
-        Timestamp timestamp;
+        Timestamp timestamp = null;
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
             Date parseDate = dateFormat.parse(dateTime);
             timestamp = new java.sql.Timestamp(parseDate.getTime());
         } catch (ParseException e) {
-            return null;
+            log.error("Parse exception occured.");
         }
         return timestamp;
     }
