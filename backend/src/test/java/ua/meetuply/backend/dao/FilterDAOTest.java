@@ -38,12 +38,9 @@ public class FilterDAOTest {
     private FilterDAO testInstance;
 
     @Mock
-    private IDAO<Topic> topicDao;
-    @Mock
     private JdbcTemplate jdbcTemplate;
 
     private Filter filter;
-    private Topic topic;
     private Filter filter1;
     private Filter filter2;
 
@@ -51,7 +48,7 @@ public class FilterDAOTest {
     public void setUp() {
         filter = new Filter();
         filter.setId(EXISTING_FILTER_ID);
-        topic = new Topic();
+        Topic topic = new Topic();
         topic.setTopicId(TOPIC_ID);
         filter.setTopics(singletonList(topic));
         filter1 = new Filter();
