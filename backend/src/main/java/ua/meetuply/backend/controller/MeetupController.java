@@ -3,7 +3,6 @@ package ua.meetuply.backend.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.model.AppUser;
@@ -83,7 +82,7 @@ public class MeetupController {
 
     @GetMapping("/soon/{userId}/{day}")
     public Iterable<Meetup> getMeetupsBeforeDay(@PathVariable("userId") Integer userId,
-                                         @PathVariable("day") int day) {
+                                                @PathVariable("day") int day) {
         log.debug("Getting meetups for {} closest days", day);
         return meetupService.getUserMeetupsBeforeDay(userId, day);
     }
@@ -147,7 +146,7 @@ public class MeetupController {
     }
 
     @GetMapping("/{meetupID}/attendee")
-    public  Boolean leave(
+    public Boolean leave(
             @PathVariable("meetupID") Integer meetupID,
             @RequestParam("id") Integer userID) {
         return meetupService.isAttendee(meetupID, userID);
@@ -159,10 +158,11 @@ public class MeetupController {
     }
 
     @PostMapping("/filters")
-    public ResponseEntity<Meetup> createFilter(@Valid @RequestBody Filter filter) {
+    public Filter createFilter(@Valid @RequestBody Filter filter) {
         filter.setUserId(appUserService.getCurrentUserID());
-        filterService.createFilter(filter);
-        return ResponseEntity.ok().build();
+//        filterService.createFilter(filter);
+//        model.addAttribute("newFilter", filterService.getFilter(filterService.saveAndGetCreatedFilter(filter)));
+        return filterService.getFilter(filterService.saveAndGetCreatedFilter(filter));
     }
 
     @GetMapping("/filter/search")
