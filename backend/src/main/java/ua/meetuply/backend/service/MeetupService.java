@@ -48,17 +48,17 @@ public class MeetupService {
     @Transactional
     public void createMeetup(FullMeetup meetup) throws NotFoundException {
         log.debug("Creating meetup");
+        Integer currentUserId = appUserService.getCurrentUserID();
         meetup.setStateId(stateService.get(State.SCHEDULED).getStateId());
-        meetup.setSpeakerId(appUserService.getCurrentUserID());
+        meetup.setSpeakerId(currentUserId);
         meetupDao.saveFull(meetup);
 
         //notifiy all subscribers the a new meetup is created
-        for (Integer user: appUserService.getUserSubscribers(appUserService.getCurrentUserID())) {
+        for (Integer user: appUserService.getUserSubscribers(currentUserId)) {
             notificationService.sendNotification(user,"subscription_new_meetup_template");
         }
-
-        achievementService.checkOne(AchievementType.MEETUPS);
-        achievementService.checkOne(AchievementType.MEETUPS_TOPIC);
+        achievementService.checkOne(AchievementType.MEETUPS, currentUserId);
+        achievementService.checkOne(AchievementType.MEETUPS_TOPIC, currentUserId);
     }
 
     public List<Topic> getMeetupTopics(Integer meetupId){
@@ -97,22 +97,6 @@ public class MeetupService {
         return meetupDao.getUserPastMeetups(userId);
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void join(Integer meetupID) throws Exception {
-        AppUser user = appUserService.getCurrentUser();
-        if (user == null) throw new NotFoundException("Cannot find current user");
-        if (meetupDao.get(meetupID) == null) throw new NotFoundException("There is no meetup #" + meetupID);
-        meetupDao.join(meetupID, user.getUserId());
-
-        Meetup meetup = meetupDao.get(meetupID);
-
-        notificationService.sendNotification(user.getUserId(),"meetup_subscription_template");
-        notificationService.sendNotification(meetup.getSpeakerId(),"new_meetup_atendee_template");
-
-        if (meetup.getMeetupRegisteredAttendees() == meetup.getMeetupMaxAttendees())
-            stateService.updateState(meetup, stateService.get(State.BOOKED));
-    }
-
     public Iterable<Meetup> getUserMeetupsBeforeDay(Integer userId, int day) {
         return meetupDao.getUserMeetupsBeforeDay(userId, day);
     }
@@ -129,7 +113,23 @@ public class MeetupService {
         return meetupDao.getUserMeetupsChunk(appUserService.getCurrentUserID(), startRow, endRow);
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void join(Integer meetupID) throws Exception {
+        AppUser user = appUserService.getCurrentUser();
+        if (user == null) throw new NotFoundException("Cannot find current user");
+        if (meetupDao.get(meetupID) == null) throw new NotFoundException("There is no meetup #" + meetupID);
+        meetupDao.join(meetupID, user.getUserId());
+
+        Meetup meetup = meetupDao.get(meetupID);
+
+        notificationService.sendNotification(user.getUserId(),"meetup_subscription_template");
+        notificationService.sendNotification(meetup.getSpeakerId(),"new_meetup_atendee_template");
+
+        if (meetup.getMeetupRegisteredAttendees() == meetup.getMeetupMaxAttendees())
+            stateService.updateState(meetup, stateService.get(State.BOOKED));
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void leave(Integer meetupID) throws NotFoundException {
         AppUser user = appUserService.getCurrentUser();
         if (user == null) throw new NotFoundException("Cannot find current user");

@@ -1,5 +1,5 @@
 <div class='atendee'>
-  <img *ngIf="photo" src={{this.photo}}>
+  <img *ngIf="photo" src="{{this.photo}}">
   <img *ngIf="!photo" src="assets/img/download.png">
 	<div [routerLink]="['/speakers/', this.id]"
        class="author-name">{{this.name}} {{this.surname}}</div>

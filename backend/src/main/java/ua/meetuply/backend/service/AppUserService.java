@@ -165,7 +165,7 @@ public class AppUserService implements UserDetailsService {
     @Transactional
     public void follow(Integer userId) {
         appUserDAO.follow(getCurrentUserID(), userId);
-        achievementService.checkOne(AchievementType.FOLLOWERS);
+        achievementService.checkOne(AchievementType.FOLLOWERS, userId);
         notificationService.sendNotification(userId,"new_subscriber_template");
         notificationService.sendNotification(getCurrentUserID(),"new_subscription_template");
     }
@@ -180,7 +180,7 @@ public class AppUserService implements UserDetailsService {
 
     public void update(AppUser appUser) throws Exception {
         if (getCurrentUserID() == appUser.getUserId()) {
-            appUser.setPassword(appUser.getPassword() == null ? getCurrentUser().getPassword() : appUser.getPassword());
+            appUser.setPassword(appUser.getPassword() == null ? getCurrentUser().getPassword() : passwordEncoder.encode(appUser.getPassword()));
             appUserDAO.update(appUser);
         } else throw PermissionException.createWith("You don't have permission to change personal data");
     }

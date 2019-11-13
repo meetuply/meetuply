@@ -2,8 +2,10 @@ package ua.meetuply.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.dao.FeedbackDAO;
+import ua.meetuply.backend.model.AchievementType;
 import ua.meetuply.backend.model.Feedback;
 
 import java.time.LocalDateTime;
@@ -17,6 +19,9 @@ public class FeedbackService {
 
     @Autowired
     AppUserService appUserService;
+
+    @Autowired
+    AchievementService achievementService;
 
     public void createFeedback(Feedback feedback) {
         feedback.setDate(LocalDateTime.now());
