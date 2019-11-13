@@ -160,9 +160,8 @@ public class MeetupController {
     @PostMapping("/filters")
     public Filter createFilter(@Valid @RequestBody Filter filter) {
         filter.setUserId(appUserService.getCurrentUserID());
-//        filterService.createFilter(filter);
-//        model.addAttribute("newFilter", filterService.getFilter(filterService.saveAndGetCreatedFilter(filter)));
-        return filterService.getFilter(filterService.saveAndGetCreatedFilter(filter));
+        int savedFilterId = filterService.saveAndGetCreatedFilter(filter);
+        return filterService.getFilter(savedFilterId);
     }
 
     @GetMapping("/filter/search")
