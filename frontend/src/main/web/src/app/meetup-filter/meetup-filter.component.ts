@@ -26,6 +26,7 @@ export class MeetupFilterComponent implements OnInit {
   selectedTopics : Topic[] = [];
   filters: Filter[];
   selectedFilters = new Set<number>();
+  selectedFilter: number;
 
   weekdayStates:boolean[] = [
     false,
@@ -53,22 +54,27 @@ export class MeetupFilterComponent implements OnInit {
       userId: 0,
       topics: this.selectedTopics
     };
-    this.filterService.create(filter).subscribe(data => {}, error1 => {
+    this.filterService.create(filter).subscribe(data => {
+      console.log(data);
+      this.filters.unshift(data);
+    }, error1 => {
       alert('Some thing happened:' + error1)
     });
     // this.filters.unshift(filter);
     this.filter_name = "";
+    this.selectedTopics = [];
     // this.loadFilters();
   }
 
   search(){
-    this.filterService.getMeetupsByFilter(this.selectedFilters.values().next().value).subscribe(data =>
-      // this.meetups.emit(meetupsList)
-      // this.meetups.push(...data);
+    this.filterService.getMeetupsByFilter(this.selectedFilter).subscribe(data =>
       this.meetups.emit(data)
-      // this.meetups.emit(data)
     );
     console.log(this.meetups)
+    this.selectedFilters.clear();
+    this.selectedFilters.forEach(x => {
+    })
+
 
   }
 
@@ -101,32 +107,23 @@ export class MeetupFilterComponent implements OnInit {
     );
   }
 
-  // topicToggled($event) {
-  //   if ($event[1] == true) {
-  //     this.selectedTopics.add($event[0]);
-  //   } else {
-  //     this.selectedTopics.delete($event[0]);
-  //   }
-  //   console.log(this.selectedTopics)
-  //
-  // }
   topicToggled($event) {
     var selected : Topic[];
     selected = this.topics.filter(x => x.topicId == $event[0]);
-    this.selectedTopics.push(selected.pop())
+    var elem = selected.pop();
+    if(this.selectedTopics.includes(elem)){
+      this.selectedTopics.splice(this.selectedTopics.indexOf(elem), 1);
+    }
+    else {
+      this.selectedTopics.push(elem);
+    }
+    // this.selectedTopics.push(selected.pop())
     console.log(this.selectedTopics)
   }
 
   filterToggled($event) {
-    if ($event[1] == true) {
-      this.selectedFilters.add($event[0])
-    } else {
-      this.selectedFilters.delete($event[0]);
-    }
-  }
-
-  toggledWeekday($event) {
-    this.weekdayStates[$event[0]] = $event[1]
+    this.selectedFilter = parseInt($event[0]);
+    console.log(this.selectedFilter)
   }
 
 

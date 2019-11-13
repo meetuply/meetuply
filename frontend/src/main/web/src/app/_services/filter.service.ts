@@ -15,8 +15,8 @@ export class FilterService {
 
   constructor(private http: HttpClient) { }
 
-  create(filter: Filter): Observable<{}> {
-    return this.http.post(this.filterApiUrl+ "filters", filter);
+  create(filter: Filter): Observable<Filter> {
+    return this.http.post<Filter>(this.filterApiUrl+ "filters", filter);
   }
 
   getAll():Observable<Filter[]> {

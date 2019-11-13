@@ -17,4 +17,6 @@ public interface FilterService {
     void deleteFilter(Integer id);
 
     List<Filter> getAllFilters();
+
+    int saveAndGetCreatedFilter(Filter filter);
 }

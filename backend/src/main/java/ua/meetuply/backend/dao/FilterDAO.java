@@ -45,6 +45,17 @@ public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
         return jdbcTemplate.query(GET_USERS_FILTERS_QUERY, new Object[]{userId}, this);
     }
 
+    @Override
+    public int saveAndGetCreatedFilter(Filter filter) {
+        int key = getSavedFilterId(filter).intValue();
+        if (isNotEmpty(filter.getTopics())) {
+            for (Topic topic : filter.getTopics()) {
+                jdbcTemplate.update(CREATE_FILTER_TOPIC_QUERY, topic.getTopicId(), key);
+            }
+        }
+        return key;
+    }
+
     private List<Integer> getTopicIds(Integer filterId) {
         return jdbcTemplate.queryForList(GET_FILTERS_TOPICS_QUERY, new Object[]{filterId}, Integer.class);
     }
@@ -63,6 +74,7 @@ public class FilterDAO implements IFilterDAO<Filter>, RowMapper<Filter> {
             }
         }
     }
+
 
     Number getSavedFilterId(Filter filter) {
         KeyHolder keyHolder = new GeneratedKeyHolder();

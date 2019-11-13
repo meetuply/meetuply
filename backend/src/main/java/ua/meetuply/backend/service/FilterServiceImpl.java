@@ -42,4 +42,9 @@ public class FilterServiceImpl implements FilterService {
         return filterDao.getAll();
     }
 
+    @Override
+    public int saveAndGetCreatedFilter(Filter filter) {
+        return this.filterDao.saveAndGetCreatedFilter(filter);
+    }
+
 }
