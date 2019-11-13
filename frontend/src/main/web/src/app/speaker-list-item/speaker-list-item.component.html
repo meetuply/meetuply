@@ -22,10 +22,10 @@
 		</div>
 	</div>
 	<div class='additional'>
-		<div class='languages'>
+		<div class='languages' *ngIf="this.speakerListItem.languages.length > 0" >
 			<div class='icon'>
 			</div>
-			<div>
+			<div >
 				<div *ngFor="let language of this.speakerListItem.languages">{{language}}</div>
 			</div>
 		</div>

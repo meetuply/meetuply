@@ -60,7 +60,8 @@
       <div class='icon'>
       </div>
       <div class='date_time'>
-        <div>{{this.meetup.meetupStartDateTime | date:'MMM d, y h:mm a'}}</div>
+        <div> <span class="time-word">start:</span>  {{this.meetup.meetupStartDateTime | date:'MMM d, y h:mm a'}}</div>
+        <div> <span class="time-word">end: </span>    {{this.meetup.meetupFinishDateTime | date:'MMM d, y h:mm a' }}</div>
       </div>
     </div>
     <div class='location'>
