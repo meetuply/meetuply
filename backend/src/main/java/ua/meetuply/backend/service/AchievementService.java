@@ -78,32 +78,32 @@ public class AchievementService {
         return achievementDAO.getUserAchievements(userId);
     }
 
+
     @Transactional
-    void checkOne(AchievementType type){
+    void checkOne(AchievementType type, Integer userId){
         log.debug("Checking if user should get an achievement");
-        Integer currentUserId = appUserService.getCurrentUserID();
         List<Integer> achievementsIdlist = new ArrayList<>();
         switch (type) {
             case FOLLOWERS:
-                achievementsIdlist = achievementDAO.getFollowersAchievementId(currentUserId);
+                achievementsIdlist = achievementDAO.getFollowersAchievementId(userId);
                 break;
             case POSTS:
-                achievementsIdlist = achievementDAO.getPostsAchievementId(currentUserId);
+                achievementsIdlist = achievementDAO.getPostsAchievementId(userId);
                 break;
             case RATING:
-                achievementsIdlist = achievementDAO.getRatingAchievementId(currentUserId);
+                achievementsIdlist = achievementDAO.getRatingAchievementId(userId);
                 break;
             case MEETUPS:
-                achievementsIdlist = achievementDAO.getMeetupAchievementId(currentUserId);
+                achievementsIdlist = achievementDAO.getMeetupAchievementId(userId);
                 break;
             case MEETUPS_TOPIC:
-                achievementsIdlist = achievementDAO.getMeetupTopicAchievementId(currentUserId);
+                achievementsIdlist = achievementDAO.getMeetupTopicAchievementId(userId);
                 break;
         }
         if (achievementsIdlist.size() != 0){
             System.out.println(achievementsIdlist.get(0));
             for (Integer achievementId: achievementsIdlist){
-                awardOne(achievementId, currentUserId);
+                awardOne(achievementId, userId);
             }
         }
     }

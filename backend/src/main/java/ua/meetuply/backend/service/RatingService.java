@@ -27,7 +27,7 @@ public class RatingService {
         rating.setRatedBy(appUserService.getCurrentUserID());
         rating.setRatedUser(idrated);
         ratingDAO.save(rating);
-        achievementService.checkOne(AchievementType.RATING);
+        achievementService.checkOne(AchievementType.RATING, appUserService.getCurrentUserID());
     }
 
     public List<Rating> getAllRatings() {
