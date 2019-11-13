@@ -3,11 +3,13 @@ package ua.meetuply.backend.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.meetuply.backend.controller.exception.NotFoundException;
 import ua.meetuply.backend.dao.AchievementDAO;
 import ua.meetuply.backend.model.Achievement;
 import ua.meetuply.backend.model.AchievementType;
 
+import javax.xml.transform.sax.SAXSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,6 +78,7 @@ public class AchievementService {
         return achievementDAO.getUserAchievements(userId);
     }
 
+    @Transactional
     void checkOne(AchievementType type){
         log.debug("Checking if user should get an achievement");
         Integer currentUserId = appUserService.getCurrentUserID();
@@ -98,6 +101,7 @@ public class AchievementService {
                 break;
         }
         if (achievementsIdlist.size() != 0){
+            System.out.println(achievementsIdlist.get(0));
             for (Integer achievementId: achievementsIdlist){
                 awardOne(achievementId, currentUserId);
             }
