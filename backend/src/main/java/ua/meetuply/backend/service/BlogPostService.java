@@ -27,15 +27,14 @@ public class BlogPostService {
 
     @Transactional
     public void createBlogPost(BlogPost blogPost) {
+        Integer currentUserId = appUserService.getCurrentUserID();
         blogPost.setTime(LocalDateTime.now());
-        blogPost.setAuthorId(appUserService.getCurrentUserID());
+        blogPost.setAuthorId(currentUserId);
         blogPostDAO.save(blogPost);
-
-        for (Integer user: appUserService.getUserSubscribers(appUserService.getCurrentUserID())) {
+        for (Integer user: appUserService.getUserSubscribers(currentUserId)) {
             notificationService.sendNotification(user,"subscription_new_post_template");
         }
-
-        achievementService.checkOne(AchievementType.POSTS);
+        achievementService.checkOne(AchievementType.POSTS, currentUserId);
     }
 
     public void updateBlogPost(BlogPost blogPost){

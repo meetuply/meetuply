@@ -48,17 +48,17 @@ public class MeetupService {
     @Transactional
     public void createMeetup(FullMeetup meetup) throws NotFoundException {
         log.debug("Creating meetup");
+        Integer currentUserId = appUserService.getCurrentUserID();
         meetup.setStateId(stateService.get(State.SCHEDULED).getStateId());
-        meetup.setSpeakerId(appUserService.getCurrentUserID());
+        meetup.setSpeakerId(currentUserId);
         meetupDao.saveFull(meetup);
 
         //notifiy all subscribers the a new meetup is created
-        for (Integer user: appUserService.getUserSubscribers(appUserService.getCurrentUserID())) {
+        for (Integer user: appUserService.getUserSubscribers(currentUserId)) {
             notificationService.sendNotification(user,"subscription_new_meetup_template");
         }
-
-        achievementService.checkOne(AchievementType.MEETUPS);
-        achievementService.checkOne(AchievementType.MEETUPS_TOPIC);
+        achievementService.checkOne(AchievementType.MEETUPS, currentUserId);
+        achievementService.checkOne(AchievementType.MEETUPS_TOPIC, currentUserId);
     }
 
     public List<Topic> getMeetupTopics(Integer meetupId){
