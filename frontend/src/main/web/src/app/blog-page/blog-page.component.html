@@ -40,8 +40,8 @@
         <div class="new-comment">
           <div class="author">
             <div class='avatar'>
-              <img *ngIf="authorPhoto" src={{this.authorPhoto}}>
-              <img *ngIf="!authorPhoto" src="assets/img/download.png">
+              <img *ngIf="this.userService.currentUser.photo" src={{this.this.userService.currentUser.photo}}>
+              <img *ngIf="!this.userService.currentUser.photo" src="assets/img/download.png">
             </div>
           </div>
 
