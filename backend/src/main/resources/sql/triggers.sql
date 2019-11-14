@@ -4,7 +4,14 @@ CREATE TRIGGER bfr_join_meetup BEFORE INSERT ON meetup_attendees
 FOR EACH ROW
 BEGIN
     SET @FREE_PLACES = (SELECT max_attendees - registered_attendees FROM meetup WHERE uid = NEW.meetup_id);
-    IF @FREE_PLACES > 0 THEN
+
+    UPDATE meetup
+    SET registered_attendees = registered_attendees + 1
+    WHERE uid = NEW.meetup_id;
+
+    SET @FREE_PLACES = (SELECT max_attendees - registered_attendees FROM meetup WHERE uid = NEW.meetup_id);
+
+    IF @FREE_PLACES >= 0 THEN
         UPDATE meetup
         SET registered_attendees = registered_attendees + 1
         WHERE uid = NEW.meetup_id;
